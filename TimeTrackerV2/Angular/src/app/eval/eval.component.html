@@ -1,0 +1,106 @@
+<div id="eval" ng-cloak>
+  <h3 class="mt-3">Complete Evaluation</h3>
+
+  <div class="mt-4 table-responsive" ng-cloak>
+    <table class="table table-condensed">
+      <thead class="thead-light">
+        <tr>
+          <th class="sticky-column" style="width: 225px; min-width: 150px;">Evaluation #</th>
+          <!-- ng-repeat="u in users" ng-if="u.userID === $parent.user.userID" -->
+          <th style="min-width: 150px;">Self</th>
+          <!-- ng-repeat="u in users" ng-if="u.userID !== $parent.user.userID" -->
+          <th style="min-width: 150px;">User First Name User Last Name</th>
+        </tr>
+      </thead>
+      <tbody id="noCategoryQuestions">
+        <!--  ng-repeat="tq in evaluation.templateQuestions | orderObjectBy : 'number' | filter: {evalTemplateQuestionCategoryID: 0}" -->
+        <tr>
+          <td class="sticky-column">Question text</td>
+          <!-- ng-repeat="u in users" ng-if="u.userID === $parent.user.userID" -->
+          <td class="p-0 align-middle border-right">
+            <!-- ng-if="tq.questionType === 'R'" class="response-text" ng-model="getResponse(tq.evalTemplateQuestionID, u.userID).response" -->
+            <textarea></textarea>
+            <!-- ng-if="tq.questionType === 'N'" ng-model="getResponse(tq.evalTemplateQuestionID, u.userID).response" ng-change="updateTotAvg(getResponse(tq.evalTemplateQuestionID, u.userID).response, u.userID)" -->
+            <select class="response-select">
+              <option value="">Select One</option>
+              <option value="0">0 - Strongly Disagree</option>
+              <option value="1">1 - Disagree</option>
+              <option value="2">2 - Neutral</option>
+              <option value="3">3 - Agree</option>
+              <option value="4">4 - Strongly Agree</option>
+              <option value="5">5 - Without a Doubt</option>
+            </select>
+          </td>
+          <!-- ng-repeat="u in users" ng-if="u.userID !== $parent.user.userID" -->
+          <td class="p-0 align-middle border-right">
+            <!-- ng-if="tq.questionType === 'R'" class="response-text" ng-model="getResponse(tq.evalTemplateQuestionID, u.userID).response" -->
+            <textarea></textarea>
+            <!-- ng-if="tq.questionType === 'N'" ng-model="getResponse(tq.evalTemplateQuestionID, u.userID).response" ng-change="updateTotAvg(getResponse(tq.evalTemplateQuestionID, u.userID).response, u.userID)" -->
+            <select class="response-select">
+              <option value="">Select One</option>
+              <option value="0">0 - Strongly Disagree</option>
+              <option value="1">1 - Disagree</option>
+              <option value="2">2 - Neutral</option>
+              <option value="3">3 - Agree</option>
+              <option value="4">4 - Strongly Agree</option>
+              <option value="5">5 - Without a Doubt</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+      <!-- ng-repeat="c in evaluation.categories" -->
+      <tbody>
+        <tr>
+          <th class="sticky-column">Category Name</th>
+          <!-- ng-repeat="u in users" -->
+          <td></td>
+        </tr>
+        <!-- ng-repeat="tq in evaluation.templateQuestions | orderObjectBy : 'number' | filter: {evalTemplateQuestionCategoryID: c.evalTemplateQuestionCategoryID}" -->
+        <tr>
+          <td class="pl-3 sticky-column">Question Text</td>
+          <!-- ng-repeat="u in users" ng-if="u.userID === $parent.user.userID" -->
+          <td class="p-0 align-middle border-right">
+            <!-- ng-if="tq.questionType === 'R'" class="response-text" ng-model="getResponse(tq.evalTemplateQuestionID, u.userID).response" -->
+            <textarea></textarea>
+            <!-- ng-if="tq.questionType === 'N'" ng-model="getResponse(tq.evalTemplateQuestionID, u.userID).response" ng-change="updateTotAvg(getResponse(tq.evalTemplateQuestionID, u.userID).response, u.userID)" -->
+            <select class="response-select">
+              <option value="">Select One</option>
+              <option value="0">0 - Strongly Disagree</option>
+              <option value="1">1 - Disagree</option>
+              <option value="2">2 - Neutral</option>
+              <option value="3">3 - Agree</option>
+              <option value="4">4 - Strongly Agree</option>
+              <option value="5">5 - Without a Doubt</option>
+            </select>
+          </td>
+          <!-- ng-repeat="u in users" ng-if="u.userID !== $parent.user.userID" -->
+          <td class="p-0 align-middle border-right">
+            <!-- ng-if="tq.questionType === 'R'" class="response-text" ng-model="getResponse(tq.evalTemplateQuestionID, u.userID).response" -->
+            <textarea></textarea>
+            <!-- ng-if="tq.questionType === 'N'" ng-model="getResponse(tq.evalTemplateQuestionID, u.userID).response" ng-change="updateTotAvg(getResponse(tq.evalTemplateQuestionID, u.userID).response, u.userID)" -->
+            <select class="response-select">
+              <option value="">Select One</option>
+              <option value="0">0 - Strongly Disagree</option>
+              <option value="1">1 - Disagree</option>
+              <option value="2">2 - Neutral</option>
+              <option value="3">3 - Agree</option>
+              <option value="4">4 - Strongly Agree</option>
+              <option value="5">5 - Without a Doubt</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+      <tr>
+        <th class="pl-3 sticky-column">Total</th>
+        <!-- ng-repeat="u in users" -->
+        <td class="p-0 align-middle border-right">
+          <textarea class="response-text">Total</textarea>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="w-100">
+    <!-- ng-click="completeEvaluation()" -->
+    <button class="btn btn-primary mt-2 mb-3 float-right">Submit Evaluation</button>
+  </div>
+</div>

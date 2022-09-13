@@ -1,0 +1,45 @@
+<div id="register" ng-cloak>
+
+  <div class="row no-gutters">
+    <div class="col"></div> <!-- Extra col div for some auto bootstrap centering -->
+    <div class="card mt-5 col-10 col-sm-6 col-md-5 col-xl-3">
+      <div class="card-header">Register</div>
+      <div class="card-body">
+        <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+          <div>
+            <p style="color: red;">{{ errMsg }}</p>
+          </div>
+          <div class="input-group">
+            <div class="input-group-prepend"><span class="input-group-text" style="width: 40px; border: none; border-bottom-left-radius: 0;"><i class="fa fa-user" aria-hidden="true"></i></span></div>
+            <input id="username" formControlName="username" type="text" class="form-control bg-light" style="border: none; border-bottom-right-radius: 0;" name="username" placeholder="Username" ng-model="user.username">
+          </div>
+          <div class="input-group" style="margin-top: 1px;">
+            <div class="input-group-prepend"><span class="input-group-text" style="width:40px; border: none; border-top-left-radius: 0; border-bottom-left-radius: 0;"><i class="fa fa-user" aria-hidden="true"></i></span></div>
+            <input id="firstName" formControlName="firstName" type="text" class="form-control bg-light" style="border: none; border-top-right-radius: 0;  border-bottom-right-radius: 0;" name="firstName" placeholder="First Name" ng-model="user.firstName">
+          </div>
+          <div class="input-group" style="margin-top: 1px;">
+            <div class="input-group-prepend"><span class="input-group-text" style="width:40px; border: none; border-top-left-radius: 0; border-bottom-left-radius: 0;"><i class="fa fa-user" aria-hidden="true"></i></span></div>
+            <input id="lastName" formControlName="lastName" type="text" class="form-control bg-light" style="border: none; border-top-right-radius: 0;  border-bottom-right-radius: 0;" name="lastName" placeholder="Last Name" ng-model="user.lastName">
+          </div>
+          <div class="input-group" style="margin-top: 1px;">
+            <div class="input-group-prepend"><span class="input-group-text" style="width:40px; border: none; border-top-left-radius: 0; border-bottom-left-radius: 0;"><i class="fa fa-lock" aria-hidden="true"></i></span></div>
+            <input id="password" formControlName="password" type="password" class="form-control bg-light" style="border: none; border-top-right-radius: 0;  border-bottom-right-radius: 0;" name="password" placeholder="Password" ng-model="password">
+          </div>
+          <div class="input-group" style="margin-top: 1px;">
+            <div class="input-group-prepend"><span class="input-group-text" style="width:40px; border: none; border-top-left-radius: 0;"><i class="fa fa-lock" aria-hidden="true"></i></span></div>
+            <input id="repeatPassword" formControlName="repeatPassword" type="password" class="form-control bg-light" style="border: none; border-top-right-radius: 0;" placeholder="Repeat Password" ng-model="repeatPassword">
+          </div>
+          <div class="row mt-2 pl-3 pr-3">
+            <!-- ng-click="cancel()" -->
+            <button type="button" class="btn btn-danger col mr-1" [routerLink]="['..',]">Cancel</button>
+            <!-- ng-click="register()" -->
+            <button type="submit" class="btn btn-primary col ml-1">Register</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+    <div class="col"></div> <!-- Extra col div for some auto bootstrap centering -->
+  </div>
+
+</div>

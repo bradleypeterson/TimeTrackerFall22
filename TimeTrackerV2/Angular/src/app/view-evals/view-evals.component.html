@@ -1,0 +1,101 @@
+<div id="viewEvals" ng-cloak>
+  <h3 class="mt-3">Evaluation Results</h3>
+
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="student">Student</label>
+    </div>
+    <!-- ng-model="currentUser" ng-change="loadEvals(currentUser)"
+          ng-options="u.userID as (u.firstName + ' ' + u.lastName) for u in group.users" -->
+    <select class="custom-select" id="student">
+    </select>
+  </div>
+
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <label class="input-group-text" for="evaluation">Evaluation</label>
+    </div>
+    <!-- ng-model="currentEval"
+          ng-options="e.number as ('Evaluation ' + e.number) for e in group.evaluations" -->
+    <select class="custom-select" id="evaluation">
+    </select>
+  </div>
+
+  <div class="mt-4 table-responsive">
+    <!-- ng-repeat="e in group.evaluations" ng-if="e.number === currentEval"  -->
+    <table class="table table-condensed">
+      <thead class="thead-light">
+        <tr>
+          <!--  -->
+          <th class="sticky-column" style="width: 225px; min-width: 150px;">Evaluation #</th>
+          <!-- ng-repeat="ev in e.evals" -->
+          <th style="min-width: 150px;">FirstName LastName</th>
+        </tr>
+      </thead>
+      <tbody id="noCategoryQuestions">
+        <!-- ng-repeat="tq in e.templateQuestions | orderObjectBy : 'number' | filter: {evalTemplateQuestionCategoryID: 0}" -->
+        <tr>
+          <td class="sticky-column">Question Text</td>
+          <!-- ng-repeat="ev in e.evals" -->
+          <td class="p-0 align-middle border-right">
+            <!-- ng-if="tq.questionType === 'R'" {{getResponse(e.number, ev.evalID, tq.evalTemplateQuestionID)}}-->
+            <textarea class="response-text" readonly>getResponse(), question ID</textarea>
+            <!-- ng-if="tq.questionType === 'N'" value="{{getResponse(e.number, ev.evalID, tq.evalTemplateQuestionID)}}" -->
+            <input class="text-center w-100 border-0" readonly />
+          </td>
+        </tr>
+
+      </tbody>
+      <!-- ng-repeat="c in e.categories" -->
+      <tbody>
+        <tr>
+          <th class="sticky-column">Category name</th>
+          <!-- {{calculateCategoryTotal(c.evalTemplateQuestionCategoryID, e.evalID)}} -->
+          <td class="border-right" ng-repeat="ev in e.evals">
+            Category total
+          </td>
+        </tr>
+        <!-- ng-repeat="tq in e.templateQuestions | orderObjectBy : 'number' | filter: {evalTemplateQuestionCategoryID: c.evalTemplateQuestionCategoryID}" -->
+        <tr>
+          <td class="pl-3 sticky-column">Question Text</td>
+          <!-- ng-repeat="ev in e.evals" -->
+          <td class="p-0 align-middle border-right">
+            <!-- ng-if="tq.questionType === 'R'"  {{getResponse(e.number, ev.evalID, tq.evalTemplateQuestionID)}} -->
+            <textarea class="response-text" readonly>Response</textarea>
+            <!-- ng-if="tq.questionType === 'N'" value="{{getResponse(e.number, ev.evalID, tq.evalTemplateQuestionID)}}" -->
+            <input class="text-center w-100 border-0" readonly />
+          </td>
+        </tr>
+
+      </tbody>
+      <!--Jamison Edit-->
+      <tbody>
+        <tr>
+          <th class="sticky-column">Total</th>
+          <!-- ng-repeat="ev in e.evals" -->
+          <td class="p-0 align-middle border-right">
+            <!-- value="{{getTotal(e.number, ev.evalID)}}" -->
+            <input class="text-center w-100 border-0" readonly />
+          </td>
+        </tr>
+        <tr>
+          <th class="sticky-column">Average rating teammate gave</th>
+          <!-- ng-repeat="ev in e.evals" -->
+          <td class="border-right">
+            <!-- value="{{getUserAvg(e.number, ev.evalID)}}" -->
+            <input class="text-center w-100 border-0" readonly />
+          </td>
+        </tr>
+        <tr>
+          <th class="sticky-column">Weighted Rating</th>
+          <!-- ng-repeat="ev in e.evals" -->
+          <td class="border-right">
+            <!-- value="{{getDiff(e.number, ev.evalID)}}" -->
+            <input class="text-center w-100 border-0" readonly />
+          </td>
+        </tr>
+      </tbody>
+      <!--End Edit-->
+    </table>
+  </div>
+</div>

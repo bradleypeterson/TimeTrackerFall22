@@ -1,0 +1,41 @@
+.dashboard-titles {
+  border-bottom: 1px solid #cccccc;
+  color: black;
+  margin-bottom: 10px
+}
+
+.box-part {
+  background: white;
+  /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
+}
+
+  .box-part:hover {
+    background: #2D3E50
+  }
+
+    .box-part:hover .fa,
+    .box-part:hover .title,
+    .box-part:hover .text,
+    .box-part:hover a {
+      color: #FFF;
+      -webkit-transition: all 1s ease-out;
+      -moz-transition: all 1s ease-out;
+      -o-transition: all 1s ease-out;
+      transition: all 1s ease-out
+    }
+
+.group-name {
+  font-size: 1.2em;
+}
+
+.project-name {
+  font-size: 1em;
+}
+
+.course-name {
+  font-size: 1em;
+}
+
+.instructor-name {
+  font-size: 1em;
+}

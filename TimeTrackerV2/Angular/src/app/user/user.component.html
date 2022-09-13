@@ -1,0 +1,71 @@
+<!-- ng-cloak ng-if="loaded" -->
+<div id="user">
+  <h3 class="mt-2">First Name Last Name</h3>
+  <div class="row">
+    <div class="col-12 col-md-6 mt-4">
+      <div class="row">
+        <div class="col-5 text-right pr-1 pl-0">
+          <label class="mb-2 mt-1" for="username">Username</label>
+          <br />
+          <label class="mb-2 mt-1" for="firstName">First Name</label>
+          <br />
+          <label class="mb-2 mt-1" for="lastName">Last Name</label>
+        </div>
+        <div class="col pl-0">
+          <!-- ng-model="viewUser.username" ng-model-options="{debounce: 750}" ng-change="saveUser()" -->
+          <input class="mb-1" type="text" name="username" />
+          <br />
+          <!-- ng-model="viewUser.firstName" ng-model-options="{debounce: 750}" ng-change="saveUser()" -->
+          <input class="mb-1" type="text" name="firstName" />
+          <br />
+          <!-- ng-model="viewUser.lastName" ng-model-options="{debounce: 750}" ng-change="saveUser()" -->
+          <input class="mb-1" type="text" name="lastName" />
+        </div>
+        <div class="mx-auto">
+          <div class="pretty p-svg p-curve mr-4">
+            <!-- ng-model="viewUser.isActive" ng-change="saveUser()" ng-disabled="$parent.user.type !== 'A'" -->
+            <input type="checkbox" />
+            <div class="state p-primary">
+              <svg class="svg svg-icon" viewBox="0 0 20 20">
+                <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z" style="stroke: white;fill:white;"></path>
+              </svg>
+              <label>Active</label>
+            </div>
+          </div>
+          <label>Type: </label>
+          <!-- ng-model="viewUser.type" ng-change="saveUser()" ng-disabled="$parent.user.type !== 'A'" -->
+          <select>
+            <option value="S">Student</option>
+            <option value="I">Instructor</option>
+            <option value="A">Admin</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 mt-4">
+      <div class="row">
+        <div class="col-5 text-right pr-1 pl-0">
+          <label class="mb-2 mt-1" for="currentPassword">Current Password</label>
+          <br />
+          <label class="mb-2 mt-1" for="newPassword">New Password</label>
+          <br />
+          <label class="mb-2 mt-1" for="repeatPassword">Repeat Password</label>
+        </div>
+        <div class="col pl-0">
+          <!-- ng-model="viewUser.currentPassword" ng-disabled="$parent.user.type === 'A'" -->
+          <input class="mb-1" type="password" name="currentPassword" />
+          <br />
+          <!-- ng-model="viewUser.newPassword" -->
+          <input class="mb-1" type="password" name="newPassword" />
+          <br />
+          <!-- ng-model="viewUser.repeatPassword" -->
+          <input class="mb-1" type="password" name="repeatPassword" />
+        </div>
+        <div class="row mt-2 mx-auto">
+          <!-- ng-click="changePassword()" -->
+          <button type="button" class="btn btn-primary col mr-1">Change Password</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

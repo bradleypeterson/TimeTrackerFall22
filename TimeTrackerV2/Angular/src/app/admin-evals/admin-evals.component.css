@@ -1,0 +1,9 @@
+.bottom-right-search {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+pretty .state .check-label label:after, .pretty .state .check-label label:before {
+  top: 0px !important;
+}
