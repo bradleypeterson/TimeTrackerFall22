@@ -27,6 +27,22 @@ app.get('/', (req, res) => {
   return res.send('Hello World');
 });
 
+app.get('/Courses', (req, res) => {
+  var rowData = "";
+  let sql = "SELECT courseName FROM Courses";
+  db.all(sql, [], (err, rows) => {
+    if(err) {
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    if(rows) {
+      rows.forEach((row) => {
+          rowData += row.courseName + ",";
+      });
+      return res.send(rowData);
+    }
+  });
+});
+
 app.post('/register', async (req, res, next) => {
 
   function isEmpty(str) {
