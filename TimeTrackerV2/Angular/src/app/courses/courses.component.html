@@ -25,15 +25,13 @@
       <tr>
         <th>Course Name</th>
         <th>Instructor</th>
-        <th>Register</th>
       </tr>
     </thead>
     <tbody>
       <!--  ng-repeat="c in courses | filter: search" ng-if="c.isActive || config.showInactiveCourses" ng-class="{inactive: !c.isActive}" -->
-      <tr>
-        <td><a href="#">Course Name</a></td>
-        <td>Instructor First Name, Instructor Last Name</td>
-        <td><button class="btn btn-primary mr-1">Register</button></td>
+      <tr *ngFor="let c of courses">
+        <td><a href="/courses">{{c}}</a></td> 
+         <td>Instructor First Name, Instructor Last Name</td> 
       </tr>
     </tbody>
   </table>
