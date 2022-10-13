@@ -25,6 +25,7 @@ export class RegisterComponent implements OnInit {
     username: '',
     firstName: '',
     lastName: '',
+    type: '',
     password: '',
     repeatPassword: '',
   });
@@ -34,9 +35,12 @@ export class RegisterComponent implements OnInit {
       username: this.registrationForm.value['username'],
       firstName: this.registrationForm.value['firstName'],
       lastName: this.registrationForm.value['lastName'],
+      type : this.registrationForm.value['type'],
       password: this.registrationForm.value['password'],
       repeatPassword: this.registrationForm.value['repeatPassword'],
     }
+
+
 
     this.http.post<any>('http://localhost:8080/register/', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {

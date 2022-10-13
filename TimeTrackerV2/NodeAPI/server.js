@@ -53,6 +53,7 @@ app.post('/register', async (req, res, next) => {
   isEmpty(req.body["firstName"]) ||
   isEmpty(req.body["lastName"]) ||
   isEmpty(req.body["password"]) ||
+  isEmpty(req.body["type"]) ||
   isEmpty(req.body["repeatPassword"])) {
     return res.status(400).json({message: 'Missing one or more required arguments.'});
   };
@@ -86,7 +87,7 @@ app.post('/register', async (req, res, next) => {
     data[1] = hash;
     data[2] = req.body["firstName"];
     data[3] = req.body["lastName"];
-    data[4] = "Basic";
+    data[4] = req.body["type"];
     data[5] = false;
     data[6] = salt;
 
