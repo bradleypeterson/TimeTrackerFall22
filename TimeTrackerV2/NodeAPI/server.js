@@ -35,9 +35,12 @@ app.get('/Courses', (req, res) => {
       return res.status(500).json({message: 'Something went wrong. Please try again later.'});
     }
     if(rows) {
+      rowData += "[";
       rows.forEach((row) => {
-          rowData += row.courseName + ",";
+        rowData += '{"courseName": "' + row.courseName + '"},';
       });
+      rowData += "]";
+      rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
       return res.send(rowData);
     }
   });

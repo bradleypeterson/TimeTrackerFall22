@@ -42,8 +42,10 @@ export class CoursesComponent implements OnInit {
   }
 
   loadCourses(courses: Array<string>): void {
-    let coursesData = this.http.get("http://localhost:8080/Courses");
-    courses.push("CS 1010");
-    courses.push("CS 1030");
+    this.http.get("http://localhost:8080/Courses").subscribe((data: any) =>{ 
+    for(let i = 0; i < data.length; i++) {
+      courses.push(data[i].courseName);
+    }
+  });
   }
 }
