@@ -16,11 +16,11 @@
     </thead>
     <!-- ng-repeat="u in users | orderObjectBy : 'firstName' | filter : search" -->
     <tbody>
-      <tr class="position-relative">
+      <tr *ngFor="let u of users" class="position-relative">
         <!--  -->
-        <td><a href="#">First Name Last Name</a></td>
+        <td><a href="#">FirstName LastName</a></td>
         <td>
-          <div class="full-width">Username</div>
+          <div class="full-width">{{u}}</div>
           <!-- ng-model="u.type" ng-change="saveUser(u)" -->
           <select class="text-center d-sm-none mt-2">
             <option value="S">Student</option>
@@ -50,6 +50,9 @@
           </select>
         </td>
       </tr>
+      <button type="button" class="btn btn-primary">Change Password</button>
     </tbody>
+  
   </table>
 </div>
+
