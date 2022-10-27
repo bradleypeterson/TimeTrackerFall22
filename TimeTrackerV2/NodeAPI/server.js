@@ -46,6 +46,25 @@ app.get('/Courses', (req, res) => {
   });
 });
 
+app.get('/Users', (req, res) => {
+  var rowData = "";
+  let sql = "SELECT username, firstName, lastName FROM Users";
+  db.all(sql, [], (err, rows) => {
+    if(err) {
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    if(rows) {
+      rowData += "[";
+      rows.forEach((row) => {
+        rowData += '{"username": "' + row.username + '", "firstName": "' + row.firstName + '", "lastName": "' + row.lastName + '"},';
+      });
+      rowData += "]";
+      rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
+      return res.send(rowData);
+    }
+  });
+});
+
 app.post('/register', async (req, res, next) => {
 
   function isEmpty(str) {
@@ -218,7 +237,7 @@ app.post('/createProject', async (req, res, next) => {
 });
 
 app.post('/clock', async (req, res, next) => {
-  function isEmpty(str) {
+  /*function isEmpty(str) {
     return (!str || str.length === 0 );
   }
   
@@ -239,12 +258,12 @@ app.post('/clock', async (req, res, next) => {
 
       if(!isValid){
         return res.status(400).json({message: 'you have an outstanding clock in. Please clock out.'});
-      }
+      }*/
 
       let data = [];
 
       data[0] = req.body["timeIn"];
-      data[1] = false;
+      data[1] = req.body["timeOut"];
       data[2] = req.body["createdOn"];
       data[3] = req.body["userID"];
       data[4] = req.body["description"];
@@ -258,7 +277,7 @@ app.post('/clock', async (req, res, next) => {
           return res.status(200).json({message: 'Clocked in successfully.'});
         }
       });
-    }
+    /*}
     else{//clocking out
       console.log("clocking out.");
       let isNullTimeOut = false;
@@ -293,7 +312,7 @@ app.post('/clock', async (req, res, next) => {
         }
       });
     }
-  });  
+  }); */
 });
 
 app.listen(PORT, HOST);
