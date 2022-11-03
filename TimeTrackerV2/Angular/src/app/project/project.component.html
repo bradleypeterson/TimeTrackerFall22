@@ -3,16 +3,16 @@
       <!-- This is the start/stop square in the first row, first column -->
       <div class="col-2 mx-3">
         <!--Date Row-->
-        <div class="row"><h3>10/21/2022</h3></div>
+        <div class="row"><h3>{{currDate}}</h3></div>
         <!--Time Row-->
         <div class="row"><h1>03:27:16</h1></div>
         <!--Start/Stop Buttons-->
         <div class="row">
           <div class="col-6">
-            <button type="button" class="btn btn-success">Start</button>
+            <button (click)="clockIn()" type="button" class="btn btn-success">Start</button>
           </div>
           <div class="col-6">
-            <button type="button" class="btn btn-danger">Stop</button>
+            <button (click)="clockOut()" type="button" class="btn btn-danger">Stop</button>
           </div>
         </div>
         <!--Submit Button-->
