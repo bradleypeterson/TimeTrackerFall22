@@ -31,10 +31,10 @@ export class GroupComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  clockIn(): void {
+  /*clockIn(): void {
     localStorage.setItem("timeIn", Date.now().toString());
 
-    /*var item = localStorage.getItem('currentUser');
+    var item = localStorage.getItem('currentUser');
     
     if (typeof item === 'string')
     {
@@ -66,13 +66,13 @@ export class GroupComponent implements OnInit {
           }
         });
       } 
-    }*/
+    }
   }
 
   clockOut(): void {
     console.log(localStorage.getItem("timeIn"));
     
-    /*var item = localStorage.getItem('currentUser');
+    var item = localStorage.getItem('currentUser');
     
     if (typeof item === 'string')
     {
@@ -80,7 +80,7 @@ export class GroupComponent implements OnInit {
     }
 
     if (this.user !== null )
-    {*/
+    {
         let req = {
           timeIn: localStorage.getItem("timeIn"), 
           timeOut: Date.now(), /// pull date from the HTML
@@ -90,8 +90,8 @@ export class GroupComponent implements OnInit {
         };
       
 
-      /*if (req !== null)
-      {*/
+      if (req !== null)
+      {
         this.http.post<any>('http://localhost:8080/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
           next: data => {
             this.errMsg = "";
@@ -102,8 +102,8 @@ export class GroupComponent implements OnInit {
             this.errMsg = error['error']['message'];
           }
         });
-      /*}
-    }*/
+      }
+    }
 
-  }
+  }*/
 }
