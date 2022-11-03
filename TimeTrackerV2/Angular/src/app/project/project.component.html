@@ -1,3 +1,168 @@
+<div class="container">
+  <div class="row">
+      <!-- This is the start/stop square in the first row, first column -->
+      <div class="col-2 mx-3">
+        <!--Date Row-->
+        <div class="row"><h3>10/21/2022</h3></div>
+        <!--Time Row-->
+        <div class="row"><h1>03:27:16</h1></div>
+        <!--Start/Stop Buttons-->
+        <div class="row">
+          <div class="col-6">
+            <button type="button" class="btn btn-success">Start</button>
+          </div>
+          <div class="col-6">
+            <button type="button" class="btn btn-danger">Stop</button>
+          </div>
+        </div>
+        <!--Submit Button-->
+        <div class="row">
+          <form>
+            <div class="row mt-2">
+              <input type="text" class="form-control">
+              <div id="summary" class="form-text">What did you work on during this time?</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>      
+        </div>
+      </div>
+    <!-- Table to show signed-in user's time history: first row, second column -->
+    <div class="col-7">
+      <div class="row">
+        <div class="col-10">
+          <h3>Activity</h3>
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-primary">All Activity</button>
+        </div>
+      </div>
+      <div class="row">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Time In</th>
+              <th scope="col">Time Out</th>
+              <th scope="col">Total Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>10/21/2022 02:52:21 PM</td>
+              <td>10/21/2022 06:20:37 PM</td>
+              <td>03:27:16</td>
+            </tr>
+            <tr>
+              <td>10/16/2022 07:34:21 AM</td>
+              <td>10/16/2022 08:45:06 AM</td>
+              <td>01:10:45</td>
+            </tr>
+            <tr>
+              <td>10/15/2022 02:20:46 PM</td>
+              <td>10/15/2022 03:06:07 PM</td>
+              <td>00:45:21</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+    </div>
+    <!-- This would be the graph of the signed-in user's time history -->
+    <div class="col-1">
+      <img src="Angular\src\assets\Images\myactivity.jpg" width="500" height="250">
+    </div>
+  </div>
+  
+  
+  <div class="row">
+    <!-- This is the whole team chart with member names and total time, second row, first square/column -->
+    <div class="col-2 mx-3">
+      <div class="row"><h3>My Team</h3></div>
+      <div class="row">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Total Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mike</td>
+              <td>16:12:37</td>
+            </tr>
+            <tr>
+              <td>Jamison</td>
+              <td>11:47:54</td>
+            </tr>
+            <tr>
+              <td>Dwight</td>
+              <td>04:52:19</td>
+            </tr>
+            <tr>
+              <td>Pam</td>
+              <td>03:26:42</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+      <div class="row">
+        <div class="col-12">
+          <button type="button" class="btn btn-primary">Reports</button>
+        </div>
+      </div>
+    </div>
+    <!-- The entire "History" item on the second row -->
+    <div class="col-7">
+      <div class="row">
+        <div class="col-10">
+          <h3>History</h3>
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-primary">All History</button>
+        </div>
+      </div>
+      <div class="row">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Time In</th>
+              <th scope="col">Time Out</th>
+              <th scope="col">Total Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dwight</td>
+              <td>10/20/2022 04:26:53 PM</td>
+              <td>10/20/2022 04:49:55 PM</td>
+              <td>00:23:02</td>
+            </tr>
+            <tr>
+              <td>Michael</td>
+              <td>10/19/2022 08:45:21 PM</td>
+              <td>10/19/2022 10:01:35 PM</td>
+              <td>01:16:14</td>
+            </tr>
+            <tr>
+              <td>Pam</td>
+              <td>10/19/2022 07:21:45 AM</td>
+              <td>10/19/2022 08:07:41 AM</td>
+              <td>00:45:56</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <!-- This would be the pie chart of the team progress -->
+    <div class="col-1">
+      <img src="Angular\src\assets\Images\group history.jpg" width="500" height="250">
+    </div>
+  </div>
+</div>
+
+
+
+
 <div id="project" ng-cloak>
   <div class="row position-relative">
     <!-- ng-model-options="{debounce: 750}" ng-change="saveProject()" ng-model="project.projectName" ng-readonly="$parent.user.type !== 'A' && $parent.user.type !== 'I'" -->
