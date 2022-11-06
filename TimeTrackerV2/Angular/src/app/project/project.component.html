@@ -53,23 +53,15 @@
               <th scope="col">Start Time</th>
               <th scope="col">End Time</th>
               <th scope="col">Total Time</th>
+              <th scope="col">Description</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>10/21/2022 02:52:21 PM</td>
-              <td>10/21/2022 06:20:37 PM</td>
-              <td>03:27:16</td>
-            </tr>
-            <tr>
-              <td>10/16/2022 07:34:21 AM</td>
-              <td>10/16/2022 08:45:06 AM</td>
-              <td>01:10:45</td>
-            </tr>
-            <tr>
-              <td>10/15/2022 02:20:46 PM</td>
-              <td>10/15/2022 03:06:07 PM</td>
-              <td>00:45:21</td>
+            <tr *ngFor="let activity of activities">
+              <td>{{activity.timeIn | date:'medium'}}</td>
+              <td>{{activity.timeOut | date:'medium'}}</td>
+              <td>{{activity.timeOut - activity.timeIn | totalTimePipe}}</td>
+              <td>{{activity.description}}</td>
             </tr>
           </tbody>
         </table>
@@ -91,19 +83,19 @@
         </div>
         <!--Submit Button-->
         <div class="gap-4 d-md-flex justify-content-md-center">
-          <form _ngcontent-rte-c59="" novalidate="" class="ng-untouched ng-pristine ng-valid">
-                  <div _ngcontent-rte-c59="" class="row mt-2">
-                      <input _ngcontent-rte-c59="" type="text" placeholder="Description" class="form-control">
-                  </div>
-              </form>
-          <div _ngcontent-rte-c59="" class="d-grid d-md-flex justify-content-md-center">
-          <button _ngcontent-rte-c59="" type="button" class="btn btn-primary mt-2">Submit</button>
-      </div>
-      </div>        
-    </div>
-  </div>
-  <div class="row">
-    <div class="col align-self-center">
+          <form (ngSubmit)="submit()">
+            <div class="row mt-2">
+              <input type="text" placeholder="Description" class="form-control" [formControl]="description">
+            </div>
+            <div class="d-grid d-md-flex justify-content-md-center">
+              <button type="submit" class="btn btn-primary mt-2" [disabled]="this.description.value===''">Submit</button>
+            </div>
+          </form>
+        </div>
+        </div>
+        </div>
+        <div class="row">
+          <div class="col align-self-center">
       <div class="row">
         <div class="col-10">
           <h3>History</h3>

@@ -65,6 +65,26 @@ app.get('/Users', (req, res) => {
   });
 });
 
+app.get('/Users/:userId/activities', (req, res) => {
+  var rowData = "";
+  let userId = req.params["userId"];
+  let sql = `SELECT timeIn, timeOut, description FROM TimeCard WHERE userID = ${userId}`;
+  db.all(sql, [], (err, rows) => {
+    if(err) {
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    if(rows) {
+      rowData += "[";
+      rows.forEach((row) => {
+        rowData += '{"timeIn": "' + row.timeIn + '", "timeOut": "' + row.timeOut + '", "description": "' + row.description + '"},';
+      });
+      rowData += "]";
+      rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
+      return res.send(rowData);
+    }
+  });
+});
+
 app.post('/register', async (req, res, next) => {
 
   function isEmpty(str) {
