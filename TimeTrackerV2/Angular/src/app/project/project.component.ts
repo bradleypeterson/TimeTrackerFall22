@@ -22,7 +22,6 @@ export class ProjectComponent implements OnInit {
 
   public punches = [];
   
-  stopwatch: any;
   description = new FormControl('');
   activities: any=[];
 
@@ -66,17 +65,7 @@ export class ProjectComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadPunches(this.punches);
     this.getActivities();
-  }
-
-  loadPunches(punches: Array<string>): void {
-    this.http.get("http://localhost:8080/timeCard").subscribe((data: any) =>{ 
-    for(let i = 0; i < data.length; i++) {
-      console.log(data[i].timeIn.toString());
-      punches.push(data[i].timeIn);
-    }
-  });
   }
 
   clockIn(): void {
