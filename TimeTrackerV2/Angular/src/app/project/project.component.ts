@@ -67,6 +67,7 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadPunches(this.punches);
+    this.getActivities();
   }
 
   loadPunches(punches: Array<string>): void {
@@ -80,100 +81,18 @@ export class ProjectComponent implements OnInit {
 
   clockIn(): void {
     if(!this.isTimerRunning) {
-      var nowDate = Date.now();
-      var formattedNowDate = formatDate(nowDate, 'MM/dd/yyyy HH:mm:s', 'en-US');
-
-      localStorage.setItem("timeIn", formattedNowDate);
+      localStorage.setItem("timeIn", Date.now().toString());
 
       this.startClickedLast = true;
       this.startTimer();
     }
-    
-    this.getActivities();
-  }
-
-  clockIn(): void {
-    localStorage.setItem("timeIn", Date.now().toString());
-    /*var item = localStorage.getItem('currentUser');
-    
-    if (typeof item === 'string')
-    {
-      this.user = JSON.parse(item) as User
-    }
-    
-    if (this.user !== null)
-    {
-        let req = {
-          timeIn: Date.now(), /// pull date from the HTML
-          timeOut: null,
-          createdOn: Date.now(),
-          userID: this.user.userID,
-          description: null /// pull description from the HTML
-        };
-      
-        console.log(req);
-        
-      if (req !== null)
-      {
-        this.http.post<any>('http://localhost:8080/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
-          next: data => {
-            this.errMsg = "";
-            console.log("user clocked in: " + this.user.username);
-            /// populate a label to inform the user that they successfully clocked in, maybe with the time.
-          },
-          error: error => {
-            this.errMsg = error['error']['message'];
-          }
-        });
-      } 
-    }*/
-  }
-
-  clockOut(): void {  
-    if(this.startClickedLast) {
-      this.startClickedLast = false;
-      this.isTimerRunning = true;  
-      this.startTimer();
-
-      var nowDate = Date.now();
-      var formattedNowDate = formatDate(nowDate, 'MM/dd/yyyy', 'en-US');
-      var formattedTime = formatDate(nowDate, "HH:mm:s", 'en-US');
-      /*var item = localStorage.getItem('currentUser');
-    
-      if (typeof item === 'string')
-      {
-        this.user = JSON.parse(item) as User
-      }
-
-      if (this.user !== null )
-      {*/
-          let req = {
-            timeIn: localStorage.getItem("timeIn"), 
-            timeOut: formattedNowDate + " " + formattedTime, /// pull date from the HTML
-            isEdited: false,
-            createdOn: formattedNowDate,
-            userID: 1,
-            description: "This is the Description field" /// pull description from the HTML
-          };
-      
-
-        /*if (req !== null)
-        {*/
-          this.http.post<any>('http://localhost:8080/clock/', req, {headers: new  HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}). subscribe({
-            next: data => {
-              this.errMsg = "";
-              /// populate a label to inform the user that they successfully clocked out, maybe with the time.
-            },
-            error: error => {
-              this.errMsg = error['error']['message'];
-            }
-          });
-        /*}
-      }*/
-    }
   }
 
   submit(): void{
+    this.startClickedLast = false;
+    this.isTimerRunning = true;  
+    this.startTimer();
+
     let req = {
       timeIn: localStorage.getItem("timeIn"), 
       timeOut: Date.now(), /// pull date from the HTML
