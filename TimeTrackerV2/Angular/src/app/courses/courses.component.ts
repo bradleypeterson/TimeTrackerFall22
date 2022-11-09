@@ -22,7 +22,7 @@ export class CoursesComponent implements OnInit {
     this.loadCourses(this.courses);
   }
 
-  createCourse(): void {
+  /*createCourse(): void {
     let payload = {
       courseName: 'New Course',
       isActive: true,
@@ -39,7 +39,7 @@ export class CoursesComponent implements OnInit {
         this.errMsg = error['error']['message'];
       }
     });
-  }
+  }*/
 
   loadCourses(courses: Array<string>): void {
     this.http.get("http://localhost:8080/Courses").subscribe((data: any) =>{ 
