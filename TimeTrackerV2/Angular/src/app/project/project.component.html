@@ -1,6 +1,70 @@
 <h1 class="display-1">TimeTrackerV2</h1>
 <div class="container">
   <div class="row">
+      <!-- This is the start/stop square in the first row, first column -->
+      <div class="col-2 mx-3">
+        <!--Date Row-->
+        <div class="row"><h3>{{currDate}}</h3></div>
+        <!--Time Row-->
+        <div class="row">
+          <div class="timeContainer">
+            <h1>{{hours}}</h1>
+            <h1 class="timeColon">:</h1>
+            <h1>{{minutes}}</h1>
+            <h1 class="timeColon">:</h1>
+            <h1>{{seconds}}</h1>
+          </div>
+        </div>
+        <!--Start/Stop Buttons-->
+        <div class="row">
+          <div class="col-6">
+            <button (click)="clockIn()" type="button" class="btn btn-success">Start</button>
+          </div>
+          <div class="col-6">
+            <button (click)="clockOut()" type="button" class="btn btn-danger">Stop</button>
+          </div>
+        </div>
+        <!--Submit Button-->
+        <div class="row">
+          <form>
+            <div class="row mt-2">
+              <input type="text" class="form-control">
+              <div id="summary" class="form-text">What did you work on during this time?</div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>      
+        </div>
+      </div>
+    <!-- Table to show signed-in user's time history: first row, second column -->
+    <div class="col-7">
+      <div class="row">
+        <div class="col-10">
+          <h3>Activity</h3>
+        </div>
+        <div class="col-2">
+          <button type="button" class="btn btn-primary">All Activity</button>
+        </div>
+      </div>
+      <div class="row">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Time In</th>
+              <th scope="col">Time Out</th>
+              <th scope="col">Total Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>10/21/2022 02:52:21 PM</td>
+              <td>10/21/2022 06:20:37 PM</td>
+              <td>{{totalTime}}</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+    </div>
+    <!-- This would be the graph of the signed-in user's time history -->
     <div class="col-6">
       <img src="Angular\src\assets\Images\mstile-70x70.png" width="500" height="250">
     </div>
