@@ -6,3 +6,8 @@
     position: relative;
     bottom: 3px;
 }
+
+.center{
+    text-align: center;
+    align-items: center;
+}

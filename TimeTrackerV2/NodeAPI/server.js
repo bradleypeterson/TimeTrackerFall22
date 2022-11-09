@@ -84,6 +84,26 @@ app.get('/Users', (req, res) => {
   });
 });
 
+app.get('/Users/:userId/activities', (req, res) => {
+  var rowData = "";
+  let userId = req.params["userId"];
+  let sql = `SELECT timeIn, timeOut, description FROM TimeCard WHERE userID = ${userId}`;
+  db.all(sql, [], (err, rows) => {
+    if(err) {
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    if(rows) {
+      rowData += "[";
+      rows.forEach((row) => {
+        rowData += '{"timeIn": "' + row.timeIn + '", "timeOut": "' + row.timeOut + '", "description": "' + row.description + '"},';
+      });
+      rowData += "]";
+      rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
+      return res.send(rowData);
+    }
+  });
+});
+
 app.post('/register', async (req, res, next) => {
 
   function isEmpty(str) {
@@ -338,3 +358,24 @@ app.post('/clock', async (req, res, next) => {
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
 require('./database/seed.js');
+
+
+
+app.get('/Projects', (req, res) => {
+  var rowData = "";
+  let sql = "SELECT projectName FROM Projects WHERE courseID = 1";
+  db.all(sql, [], (err, rows) => {
+    if(err) {
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    if(rows) {
+      rowData += "[";
+      rows.forEach((row) => {
+        rowData += '{"projectName": "' + row.projectName + '"},';
+      });
+      rowData += "]";
+      rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
+      return res.send(rowData);
+    }
+  });
+});

@@ -1,7 +1,11 @@
+import { ViewEvalComponent } from './../view-eval/view-eval.component';
 import { Component, Directive, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Router} from '@angular/router';
 import { formatDate } from '@angular/common';
+// import { Stopwatch } from "ts-stopwatch";
+import { FormControl } from '@angular/forms';
+
 
 @Component({
   selector: 'app-project',
@@ -15,7 +19,12 @@ export class ProjectComponent implements OnInit {
   private item;
   public projectName;
   public projectDescription;
+
   public punches = [];
+  
+  stopwatch: any;
+  description = new FormControl('');
+  activities: any=[];
 
   date: Date = new Date();
   currDate = formatDate(this.date, 'MM/dd/yyyy', 'en-US');
@@ -42,6 +51,20 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  getActivities(): void{
+    this.http.get<any>('http://localhost:8080/Users/1/activities/', {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+      next: data => {
+        this.errMsg = "";
+        console.log(data);
+        this.activities=data;
+        /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
+
   ngOnInit(): void {
     this.loadPunches(this.punches);
   }
@@ -65,7 +88,12 @@ export class ProjectComponent implements OnInit {
       this.startClickedLast = true;
       this.startTimer();
     }
+    
+    this.getActivities();
+  }
 
+  clockIn(): void {
+    localStorage.setItem("timeIn", Date.now().toString());
     /*var item = localStorage.getItem('currentUser');
     
     if (typeof item === 'string')
@@ -144,6 +172,36 @@ export class ProjectComponent implements OnInit {
       }*/
     }
   }
+
+  submit(): void{
+    let req = {
+      timeIn: localStorage.getItem("timeIn"), 
+      timeOut: Date.now(), /// pull date from the HTML
+      isEdited: false,
+      createdOn: Date.now(),
+      userID: 1,
+      description: this.description.value /// pull description from the HTML
+    };
+    console.log(this.description);
+
+    if(this.description.value===''){
+      return;
+    }
+
+    this.http.post<any>('http://localhost:8080/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+      next: data => {
+        this.errMsg = "";
+        console.log(req.isEdited);
+        this.description.setValue("");
+        this.getActivities();
+
+        /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+}
 
   createGroup(): void {
     let payload = {
