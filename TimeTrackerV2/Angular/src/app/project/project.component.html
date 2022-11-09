@@ -5,7 +5,15 @@
         <!--Date Row-->
         <div class="row"><h3>{{currDate}}</h3></div>
         <!--Time Row-->
-        <div class="row"><h1>03:27:16</h1></div>
+        <div class="row">
+          <div class="timeContainer">
+            <h1>{{hours}}</h1>
+            <h1 class="timeColon">:</h1>
+            <h1>{{minutes}}</h1>
+            <h1 class="timeColon">:</h1>
+            <h1>{{seconds}}</h1>
+          </div>
+        </div>
         <!--Start/Stop Buttons-->
         <div class="row">
           <div class="col-6">
@@ -49,17 +57,7 @@
             <tr>
               <td>10/21/2022 02:52:21 PM</td>
               <td>10/21/2022 06:20:37 PM</td>
-              <td>03:27:16</td>
-            </tr>
-            <tr>
-              <td>10/16/2022 07:34:21 AM</td>
-              <td>10/16/2022 08:45:06 AM</td>
-              <td>01:10:45</td>
-            </tr>
-            <tr>
-              <td>10/15/2022 02:20:46 PM</td>
-              <td>10/15/2022 03:06:07 PM</td>
-              <td>00:45:21</td>
+              <td>{{totalTime}}</td>
             </tr>
           </tbody>
         </table>

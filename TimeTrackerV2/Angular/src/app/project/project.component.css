@@ -1,0 +1,8 @@
+.timeContainer {
+    display: flex;
+}
+
+.timeColon {
+    position: relative;
+    bottom: 3px;
+}
