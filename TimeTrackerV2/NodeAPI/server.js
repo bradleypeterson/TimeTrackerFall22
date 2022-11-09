@@ -46,25 +46,6 @@ app.get('/Courses', (req, res) => {
   });
 });
 
-app.get('/timeCard', (req, res) => {
-  var rowData = "";
-  let sql = "SELECT timeIn, timeOut FROM TimeCard";
-  db.all(sql, [], (err, rows) => {
-    if(err) {
-      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
-    }
-    if(rows) {
-      rowData += "[";
-      rows.forEach((row) => {
-        rowData += '{["timeIn": "' + row.timeIn + '", "timeOut": "' + row.timeOut + '"]},';
-      });
-      rowData += "]";
-      rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
-      return res.send(rowData);
-    }
-  });
-});
-
 app.get('/Users', (req, res) => {
   var rowData = "";
   let sql = "SELECT username, firstName, lastName FROM Users";
