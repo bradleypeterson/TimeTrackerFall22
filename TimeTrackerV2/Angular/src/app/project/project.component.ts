@@ -19,12 +19,23 @@ export class ProjectComponent implements OnInit {
   private item;
   public projectName;
   public projectDescription;
-  stopwatch: any;
+
+  public punches = [];
+  
   description = new FormControl('');
   activities: any=[];
 
   date: Date = new Date();
   currDate = formatDate(this.date, 'MM/dd/yyyy', 'en-US');
+
+  seconds: any = '0' + 0;
+  minutes: any = '0' + 0;
+  hours: any = '0' + 0;
+
+  start: any;
+  isTimerRunning = false;
+  totalTime: any = "00:00:00";
+  startClickedLast = false;
 
   constructor(
     private http: HttpClient,
@@ -58,66 +69,19 @@ export class ProjectComponent implements OnInit {
   }
 
   clockIn(): void {
-    localStorage.setItem("timeIn", Date.now().toString());
-    
-/*     this.stopwatch = new Stopwatch();
-    this.stopwatch.start();
- */
-    /*var item = localStorage.getItem('currentUser');
-    
-    if (typeof item === 'string')
-    {
-      this.user = JSON.parse(item) as User
+    if(!this.isTimerRunning) {
+      localStorage.setItem("timeIn", Date.now().toString());
+
+      this.startClickedLast = true;
+      this.startTimer();
     }
-    
-    if (this.user !== null)
-    {
-        let req = {
-          timeIn: Date.now(), /// pull date from the HTML
-          timeOut: null,
-          createdOn: Date.now(),
-          userID: this.user.userID,
-          description: null /// pull description from the HTML
-        };
-      
-        console.log(req);
-        
-      if (req !== null)
-      {
-        this.http.post<any>('http://localhost:8080/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
-          next: data => {
-            this.errMsg = "";
-            console.log("user clocked in: " + this.user.username);
-            /// populate a label to inform the user that they successfully clocked in, maybe with the time.
-          },
-          error: error => {
-            this.errMsg = error['error']['message'];
-          }
-        });
-      } 
-    }*/
-  }
-
-  clockOut(): void {   
-    // this.stopwatch.stop(); 
-    /*var item = localStorage.getItem('currentUser');
-    
-    if (typeof item === 'string')
-    {
-      this.user = JSON.parse(item) as User
-    }
-
-    if (this.user !== null )
-    {*/
-      
-
-      /*if (req !== null)
-      {*/
-      /*}
-    }*/
   }
 
   submit(): void{
+    this.startClickedLast = false;
+    this.isTimerRunning = true;  
+    this.startTimer();
+
     let req = {
       timeIn: localStorage.getItem("timeIn"), 
       timeOut: Date.now(), /// pull date from the HTML
@@ -164,5 +128,40 @@ export class ProjectComponent implements OnInit {
         this.errMsg = error['error']['message'];
       }
     });
+  }
+
+  startTimer(): void {
+    if(!this.isTimerRunning) {
+      this.isTimerRunning = true;
+      this.start = setInterval(() => {
+        this.seconds++;
+        this.seconds = this.seconds < 10 ? '0' + this.seconds : this.seconds;
+
+        if(this.seconds === 60) {
+          this.minutes++;
+          this.minutes = this.minutes < 10 ? '0' + this.minutes : this.minutes;
+          this.seconds = '0' + 0;
+        }
+
+        if(this.minutes === 60) {
+          this.hours++;
+          this.hours = this.hours < 10 ? '0' + this.hours : this.hours;
+          this.minutes = '0' + 0;
+        }
+      }, 1000);
+    } else {
+      this.stopTimer();
+    }
+  }
+
+  stopTimer(): void {
+    clearInterval(this.start);
+    this.isTimerRunning = false;
+
+    this.totalTime = this.hours.toString() + ":" + this.minutes.toString() + ":" + this.seconds.toString();
+
+    this.hours = '0' + 0;
+    this.minutes = '0' + 0;
+    this.seconds = '0' + 0;
   }
 }

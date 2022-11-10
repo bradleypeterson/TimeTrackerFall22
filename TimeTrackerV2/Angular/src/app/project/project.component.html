@@ -74,12 +74,11 @@
         </div>
         <!--Time Row-->
         <div class="row, center">
-          <h1>03:27:16</h1>
+          <h1>{{hours}}:{{minutes}}:{{seconds}}</h1>
         </div>
         <!--Start/Stop Buttons-->
         <div class="gap-2 d-md-flex justify-content-md-center">
             <button (click)="clockIn()" type="button" class="btn btn-success">Start</button>
-            <button (click)="clockOut()" type="button" class="btn btn-danger">Stop</button>
         </div>
         <!--Submit Button-->
         <div class="gap-4 d-md-flex justify-content-md-center">
@@ -139,5 +138,3 @@
     </div>
   </div>
 </div>
-
-
