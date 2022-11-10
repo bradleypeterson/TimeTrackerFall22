@@ -11,6 +11,7 @@ export class AppComponent implements OnInit {
   student: boolean = false;
   admin: boolean = false;
   nullType: boolean = false;
+  name: string = '';
 
 
   ngOnInit(): void {
@@ -19,11 +20,14 @@ export class AppComponent implements OnInit {
     this.userType = userDate.type;
     if(this.userType === 'admin') {
       this.admin = true;
+      this.name = userDate.firstName + ' ' + userDate.lastName;
     }
     else if(this.userType === 'instructor'){
       this.instructor = true;
+      this.name = userDate.firstName + ' ' + userDate.lastName;
     }else if(this.userType === 'student'){
       this.student = true;
+      this.name = userDate.firstName + ' ' + userDate.lastName;
     }else{
       this.nullType = true;
     }

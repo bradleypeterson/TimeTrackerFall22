@@ -10,6 +10,7 @@ import {TotalTimePipe} from './pipes/total-time.pipe';
 
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+
 @NgModule({
   declarations: [
     AppComponent,

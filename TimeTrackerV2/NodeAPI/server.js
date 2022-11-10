@@ -46,6 +46,13 @@ app.get('/Courses', (req, res) => {
   });
 });
 
+app.get('/Add-Courses', async (req, res) => {
+  const courses = await db.all('SELECT * FROM Courses')
+  res.send('CourseList', {courses})
+});
+
+
+
 app.get('/Users', (req, res) => {
   var rowData = "";
   let sql = "SELECT username, firstName, lastName FROM Users";

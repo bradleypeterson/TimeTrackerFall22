@@ -42,3 +42,8 @@ db.run(`CREATE TABLE IF NOT EXISTS Projects(projectID INTEGER PRIMARY KEY,
                             isActive BOOL NOT NULL,
                             courseID INTEGER NOT NULL,
                             description TEXT);`)
+
+db.run(`CREATE TABLE IF NOT EXISTS COURSE_REGISTRATION (courseRegistrationId INTEGER PRIMARY KEY,
+                            studentID INTEGER NOT NULL,
+                            instructorID INTEGER NOT NULL,
+                            isActive BOOL NOT NULL);`)

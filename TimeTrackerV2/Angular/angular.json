@@ -102,5 +102,8 @@
       }
     }
   },
-  "defaultProject": "TimeTrackerV2"
+  "defaultProject": "TimeTrackerV2",
+  "cli": {
+    "analytics": "34847fb7-4524-4d1c-ba04-c3d3aed682fb"
+  }
 }
