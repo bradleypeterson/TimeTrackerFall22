@@ -37,10 +37,19 @@ export class ProjectComponent implements OnInit {
   totalTime: any = "00:00:00";
   startClickedLast = false;
 
+  currentUser: any;
+
   constructor(
     private http: HttpClient,
     private router: Router,
   ) {
+    const tempUser = localStorage.getItem('currentUser');
+    if (!tempUser){
+      this.router.navigate(["/Login"]);
+      return;
+    }
+    this.currentUser = JSON.parse(tempUser);
+    console.log(this.currentUser);
     this.item = localStorage.getItem('currentProject');
     console.log("The current project is: " + this.item);
     if(this.item) {
@@ -51,7 +60,7 @@ export class ProjectComponent implements OnInit {
   }
 
   getActivities(): void{
-    this.http.get<any>('http://localhost:8080/Users/1/activities/', {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.get<any>(`http://localhost:8080/Users/${this.currentUser.userID}/activities/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
@@ -87,7 +96,7 @@ export class ProjectComponent implements OnInit {
       timeOut: Date.now(), /// pull date from the HTML
       isEdited: false,
       createdOn: Date.now(),
-      userID: 1,
+      userID: this.currentUser.userID,
       description: this.description.value /// pull description from the HTML
     };
     console.log(this.description);
