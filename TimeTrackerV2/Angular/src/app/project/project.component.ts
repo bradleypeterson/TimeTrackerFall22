@@ -95,7 +95,6 @@ export class ProjectComponent implements OnInit {
       timeIn: localStorage.getItem("timeIn"), 
       timeOut: Date.now(), /// pull date from the HTML
       isEdited: false,
-      createdOn: Date.now(),
       userID: this.currentUser.userID,
       description: this.description.value /// pull description from the HTML
     };
