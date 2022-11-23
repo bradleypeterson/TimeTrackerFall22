@@ -11,7 +11,8 @@ import {Router} from '@angular/router';
 export class CoursesComponent implements OnInit {
   public pageTitle = 'TimeTrackerV2 | Courses'
   public errMsg = '';
-  public courses = [];
+
+  courses: any = [];
 
   constructor(
     private http: HttpClient,
@@ -19,7 +20,7 @@ export class CoursesComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.loadCourses(this.courses);
+    this.loadCourses();
   }
 
   /*createCourse(): void {
@@ -41,10 +42,10 @@ export class CoursesComponent implements OnInit {
     });
   }*/
 
-  loadCourses(courses: Array<string>): void {
+  loadCourses(): void {
     this.http.get("http://localhost:8080/Courses").subscribe((data: any) =>{ 
     for(let i = 0; i < data.length; i++) {
-      courses.push(data[i].courseName);
+      this.courses = data;
     }
   });
   }

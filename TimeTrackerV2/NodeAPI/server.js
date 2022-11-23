@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 
 app.get('/Courses', (req, res) => {
   var rowData = "";
-  let sql = "SELECT courseName FROM Courses";
+  let sql = "SELECT Courses.courseName, Users.firstName, Users.lastName, Courses.description FROM Courses JOIN Users ON Users.userID = Courses.instructorID";
   db.all(sql, [], (err, rows) => {
     if(err) {
       return res.status(500).json({message: 'Something went wrong. Please try again later.'});
@@ -37,7 +37,7 @@ app.get('/Courses', (req, res) => {
     if(rows) {
       rowData += "[";
       rows.forEach((row) => {
-        rowData += '{"courseName": "' + row.courseName + '"},';
+        rowData += '{"courseName": "' + row.courseName + '", "firstName": "' + row.firstName + '", "lastName": "' + row.lastName + '", "description": "' + row.description + '"},';
       });
       rowData += "]";
       rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
@@ -55,7 +55,7 @@ app.get('/Add-Courses', async (req, res) => {
 
 app.get('/Users', (req, res) => {
   var rowData = "";
-  let sql = "SELECT username, firstName, lastName FROM Users";
+  let sql = "SELECT username, firstName, lastName, type, isActive FROM Users";
   db.all(sql, [], (err, rows) => {
     if(err) {
       return res.status(500).json({message: 'Something went wrong. Please try again later.'});
@@ -63,7 +63,15 @@ app.get('/Users', (req, res) => {
     if(rows) {
       rowData += "[";
       rows.forEach((row) => {
-        rowData += '{"username": "' + row.username + '", "firstName": "' + row.firstName + '", "lastName": "' + row.lastName + '"},';
+        rowData += '{"username": "' + row.username + '", "firstName": "' + row.firstName + '", "lastName": "' + row.lastName + '", "type": "' + row.type + '", "isActive": "';
+
+        if(row.isActive == 1) {
+          rowData += "true";
+        } else {
+          rowData += "false";
+        }
+        
+        rowData += '"},';
       });
       rowData += "]";
       rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);

@@ -29,9 +29,9 @@
 
       <!--  ng-repeat="c in courses | filter: search" ng-if="c.isActive || config.showInactiveCourses" ng-class="{inactive: !c.isActive}" -->
       <tr *ngFor="let c of courses">
-        <td>{{c}}</td>
-        <td>[instructor_first], [instructor_last]</td>
-        <td>[course_desc]</td>
+        <td>{{c.courseName}}</td>
+        <td>{{c.firstName}} {{c.lastName}}</td>
+        <td>{{c.description}}</td>
         <td><a href="[register_link]" class="btn btn-success float-right">Register</a></td>
       </tr>
 

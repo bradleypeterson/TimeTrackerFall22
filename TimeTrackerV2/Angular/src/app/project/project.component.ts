@@ -3,7 +3,6 @@ import { Component, Directive, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Router} from '@angular/router';
 import { formatDate } from '@angular/common';
-// import { Stopwatch } from "ts-stopwatch";
 import { FormControl } from '@angular/forms';
 
 
@@ -19,8 +18,6 @@ export class ProjectComponent implements OnInit {
   private item;
   public projectName;
   public projectDescription;
-
-  public punches = [];
   
   description = new FormControl('');
   activities: any=[];
