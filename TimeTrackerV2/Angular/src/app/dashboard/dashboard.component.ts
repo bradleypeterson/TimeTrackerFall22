@@ -9,7 +9,7 @@ import {Router} from '@angular/router';
 })
 
 export class DashboardComponent implements OnInit {
-  public projects = [];
+  public projects: any = [];
   public courses = [];
 
   constructor(
@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.loadProjects(this.projects);
+    this.loadProjects();
     this.loadCourses(this.courses);
     if (!localStorage.getItem('foo')) { 
       localStorage.setItem('foo', 'no reload') 
@@ -30,13 +30,14 @@ export class DashboardComponent implements OnInit {
     
   }
 
-
   public pageTitle = 'TimeTrackerV2 | Dashboard'
 
-  loadProjects(projects: Array<string>): void {
+  loadProjects(): void {
     this.http.get("http://localhost:8080/Projects").subscribe((data: any) =>{ 
-    for(let i = 0; i < data.length; i++) {
-      projects.push(data[i].projectName);
+    console.log(data);
+    this.projects = data;
+    if(this.projects){
+      localStorage.setItem("projects", JSON.stringify(this.projects))
     }
   });
   }

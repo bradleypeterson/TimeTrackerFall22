@@ -27,7 +27,7 @@ const routes: Routes = [
   { path: 'eval', component: EvalComponent },
   { path: 'group', component: GroupComponent },
   { path: 'manage-evals', component: ManageEvalsComponent },
-  { path: 'project', component: ProjectComponent },
+  { path: 'project/:id', component: ProjectComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'user', component: UserComponent },
   { path: 'users', component: UsersComponent },

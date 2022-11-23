@@ -343,15 +343,9 @@ app.post('/clock', async (req, res, next) => {
   }); */
 });
 
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);
-require('./database/seed.js');
-
-
-
 app.get('/Projects', (req, res) => {
   var rowData = "";
-  let sql = "SELECT projectName FROM Projects WHERE courseID = 1";
+  let sql = "SELECT p.projectName, p.projectID, p.description, c.courseName FROM Projects as p INNER JOIN Courses as c ON p.courseID = c.courseID";
   db.all(sql, [], (err, rows) => {
     if(err) {
       return res.status(500).json({message: 'Something went wrong. Please try again later.'});
@@ -359,11 +353,40 @@ app.get('/Projects', (req, res) => {
     if(rows) {
       rowData += "[";
       rows.forEach((row) => {
-        rowData += '{"projectName": "' + row.projectName + '"},';
+        rowData += '{"projectName": "' + row.projectName + '", "projectID": ' + row.projectID + ', "description": "' + row.description + '", "courseName": "' + row.courseName + '"},';
       });
       rowData += "]";
       rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
+      console.log(rowData);
       return res.send(rowData);
     }
   });
 });
+
+app.get('/Projects/:id/Users', (req, res) => {
+  var rowData = "";
+  let projectID = req.params["id"];
+  console.log(projectID);
+  let sql = `SELECT u.userID, u.firstName, u.lastName, t.timeIn, t.timeOut FROM Users as u INNER JOIN Project_Users as pu ON u.userID = pu.userID LEFT JOIN TimeCard as t ON u.userID = t.userID WHERE pu.projectID = ${projectID}`;
+  db.all(sql, [], (err, rows) => {
+    if(err) {
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    if(rows) {
+      rowData += "[";
+      rows.forEach((row) => {
+        rowData += '{"userID": "' + row.userID + '", "firstName": "' + row.firstName + '", "lastName": "' + row.lastName + '", "timeIn": ' + row.timeIn + ', "timeOut": ' + row.timeOut + '},';
+      });
+      rowData += "]";
+      rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
+      console.log(rowData);
+      return res.send(rowData);
+    }
+  });
+});
+
+app.listen(PORT, HOST);
+console.log(`Running on http://${HOST}:${PORT}`);
+require('./database/seed.js');
+
+

@@ -1,7 +1,8 @@
+import { TotalTimePipe } from './../pipes/total-time.pipe';
 import { ViewEvalComponent } from './../view-eval/view-eval.component';
 import { Component, Directive, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { formatDate } from '@angular/common';
 // import { Stopwatch } from "ts-stopwatch";
 import { FormControl } from '@angular/forms';
@@ -16,9 +17,11 @@ import { FormControl } from '@angular/forms';
 export class ProjectComponent implements OnInit {
   public pageTitle = 'TimeTrackerV2 | Project'
   public errMsg = '';
-  private item;
-  public projectName;
-  public projectDescription;
+  public project: any;
+  public projectUsers: any;
+  public totalTimeMap: Map<string, number> = new Map<string, number>();
+  private projectId;
+  
 
   public punches = [];
   
@@ -42,6 +45,7 @@ export class ProjectComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private activatedRoute: ActivatedRoute,
   ) {
     const tempUser = localStorage.getItem('currentUser');
     if (!tempUser){
@@ -50,12 +54,24 @@ export class ProjectComponent implements OnInit {
     }
     this.currentUser = JSON.parse(tempUser);
     console.log(this.currentUser);
-    this.item = localStorage.getItem('currentProject');
-    console.log("The current project is: " + this.item);
-    if(this.item) {
-      this.item = JSON.parse(this.item);
-      this.projectName = this.item[0];
-      this.projectDescription = this.item[3];
+    this.projectId = this.activatedRoute.snapshot.params["id"];
+    console.log("The current project is: " + this.projectId);
+    if(this.projectId) {
+      let tempProjects = localStorage.getItem('projects');
+      if(tempProjects){
+        const projects = JSON.parse(tempProjects);
+        console.log(projects);
+        for(let project of projects){
+          console.log(project);
+          console.log(this.projectId);
+          console.log(project.projectID);
+          if(Number(project.projectID) === Number(this.projectId)){
+            console.log(project);
+            this.project = project;
+            this.loadProjectUsers();
+          }
+        }
+      }
     }
   }
 
@@ -85,6 +101,39 @@ export class ProjectComponent implements OnInit {
       this.startTimer();
     }
   }
+  
+  calculateTotalTime(): void{
+    this.totalTimeMap = new Map<string, number>();
+    for(let teamMate of this.projectUsers){
+      const fullName = `${teamMate.firstName} ${teamMate.lastName}`;
+      if(!teamMate.timeIn){
+        this.totalTimeMap.set(fullName, 0);
+        continue;
+      }
+      if(this.totalTimeMap.has(fullName)){
+        const timeDifference = teamMate.timeOut - teamMate.timeIn;
+        this.totalTimeMap.set(fullName, timeDifference + this.totalTimeMap.get(fullName)!);
+      }
+      else{
+        const timeDifference = teamMate.timeOut - teamMate.timeIn;
+        this.totalTimeMap.set(fullName, timeDifference);
+      }
+    }
+  }
+
+  loadProjectUsers(): void{
+    this.http.get<any>(`http://localhost:8080/Projects/${this.projectId}/Users/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+      next: data => {
+        this.errMsg = "";
+        console.log(data);
+        this.projectUsers=data;
+        this.calculateTotalTime();
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
 
   submit(): void{
     this.startClickedLast = false;
@@ -110,6 +159,7 @@ export class ProjectComponent implements OnInit {
         console.log(req.isEdited);
         this.description.setValue("");
         this.getActivities();
+        this.loadProjectUsers();
 
         /// populate a label to inform the user that they successfully clocked out, maybe with the time.
       },
