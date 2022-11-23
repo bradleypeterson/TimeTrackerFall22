@@ -305,42 +305,6 @@ app.post('/clock', async (req, res, next) => {
           return res.status(200).json({message: 'Clocked in successfully.'});
         }
       });
-    /*}
-    else{//clocking out
-      console.log("clocking out.");
-      let isNullTimeOut = false;
-      let ID = 0;
-      rows.every(row => {
-        isNullTimeOut = row["timeOut"] === null;
-        if(isNullTimeOut){
-          ID = row["timeslotID"];
-          return false;
-        }
-        return true;
-      });
-
-      isValid = isNullTimeOut;
-
-      if(!isValid){
-        return res.status(400).json({message: 'No outstanding clock in. Please clock in first.'});
-      }
-
-      let data = [];
-      data[0] = req.body["timeOut"];
-      data[1] = req.body["description"];
-      data[2] = ID;
-
-      db.run(`UPDATE TimeCard SET timeOut = ? , description = ? WHERE timeslotID = ? `, data, function(err, value){
-        if(err){
-          console.log(err)
-          return res.status(500).json({message: 'Something went wrong. Please try again later.'});
-        }
-        else{
-          return res.status(200).json({message: 'Clocked out successfully.'});
-        }
-      });
-    }
-  }); */
 });
 
 app.get('/Projects', (req, res) => {
