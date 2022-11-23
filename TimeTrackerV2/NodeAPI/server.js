@@ -294,8 +294,9 @@ app.post('/clock', async (req, res, next) => {
       data[2] = req.body["isEdited"];
       data[3] = req.body["userID"];
       data[4] = req.body["description"];
+      data[5] = req.body["projectID"];
 
-      db.run(`INSERT INTO TimeCard(timeIn, timeOut, isEdited, userID, description) VALUES(?, ?, ?, ?, ?)`, data, function(err,value){
+      db.run(`INSERT INTO TimeCard(timeIn, timeOut, isEdited, userID, description, projectID) VALUES(?, ?, ?, ?, ?, ?)`, data, function(err,value){
         if(err){
           console.log(err)
           return res.status(500).json({message: 'Something went wrong. Please try again later.'});

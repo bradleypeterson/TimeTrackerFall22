@@ -96,9 +96,9 @@ export class ProjectComponent implements OnInit {
       timeOut: Date.now(), /// pull date from the HTML
       isEdited: false,
       userID: this.currentUser.userID,
+      projectID: 1,
       description: this.description.value /// pull description from the HTML
     };
-    console.log(this.description);
 
     if(this.description.value===''){
       return;
