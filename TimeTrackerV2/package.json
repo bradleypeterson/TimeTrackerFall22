@@ -2,5 +2,8 @@
   "dependencies": {
     "@angular/common": "^14.2.7",
     "@angular/core": "^14.2.7"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.2.2"
   }
 }
