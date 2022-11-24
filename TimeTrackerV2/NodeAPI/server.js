@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 
 app.get('/Courses', (req, res) => {
   var rowData = "";
-  let sql = "SELECT courseName FROM Courses";
+  let sql = "SELECT courseName, courseID, description FROM Courses";
   db.all(sql, [], (err, rows) => {
     if(err) {
       return res.status(500).json({message: 'Something went wrong. Please try again later.'});
@@ -37,7 +37,27 @@ app.get('/Courses', (req, res) => {
     if(rows) {
       rowData += "[";
       rows.forEach((row) => {
-        rowData += '{"courseName": "' + row.courseName + '"},';
+        rowData += '{"courseName": "' + row.courseName + '", "courseID": "' + row.courseID + '", "description": "' + row.description + '"},';
+      });
+      rowData += "]";
+      rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
+      return res.send(rowData);
+    }
+  });
+});
+
+app.get('/Courses/:id', (req, res) => { // dynamic courses based on instructor id
+  var rowData = "";
+  let instructorID = req.params["id"];
+  let sql = 'SELECT courseName, courseID, description FROM Courses WHERE instructorID = ' + instructorID;
+  db.all(sql, [], (err, rows) => {
+    if(err) {
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    if(rows) {
+      rowData += "[";
+      rows.forEach((row) => {
+        rowData += '{"courseName": "' + row.courseName + '", "courseID": "' + row.courseID + '", "description": "' + row.description + '"},';
       });
       rowData += "]";
       rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
@@ -210,31 +230,7 @@ app.post('/createGroup', async (req, res, next) => {
     });
 });
 
-app.post('/createCourse', async (req, res, next) => {
-  function isEmpty(str) {
-      return (!str || str.length === 0);
-  }
 
-  console.log("Running createCourse");
-
-  let data = [];
-
-  // Can't use dictionaries for queries so order matters!
-  data[0] = req.body["courseName"];
-  data[1] = req.body["isActive"];
-  data[2] = 1;
-  data[3] = "This is your new course";
-
-  console.log(data);
-
-  db.run(`INSERT INTO Courses(courseName, isActive, instructorID, description) VALUES(?, ?, ?, ?)`, data, function (err, rows) {
-      if (err) {
-          return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
-      } else {
-          return res.status(200).json({course: data});
-      }
-  });
-});
 
 app.post('/createProject', async (req, res, next) => {
   function isEmpty(str) {
@@ -354,3 +350,24 @@ console.log(`Running on http://${HOST}:${PORT}`);
 require('./database/seed.js');
 
 
+
+
+app.post('/createCourse', async (req, res, next) => {
+  function isEmpty(str) {
+      return (!str || str.length === 0);
+  }
+
+  let data = [];
+  data[0] = req.body["courseName"];
+  data[1] = req.body["isActive"];
+  data[2] = req.body["instructorID"];
+  data[3] = req.body["description"];
+
+  db.run('INSERT INTO Courses(courseName, isActive, instructorID, description) VALUES(?, ?, ?, ?)', data, function (err, rows) {
+      if (err) {
+          return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+      } else {
+          return res.status(200).json({course: data});
+      }
+  });
+});

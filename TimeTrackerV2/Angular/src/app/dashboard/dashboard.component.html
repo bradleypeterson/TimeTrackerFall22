@@ -1,80 +1,61 @@
-<!-- ng-cloak && user.type == student-->
-<!-- STUDENT DASHBOARD -->
-<div id="dashboard">
+<div [ngSwitch]="true">
 
 
-  <h2>Dashboard</h2>
-  <hr>
-
-
-  <!-- if groups.length == 0 && loaded -->
-
-  <!-- ALERT SHOWN WHEN STUDENT HAS NO PROJECTS -->
-  <div class="alert alert-danger">
-    You are not assigned any projects.
-  </div>
-
-
-  <!-- if groups.length !== 0 && loaded -->
-  <!-- IF STUDENT HAS PROJECTS, THEN BUILD A PROJECTS ROW -->
-  <div class="row">
-
-
-    <!-- repeat for group in groups ORDER BY group name -->
-    <div class="col-sm-3 mb-3" *ngFor="let p of projects">
-      <div class="card">
-        <h5 class="card-header">{{p.projectID}}</h5>
-        <div class="card-body">
-          <h5 class="card-title">{{p.courseName}}</h5>
-          <p class="card-text">{{p.description}}</p>
-          <a routerLink="/project/{{p.projectID}}" class="btn btn-primary">View Project</a>
-        </div>
-      </div>
-    </div>
-    
-
-  </div>
-
-
-</div>
-
-
-
-
-
-<!-- ng-cloak && user.type == instructor-->
-<!-- INSTRUCTOR DASHBOARD -->
-<div id="dashboard">
   
+  <div *ngSwitchCase="student" id="dashboard">
 
-  <h2>Dashboard</h2>
-  <a href="" class="btn btn-success">Create New Course</a>
-  <hr>
+    <h2>Dashboard</h2>
+    <hr>
 
+    <div class="alert alert-danger" *ngIf="projects?.length <= 0">
+      You are not assigned any projects.
+    </div>
+    <div class="row">
 
-  <!-- if courses.length == 0 && loaded -->
-  <!-- ALERT SHOWN WHEN INSTRUCTOR HAS NO COURSES -->
-  <div class="alert alert-danger">
-    You have not created any courses.
-  </div>
-
-
-  <!-- if courses.length !== 0 && loaded -->
-  <!-- IF INSTRUCTOR HAS COURSES, THEN BUILD A COURSES ROW -->
-  <div class="row">
-
-
-    <!-- repeat for course in courses ORDER BY course name -->
-    <div class="col-sm-3 mb-3" *ngFor="let c of courses">
-      <div class="card">
-        <h5 class="card-header">{{ c }}</h5>
-        <div class="card-body">
-          <p class="card-text">[course_desc]</p>
-          <a href="[course_link]" class="btn btn-primary">View Course</a>
+      <div class="col-sm-3 mb-3" *ngFor="let p of projects">
+        <div class="card">
+          <h5 class="card-header">{{p.projectID}}</h5>
+          <div class="card-body">
+            <h5 class="card-title">{{p.courseName}}</h5>
+            <p class="card-text">{{p.description}}</p>
+            <a routerLink="/project/{{p.projectID}}" class="btn btn-primary">View Project</a>
+          </div>
         </div>
       </div>
+
     </div>
-    
 
   </div>
+
+
+
+  <div *ngSwitchCase="instructor" id="dashboard">
+    
+
+    <h2>Dashboard</h2>
+    <a href="/create-course" class="btn btn-success">Create New Course</a>
+    <hr>
+
+
+
+    <div class="alert alert-danger" *ngIf="courses?.length <= 0">
+      You have not created any courses.
+    </div>
+    <div class="row">
+
+      <div class="col-sm-3 mb-3" *ngFor="let c of courses">
+        <div class="card">
+          <h5 class="card-header">{{ c.courseName }}</h5>
+          <div class="card-body">
+            <p class="card-text">{{ c.description }}</p>
+            <a href="/course/{{ c.courseID }}" class="btn btn-primary">View Course</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
 </div>
