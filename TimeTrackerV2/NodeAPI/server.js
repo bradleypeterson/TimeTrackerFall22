@@ -112,6 +112,25 @@ app.get('/Users/:userId/activities', (req, res) => {
   });
 });
 
+app.get('/Users', (req, res) => {
+  var rowData = "";
+  let sql = "SELECT username,firstName,lastName FROM Users";
+  db.all(sql, [], (err, rows) => {
+    if(err) {
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    if(rows) {
+      rowData += "[";
+      rows.forEach((row) => {
+        rowData += '{"username": "' + row.username +'", "firstName": "'+ row.firstName + '", "lastName": "' +row.lastName + '"},';
+      });
+      rowData += "]";
+      rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
+      return res.send(rowData);
+    }
+  });
+});
+
 app.post('/register', async (req, res, next) => {
 
   function isEmpty(str) {

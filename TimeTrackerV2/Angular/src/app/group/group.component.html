@@ -6,8 +6,173 @@
     <a href="" class="btn btn-secondary">Edit</a>
     <a href="" class="btn btn-danger">Delete</a>
   </div>
-  
-  
+  <label id="lblName"> test </label>
+  <!-- start or end time  -->
+  <div class="row mt-4">
+    <div class="col-12 mb-2">
+      <!-- ng-click="startTime()"
+    ng-if="userActiveInGroup() && !hasUnfinishedBusiness()" -->
+      <button class="btn btn-success">
+        Start Time
+      </button>
+      <!-- ng-click="endTime()"
+      ng-if="userActiveInGroup() && hasUnfinishedBusiness()" -->
+      <button class="btn btn-warning">
+        End Time
+      </button>
+    </div>
+
+    <!-- The current user times on top if they are in the group -->
+    <!-- ng-if="($parent.user.type === 'A' || $parent.user.type === 'I') || (userInGroup() && u.userID === $parent.user.userID)"
+     ng-repeat="u in group.users" -->
+    <div class="col-lg mb-2">
+      <div class="card position-relative">
+        <div class="card-header font-weight-bold py-1 px-3">
+          User First Name, User Last Name
+          <!-- ng-if="!u.isActive" -->
+          <span class="text-danger">(Left Group)</span>
+        </div>
+        <!--<i class="fa fa-plus mt-2 mr-2 my-auto card-button" ng-click="createTime(u.userID)" ng-if="isUser(u.userID)" title="Create a new time entry."></i>-->
+        <div class="card-body p-0 ">
+          <table class="full-width table-striped">
+            <thead>
+              <!-- Headers (time, in/out/description/hours)         -->
+              <tr class="row no-gutters ml-3 mr-1">
+                <th scope="col" class="col col-md-4 col-lg">
+                  Time<span class="d-none d-lg-inline">
+                    In
+                  </span>
+                </th>
+                <th scope="col" class="col d-none d-lg-table-cell col-lg">Time Out</th>
+                <th scope="col" class="col d-none d-sm-table-cell col-lg-6">Description</th>
+                <th scope="col" class="hours-col">Hours</th>
+                <th scope="col" class="hours-col"></th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <!-- Blank row ready for data input  -->
+              <!-- ng-if="isUser(u.userID)" -->
+              <tr class="row no-gutters pt-1" style="border-top: 1px lightgray solid;">
+
+                <!-- Empty time in  -->
+                <td class="col col-md-4 col-lg pr-1 container">
+                  <!-- if a super small screen use this for time in -->
+                  <div class="row d-lg-none">
+                    <span class="col-2 pr-0 text-right">In</span>
+                    <!-- id="datetimepicker-blank-USER_ID-in" -->
+                    <div class="input-group date timeslot col mb-1 pl-1" data-target-input="nearest">
+                      <!-- data-target="#datetimepicker-blank-USER_ID-in"
+                    ng-model="u.blank.timeIn"
+                    ng-readonly="!isUser(u.userID) || (!u.isActive && !($parent.user.type === 'A' || $parent.user.type === 'I'))"
+                    ng-model-options="{updateOn: 'blur', debounce: 750}"
+                    ng-change="createTimeFromBlank(u.userID)" -->
+                      <input class="full-width form-control datetimepicker-input py-0 px-1 date-text" type="text" />
+                      <!-- data-target="#datetimepicker-blank-USER_ID-in" -->
+                      <div class="input-group-append"
+                           data-toggle="datetimepicker">
+                        <div class="input-group-text px-2 py-1">
+                          <i class="fa fa-calendar"></i>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                  <!-- if super tiny screen use this for time out-->
+                  <div class="row d-lg-none">
+                    <span class="col-2 pr-0 text-right">Out</span>
+                    <!-- id="datetimepicker-blank-USER_ID-out" -->
+                    <div class="input-group date timeslot col mb-1 pl-1"
+                         data-target-input="nearest">
+                      <!-- data-target="#datetimepicker-blank-USER_ID-out",
+                    ng-model="u.blank.timeOut"
+                    ng-readonly="!isUser(u.userID) || (!u.isActive && !($parent.user.type === 'A' || $parent.user.type === 'I'))"
+                    ng-model-options="{updateOn: 'blur', debounce: 750}"
+                    ng-change="createTimeFromBlank(u.userID)"-->
+                      <input class="full-width form-control datetimepicker-input py-0 px-1 date-text" type="text" />
+                      <!--  data-target="#datetimepicker-blank-USER_ID-out" -->
+                      <div class="input-group-append"
+                           data-toggle="datetimepicker">
+                        <div class="input-group-text px-2 py-1">
+                          <i class="fa fa-calendar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- This is the div to log in time on a normal screen-->
+                  <div class="d-none d-lg-block">
+                    <!-- id="datetimepicker-blank-USER_ID-in-lg" -->
+                    <div class="input-group date timeslot col mb-1 pl-1 pr-0" data-target-input="nearest">
+                      <!-- data-target="#datetimepicker-blank-USER_ID-in-lg"
+                    ng-model="u.blank.timeIn"
+                    ng-readonly="!isUser(u.userID) || (!u.isActive && !($parent.user.type === 'A' || $parent.user.type === 'I'))"
+                    ng-model-options="{updateOn: 'blur', debounce: 750}"
+                    ng-change="createTimeFromBlank(u.userID)" -->
+                      <input class="full-width form-control datetimepicker-input py-0 px-1 date-text" type="text" />
+                      <!-- data-target="#datetimepicker-blank-USER_ID-in-lg" -->
+                      <div class="input-group-append" data-toggle="datetimepicker">
+                        <div class="input-group-text px-2 py-1">
+                          <i class="fa fa-calendar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Time out -->
+                <td class="d-none d-lg-table-cell col-lg">
+                  <div>
+                    <!-- id="datetimepicker-blank-USER_ID-out-lg" -->
+                    <div class="input-group date timeslot col mb-1 pr-1 pl-0" data-target-input="nearest">
+                      <!-- data-target="#datetimepicker-blank-USER_ID-out-lg"
+                    ng-model="u.blank.timeOut"
+                    ng-readonly="!isUser(u.userID) || (!u.isActive && !($parent.user.type === 'A' || $parent.user.type === 'I'))"
+                    ng-model-options="{updateOn: 'blur', debounce: 750}"
+                    ng-change="createTimeFromBlank(u.userID)" -->
+                      <input class="full-width form-control datetimepicker-input py-0 px-1 date-text" type="text" />
+                      <!-- data-target="#datetimepicker-blank-USER_ID-out-lg" -->
+                      <div class="input-group-append"
+                           data-toggle="datetimepicker">
+                        <div class="input-group-text px-2 py-1">
+                          <i class="fa fa-calendar"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Description -->
+                <td class="col pr-1 d-none d-sm-table-cell col-lg-6">
+                  <!-- ng-model="u.blank.description"
+                ng-readonly="!isUser(u.userID) || (!u.isActive && !($parent.user.type === 'A' || $parent.user.type === 'I'))"
+                ng-model-options="{updateOn: 'blur', debounce: 750}"
+                ng-change="createTimeFromBlank(u.userID)" -->
+                  <textarea class="full-width form-control date-text description-textarea" placeholder="Description"></textarea>
+                </td>
+
+                <!-- empty Space where hours will go -->
+                <td class="pr-1 hours-col" style="position:relative;">
+                  <!--<span style="position: absolute;">{{u.blank.hours = diffHours(u.blank.timeIn, u.blank.timeOut)}}</span>
+                <i class="fa fa-pencil edited-icon" ng-if="u.blank.isEdited" title="This time entry has been edited."></i>-->
+                </td>
+
+                <!--tiny screen description box-->
+                <td class="d-sm-none col-12 pr-4 mb-1">
+                  <div class="row">
+                    <span class="col-2 pr-0 text-right">Desc&nbsp;</span>
+                    <!-- ng-model="u.blank.description"
+                  ng-readonly="!isUser(u.userID) || (!u.isActive && !($parent.user.type === 'A' || $parent.user.type === 'I'))"
+                  ng-model-options="{updateOn: 'blur', debounce: 750}"
+                  ng-change="createTimeFromBlank(u.userID)" -->
+                    <textarea class="full-width form-control date-text description-textarea col"
+                              placeholder="Description"></textarea>
+                  </div>
+                </td>
+                <td class="px-2 hours-col" style="position:relative;">
+                  <!--<span style="position: absolute;">{{u.blank.hours = diffHours(u.blank.timeIn, u.blank.timeOut)}}</span>
+                <i class="fa fa-pencil edited-icon" ng-if="u.blank.isEdited" title="This time entry has been edited."></i>-->
+                </td>
+              </tr>
 
   <table class="table table-hover">
     <thead>

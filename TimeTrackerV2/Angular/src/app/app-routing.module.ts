@@ -11,6 +11,7 @@ import { LoginComponent } from './login/login.component';
 import { ManageEvalsComponent } from './manage-evals/manage-evals.component';
 import { ProjectComponent } from './project/project.component';
 import { RegisterComponent } from './register/register.component';
+import { ResetpasswordComponent } from './resetpassword/resetpassword.component';
 import { UserComponent } from './user/user.component';
 import { UsersComponent } from './users/users.component';
 import { ViewEvalComponent } from './view-eval/view-eval.component';
@@ -35,6 +36,7 @@ const routes: Routes = [
   { path: 'users', component: UsersComponent },
   { path: 'view-eval', component: ViewEvalComponent },
   { path: 'view-evals', component: ViewEvalsComponent },
+  { path: 'resetpassword', component: ResetpasswordComponent },
   { path: 'add-courses', component: AddCoursesComponent },
   { path: 'create-course', component: CreateCourseComponent },
   { path: 'delete-course', component: DeleteCourseComponent }
@@ -62,6 +64,7 @@ export const RoutingComponents = [
   UsersComponent,
   ViewEvalComponent,
   ViewEvalsComponent,
+  ResetpasswordComponent,
   AddCoursesComponent,
   CreateCourseComponent,
   DeleteCourseComponent

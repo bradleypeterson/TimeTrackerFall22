@@ -24,7 +24,7 @@ export class ProjectComponent implements OnInit {
   
 
   public punches = [];
-  
+ 
   description = new FormControl('');
   activities: any=[];
 
@@ -89,6 +89,20 @@ export class ProjectComponent implements OnInit {
     });
   }
 
+  getActivities(): void{
+    this.http.get<any>('http://localhost:8080/Users/1/activities/', {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+      next: data => {
+        this.errMsg = "";
+        console.log(data);
+        this.activities=data;
+        /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
+
   ngOnInit(): void {
     this.getActivities();
   }
@@ -139,11 +153,11 @@ export class ProjectComponent implements OnInit {
     this.startClickedLast = false;
     this.isTimerRunning = true;  
     this.startTimer();
-
     let req = {
       timeIn: localStorage.getItem("timeIn"), 
       timeOut: Date.now(), /// pull date from the HTML
       isEdited: false,
+
       userID: this.currentUser.userID,
       projectID: 1,
       description: this.description.value /// pull description from the HTML
