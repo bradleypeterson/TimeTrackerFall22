@@ -1,4 +1,4 @@
-<h1 class="display-1">TimeTrackerV2</h1>
+<h1 class="display-1" *ngIf="project">{{project.projectName}}</h1>
 <div class="container">
   <div class="row">
     <div class="col-6">
@@ -15,21 +15,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Mike</td>
-              <td>16:12:37</td>
-            </tr>
-            <tr>
-              <td>Jamison</td>
-              <td>11:47:54</td>
-            </tr>
-            <tr>
-              <td>Dwight</td>
-              <td>04:52:19</td>
-            </tr>
-            <tr>
-              <td>Pam</td>
-              <td>03:26:42</td>
+            <tr *ngFor="let teamMate of totalTimeMap | keyvalue">
+              <td>{{teamMate.key}}</td>
+              <td>{{teamMate.value | totalTimePipe}}</td>
             </tr>
           </tbody>
         </table>
@@ -74,12 +62,11 @@
         </div>
         <!--Time Row-->
         <div class="row, center">
-          <h1>03:27:16</h1>
+          <h1>{{hours}}:{{minutes}}:{{seconds}}</h1>
         </div>
         <!--Start/Stop Buttons-->
         <div class="gap-2 d-md-flex justify-content-md-center">
             <button (click)="clockIn()" type="button" class="btn btn-success">Start</button>
-            <button (click)="clockOut()" type="button" class="btn btn-danger">Stop</button>
         </div>
         <!--Submit Button-->
         <div class="gap-4 d-md-flex justify-content-md-center">
@@ -139,5 +126,3 @@
     </div>
   </div>
 </div>
-
-

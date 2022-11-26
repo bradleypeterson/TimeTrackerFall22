@@ -15,6 +15,7 @@ export class GroupComponent implements OnInit {
   private user!: User;
   private item;
   public groupName;
+  public students = [];
 
   constructor(
     private http: HttpClient,
@@ -29,6 +30,7 @@ export class GroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadStudents(this.students);
   }
 
   /*clockIn(): void {
@@ -106,4 +108,14 @@ export class GroupComponent implements OnInit {
     }
 
   }*/
+
+
+  loadStudents(students: Array<string>): void {
+    this.http.get("http://localhost:8080/Users").subscribe((data: any) =>{ 
+    for(let i = 0; i < data.length; i++) {
+      students.push(data[i].firstName);
+    }
+  });
+  }
+ 
 }
