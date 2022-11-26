@@ -39,7 +39,7 @@ db.run(`CREATE TABLE IF NOT EXISTS Projects(projectID INTEGER PRIMARY KEY,
                             description TEXT);`)
 
 db.run(`CREATE TABLE IF NOT EXISTS Course_Users (userID INTEGER NOT NULL,
-                            courseID INTEGER NOT NULL);`)
-
+                              courseID INTEGER NOT NULL);`)
+  
 db.run(`CREATE TABLE IF NOT EXISTS Project_Users (userID INTEGER NOT NULL,
                             projectID INTEGER NOT NULL);`)

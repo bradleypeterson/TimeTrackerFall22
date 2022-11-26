@@ -345,6 +345,81 @@ app.get('/Projects/:id/Users', (req, res) => {
   });
 });
 
+app.get('/Users/:userId/getUserCourses', (req, res) => {
+  var rowData = "";
+  let userId = req.params["userId"];
+  let sql = `SELECT c.* from Courses c JOIN Course_Users cu ON cu.courseID = c.courseID AND cu.userID = ${userId}`;
+  db.all(sql, [], (err, rows) => {
+    if(err) {
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    if(rows) {
+      rowData += "[";
+      rows.forEach((row) => {
+        rowData += '{"courseID": "' + row.courseID + '", "courseName": "' + row.courseName + '", "instructorID": "' + row.instructorID + '", "description": "' + row.description + '"},';
+      });
+      rowData += "]";
+      rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
+      return res.send(rowData);
+    }
+  });
+});
+
+app.get('/Users/:userId/getNonUserCourses', (req, res) => {
+  var rowData = "";
+  let userId = req.params["userId"];
+  let sql = `select * from Courses where courseID not in (select c.courseID from Courses c join Course_Users cu ON cu.courseID = c.courseID AND cu.userID = ${userId})`;
+  db.all(sql, [], (err, rows) => {
+    if(err) {
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    if(rows) {
+      rowData += "[";
+      rows.forEach((row) => {
+        rowData += '{"courseID": "' + row.courseID + '", "courseName": "' + row.courseName + '", "instructorID": "' + row.instructorID + '", "description": "' + row.description + '"},';
+      });
+      rowData += "]";
+      rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
+      return res.send(rowData);
+    }
+  });
+});
+
+app.post('/addUserCourse', async (req, res, next) => {
+  let data = [];
+
+  data[0] = req.body["userID"];
+  data[1] = req.body["courseID"];
+
+  db.run(`INSERT INTO Course_Users(userID, courseID) VALUES(?, ?)`, data, function(err,value){
+    if(err){
+      console.log(err)
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    else{
+      return res.status(200).json({message: 'User Course added.'});
+    }
+  });
+});
+
+app.post('/deleteUserCourse', async (req, res, next) => {
+  let data = [];
+
+  data[0] = req.body["userID"];
+  data[1] = req.body["courseID"];
+  let sql = `delete from Course_Users where courseID = ${data[1]} and userID = ${data[0]};`;
+
+  db.run(sql, function(err,value){
+    if(err){
+      console.log(err)
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    else{
+      return res.status(200).json({message: 'User Course deleted.'});
+    }
+  });
+});
+
 app.listen(PORT, HOST);
 console.log(`Running on http://${HOST}:${PORT}`);
 require('./database/seed.js');
