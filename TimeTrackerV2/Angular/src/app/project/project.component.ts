@@ -89,20 +89,6 @@ export class ProjectComponent implements OnInit {
     });
   }
 
-  getActivities(): void{
-    this.http.get<any>('http://localhost:8080/Users/1/activities/', {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
-      next: data => {
-        this.errMsg = "";
-        console.log(data);
-        this.activities=data;
-        /// populate a label to inform the user that they successfully clocked out, maybe with the time.
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
-  }
-
   ngOnInit(): void {
     this.getActivities();
   }
