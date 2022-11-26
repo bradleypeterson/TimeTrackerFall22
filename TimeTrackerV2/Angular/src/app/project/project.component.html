@@ -1,49 +1,143 @@
-<div id="project" ng-cloak>
-  <div class="row position-relative">
-    <!-- ng-model-options="{debounce: 750}" ng-change="saveProject()" ng-model="project.projectName" ng-readonly="$parent.user.type !== 'A' && $parent.user.type !== 'I'" -->
-    <h4 class="mt-3 col-sm-9 col-12 float-left"><input class="input-header" type="text" name="projectName" [(ngModel)]="projectName"/></h4>
-    <div></div>
-    <!-- ng-if="$parent.user.type === 'A' || $parent.user.type === 'I'" -->
-    <div class="mt-3 pretty p-switch p-slim col-sm-2 col-12 header-checkbox">
-      <!--  ng-model="project.isActive" ng-change="saveProject()" -->
-      <input type="checkbox"/>
-      <div class="mt-2 state float-right">
-        <label>Active</label>
-      </div>
+<h1 class="display-1">TimeTrackerV2</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+      <img src="Angular\src\assets\Images\mstile-70x70.png" width="500" height="250">
     </div>
+    <div class="col-6">
+      <div class="row"><h3>My Team</h3></div>
+      <div class="row">
+        <table class="table table-light table-sm table-hover table-bordered border-dark">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Total Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Mike</td>
+              <td>16:12:37</td>
+            </tr>
+            <tr>
+              <td>Jamison</td>
+              <td>11:47:54</td>
+            </tr>
+            <tr>
+              <td>Dwight</td>
+              <td>04:52:19</td>
+            </tr>
+            <tr>
+              <td>Pam</td>
+              <td>03:26:42</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
   </div>
-
-
-  <div class="row mt-4">
-    <div class="col-sm-6 col-md-5 col-lg-4 col-12">
-      <canvas id="projectHours" width="400" height="400"></canvas>
-      <img class="noDataFound" id="noProjectData" src="noDataFound-310x310.png" alt="No Data Entered" width="400" height="400">
-    </div>
-
-
-    <div class="col-sm col-12">
-      <div class="position-relative">
-        <h5>Groups</h5>
-        <!-- ng-click="createGroup()" -->
-        <button (click)="createGroup()">
-          <i class="fa fa-plus mt-2 mr-2 my-auto small-button" title="Create a new group."></i>
-        </button>
-          <!-- ng-if="$parent.user.type === 'A' || $parent.user.type === 'I'" -->
-          <div class="float-right mt-4 mr-5 pretty p-switch p-slim top-right-checkbox">
-            <!-- ng-model="config.showInactiveGroups" ng-change="updateChart()" -->
-            <input type="checkbox" />
-            <div class="float-left mr-3 mt-2 state">
-              <label>Show Inactive</label>
-            </div>
-          </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="row">
+        <div class="col-9">
+          <h3>Activity</h3>
+        </div>
+        <div class="col-3">
+          <!--<button type="button" class="btn btn-primary">All Activity</button>-->
+        </div>
       </div>
-
-      <div class="card">
-        <ul class="list-group list-group-flush">
-          <!-- ng-repeat="g in project.groups | orderObjectBy :'groupName'" ng-if="g.isActive || config.showInactiveGroups" -->
-          <li class="list-group-item p-0"><a class="card-list-link p-2" href="#">Group Name</a></li>
-        </ul>
+      <div class="row">
+        <table class="table table-light table-sm table-hover table-bordered border-dark">
+          <thead>
+            <tr>
+              <th scope="col">Start Time</th>
+              <th scope="col">End Time</th>
+              <th scope="col">Total Time</th>
+              <th scope="col">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let activity of activities">
+              <td>{{activity.timeIn | date:'medium'}}</td>
+              <td>{{activity.timeOut | date:'medium'}}</td>
+              <td>{{activity.timeOut - activity.timeIn | totalTimePipe}}</td>
+              <td>{{activity.description}}</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+    </div>
+    <div class="col-6">
+        <!--Date Row-->
+        <div class="row, center">
+          <h3>{{currDate}}</h3>
+        </div>
+        <!--Time Row-->
+        <div class="row, center">
+          <h1>03:27:16</h1>
+        </div>
+        <!--Start/Stop Buttons-->
+        <div class="gap-2 d-md-flex justify-content-md-center">
+            <button (click)="clockIn()" type="button" class="btn btn-success">Start</button>
+            <button (click)="clockOut()" type="button" class="btn btn-danger">Stop</button>
+        </div>
+        <!--Submit Button-->
+        <div class="gap-4 d-md-flex justify-content-md-center">
+          <form (ngSubmit)="submit()">
+            <div class="row mt-2">
+              <input type="text" placeholder="Description" class="form-control" [formControl]="description">
+            </div>
+            <div class="d-grid d-md-flex justify-content-md-center">
+              <button type="submit" class="btn btn-primary mt-2" [disabled]="this.description.value===''">Submit</button>
+            </div>
+          </form>
+        </div>
+        </div>
+        </div>
+        <div class="row">
+          <div class="col align-self-center">
+      <div class="row">
+        <div class="col-10">
+          <h3>History</h3>
+        </div>
+        <div class="col-2">
+          <!--<button type="button" class="btn btn-primary">All History</button>-->
+        </div>
+      </div>
+      <div class="row">
+        <table class="table table-light table-sm table-hover table-bordered border-dark">
+          <thead>
+            <tr>
+              <th scope="col">Name</th>
+              <th scope="col">Time In</th>
+              <th scope="col">Time Out</th>
+              <th scope="col">Total Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dwight</td>
+              <td>10/20/2022 04:26:53 PM</td>
+              <td>10/20/2022 04:49:55 PM</td>
+              <td>00:23:02</td>
+            </tr>
+            <tr>
+              <td>Michael</td>
+              <td>10/19/2022 08:45:21 PM</td>
+              <td>10/19/2022 10:01:35 PM</td>
+              <td>01:16:14</td>
+            </tr>
+            <tr>
+              <td>Pam</td>
+              <td>10/19/2022 07:21:45 AM</td>
+              <td>10/19/2022 08:07:41 AM</td>
+              <td>00:45:56</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </div>
+
+
