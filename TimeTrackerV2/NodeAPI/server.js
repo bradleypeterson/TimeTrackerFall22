@@ -66,6 +66,8 @@ app.get('/Courses/:id', (req, res) => { // dynamic courses based on instructor i
   });
 });
 
+
+
 app.get('/Add-Courses', async (req, res) => {
   const courses = await db.all('SELECT * FROM Courses')
   res.send('CourseList', {courses})
@@ -247,35 +249,6 @@ app.post('/createGroup', async (req, res, next) => {
             return res.status(200).json({group: data});
         }
     });
-});
-
-
-
-app.post('/createProject', async (req, res, next) => {
-  function isEmpty(str) {
-      return (!str || str.length === 0);
-  }
-
-  console.log("Running createProject");
-
-  let data = [];
-
-  // Can't use dictionaries for queries so order matters!
-  data[0] = req.body["projectName"];
-  data[1] = req.body["isActive"];
-  data[2] = 1;
-  data[3] = "This is your new project";
-
-  console.log(data);
-
-  db.run(`INSERT INTO Projects(projectName, isActive, courseID, description) VALUES(?, ?, ?, ?)`, data, function (err, rows) {
-      if (err) {
-          return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
-      } else {
-          console.log(rows);
-          return res.status(200).json({project: data});
-      }
-  });
 });
 
 app.post('/clock', async (req, res, next) => {
@@ -463,5 +436,46 @@ app.post('/createCourse', async (req, res, next) => {
       } else {
           return res.status(200).json({course: data});
       }
+  });
+});
+
+app.post('/createProject', async (req, res, next) => {
+  function isEmpty(str) {
+      return (!str || str.length === 0);
+  }
+
+  let data = [];
+  data[0] = req.body["projectName"];
+  data[1] = req.body["isActive"];
+  data[2] = req.body["courseID"];
+  data[3] = req.body["description"];
+
+  db.run('INSERT INTO Projects(projectName, isActive, courseID, description) VALUES(?, ?, ?, ?)', data, function (err, rows) {
+      if (err) {
+          return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+      } else {
+          return res.status(200).json({project: data});
+      }
+  });
+});
+
+
+app.get('/Projects/:id', (req, res) => { // grab all projects based on provided courseid
+  var rowData = "";
+  let courseID = req.params["id"];
+  let sql = 'SELECT projectName, projectID, description FROM Projects WHERE courseID = ' + courseID;
+  db.all(sql, [], (err, rows) => {
+    if(err) {
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    if(rows) {
+      rowData += "[";
+      rows.forEach((row) => {
+        rowData += '{"projectName": "' + row.projectName + '", "projectID": "' + row.projectID + '", "description": "' + row.description + '"},';
+      });
+      rowData += "]";
+      rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
+      return res.send(rowData);
+    }
   });
 });
