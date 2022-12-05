@@ -19,14 +19,12 @@ import { ViewEvalsComponent } from './view-evals/view-evals.component';
 import { AddCoursesComponent } from './add-courses/add-courses.component';
 import { CreateCourseComponent } from './create-course/create-course.component';
 import { DeleteCourseComponent } from './delete-course/delete-course.component';
-import { CreateProjectComponent } from './create-project/create-project.component';
-
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'admin-evals', component: AdminEvalsComponent },
   { path: 'assign-evals', component: AssignEvalsComponent },
-  { path: 'course/:id', component: CourseComponent },
+  { path: 'course', component: CourseComponent },
   { path: 'courses', component: CoursesComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'eval', component: EvalComponent },
@@ -41,8 +39,7 @@ const routes: Routes = [
   { path: 'resetpassword', component: ResetpasswordComponent },
   { path: 'add-courses', component: AddCoursesComponent },
   { path: 'create-course', component: CreateCourseComponent },
-  { path: 'delete-course', component: DeleteCourseComponent },
-  { path: 'create-project/:id', component: CreateProjectComponent },
+  { path: 'delete-course', component: DeleteCourseComponent }
 ];
 
 @NgModule({
@@ -70,6 +67,5 @@ export const RoutingComponents = [
   ResetpasswordComponent,
   AddCoursesComponent,
   CreateCourseComponent,
-  DeleteCourseComponent,
-  CreateProjectComponent,
+  DeleteCourseComponent
 ]

@@ -1,5 +1,5 @@
 <div id="course">
-  <h2>{{course.courseName}}</h2>
+  <h2>Course Name</h2>
   <div class="btn-group">
     <a href="" class="btn btn-secondary">Edit</a>
     <a href="" class="btn btn-danger">Delete</a>
@@ -16,7 +16,7 @@
       <button class="btn btn-primary" type="submit">Search</button>
     </form>
   
-    <a href="/create-project/{{course.courseID}}" class="btn btn-success">Create New Project</a>
+    <a href="" class="btn btn-success">Create New Project</a>
   </div>
   
 
@@ -24,19 +24,16 @@
     <thead>
       <tr>
         <th>Projects</th>
-        <th>Description</th>
         <th></th>
       </tr>
     </thead>
     <tbody>
 
-      
+
       <tr *ngFor="let p of projects">
-        <td>{{ p.projectName }}</td>
-        <td>{{ p.description }}</td>
-        <td><a href="/project/{{p.projectID}}" class="btn btn-primary float-right">View Project</a></td>
+        <td>{{ p }}</td>
+        <td><a href="[project_link]" class="btn btn-primary float-right">View Project</a></td>
       </tr>
-    
 
 
     </tbody>
@@ -62,11 +59,10 @@
     </thead>
     <tbody>
 
-      <!--
+
       <tr *ngFor="let s of students">
         <td>{{ s }}</td>
       </tr>
-    -->
 
 
     </tbody>
