@@ -92,10 +92,11 @@ app.get('/Users', (req, res) => {
   });
 });
 
-app.get('/Users/:userId/activities', (req, res) => {
+app.get('/Users/:userId/:projectID/activities', (req, res) => {
   var rowData = "";
   let userId = req.params["userId"];
-  let sql = `SELECT timeIn, timeOut, description FROM TimeCard WHERE userID = ${userId}`;
+  let projectID = req.params["projectID"];
+  let sql = `SELECT timeIn, timeOut, description FROM TimeCard WHERE userID = ${userId} AND projectID = ${projectID}`;
   db.all(sql, [], (err, rows) => {
     if(err) {
       return res.status(500).json({message: 'Something went wrong. Please try again later.'});
@@ -346,7 +347,7 @@ app.get('/Projects/:id/Users', (req, res) => {
   var rowData = "";
   let projectID = req.params["id"];
   console.log(projectID);
-  let sql = `SELECT u.userID, u.firstName, u.lastName, t.timeIn, t.timeOut FROM Users as u INNER JOIN Project_Users as pu ON u.userID = pu.userID LEFT JOIN TimeCard as t ON u.userID = t.userID WHERE pu.projectID = ${projectID}`;
+  let sql = `SELECT DISTINCT u.userID, u.firstName, u.lastName, t.timeIn, t.timeOut FROM Users as u INNER JOIN Project_Users as pu ON u.userID = pu.userID LEFT JOIN TimeCard as t ON u.userID = t.userID WHERE t.projectID = ${projectID}`;
   db.all(sql, [], (err, rows) => {
     if(err) {
       return res.status(500).json({message: 'Something went wrong. Please try again later.'});

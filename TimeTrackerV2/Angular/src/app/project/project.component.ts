@@ -1,11 +1,13 @@
 import { TotalTimePipe } from './../pipes/total-time.pipe';
 import { ViewEvalComponent } from './../view-eval/view-eval.component';
-import { Component, Directive, OnInit } from '@angular/core';
+import { Component, Directive, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
 import { formatDate } from '@angular/common';
 // import { Stopwatch } from "ts-stopwatch";
 import { FormControl } from '@angular/forms';
+import { ChartOptions } from 'chart.js';
+import { BaseChartDirective } from 'ng2-charts';
 
 
 @Component({
@@ -21,9 +23,17 @@ export class ProjectComponent implements OnInit {
   public projectUsers: any;
   public totalTimeMap: Map<string, number> = new Map<string, number>();
   private projectId;
-  
 
+  public pieChartOptions: ChartOptions<'pie'> = {
+    responsive: false,
+  };
+  public pieChartLabels: any = [];
+  public pieChartDatasets: any = [{data: []}];
+  public pieChartLegend = true;
+  public pieChartPlugins = [];
   public punches = [];
+
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective;
  
   description = new FormControl('');
   activities: any=[];
@@ -47,6 +57,7 @@ export class ProjectComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
+    this.chart = null!;
     const tempUser = localStorage.getItem('currentUser');
     if (!tempUser){
       this.router.navigate(["/Login"]);
@@ -76,7 +87,7 @@ export class ProjectComponent implements OnInit {
   }
 
   getActivities(): void{
-    this.http.get<any>(`http://localhost:8080/Users/${this.currentUser.userID}/activities/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.get<any>(`http://localhost:8080/Users/${this.currentUser.userID}/${this.projectId}/activities/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
@@ -121,6 +132,23 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  populateGraph(): void{
+    this.pieChartDatasets = [{data: []}];
+    this.pieChartLabels = [];
+    this.totalTimeMap.forEach((value: number, key: string) => {
+      this.pieChartLabels.push(key);
+      this.pieChartDatasets[0]["data"].push(this.calculateGraphTime(value));
+      if(this.chart && this.chart.chart){
+        this.chart.chart.update();
+      }
+  });
+  }
+
+  calculateGraphTime(value:number): number{
+    // Minutes Conversion
+      return Number((value / 1000 / 60).toFixed(2));
+  }
+
   loadProjectUsers(): void{
     this.http.get<any>(`http://localhost:8080/Projects/${this.projectId}/Users/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
@@ -128,6 +156,7 @@ export class ProjectComponent implements OnInit {
         console.log(data);
         this.projectUsers=data;
         this.calculateTotalTime();
+        this.populateGraph();
       },
       error: error => {
         this.errMsg = error['error']['message'];
@@ -145,7 +174,7 @@ export class ProjectComponent implements OnInit {
       isEdited: false,
 
       userID: this.currentUser.userID,
-      projectID: 1,
+      projectID: this.projectId,
       description: this.description.value /// pull description from the HTML
     };
 
@@ -160,6 +189,7 @@ export class ProjectComponent implements OnInit {
         this.description.setValue("");
         this.getActivities();
         this.loadProjectUsers();
+        this.populateGraph();
 
         /// populate a label to inform the user that they successfully clocked out, maybe with the time.
       },
