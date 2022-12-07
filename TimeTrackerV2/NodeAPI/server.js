@@ -115,7 +115,7 @@ app.get('/Users/:userId/:projectID/activities', (req, res) => {
 
 app.get('/Users', (req, res) => {
   var rowData = "";
-  let sql = "SELECT username,firstName,lastName FROM Users";
+  let sql = "SELECT username, firstName, lastName FROM Users";
   db.all(sql, [], (err, rows) => {
     if(err) {
       return res.status(500).json({message: 'Something went wrong. Please try again later.'});
@@ -123,7 +123,27 @@ app.get('/Users', (req, res) => {
     if(rows) {
       rowData += "[";
       rows.forEach((row) => {
-        rowData += '{"username": "' + row.username +'", "firstName": "'+ row.firstName + '", "lastName": "' +row.lastName + '"},';
+        rowData += '{"username": "' + row.username + '", "firstName": "' + row.firstName + '", "lastName": "' + row.lastName + '"},';
+      });
+      rowData += "]";
+      rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
+      return res.send(rowData);
+    }
+  });
+});
+
+app.get('/Users/:userId/activities', (req, res) => {
+  var rowData = "";
+  let userId = req.params["userId"];
+  let sql = `SELECT timeIn, timeOut, description FROM TimeCard WHERE userID = ${userId}`;
+  db.all(sql, [], (err, rows) => {
+    if(err) {
+      return res.status(500).json({message: 'Something went wrong. Please try again later.'});
+    }
+    if(rows) {
+      rowData += "[";
+      rows.forEach((row) => {
+        rowData += '{"timeIn": "' + row.timeIn + '", "timeOut": "' + row.timeOut + '", "description": "' + row.description + '"},';
       });
       rowData += "]";
       rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
@@ -321,6 +341,18 @@ app.post('/clock', async (req, res, next) => {
           return res.status(200).json({message: 'Clocked in successfully.'});
         }
       });
+    /*}
+    else{//clocking out
+      console.log("clocking out.");
+      let isNullTimeOut = false;
+      let ID = 0;
+      rows.every(row => {
+        isNullTimeOut = row["timeOut"] === null;
+        if(isNullTimeOut){
+          ID = row["timeslotID"];
+          return false;
+        }
+        return true;
 });
 
 app.get('/Projects', (req, res) => {
