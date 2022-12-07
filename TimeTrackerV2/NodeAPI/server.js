@@ -368,7 +368,8 @@ app.get('/Projects/:id/Users', (req, res) => {
 app.get('/Users/:userId/getUserCourses', (req, res) => {
   var rowData = "";
   let userId = req.params["userId"];
-  let sql = `SELECT c.* from Courses c JOIN Course_Users cu ON cu.courseID = c.courseID AND cu.userID = ${userId}`;
+  let sql = `SELECT c.*, u.firstname, u.lastName from Courses c JOIN Course_Users cu ON cu.courseID
+  = c.courseID JOIN Users u on u.userID = c.instructorID AND cu.userID = ${userId}`;
   db.all(sql, [], (err, rows) => {
     if(err) {
       return res.status(500).json({message: 'Something went wrong. Please try again later.'});
@@ -376,7 +377,7 @@ app.get('/Users/:userId/getUserCourses', (req, res) => {
     if(rows) {
       rowData += "[";
       rows.forEach((row) => {
-        rowData += '{"courseID": "' + row.courseID + '", "courseName": "' + row.courseName + '", "instructorID": "' + row.instructorID + '", "description": "' + row.description + '"},';
+        rowData += '{"courseID": "' + row.courseID + '", "courseName": "' + row.courseName + '", "instructorFN": "' + row.firstName + '", "instructorLN": "' + row.lastName + '", "description": "' + row.description + '"},';
       });
       rowData += "]";
       rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
@@ -388,7 +389,10 @@ app.get('/Users/:userId/getUserCourses', (req, res) => {
 app.get('/Users/:userId/getNonUserCourses', (req, res) => {
   var rowData = "";
   let userId = req.params["userId"];
-  let sql = `select * from Courses where courseID not in (select c.courseID from Courses c join Course_Users cu ON cu.courseID = c.courseID AND cu.userID = ${userId})`;
+  let sql = `select c.*, u.firstname, u.lastname from Courses c JOIN Users
+  u where u.userID = c.instructorID AND c.courseID
+  not in (select c.courseID from Courses c
+  join Course_Users cu ON cu.courseID = c.courseID AND cu.userID = ${userId})`;
   db.all(sql, [], (err, rows) => {
     if(err) {
       return res.status(500).json({message: 'Something went wrong. Please try again later.'});
@@ -396,7 +400,7 @@ app.get('/Users/:userId/getNonUserCourses', (req, res) => {
     if(rows) {
       rowData += "[";
       rows.forEach((row) => {
-        rowData += '{"courseID": "' + row.courseID + '", "courseName": "' + row.courseName + '", "instructorID": "' + row.instructorID + '", "description": "' + row.description + '"},';
+        rowData += '{"courseID": "' + row.courseID + '", "courseName": "' + row.courseName + '", "instructorFN": "' + row.firstName + '", "instructorLN": "' + row.lastName + '", "description": "' + row.description + '"},';
       });
       rowData += "]";
       rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);

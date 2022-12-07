@@ -29,14 +29,14 @@
       <!--  ng-repeat="c in courses | filter: search" ng-if="c.isActive || config.showInactiveCourses" ng-class="{inactive: !c.isActive}" -->
       <tr *ngFor="let c of nonUserCourses">
         <td>{{c.courseName}}</td>
-        <td>{{c.instructorID}}</td>
+        <td>{{c.instructorFN}} {{c.instructorLN}}</td>
         <td>{{c.description}}</td>
         <td><button class="btn btn-success float-right" (click)="register(c.courseID)">Register</button></td>
       </tr>
 
       <tr *ngFor="let c of allUserCourses">
         <td>{{c.courseName}}</td>
-        <td>{{c.instructorID}}</td>
+        <td>{{c.instructorFN}} {{c.instructorLN}}</td>
         <td>{{c.description}}</td>
         <td><button class="btn btn-danger float-right" (click)="drop(c.courseID)">Drop</button></td>
       </tr>

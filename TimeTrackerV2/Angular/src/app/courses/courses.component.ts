@@ -84,6 +84,13 @@ export class CoursesComponent implements OnInit {
 
     this.loadAllUserCourses();
     this.loadNonUserCourses();
+    
+    if (!localStorage.getItem('foo')) { 
+      localStorage.setItem('foo', 'no reload') 
+      location.reload() 
+    } else {
+      localStorage.removeItem('foo') 
+    }
   }
 
 
