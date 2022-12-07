@@ -32,6 +32,7 @@ export class UsersComponent implements OnInit {
 
 
 
+
   loadUsers(users: Array<String>){
 
     this.http.get("http://localhost:8080/users").subscribe((data: any) =>{ 

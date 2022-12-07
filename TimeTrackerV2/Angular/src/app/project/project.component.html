@@ -1,8 +1,17 @@
-<h1 class="display-1">TimeTrackerV2</h1>
+<h1 class="display-1" *ngIf="project">{{project.projectName}}</h1>
 <div class="container">
   <div class="row">
     <div class="col-6">
-      <img src="Angular\src\assets\Images\mstile-70x70.png" width="500" height="250">
+      <div *ngIf="pieChartLabels.length != 0">
+        <canvas baseChart 
+          [type]="'pie'"
+          [datasets]="pieChartDatasets"
+          [labels]="pieChartLabels"
+          [options]="pieChartOptions"
+          [plugins]="pieChartPlugins"
+          [legend]="pieChartLegend">
+        </canvas>      
+      </div>
     </div>
     <div class="col-6">
       <div class="row"><h3>My Team</h3></div>
@@ -15,21 +24,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Mike</td>
-              <td>16:12:37</td>
-            </tr>
-            <tr>
-              <td>Jamison</td>
-              <td>11:47:54</td>
-            </tr>
-            <tr>
-              <td>Dwight</td>
-              <td>04:52:19</td>
-            </tr>
-            <tr>
-              <td>Pam</td>
-              <td>03:26:42</td>
+            <tr *ngFor="let teamMate of totalTimeMap | keyvalue">
+              <td>{{teamMate.key}}</td>
+              <td>{{teamMate.value | totalTimePipe}}</td>
             </tr>
           </tbody>
         </table>
@@ -74,12 +71,11 @@
         </div>
         <!--Time Row-->
         <div class="row, center">
-          <h1>03:27:16</h1>
+          <h1>{{hours}}:{{minutes}}:{{seconds}}</h1>
         </div>
         <!--Start/Stop Buttons-->
         <div class="gap-2 d-md-flex justify-content-md-center">
             <button (click)="clockIn()" type="button" class="btn btn-success">Start</button>
-            <button (click)="clockOut()" type="button" class="btn btn-danger">Stop</button>
         </div>
         <!--Submit Button-->
         <div class="gap-4 d-md-flex justify-content-md-center">
@@ -105,7 +101,7 @@
         </div>
       </div>
       <div class="row">
-        <table class="table table-light table-sm table-hover table-bordered border-dark">
+        <table class="table table-light table-sm table-hover table-bordered border-dark" style="max-height: 200px; overflow-y:scroll">
           <thead>
             <tr>
               <th scope="col">Name</th>
@@ -115,23 +111,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Dwight</td>
-              <td>10/20/2022 04:26:53 PM</td>
-              <td>10/20/2022 04:49:55 PM</td>
-              <td>00:23:02</td>
-            </tr>
-            <tr>
-              <td>Michael</td>
-              <td>10/19/2022 08:45:21 PM</td>
-              <td>10/19/2022 10:01:35 PM</td>
-              <td>01:16:14</td>
-            </tr>
-            <tr>
-              <td>Pam</td>
-              <td>10/19/2022 07:21:45 AM</td>
-              <td>10/19/2022 08:07:41 AM</td>
-              <td>00:45:56</td>
+            <tr *ngFor="let user of projectUsers">
+              <td>{{user.firstName}} {{user.lastName}}</td>
+              <td>{{user.timeIn| date:'medium'}}</td>
+              <td>{{user.timeOut| date:'medium'}}</td>
+              <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
             </tr>
           </tbody>
         </table>

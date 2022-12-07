@@ -22,14 +22,9 @@ db.run(`CREATE TABLE IF NOT EXISTS TimeCard(timeslotID INTEGER PRIMARY KEY,
                             timeIn TEXT NOT NULL,
                             timeOut TEXT,
                             isEdited bool NOT NULL,
-                            createdOn TEXT NOT NULL,
                             userID INTEGER NOT NULL,
-                            description TEXT);`)
-
-db.run(`CREATE TABLE IF NOT EXISTS Groups(groupID INTEGER PRIMARY KEY,
-                            groupName TEXT NOT NULL,
-                            isActive BOOL NOT NULL,
-                            projectID INTEGER NOT NULL);`)
+                            description TEXT,
+                            projectID INT NOT NULL);`)
 
 db.run(`CREATE TABLE IF NOT EXISTS Courses(courseID INTEGER PRIMARY KEY, 
                             courseName TEXT NOT NULL,
@@ -42,3 +37,9 @@ db.run(`CREATE TABLE IF NOT EXISTS Projects(projectID INTEGER PRIMARY KEY,
                             isActive BOOL NOT NULL,
                             courseID INTEGER NOT NULL,
                             description TEXT);`)
+
+db.run(`CREATE TABLE IF NOT EXISTS Course_Users (userID INTEGER NOT NULL,
+                              courseID INTEGER NOT NULL);`)
+  
+db.run(`CREATE TABLE IF NOT EXISTS Project_Users (userID INTEGER NOT NULL,
+                            projectID INTEGER NOT NULL);`)

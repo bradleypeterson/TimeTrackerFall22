@@ -16,6 +16,9 @@ import { UserComponent } from './user/user.component';
 import { UsersComponent } from './users/users.component';
 import { ViewEvalComponent } from './view-eval/view-eval.component';
 import { ViewEvalsComponent } from './view-evals/view-evals.component';
+import { AddCoursesComponent } from './add-courses/add-courses.component';
+import { CreateCourseComponent } from './create-course/create-course.component';
+import { DeleteCourseComponent } from './delete-course/delete-course.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -27,13 +30,16 @@ const routes: Routes = [
   { path: 'eval', component: EvalComponent },
   { path: 'group', component: GroupComponent },
   { path: 'manage-evals', component: ManageEvalsComponent },
-  { path: 'project', component: ProjectComponent },
+  { path: 'project/:id', component: ProjectComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'user', component: UserComponent },
   { path: 'users', component: UsersComponent },
   { path: 'view-eval', component: ViewEvalComponent },
   { path: 'view-evals', component: ViewEvalsComponent },
   { path: 'resetpassword', component: ResetpasswordComponent },
+  { path: 'add-courses', component: AddCoursesComponent },
+  { path: 'create-course', component: CreateCourseComponent },
+  { path: 'delete-course', component: DeleteCourseComponent }
 ];
 
 @NgModule({
@@ -59,4 +65,7 @@ export const RoutingComponents = [
   ViewEvalComponent,
   ViewEvalsComponent,
   ResetpasswordComponent,
+  AddCoursesComponent,
+  CreateCourseComponent,
+  DeleteCourseComponent
 ]

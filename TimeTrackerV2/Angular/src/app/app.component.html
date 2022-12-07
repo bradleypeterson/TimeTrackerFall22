@@ -6,30 +6,36 @@
     <button class="navbar-toggler custom-toggler" type="button" data-toggle="collapse" data-target="navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+    
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-           <!-- <a class="nav-item nav-link active" routerLink="./dashboard">Dashboard</a>
-           <a class="nav-item nav-link active" routerLink="./course">Course</a>
-          <a class="nav-item nav-link active" routerLink="./courses">Courses</a>
-          <a class="nav-item nav-link active" routerLink="./admin-evals">Admin Evals</a>
-          <a class="nav-item nav-link active" routerLink="./assign-evals">Assign Evals</a>
-          <a class="nav-item nav-link active" routerLink="./eval">Eval</a>
-          <a class="nav-item nav-link active" routerLink="./group">Group</a>
-          <a class="nav-item nav-link active" routerLink="./project">Project</a>
-          <a class="nav-item nav-link active" routerLink="./register">Register</a>  -->
-          <a class="nav-item nav-link active" routerLink="./users">Users</a> 
-          <!-- <a class="nav-item nav-link active" routerLink="./view-eval">View Eval</a>
-          <a class="nav-item nav-link active" routerLink="./view-evals">View Evals</a>  -->
+      <div [ngSwitch]="true">
+      <div *ngSwitchCase="instructor">
+      <div class="navbar-nav W-100">
+          <a class="nav-item nav-link active" routerLink="./dashboard">Dashboard</a>
+          <a class="nav-item nav-link ml-auto active" href="#">Logout</a>
       </div>
-      
-      <div class="navbar-nav ml-auto">
-        <a class="nav-item nav-link active" href="#">Username</a>
       </div>
-
-      <form class="form-inline my-2 my-lg-0">
-        <button class="btn btn-primary my-2 my-sm-0 btn1" type="submit" routerLink="./login">Login</button>
-      </form>
+      <div *ngSwitchCase="student">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" routerLink="./dashboard">Dashboard</a>
+            <a class="nav-item nav-link active" routerLink="./courses">Add Courses</a>
+            <a class="nav-item nav-link ml-auto active" href="#">Logout</a>
+        </div>
+        </div>
+        <div *ngSwitchCase="admin">
+          <div class="navbar-nav W-100">
+              <a class="nav-item nav-link active" routerLink="./dashboard">Dashboard</a>
+              <a class="nav-item nav-link active" routerLink="./users">Users</a>
+              <a class="nav-item nav-link ml-auto active" href="#">Logout</a>
+          </div>
+          </div>
+          <div *ngSwitchDefault>
+            <div class="navbar-nav">
+            </div>
+            </div>
+          </div>
     </div>
+
   </div>
 
 <div class="container mt-6">

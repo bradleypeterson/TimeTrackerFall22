@@ -14,6 +14,8 @@ export class CourseComponent implements OnInit {
   private item;
   public courseName;
   public courseDescription;
+  public projects = [];
+  public students = [];
 
   constructor(
     private http: HttpClient,
@@ -29,9 +31,11 @@ export class CourseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loadProjects(this.projects);
+    this.loadStudents(this.students);
   }
 
-  createProject(): void {
+  /*createProject(): void {
     let payload = {
       projectName: 'New Project',
       isActive: true,
@@ -48,6 +52,22 @@ export class CourseComponent implements OnInit {
         this.errMsg = error['error']['message'];
       }
     });
+  }*/
+
+  loadProjects(projects: Array<string>): void {
+    this.http.get("http://localhost:8080/Projects").subscribe((data: any) =>{ 
+    for(let i = 0; i < data.length; i++) {
+      projects.push(data[i].projectName);
+    }
+  });
+  }
+
+  loadStudents(students: Array<string>): void {
+    this.http.get("http://localhost:8080/Users").subscribe((data: any) =>{ 
+    for(let i = 0; i < data.length; i++) {
+      students.push(data[i].firstName);
+    }
+  });
   }
 
 }

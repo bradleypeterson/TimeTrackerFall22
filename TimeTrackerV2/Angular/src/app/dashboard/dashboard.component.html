@@ -1,92 +1,61 @@
-<!-- ng-cloak -->
-<div id="dashboard">
-  <h2 class="mt-8 dashboard-titles">Dashboard</h2>
-  <!-- if groups.length == 0 && loaded -->
-  <div>
-    <h4 class="mt-5">You are not a member of any groups. Find a group through the <a href="./courses">courses</a> page.</h4>
-  </div>
+<div [ngSwitch]="true">
 
-  <!-- if groups.length !== 0 && loaded -->
-  <div class="panel panel-default border border-light rounded">
-    <div class="panel-heading dashboard-titles">
-      <h4 style="padding: .5em">My Projects</h4>
+
+  
+  <div *ngSwitchCase="student" id="dashboard">
+
+    <h2>Dashboard</h2>
+    <hr>
+
+    <div class="alert alert-danger" *ngIf="projects?.length <= 0">
+      You are not assigned any projects.
     </div>
-    <div class="row justify-content-left">
-
-      <!-- repeat for group in groups ORDER BY group name -->
-      <div class="card border-dark m-3 pl-0 pr-0" style="max-width: 18rem;">
-        <div class="card-header">TimeTrackerV2</div>
-        <div class="card-body">
-          <h5 class="card-title">Course: CS 4450</h5>
-          <p class="card-text">Instructor: Bradley Peterson</p>
-        </div>
-      </div>
-
-      <div class="card border-dark m-3 pl-0 pr-0" style="max-width: 18rem;">
-        <div class="card-header">The Grind Dont Stop</div>
-        <div class="card-body">
-          <h5 class="card-title">Course: CS 3750</h5>
-          <p class="card-text">Instructor: Arpit Christi</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- if parent.user.type == Instructor AND loadInactivePanel AND loaded -->
-  <div class="panel panel-default border border-light rounded" style="margin-top:1em">
-    <div class="panel-heading dashboard-titles">
-      <h4 style="padding: .5em">Course join requests</h4>
-    </div>
-
     <div class="row">
-      <div class="card border-dark m-3 pl-0 pr-0" style="max-width: 18rem;">
-        <div class="card-header">Course Name: CS 4450</div>
-        <div class="card-body">
-          <p><strong>Student Name(s)</strong></p>
 
-          <ul class="list-group list-group-flush">
-            <!--if (user.isActive OR parent.user.type == Admin OR parent.user.userID == instructorId)-->
-            <!--repeat for user in courseToInactiveUsers[courseID] ORDER BY first name-->
-            <li class="list-group-item">
-              John Smith
-              <div class="pretty p-svg p-curve float-right">
-                <!--ng-change="saveUserInCourse(c.courseID, u.userID, u.isActive)-->
-                <input type="checkbox" title="Accept the user into the course." />
-                <div class="state p-primary">
-                  <svg class="svg svg-icon" viewBox="0 0 20 20">
-                    <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z" style="stroke: white;fill:white;"></path>
-                  </svg>
-                  <label></label>
-                </div>
-              </div>
-              <!--ng-click="deleteUserFromCourse(u.userID)"-->
-              <i class="fa fa-times clickable delete-user-button" title="Delete user from the course."></i>
-            </li>
-
-            <!-- Student 2 -->
-            <li class="list-group-item">
-              Suzy Q
-              <div class="pretty p-svg p-curve float-right">
-                <!--ng-change="saveUserInCourse(c.courseID, u.userID, u.isActive)-->
-                <input type="checkbox" title="Accept the user into the course." />
-                <div class="state p-primary">
-                  <svg class="svg svg-icon" viewBox="0 0 20 20">
-                    <path d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z" style="stroke: white;fill:white;"></path>
-                  </svg>
-                  <label></label>
-                </div>
-              </div>
-              <!--ng-click="deleteUserFromCourse(u.userID)"-->
-              <i class="fa fa-times clickable delete-user-button" title="Delete user from the course."></i>
-            </li>
-
-
-          </ul>
+      <div class="col-sm-3 mb-3" *ngFor="let p of projects">
+        <div class="card">
+          <h5 class="card-header">{{p.projectID}}</h5>
+          <div class="card-body">
+            <h5 class="card-title">{{p.courseName}}</h5>
+            <p class="card-text">{{p.description}}</p>
+            <a routerLink="/project/{{p.projectID}}" class="btn btn-primary">View Project</a>
+          </div>
         </div>
       </div>
 
     </div>
 
   </div>
+
+
+
+  <div *ngSwitchCase="instructor" id="dashboard">
+    
+
+    <h2>Dashboard</h2>
+    <a href="/create-course" class="btn btn-success">Create New Course</a>
+    <hr>
+
+
+
+    <div class="alert alert-danger" *ngIf="courses?.length <= 0">
+      You have not created any courses.
+    </div>
+    <div class="row">
+
+      <div class="col-sm-3 mb-3" *ngFor="let c of courses">
+        <div class="card">
+          <h5 class="card-header">{{ c.courseName }}</h5>
+          <div class="card-body">
+            <p class="card-text">{{ c.description }}</p>
+            <a href="/course/{{ c.courseID }}" class="btn btn-primary">View Course</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
 </div>
