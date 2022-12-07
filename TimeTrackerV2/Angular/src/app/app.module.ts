@@ -5,7 +5,7 @@ import { AppRoutingModule, RoutingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { HttpClientModule } from '@angular/common/http';
-
+import {TotalTimePipe} from './pipes/total-time.pipe';
 
 
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -14,7 +14,8 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
   declarations: [
     AppComponent,
     RoutingComponents,
-    LoginComponent
+    LoginComponent,
+    TotalTimePipe
   ],
   imports: [
     BrowserModule,

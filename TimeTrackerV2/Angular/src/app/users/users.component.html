@@ -33,6 +33,9 @@
     <!-- ng-repeat="u in users | orderObjectBy : 'firstName' | filter : search" -->
 
     <tbody>
+      <tr *ngFor="let u of users" class="position-relative">
+        <!--  -->
+        <td><a href="#"></a>First Name Last Name</td>
 
       <tr *ngFor="let u of users" class="position-relative">
 
@@ -41,6 +44,7 @@
         <td><a href="#">FirstName LastName</a></td>
 
         <td>
+          <div class="full-width">{{u}}</div>
 
           <div class="full-width">{{u}}</div>
 

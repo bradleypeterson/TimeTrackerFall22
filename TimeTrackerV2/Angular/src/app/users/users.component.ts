@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
 import { Router } from '@angular/router';
 
 
@@ -18,18 +16,14 @@ import { Router } from '@angular/router';
 
 export class UsersComponent implements OnInit {
 
-
-
   public users = [];
 
+  constructor(
+    private http: HttpClient
+  ) { }
 
-
-  constructor(private http: HttpClient,private router:Router) { }
-
-
-
-  ngOnInit(): void {this.loadUsers(this.users);
-
+  ngOnInit(): void {
+    this.loadUsers(this.users);
   }
 
 

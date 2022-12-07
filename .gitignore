@@ -1,3 +1,8 @@
+TimeTrackerV2/Angular/node_modules/
+TimeTrackerV2/node_modules/
+.DS_Store
+package-lock.json
+
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
