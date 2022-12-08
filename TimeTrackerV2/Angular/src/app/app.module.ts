@@ -15,7 +15,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
     AppComponent,
     RoutingComponents,
     LoginComponent,
-    TotalTimePipe
+    TotalTimePipe,
   ],
   imports: [
     BrowserModule,

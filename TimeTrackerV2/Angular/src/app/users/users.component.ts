@@ -19,7 +19,8 @@ export class UsersComponent implements OnInit {
   public users = [];
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
