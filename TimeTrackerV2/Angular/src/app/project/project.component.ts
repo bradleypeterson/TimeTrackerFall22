@@ -87,7 +87,7 @@ export class ProjectComponent implements OnInit {
   }
 
   getActivities(): void{
-    this.http.get<any>(`http://localhost:8080/Users/${this.currentUser.userID}/${this.projectId}/activities/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/${this.projectId}/activities/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
@@ -150,7 +150,7 @@ export class ProjectComponent implements OnInit {
   }
 
   loadProjectUsers(): void{
-    this.http.get<any>(`http://localhost:8080/Projects/${this.projectId}/Users/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.get<any>(`http://localhost:8080/api/Projects/${this.projectId}/Users/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
@@ -182,7 +182,7 @@ export class ProjectComponent implements OnInit {
       return;
     }
 
-    this.http.post<any>('http://localhost:8080/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.post<any>('http://localhost:8080/api/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(req.isEdited);
@@ -206,7 +206,7 @@ export class ProjectComponent implements OnInit {
     }
     console.log(payload);
 
-    this.http.post<any>('http://localhost:8080/createGroup/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.post<any>('http://localhost:8080/api/createGroup/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         localStorage.setItem('currentGroup', JSON.stringify(data['group']));

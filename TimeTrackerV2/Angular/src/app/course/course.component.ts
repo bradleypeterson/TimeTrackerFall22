@@ -45,7 +45,7 @@ export class CourseComponent implements OnInit {
   }
 
   loadProjects(): void {
-    this.http.get("http://localhost:8080/Projects/" + this.courseID).subscribe((data: any) =>{ 
+    this.http.get("http://localhost:8080/api/Projects/" + this.courseID).subscribe((data: any) =>{ 
     this.projects = data;
     if(this.projects){
       localStorage.setItem("projects", JSON.stringify(this.projects));

@@ -50,7 +50,7 @@ export class DashboardComponent implements OnInit {
   public pageTitle = 'TimeTrackerV2 | Dashboard';
 
   loadProjects(): void {
-    this.http.get("http://localhost:8080/Projects").subscribe((data: any) =>{ 
+    this.http.get("http://localhost:8080/api/Projects").subscribe((data: any) =>{ 
     //console.log(data);
     this.projects = data;
     if(this.projects){
@@ -60,7 +60,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadCourses(): void {
-    var request = 'http://localhost:8080/Courses/' + this.userID; // attempt to pull only the courses the instructor has created
+    var request = 'http://localhost:8080/api/Courses/' + this.userID; // attempt to pull only the courses the instructor has created
     this.http.get(request).subscribe((data: any) =>{
     console.log(data);
     this.courses = data;

@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
       password: this.checkoutForm.value['password'],
     }
 
-    this.http.post<any>('http://localhost:8080/login/', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.post<any>('http://localhost:8080/api/login/', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
         localStorage.setItem('currentUser', JSON.stringify(data['user']));

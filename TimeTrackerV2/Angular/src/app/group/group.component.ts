@@ -57,7 +57,7 @@ export class GroupComponent implements OnInit {
         
       if (req !== null)
       {
-        this.http.post<any>('http://localhost:8080/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+        this.http.post<any>('http://localhost:8080/api/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
           next: data => {
             this.errMsg = "";
             console.log("user clocked in: " + this.user.username);
@@ -94,7 +94,7 @@ export class GroupComponent implements OnInit {
 
       if (req !== null)
       {
-        this.http.post<any>('http://localhost:8080/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+        this.http.post<any>('http://localhost:8080/api/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
           next: data => {
             this.errMsg = "";
             console.log(req.timeIn);
@@ -110,7 +110,7 @@ export class GroupComponent implements OnInit {
   }*/
 
   loadStudents(students: Array<string>): void {
-    this.http.get("http://localhost:8080/Users").subscribe((data: any) =>{ 
+    this.http.get("http://localhost:8080/api/Users").subscribe((data: any) =>{ 
     for(let i = 0; i < data.length; i++) {
       students.push(data[i].firstName);
     }
