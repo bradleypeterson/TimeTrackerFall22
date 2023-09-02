@@ -2,20 +2,27 @@ const express = require("express");  //includes the "express" module so we can u
 
 const router = express.Router();
 
+//#region Controller imports (imports everything inside the {} to this file)
 const {
     Register,
     Login,
-} = require("./controllers/AccountControllers") //imports everything from inside the {} from the AccountControllers.ts file
+} = require("./controllers/AccountControllers")
 
 const {
-    GetAllCoursesNamesIDs,
+    GetAllCoursesNamesDescriptionIDs,
     GetAllCoursesForInstructorID,
     GetAllCourses,
 } = require("./controllers/CourseControllers")
 
 const {
-    GetFirstLastUserName,
-} = require("./controllers/UsersControllers")
+    CreateNewGroup,
+} = require("./controllers/MiscellaneousControllers")
+
+const {
+    GetAllProjectsForAllCourses,
+    GetUserTimesForProject,
+    GetAllProjectsForCourse,
+} = require("./controllers/ProjectControllers")
 
 const {
     GetAllTimeCardsForUserInProject,
@@ -24,13 +31,16 @@ const {
 } = require("./controllers/TimeCardControllers")
 
 const {
-    GetAllProjectsForAllCourses,
-    CurrentlyUnknownFunction1,
-} = require("./controllers/ProjectControllers")
+    GetFirstLastUserName,
+    GetCoursesRegisteredFor,
+    GetCoursesNotRegisteredFor,
+    RegisterForCourse,
+    DropCourse,
+    CreateCourse,
+    CreateProject,
+} = require("./controllers/UsersControllers")
+//#endregion
 
-const {
-    CreateNewGroup,
-} = require("./controllers/MiscellaneousControllers")
 
 //This is used to validate that the api route is working, it has no functional purposes other then that
 router.get("/", (req, res) => {
@@ -44,15 +54,23 @@ router.post("/login", Login);
 //#endregion
 
 //#region Course routes
-router.get('/Courses', GetAllCoursesNamesIDs);
+router.get('/Courses', GetAllCoursesNamesDescriptionIDs);
 
 router.get('/Courses/:id', GetAllCoursesForInstructorID);
 
 router.get('/Add-Courses', GetAllCourses);
 //#endregion
 
-//#region User routes
-router.get('/Users', GetFirstLastUserName);
+//#region Miscellaneous routes
+router.post('/createGroup', CreateNewGroup);
+//#endregion
+
+//#region Project routes
+router.get('/Projects', GetAllProjectsForAllCourses);
+
+router.get('/Projects/:id/Users', GetUserTimesForProject);
+
+router.get('/Projects/:id', GetAllProjectsForCourse); 
 //#endregion
 
 //#region Time card routes
@@ -63,14 +81,21 @@ router.get('/Users/:userId/activities', GetAllTimeCardsForUser);
 router.post('/clock', ClockOperation);
 //#endregion
 
-//#region Project routes
-router.get('/Projects', GetAllProjectsForAllCourses);
+//#region User routes
+router.get('/Users', GetFirstLastUserName);
 
-router.get('/Projects/:id/Users', CurrentlyUnknownFunction1);
+router.get('/Users/:userId/getUserCourses', GetCoursesRegisteredFor);
+
+router.get('/Users/:userId/getNonUserCourses', GetCoursesNotRegisteredFor);
+
+router.post('/addUserCourse', RegisterForCourse);
+
+router.post('/deleteUserCourse', DropCourse);
+
+router.post('/createCourse', CreateCourse);
+
+router.post('/createProject', CreateProject);
 //#endregion
 
-//#region Miscellaneous routes
-router.post('/createGroup', CreateNewGroup);
-//#endregion
 
 module.exports = router;  //export the constant "router" (which contains the get, post, put, and delete http responses) so that we can make use of it outside this file.  This is the middleware that Router.use() requires to run.  https://stackoverflow.com/questions/27465850/typeerror-router-use-requires-middleware-function-but-got-a-object

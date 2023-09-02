@@ -43,7 +43,7 @@ export class CreateCourseComponent implements OnInit {
       instructorID: this.instructorID,
     }
 
-    this.http.post<any>('http://localhost:8080/createCourse', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.post<any>('http://localhost:8080/api/createCourse', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
         this.router.navigate(['/dashboard']);

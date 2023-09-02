@@ -24,7 +24,7 @@ exports.CreateNewGroup = async (req, res, next) => {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         } else {
             console.log(data);
-            return res.status(200).json({group: data});
+            return res.status(200).json({ group: data });
         }
     });
 }

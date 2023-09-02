@@ -50,7 +50,7 @@ export class CoursesComponent implements OnInit {
     }
     console.log(payload);
 
-    this.http.post<any>('http://localhost:8080/createCourse/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.post<any>('http://localhost:8080/api/createCourse/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         localStorage.setItem('currentCourse', JSON.stringify(data['course']));
@@ -96,7 +96,7 @@ export class CoursesComponent implements OnInit {
 
 
   loadAllUserCourses(): void{
-    this.http.get<any>(`http://localhost:8080/Users/${this.currentUser.userID}/getUserCourses/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/getUserCourses/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
@@ -109,7 +109,7 @@ export class CoursesComponent implements OnInit {
   }
 
   loadNonUserCourses(): void{
-    this.http.get<any>(`http://localhost:8080/Users/${this.currentUser.userID}/getNonUserCourses/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/getNonUserCourses/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
@@ -131,7 +131,7 @@ export class CoursesComponent implements OnInit {
       courseID: CourseId
     };
 
-    this.http.post<any>('http://localhost:8080/addUserCourse/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.post<any>('http://localhost:8080/api/addUserCourse/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
         this.loadCourses();
@@ -148,7 +148,7 @@ export class CoursesComponent implements OnInit {
       courseID: CourseId
     };
     
-    this.http.post<any>('http://localhost:8080/deleteUserCourse/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.post<any>('http://localhost:8080/api/deleteUserCourse/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
         this.loadCourses();
