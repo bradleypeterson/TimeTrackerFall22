@@ -4,6 +4,8 @@ const crypto = require('crypto');
 const db = new sqlite3.Database('./database/main.db');
 
 exports.Register = async (req, res, next) => {
+	console.log("AccountControllers.js file/Register route called");
+
 	function isEmpty(str) {
 		return (!str || str.length === 0);
 	}
@@ -21,8 +23,8 @@ exports.Register = async (req, res, next) => {
 	let sql = `SELECT *
 		FROM Users
 		WHERE username = ?`;
-	db.get(sql, [req.body["username"]], (err, rows) => {
 
+	db.get(sql, [req.body["username"]], (err, rows) => {
 		if (err) {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
@@ -41,9 +43,8 @@ exports.Register = async (req, res, next) => {
 		let hash = crypto.pbkdf2Sync(req.body["password"], salt,
 			1000, 64, `sha512`).toString(`hex`);
 
-		let data = [];
-
 		// Can't use dictionaries for queries so order matters!
+		let data = [];
 		data[0] = req.body["username"];
 		data[1] = hash;
 		data[2] = req.body["firstName"];
@@ -63,6 +64,8 @@ exports.Register = async (req, res, next) => {
 }
 
 exports.Login = async (req, res, next) => {
+	console.log("AccountControllers.js file/Login route called");
+
 	function isEmpty(str) {
 		return (!str || str.length === 0);
 	}
@@ -75,6 +78,7 @@ exports.Login = async (req, res, next) => {
 	let sql = `SELECT *
 		FROM Users
 		WHERE username = ?`;
+
 	db.get(sql, [req.body["username"]], (err, rows) => {
 		if (err) {
 			console.log(err);
@@ -82,7 +86,7 @@ exports.Login = async (req, res, next) => {
 		}
 
 		if (rows) {
-			salt = rows['salt']
+			salt = rows['salt'];
 
 			let hash = crypto.pbkdf2Sync(req.body["password"], salt,
 				1000, 64, `sha512`).toString(`hex`);

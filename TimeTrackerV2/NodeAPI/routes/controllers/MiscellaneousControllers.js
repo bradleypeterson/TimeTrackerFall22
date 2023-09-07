@@ -3,16 +3,16 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./database/main.db');
 
 exports.CreateNewGroup = async (req, res, next) => {
-    console.log("/createGroup called")
+    console.log("MiscellaneousControllers.js file/CreateNewGroup route called");
+
     function isEmpty(str) {
         return (!str || str.length === 0);
     }
 
     console.log("Running createGroup");
 
-    let data = [];
-
     // Can't use dictionaries for queries so order matters!
+    let data = [];
     data[0] = req.body["groupName"];
     data[1] = req.body["isActive"];
     data[2] = 1;

@@ -3,10 +3,13 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./database/main.db');
 
 exports.GetAllCoursesNamesDescriptionIDs = (req, res) => {
-	console.log("/Course called")
+	console.log("CourseControllers.js file/GetAllCoursesNamesDescriptionIDs route called");
+
 	var rowData = "";
+
 	let sql = `SELECT courseName, courseID, description
 		FROM Courses`;
+
 	db.all(sql, [], (err, rows) => {
 		if (err) {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
@@ -24,10 +27,13 @@ exports.GetAllCoursesNamesDescriptionIDs = (req, res) => {
 }
 
 exports.GetAllCoursesForInstructorID = (req, res) => { // dynamic courses based on instructor id
-	console.log("/Course/:id called")
+	console.log("CourseControllers.js file/GetAllCoursesForInstructorID route called");
+
 	var rowData = "";
+
 	let sql = `SELECT courseName, courseID, description
 		FROM Courses WHERE instructorID = ?`;
+
 	db.all(sql, [req.params["id"]], (err, rows) => {
 		if (err) {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
@@ -45,10 +51,13 @@ exports.GetAllCoursesForInstructorID = (req, res) => { // dynamic courses based 
 }
 
 exports.GetAllCourses = async (req, res) => {
-	console.log("/Add-Courses called")
+	console.log("CourseControllers.js file/GetAllCourses route called");
+
 	var rowData = "";
+
 	let sql = `SELECT *
 		FROM Courses`;
+
 	db.all(sql, [], (err, rows) => {
 		if (err) {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });

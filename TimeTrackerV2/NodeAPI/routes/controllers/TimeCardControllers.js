@@ -3,13 +3,16 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./database/main.db');
 
 exports.GetAllTimeCardsForUserInProject = (req, res) => {
-	console.log("/Users/:userId/:projectID/activities called")
+	console.log("TimeCardControllers.js file/GetAllTimeCardsForUserInProject route called");
+
 	var rowData = "";
 	let userId = req.params["userId"];
 	let projectID = req.params["projectID"];
+
 	let sql = `SELECT timeIn, timeOut, description
     	FROM TimeCard
     	WHERE userID = ${userId} AND projectID = ${projectID}`;
+
 	db.all(sql, [], (err, rows) => {
 		if (err) {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
@@ -27,11 +30,14 @@ exports.GetAllTimeCardsForUserInProject = (req, res) => {
 }
 
 exports.GetAllTimeCardsForUser = (req, res) => {
-	console.log("/Users/:userId/activities called")
+	console.log("TimeCardControllers.js file/GetAllTimeCardsForUser route called");
+
 	var rowData = "";
 	let userId = req.params["userId"];
+
 	let sql = `SELECT timeIn, timeOut, description
 		FROM TimeCard WHERE userID = ${userId}`;
+
 	db.all(sql, [], (err, rows) => {
 		if (err) {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
@@ -48,8 +54,8 @@ exports.GetAllTimeCardsForUser = (req, res) => {
 	});
 }
 
-exports.ClockOperation = async (req, res, next) => {
-	console.log("/clock called")
+exports.SaveTimeCard = async (req, res, next) => {
+	console.log("TimeCardControllers.js file/SaveTimeCard route called");
 	/*function isEmpty(str) {
 	  return (!str || str.length === 0 );
 	}
@@ -74,7 +80,6 @@ exports.ClockOperation = async (req, res, next) => {
 		}*/
 
 	let data = [];
-
 	data[0] = req.body["timeIn"];
 	data[1] = req.body["timeOut"];
 	data[2] = req.body["isEdited"];

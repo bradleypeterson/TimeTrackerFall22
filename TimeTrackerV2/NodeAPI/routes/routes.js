@@ -27,7 +27,7 @@ const {
 const {
     GetAllTimeCardsForUserInProject,
     GetAllTimeCardsForUser,
-    ClockOperation,
+    SaveTimeCard,
 } = require("./controllers/TimeCardControllers")
 
 const {
@@ -70,7 +70,7 @@ router.get('/Projects', GetAllProjectsForAllCourses);
 
 router.get('/Projects/:id/Users', GetUserTimesForProject);
 
-router.get('/Projects/:id', GetAllProjectsForCourse); 
+router.get('/Projects/:id', GetAllProjectsForCourse);
 //#endregion
 
 //#region Time card routes
@@ -78,7 +78,7 @@ router.get('/Users/:userId/:projectID/activities', GetAllTimeCardsForUserInProje
 
 router.get('/Users/:userId/activities', GetAllTimeCardsForUser);
 
-router.post('/clock', ClockOperation);
+router.post('/clock', SaveTimeCard);
 //#endregion
 
 //#region User routes
