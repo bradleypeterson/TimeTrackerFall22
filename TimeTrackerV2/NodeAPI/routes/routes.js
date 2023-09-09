@@ -19,7 +19,7 @@ const {
 } = require("./controllers/MiscellaneousControllers")
 
 const {
-    GetAllProjectsForAllCourses,
+    GetAllProjectsForUser,
     GetUserTimesForProject,
     GetAllProjectsForCourse,
 } = require("./controllers/ProjectControllers")
@@ -66,7 +66,7 @@ router.post('/createGroup', CreateNewGroup);
 //#endregion
 
 //#region Project routes
-router.get('/Projects', GetAllProjectsForAllCourses);
+router.get('/ProjectsForUser/:userID', GetAllProjectsForUser);
 
 router.get('/Projects/:id/Users', GetUserTimesForProject);
 

@@ -1,29 +1,32 @@
+const { json } = require('body-parser');
+
 const sqlite3 = require('sqlite3').verbose();
 
 const db = new sqlite3.Database('./database/main.db');
 
-exports.GetAllProjectsForAllCourses = (req, res) => {
-    console.log("ProjectControllers.js file/GetAllProjectsForAllCourses route called");
+exports.GetAllProjectsForUser = (req, res) => {
+    console.log("ProjectControllers.js file/GetAllProjectsForUser route called");
 
-    var rowData = "";
+    let userID = req.params["userID"];
+    console.log(`userID: ${userID}`);
 
-    let sql = `SELECT p.projectName, p.projectID, p.description, c.courseName
+    let sql = `SELECT DISTINCT p.projectName, p.projectID, p.description, c.courseName
         FROM Projects as p
-        INNER JOIN Courses as c ON p.courseID = c.courseID`;
+        INNER JOIN Courses as c ON c.courseID = p.courseID
+        INNER JOIN Course_Users as cu ON cu.CourseID = c.courseID
+        INNER JOIN Users as u on u.userID = ?
+        INNER JOIN Project_Users as pu on pu.userID = u.userID AND pu.projectID = p.projectID`;
 
-    db.all(sql, [], (err, rows) => {
+    db.all(sql, [userID], (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
         if (rows) {
-            rowData += "[";
-            rows.forEach((row) => {
-                rowData += '{"projectName": "' + row.projectName + '", "projectID": ' + row.projectID + ', "description": "' + row.description + '", "courseName": "' + row.courseName + '"},';
-            });
-            rowData += "]";
-            rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
-            console.log(rowData);
-            return res.send(rowData);
+            console.log(`Rows retrieved:  ${JSON.stringify(rows)}`);
+            return res.send(rows);
+        }
+        else {
+            return res.send("No errors occurred, however no rows were found either.");
         }
     });
 }
@@ -61,7 +64,7 @@ exports.GetUserTimesForProject = (req, res) => {
     });
 }
 
-exports.GetAllProjectsForCourse = (req, res) => { // grab all projects based on provided courseid
+exports.GetAllProjectsForCourse = (req, res) => { // grab all projects based on provided courseID
     console.log("ProjectControllers.js file/GetAllProjectsForCourse route called");
 
     var rowData = "";
