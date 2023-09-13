@@ -40,7 +40,7 @@ const routes: Routes = [
   { path: 'resetpassword', component: ResetpasswordComponent },
   { path: 'add-courses', component: AddCoursesComponent },
   { path: 'create-course', component: CreateCourseComponent },
-  { path: 'delete-course', component: DeleteCourseComponent },
+  { path: 'delete-course/:id', component: DeleteCourseComponent },
   { path: 'create-project/:id', component: CreateProjectComponent },
 ];
 

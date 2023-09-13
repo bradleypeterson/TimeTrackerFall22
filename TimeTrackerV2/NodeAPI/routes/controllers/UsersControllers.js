@@ -149,6 +149,36 @@ exports.CreateCourse = async (req, res, next) => {
     });
 }
 
+exports.DeleteCourse = async (req, res, next) => {
+    console.log("UsersControllers.js file/DeleteCourse route called");
+
+    let courseID = req.body["courseID"];
+
+    let sqlUsers = `delete from Course_Users
+        where courseID = ${courseID};`;
+
+    db.run(sqlUsers, function (err, value) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        else {
+            let sqlCourse = `delete from Courses
+            where courseID = ${courseID};`;
+
+            db.run(sqlCourse, function (err, value) {
+                if (err) {
+                    console.log(err)
+                    return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+                }
+                else {
+                    return res.status(200).json({ message: 'Course deleted.' });
+                }
+            });
+        }
+    });
+}
+
 exports.CreateProject = async (req, res, next) => {
     console.log("UsersControllers.js file/CreateProject route called");
 
