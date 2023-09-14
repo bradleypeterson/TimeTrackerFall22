@@ -5,26 +5,20 @@ const db = new sqlite3.Database('./database/main.db');
 exports.GetAllTimeCardsForUserInProject = (req, res) => {
 	console.log("TimeCardControllers.js file/GetAllTimeCardsForUserInProject route called");
 
-	var rowData = "";
 	let userId = req.params["userId"];
 	let projectID = req.params["projectID"];
+	console.log("userID: " + userId + ", projectID: " + projectID);
 
 	let sql = `SELECT timeIn, timeOut, description
     	FROM TimeCard
-    	WHERE userID = ${userId} AND projectID = ${projectID}`;
+    	WHERE userID = ? AND projectID = ?`;
 
-	db.all(sql, [], (err, rows) => {
+	db.all(sql, [userId, projectID], (err, rows) => {
 		if (err) {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
 		if (rows) {
-			rowData += "[";
-			rows.forEach((row) => {
-				rowData += '{"timeIn": "' + row.timeIn + '", "timeOut": "' + row.timeOut + '", "description": "' + row.description + '"},';
-			});
-			rowData += "]";
-			rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
-			return res.send(rowData);
+			return res.send(rows);
 		}
 	});
 }
@@ -32,8 +26,8 @@ exports.GetAllTimeCardsForUserInProject = (req, res) => {
 exports.GetAllTimeCardsForUser = (req, res) => {
 	console.log("TimeCardControllers.js file/GetAllTimeCardsForUser route called");
 
-	var rowData = "";
 	let userId = req.params["userId"];
+	console.log("userID: " + userId);
 
 	let sql = `SELECT timeIn, timeOut, description
 		FROM TimeCard WHERE userID = ${userId}`;
@@ -43,13 +37,7 @@ exports.GetAllTimeCardsForUser = (req, res) => {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
 		if (rows) {
-			rowData += "[";
-			rows.forEach((row) => {
-				rowData += '{"timeIn": "' + row.timeIn + '", "timeOut": "' + row.timeOut + '", "description": "' + row.description + '"},';
-			});
-			rowData += "]";
-			rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
-			return res.send(rowData);
+			return res.send(rows);
 		}
 	});
 }

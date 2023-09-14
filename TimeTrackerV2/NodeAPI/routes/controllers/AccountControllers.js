@@ -6,16 +6,23 @@ const db = new sqlite3.Database('./database/main.db');
 exports.Register = async (req, res, next) => {
 	console.log("AccountControllers.js file/Register route called");
 
+	let username = req.body["username"];
+	let firstName = req.body["firstName"];
+	let lastName = req.body["lastName"];
+	let type = req.body["type"];
+	let password = req.body["password"];
+	let repeatPassword = req.body["repeatPassword"];
+
 	function isEmpty(str) {
 		return (!str || str.length === 0);
 	}
 
-	if (isEmpty(req.body["username"]) ||
-		isEmpty(req.body["firstName"]) ||
-		isEmpty(req.body["lastName"]) ||
-		isEmpty(req.body["type"]) ||
-		isEmpty(req.body["password"]) ||
-		isEmpty(req.body["repeatPassword"])) {
+	if (isEmpty(username) ||
+		isEmpty(firstName) ||
+		isEmpty(lastName) ||
+		isEmpty(type) ||
+		isEmpty(password) ||
+		isEmpty(repeatPassword)) {
 		return res.status(400).json({ message: 'Missing one or more required arguments.' });
 	};
 
@@ -24,8 +31,9 @@ exports.Register = async (req, res, next) => {
 		FROM Users
 		WHERE username = ?`;
 
-	db.get(sql, [req.body["username"]], (err, rows) => {
+	db.get(sql, [username], (err, rows) => {
 		if (err) {
+			console.log(err);
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
 
@@ -34,26 +42,29 @@ exports.Register = async (req, res, next) => {
 		}
 
 		// Validate passwords match
-		if (req.body["password"] !== req.body["repeatPassword"]) {
+		if (password !== repeatPassword) {
 			return res.status(400).json({ message: 'Given passwords do not match' });
 		}
 
 		let salt = crypto.randomBytes(16).toString('hex');
 
-		let hash = crypto.pbkdf2Sync(req.body["password"], salt,
+		let hash = crypto.pbkdf2Sync(password, salt,
 			1000, 64, `sha512`).toString(`hex`);
+
+		let sql = `INSERT INTO Users(username, password, firstName, lastName, type, isActive, salt)
+			VALUES(?, ?, ?, ?, ?, ?, ?)`;
 
 		// Can't use dictionaries for queries so order matters!
 		let data = [];
-		data[0] = req.body["username"];
+		data[0] = username;
 		data[1] = hash;
-		data[2] = req.body["firstName"];
-		data[3] = req.body["lastName"];
-		data[4] = req.body["type"];
+		data[2] = firstName;
+		data[3] = lastName;
+		data[4] = type;
 		data[5] = false;
 		data[6] = salt;
 
-		db.run(`INSERT INTO Users(username, password, firstName, lastName, type, isActive, salt) VALUES(?, ?, ?, ?, ?, ?, ?)`, data, function (err, rows) {
+		db.run(sql, data, function (err, rows) {
 			if (err) {
 				return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 			} else {
@@ -66,12 +77,15 @@ exports.Register = async (req, res, next) => {
 exports.Login = async (req, res, next) => {
 	console.log("AccountControllers.js file/Login route called");
 
+	let username = req.body["username"];
+	let password = req.body["password"];
+
 	function isEmpty(str) {
 		return (!str || str.length === 0);
 	}
 
-	if (isEmpty(req.body["username"]) ||
-		isEmpty(req.body["password"])) {
+	if (isEmpty(username) ||
+		isEmpty(password)) {
 		return res.status(400).json({ message: 'Missing one or more required arguments.' });
 	};
 
@@ -79,24 +93,26 @@ exports.Login = async (req, res, next) => {
 		FROM Users
 		WHERE username = ?`;
 
-	db.get(sql, [req.body["username"]], (err, rows) => {
+	db.get(sql, [username], (err, rows) => {
 		if (err) {
 			console.log(err);
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
-
 		if (rows) {
 			salt = rows['salt'];
 
-			let hash = crypto.pbkdf2Sync(req.body["password"], salt,
+			let hash = crypto.pbkdf2Sync(password, salt,
 				1000, 64, `sha512`).toString(`hex`);
 
 			if (rows['password'] === hash) {
 				return res.status(200).json({ user: rows });
 			} else {
+				console.log("Wrong Password");
 				return res.status(401).json({ message: 'Username or password is incorrect.' });
 			}
-		} else {
+		}
+		else {
+			console.log("No user with that username");
 			return res.status(401).json({ message: 'Username or password is incorrect.' });
 		}
 	});

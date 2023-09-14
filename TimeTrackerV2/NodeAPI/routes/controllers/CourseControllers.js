@@ -5,8 +5,6 @@ const db = new sqlite3.Database('./database/main.db');
 exports.GetAllCoursesNamesDescriptionIDs = (req, res) => {
 	console.log("CourseControllers.js file/GetAllCoursesNamesDescriptionIDs route called");
 
-	var rowData = "";
-
 	let sql = `SELECT courseName, courseID, description
 		FROM Courses`;
 
@@ -15,13 +13,7 @@ exports.GetAllCoursesNamesDescriptionIDs = (req, res) => {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
 		if (rows) {
-			rowData += "[";
-			rows.forEach((row) => {
-				rowData += '{"courseName": "' + row.courseName + '", "courseID": "' + row.courseID + '", "description": "' + row.description + '"},';
-			});
-			rowData += "]";
-			rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
-			return res.send(rowData);
+			return res.send(rows);
 		}
 	});
 }
@@ -29,23 +21,17 @@ exports.GetAllCoursesNamesDescriptionIDs = (req, res) => {
 exports.GetAllCoursesForInstructorID = (req, res) => { // dynamic courses based on instructor id
 	console.log("CourseControllers.js file/GetAllCoursesForInstructorID route called");
 
-	var rowData = "";
-
+	let instructorID = req.params["id"];
 	let sql = `SELECT courseName, courseID, description
 		FROM Courses WHERE instructorID = ?`;
+	console.log("instructorID: " + instructorID);
 
-	db.all(sql, [req.params["id"]], (err, rows) => {
+	db.all(sql, [instructorID], (err, rows) => {
 		if (err) {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
 		if (rows) {
-			rowData += "[";
-			rows.forEach((row) => {
-				rowData += '{"courseName": "' + row.courseName + '", "courseID": "' + row.courseID + '", "description": "' + row.description + '"},';
-			});
-			rowData += "]";
-			rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
-			return res.send(rowData);
+			return res.send(rows);
 		}
 	});
 }
@@ -53,9 +39,7 @@ exports.GetAllCoursesForInstructorID = (req, res) => { // dynamic courses based 
 exports.GetAllCourses = async (req, res) => {
 	console.log("CourseControllers.js file/GetAllCourses route called");
 
-	var rowData = "";
-
-	let sql = `SELECT *
+	let sql = `SELECT courseName, courseID, description
 		FROM Courses`;
 
 	db.all(sql, [], (err, rows) => {
@@ -63,13 +47,7 @@ exports.GetAllCourses = async (req, res) => {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
 		if (rows) {
-			rowData += "[";
-			rows.forEach((row) => {
-				rowData += '{"courseName": "' + row.courseName + '", "courseID": "' + row.courseID + '", "description": "' + row.description + '"},';
-			});
-			rowData += "]";
-			rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
-			return res.send(rowData);
+			return res.send(rows);
 		}
 	});
 	// Something was inherently wrong with the below code, So I Braxton replaced it with what was done in all the other controllers.  You would get the following error text out from the the docker.
