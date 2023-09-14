@@ -2,7 +2,7 @@ import { TotalTimePipe } from './../pipes/total-time.pipe';
 import { ViewEvalComponent } from './../view-eval/view-eval.component';
 import { Component, Directive, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 // import { Stopwatch } from "ts-stopwatch";
 import { FormControl } from '@angular/forms';
@@ -28,15 +28,15 @@ export class ProjectComponent implements OnInit {
     responsive: false,
   };
   public pieChartLabels: any = [];
-  public pieChartDatasets: any = [{data: []}];
+  public pieChartDatasets: any = [{ data: [] }];
   public pieChartLegend = true;
   public pieChartPlugins = [];
   public punches = [];
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
- 
+
   description = new FormControl('');
-  activities: any=[];
+  activities: any = [];
 
   date: Date = new Date();
   currDate = formatDate(this.date, 'MM/dd/yyyy', 'en-US');
@@ -59,7 +59,7 @@ export class ProjectComponent implements OnInit {
   ) {
     this.chart = null!;
     const tempUser = localStorage.getItem('currentUser');
-    if (!tempUser){
+    if (!tempUser) {
       this.router.navigate(["/Login"]);
       return;
     }
@@ -67,16 +67,16 @@ export class ProjectComponent implements OnInit {
     console.log(this.currentUser);
     this.projectId = this.activatedRoute.snapshot.params["id"];
     console.log("The current project is: " + this.projectId);
-    if(this.projectId) {
+    if (this.projectId) {
       let tempProjects = localStorage.getItem('projects');
-      if(tempProjects){
+      if (tempProjects) {
         const projects = JSON.parse(tempProjects);
         console.log(projects);
-        for(let project of projects){
+        for (let project of projects) {
           console.log(project);
           console.log(this.projectId);
           console.log(project.projectID);
-          if(Number(project.projectID) === Number(this.projectId)){
+          if (Number(project.projectID) === Number(this.projectId)) {
             console.log(project);
             this.project = project;
             this.loadProjectUsers();
@@ -86,12 +86,12 @@ export class ProjectComponent implements OnInit {
     }
   }
 
-  getActivities(): void{
-    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/${this.projectId}/activities/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+  getActivities(): void {
+    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/${this.projectId}/activities/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
-        this.activities=data;
+        this.activities = data;
         /// populate a label to inform the user that they successfully clocked out, maybe with the time.
       },
       error: error => {
@@ -105,56 +105,56 @@ export class ProjectComponent implements OnInit {
   }
 
   clockIn(): void {
-    if(!this.isTimerRunning) {
+    if (!this.isTimerRunning) {
       localStorage.setItem("timeIn", Date.now().toString());
 
       this.startClickedLast = true;
       this.startTimer();
     }
   }
-  
-  calculateTotalTime(): void{
+
+  calculateTotalTime(): void {
     this.totalTimeMap = new Map<string, number>();
-    for(let teamMate of this.projectUsers){
+    for (let teamMate of this.projectUsers) {
       const fullName = `${teamMate.firstName} ${teamMate.lastName}`;
-      if(!teamMate.timeIn){
+      if (!teamMate.timeIn) {
         this.totalTimeMap.set(fullName, 0);
         continue;
       }
-      if(this.totalTimeMap.has(fullName)){
+      if (this.totalTimeMap.has(fullName)) {
         const timeDifference = teamMate.timeOut - teamMate.timeIn;
         this.totalTimeMap.set(fullName, timeDifference + this.totalTimeMap.get(fullName)!);
       }
-      else{
+      else {
         const timeDifference = teamMate.timeOut - teamMate.timeIn;
         this.totalTimeMap.set(fullName, timeDifference);
       }
     }
   }
 
-  populateGraph(): void{
-    this.pieChartDatasets = [{data: []}];
+  populateGraph(): void {
+    this.pieChartDatasets = [{ data: [] }];
     this.pieChartLabels = [];
     this.totalTimeMap.forEach((value: number, key: string) => {
       this.pieChartLabels.push(key);
       this.pieChartDatasets[0]["data"].push(this.calculateGraphTime(value));
-      if(this.chart && this.chart.chart){
+      if (this.chart && this.chart.chart) {
         this.chart.chart.update();
       }
-  });
+    });
   }
 
-  calculateGraphTime(value:number): number{
+  calculateGraphTime(value: number): number {
     // Minutes Conversion
-      return Number((value / 1000 / 60).toFixed(2));
+    return Number((value / 1000 / 60).toFixed(2));
   }
 
-  loadProjectUsers(): void{
-    this.http.get<any>(`http://localhost:8080/api/Projects/${this.projectId}/Users/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+  loadProjectUsers(): void {
+    this.http.get<any>(`http://localhost:8080/api/Projects/${this.projectId}/Users/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
-        this.projectUsers=data;
+        this.projectUsers = data;
         this.calculateTotalTime();
         this.populateGraph();
       },
@@ -164,12 +164,12 @@ export class ProjectComponent implements OnInit {
     });
   }
 
-  submit(): void{
+  submit(): void {
     this.startClickedLast = false;
-    this.isTimerRunning = true;  
+    this.isTimerRunning = true;
     this.startTimer();
     let req = {
-      timeIn: localStorage.getItem("timeIn"), 
+      timeIn: localStorage.getItem("timeIn"),
       timeOut: Date.now(), /// pull date from the HTML
       isEdited: false,
 
@@ -178,11 +178,11 @@ export class ProjectComponent implements OnInit {
       description: this.description.value /// pull description from the HTML
     };
 
-    if(this.description.value===''){
+    if (this.description.value === '') {
       return;
     }
 
-    this.http.post<any>('http://localhost:8080/api/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.post<any>('http://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(req.isEdited);
@@ -197,7 +197,7 @@ export class ProjectComponent implements OnInit {
         this.errMsg = error['error']['message'];
       }
     });
-}
+  }
 
   createGroup(): void {
     let payload = {
@@ -219,19 +219,19 @@ export class ProjectComponent implements OnInit {
   }
 
   startTimer(): void {
-    if(!this.isTimerRunning) {
+    if (!this.isTimerRunning) {
       this.isTimerRunning = true;
       this.start = setInterval(() => {
         this.seconds++;
         this.seconds = this.seconds < 10 ? '0' + this.seconds : this.seconds;
 
-        if(this.seconds === 60) {
+        if (this.seconds === 60) {
           this.minutes++;
           this.minutes = this.minutes < 10 ? '0' + this.minutes : this.minutes;
           this.seconds = '0' + 0;
         }
 
-        if(this.minutes === 60) {
+        if (this.minutes === 60) {
           this.hours++;
           this.hours = this.hours < 10 ? '0' + this.hours : this.hours;
           this.minutes = '0' + 0;
