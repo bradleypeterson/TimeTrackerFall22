@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-courses',
@@ -25,9 +25,9 @@ export class CoursesComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-  ) { 
+  ) {
     const tempUser = localStorage.getItem('currentUser');
-    if (!tempUser){
+    if (!tempUser) {
       this.router.navigate(["/Login"]);
       return;
     }
@@ -35,7 +35,7 @@ export class CoursesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
 
     this.loadCourses();
     // this.loadAllCourses();
@@ -70,7 +70,7 @@ export class CoursesComponent implements OnInit {
   // });
   // }
 
-  loadCourses(): void{
+  loadCourses(): void {
     // this.http.get<any>(`http://localhost:8080/Users/CourseList`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
     //   next: data => {
     //     this.errMsg = "";
@@ -84,23 +84,23 @@ export class CoursesComponent implements OnInit {
 
     this.loadAllUserCourses();
     this.loadNonUserCourses();
-    
-    if (!localStorage.getItem('foo')) { 
-      localStorage.setItem('foo', 'no reload') 
-      location.reload() 
+
+    if (!localStorage.getItem('foo')) {
+      localStorage.setItem('foo', 'no reload')
+      location.reload()
     } else {
-      localStorage.removeItem('foo') 
+      localStorage.removeItem('foo')
     }
   }
 
 
 
-  loadAllUserCourses(): void{
-    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/getUserCourses/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+  loadAllUserCourses(): void {
+    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/getUserCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
-        this.allUserCourses=data;
+        this.allUserCourses = data;
       },
       error: error => {
         this.errMsg = error['error']['message'];
@@ -108,12 +108,12 @@ export class CoursesComponent implements OnInit {
     });
   }
 
-  loadNonUserCourses(): void{
-    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/getNonUserCourses/`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+  loadNonUserCourses(): void {
+    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/getNonUserCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
-        this.nonUserCourses=data;
+        this.nonUserCourses = data;
         /// populate a label to inform the user that they successfully clocked out, maybe with the time.
       },
       error: error => {
@@ -122,7 +122,7 @@ export class CoursesComponent implements OnInit {
     });
   }
 
-  register(CourseId: any){
+  register(CourseId: any) {
     console.log(CourseId);
     console.log(this.currentUser.userID);
 
@@ -131,7 +131,7 @@ export class CoursesComponent implements OnInit {
       courseID: CourseId
     };
 
-    this.http.post<any>('http://localhost:8080/api/addUserCourse/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.post<any>('http://localhost:8080/api/addUserCourse/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         this.loadCourses();
@@ -142,13 +142,13 @@ export class CoursesComponent implements OnInit {
     });
   }
 
-  drop(CourseId: any){
+  drop(CourseId: any) {
     let req = {
       userID: this.currentUser.userID,
       courseID: CourseId
     };
-    
-    this.http.post<any>('http://localhost:8080/api/deleteUserCourse/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+
+    this.http.post<any>('http://localhost:8080/api/deleteUserCourse/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         this.loadCourses();

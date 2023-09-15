@@ -1,0 +1,7 @@
+<div class="nav-links">
+    <ng-container *ngFor="let route of routes; let i = index">
+        <a [routerLink]="route.path">{{ route.label }}</a>
+        <!-- new line after every 6 links-->
+        <br *ngIf="(i + 1) % 6 === 0 && i !== 0">
+    </ng-container>
+</div>

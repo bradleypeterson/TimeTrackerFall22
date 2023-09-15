@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TotalTimePipe } from './pipes/total-time.pipe';
 import { NgChartsModule } from 'ng2-charts';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NavigationComponent } from './navigation/navigation.component';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
     RoutingComponents,
     LoginComponent,
     TotalTimePipe,
+    NavigationComponent,
   ],
   imports: [
     BrowserModule,
