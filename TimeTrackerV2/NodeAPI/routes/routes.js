@@ -31,7 +31,7 @@ const {
 } = require("./controllers/TimeCardControllers")
 
 const {
-    GetFirstLastUserName,
+    GetAllFirstLastUserNames,
     GetCoursesRegisteredFor,
     GetCoursesNotRegisteredFor,
     RegisterForCourse,
@@ -84,8 +84,9 @@ router.post('/clock', SaveTimeCard);
 //#endregion
 
 //#region User routes
-router.get('/Users', GetFirstLastUserName);
+router.get('/Users', GetAllFirstLastUserNames);
 
+//#region Student specific controllers
 router.get('/Users/:userId/getUserCourses', GetCoursesRegisteredFor);
 
 router.get('/Users/:userId/getNonUserCourses', GetCoursesNotRegisteredFor);
@@ -93,7 +94,9 @@ router.get('/Users/:userId/getNonUserCourses', GetCoursesNotRegisteredFor);
 router.post('/addUserCourse', RegisterForCourse);
 
 router.post('/deleteUserCourse', DropCourse);
+//#endregion
 
+//#region Instructor specific controllers
 router.post('/createCourse', CreateCourse);
 
 router.post('/deleteCourse', DeleteCourse);
@@ -101,6 +104,7 @@ router.post('/deleteCourse', DeleteCourse);
 router.post('/createProject', CreateProject);
 
 router.post('/deleteProject', DeleteProject);
+//#endregion
 //#endregion
 
 

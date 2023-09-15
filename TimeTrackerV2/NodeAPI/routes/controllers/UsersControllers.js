@@ -2,10 +2,8 @@ const sqlite3 = require('sqlite3').verbose();
 
 const db = new sqlite3.Database('./database/main.db');
 
-exports.GetFirstLastUserName = (req, res) => {
+exports.GetAllFirstLastUserNames = (req, res) => {
     console.log("UsersControllers.js file/GetFirstLastUserName route called");
-
-    var rowData = "";
 
     let sql = `SELECT username, firstName, lastName
         FROM Users`;
@@ -15,13 +13,7 @@ exports.GetFirstLastUserName = (req, res) => {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
         if (rows) {
-            rowData += "[";
-            rows.forEach((row) => {
-                rowData += '{"username": "' + row.username + '", "firstName": "' + row.firstName + '", "lastName": "' + row.lastName + '"},';
-            });
-            rowData += "]";
-            rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
-            return res.send(rowData);
+            return res.send(rows);
         }
     });
 }
@@ -31,27 +23,30 @@ exports.GetFirstLastUserName = (req, res) => {
 exports.GetCoursesRegisteredFor = (req, res) => {
     console.log("UsersControllers.js file/GetCoursesRegisteredFor route called");
 
-    var rowData = "";
-    let userId = req.params["userId"];
+    var rowData = [];
+    let userID = req.params["userId"];
+    console.log("userID: " + userID)
 
-    let sql = `SELECT c.*, u.firstname, u.lastName
+    let sql = `SELECT c.courseID, c.courseName, c.description, u.firstname, u.lastName
         from Courses c
         JOIN Course_Users cu ON cu.courseID = c.courseID
-        JOIN Users u on u.userID = c.instructorID AND cu.userID = ${userId}`;
+        JOIN Users u on u.userID = c.instructorID AND cu.userID = ${userID}`;
 
     db.all(sql, [], (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
         if (rows) {
-            rowData += "[";
             rows.forEach((row) => {
-                rowData += '{"courseID": "' + row.courseID + '", "courseName": "' + row.courseName + '", "instructorFN": "' + row.firstName + '", "instructorLN": "' + row.lastName + '", "description": "' + row.description + '"},';
+                rowData.push({
+                    courseID: row.courseID,
+                    courseName: row.courseName,
+                    instructorFN: row.firstName,
+                    instructorLN: row.lastName,
+                    description: row.description
+                });
             });
-            rowData += "]";
-            console.log("Data before slicing: " + rowData)
-            rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
-            console.log("Data after slicing: " + rowData)
+
             return res.send(rowData);
         }
     });
@@ -61,15 +56,16 @@ exports.GetCoursesRegisteredFor = (req, res) => {
 exports.GetCoursesNotRegisteredFor = (req, res) => {
     console.log("UsersControllers.js file/GetCoursesNotRegisteredFor route called");
 
-    var rowData = "";
-    let userId = req.params["userId"];
+    var rowData = [];
+    let userID = req.params["userId"];
+    console.log("userID: " + userID)
 
-    let sql = `select c.*, u.firstname, u.lastname
+    let sql = `select c.courseID, c.courseName, c.description, u.firstname, u.lastname
         from Courses c
         JOIN Users u where u.userID = c.instructorID AND c.courseID not in (
             select c.courseID
             from Courses c
-            join Course_Users cu ON cu.courseID = c.courseID AND cu.userID = ${userId}
+            join Course_Users cu ON cu.courseID = c.courseID AND cu.userID = ${userID}
         )`;
 
     db.all(sql, [], (err, rows) => {
@@ -77,12 +73,16 @@ exports.GetCoursesNotRegisteredFor = (req, res) => {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
         if (rows) {
-            rowData += "[";
             rows.forEach((row) => {
-                rowData += '{"courseID": "' + row.courseID + '", "courseName": "' + row.courseName + '", "instructorFN": "' + row.firstName + '", "instructorLN": "' + row.lastName + '", "description": "' + row.description + '"},';
+                rowData.push({
+                    courseID: row.courseID,
+                    courseName: row.courseName,
+                    instructorFN: row.firstName,
+                    instructorLN: row.lastName,
+                    description: row.description
+                });
             });
-            rowData += "]";
-            rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
+
             return res.send(rowData);
         }
     });

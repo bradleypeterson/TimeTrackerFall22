@@ -35,7 +35,6 @@ exports.GetAllProjectsForUser = (req, res) => {
 exports.GetUserTimesForProject = (req, res) => {
     console.log("ProjectControllers.js file/GetUserTimesForProject route called");
 
-    var rowData = "";
     let projectID = req.params["id"];
     console.log("projectID: " + projectID);
 
@@ -50,16 +49,7 @@ exports.GetUserTimesForProject = (req, res) => {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
         if (rows) {
-            rowData += "[";
-            rows.forEach((row) => {
-                console.log("userID: " + row.userID + ", firstName: " + row.firstName + ", lastName: " + row.lastName + ", timeIn: " + row.timeIn + ", timeOut: " + row.timeOut);
-                rowData += '{"userID": "' + row.userID + '", "firstName": "' + row.firstName + '", "lastName": "' + row.lastName + '", "timeIn": ' + row.timeIn + ', "timeOut": ' + row.timeOut + '},';
-            });
-            rowData += "]";
-            console.log("rowData before slice " + rowData);
-            rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
-            console.log("rowData after slice " + rowData);
-            return res.send(rowData);
+            return res.send(rows);
         }
     });
 }
@@ -67,23 +57,18 @@ exports.GetUserTimesForProject = (req, res) => {
 exports.GetAllProjectsForCourse = (req, res) => { // grab all projects based on provided courseID
     console.log("ProjectControllers.js file/GetAllProjectsForCourse route called");
 
-    var rowData = "";
+    let courseID = req.params["id"];
+    console.log(`courseID: ${courseID}`);
 
     let sql = `SELECT projectName, projectID, description
         FROM Projects WHERE courseID = ?`;
 
-    db.all(sql, [req.params["id"]], (err, rows) => {
+    db.all(sql, [courseID], (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
         if (rows) {
-            rowData += "[";
-            rows.forEach((row) => {
-                rowData += '{"projectName": "' + row.projectName + '", "projectID": "' + row.projectID + '", "description": "' + row.description + '"},';
-            });
-            rowData += "]";
-            rowData = rowData.slice(0, rowData.length - 2) + rowData.slice(-1);
-            return res.send(rowData);
+            return res.send(rows);
         }
     });
 }

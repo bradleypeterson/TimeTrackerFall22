@@ -1,12 +1,12 @@
 const cors = require('cors'); 
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
+require('./database/seed.js'); //this runs the file seed.js to make the database if it doesn't exist
 
 const ExternalRoutes = require("./routes/routes")  //include our "routes.js" module so we can use it inside this file.  Module documentation https://www.w3schools.com/nodejs/nodejs_modules.asp
 
 // Constants
 const PORT = 8080;
-const HOST = '0.0.0.0';  // Apparently you can't change this to "localhost" because then it can't be found?  But it is running on "localhost".
 
 // Database
 const db = new sqlite3.Database('./database/main.db');
@@ -35,6 +35,6 @@ app.get('/', (req, res) => {
 // using our routes we defined inside our "routes.js" file
 app.use("/api", ExternalRoutes);  //adds our custom http responses from the file specified for "ExternalRoutes"
 
-app.listen(PORT, HOST);
-console.log(`Running on http://${HOST}:${PORT}`);
-require('./database/seed.js');
+app.listen(PORT, () => 
+  console.log(`Running on http://localhost:${PORT}`)
+);
