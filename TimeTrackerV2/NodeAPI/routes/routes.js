@@ -39,6 +39,7 @@ const {
     CreateCourse,
     DeleteCourse,
     CreateProject,
+    DeleteProject
 } = require("./controllers/UsersControllers")
 //#endregion
 
@@ -98,6 +99,8 @@ router.post('/createCourse', CreateCourse);
 router.post('/deleteCourse', DeleteCourse);
 
 router.post('/createProject', CreateProject);
+
+router.post('/deleteProject', DeleteProject);
 //#endregion
 
 

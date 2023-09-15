@@ -152,29 +152,20 @@ exports.CreateCourse = async (req, res, next) => {
 exports.DeleteCourse = async (req, res, next) => {
     console.log("UsersControllers.js file/DeleteCourse route called");
 
+    db.get("PRAGMA foreign_keys = ON");
+
     let courseID = req.body["courseID"];
 
-    let sqlUsers = `delete from Course_Users
-        where courseID = ${courseID};`;
+    let sql = `delete from Courses
+    where courseID = ${courseID};`;
 
-    db.run(sqlUsers, function (err, value) {
+    db.run(sql, function (err, value) {
         if (err) {
-            console.log(err)
+            console.log(err);
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
         else {
-            let sqlCourse = `delete from Courses
-            where courseID = ${courseID};`;
-
-            db.run(sqlCourse, function (err, value) {
-                if (err) {
-                    console.log(err)
-                    return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
-                }
-                else {
-                    return res.status(200).json({ message: 'Course deleted.' });
-                }
-            });
+            return res.status(200).json({ message: 'Course deleted.' });
         }
     });
 }
@@ -194,6 +185,27 @@ exports.CreateProject = async (req, res, next) => {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         } else {
             return res.status(200).json({ project: data });
+        }
+    });
+}
+
+exports.DeleteProject = async (req, res, next) => {
+    console.log("UsersControllers.js file/DeleteProject route called");
+
+    db.get("PRAGMA foreign_keys = ON");
+
+    let projectID = req.body["projectID"];
+
+    let sql = `delete from Projects
+            where projectID = ${projectID};`;
+
+    db.run(sql, function (err, value) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        else {
+            return res.status(200).json({ message: 'Project deleted.' });
         }
     });
 }

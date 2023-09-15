@@ -9,6 +9,8 @@ let db = new sqlite3.Database('./database/main.db', sqlite3.OPEN_READWRITE | sql
     console.log('Connected to the main database.');
   });
 
+db.get("PRAGMA foreign_keys = ON");
+
 db.run(`CREATE TABLE IF NOT EXISTS Users(userID INTEGER PRIMARY KEY, 
                             username TEXT NOT NULL,
                             password TEXT NOT NULL,
@@ -24,22 +26,30 @@ db.run(`CREATE TABLE IF NOT EXISTS TimeCard(timeslotID INTEGER PRIMARY KEY,
                             isEdited bool NOT NULL,
                             userID INTEGER NOT NULL,
                             description TEXT,
-                            projectID INT NOT NULL);`)
+                            projectID INT NOT NULL,
+                            FOREIGN KEY (userID) REFERENCES Users (userID) ON DELETE CASCADE,
+                            FOREIGN KEY (projectID) REFERENCES Projects (projectID) ON DELETE CASCADE);`)
 
 db.run(`CREATE TABLE IF NOT EXISTS Courses(courseID INTEGER PRIMARY KEY, 
                             courseName TEXT NOT NULL,
                             isActive BOOL NOT NULL,
                             instructorID INTEGER NOT NULL,
-                            description TEXT);`)
+                            description TEXT,
+                            FOREIGN KEY (instructorID) REFERENCES Users (userID) ON DELETE CASCADE);`)
 
 db.run(`CREATE TABLE IF NOT EXISTS Projects(projectID INTEGER PRIMARY KEY, 
                             projectName TEXT NOT NULL,
                             isActive BOOL NOT NULL,
                             courseID INTEGER NOT NULL,
-                            description TEXT);`)
+                            description TEXT,
+                            FOREIGN KEY (courseID) REFERENCES Courses (courseID) ON DELETE CASCADE);`)
 
 db.run(`CREATE TABLE IF NOT EXISTS Course_Users (userID INTEGER NOT NULL,
-                              courseID INTEGER NOT NULL);`)
+                            courseID INTEGER NOT NULL,
+                            FOREIGN KEY (userID) REFERENCES Users (userID) ON DELETE CASCADE,
+                            FOREIGN KEY (courseID) REFERENCES Courses (courseID) ON DELETE CASCADE);`)
   
 db.run(`CREATE TABLE IF NOT EXISTS Project_Users (userID INTEGER NOT NULL,
-                            projectID INTEGER NOT NULL);`)
+                            projectID INTEGER NOT NULL,
+                            FOREIGN KEY (userID) REFERENCES Users (userID) ON DELETE CASCADE,
+                            FOREIGN KEY (projectID) REFERENCES Projects (projectID) ON DELETE CASCADE);`)
