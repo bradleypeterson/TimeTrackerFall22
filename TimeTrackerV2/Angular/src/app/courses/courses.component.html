@@ -2,7 +2,7 @@
 <div id="courses">
 
 
-  <h2>Register for Courses</h2>
+  <h2>Courses</h2>
   <hr>
 
 
@@ -14,13 +14,36 @@
     <button class="btn btn-primary" type="submit">Search</button>
   </form>
   
-  
+  <h3>Student Courses</h3>  
   <table class="table table-hover">
     <thead>
       <tr>
         <th>Course Name</th>
         <th>Instructor</th>
         <th>Description</th>
+        <th></th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of allUserCourses">
+        <td>{{c.courseName}}</td>
+        <td>{{c.instructorFN}} {{c.instructorLN}}</td>
+        <td>{{c.description}}</td>
+        <td><a href="/course/{{c.courseID}}" class="btn btn-primary">View</a></td>
+        <td><button class="btn btn-danger float-right" (click)="drop(c.courseID)">Drop</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Register for Courses</h3>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Course Name</th>
+        <th>Instructor</th>
+        <th>Description</th>
+        <th></th>
         <th></th>
       </tr>
     </thead>
@@ -31,17 +54,9 @@
         <td>{{c.courseName}}</td>
         <td>{{c.instructorFN}} {{c.instructorLN}}</td>
         <td>{{c.description}}</td>
+        <td><a href="/course/{{c.courseID}}" class="btn btn-primary">View</a></td>
         <td><button class="btn btn-success float-right" (click)="register(c.courseID)">Register</button></td>
       </tr>
-
-      <tr *ngFor="let c of allUserCourses">
-        <td>{{c.courseName}}</td>
-        <td>{{c.instructorFN}} {{c.instructorLN}}</td>
-        <td>{{c.description}}</td>
-        <td><button class="btn btn-danger float-right" (click)="drop(c.courseID)">Drop</button></td>
-      </tr>
-
-
     </tbody>
   </table>
 
