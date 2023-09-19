@@ -22,7 +22,6 @@
         <th>Instructor</th>
         <th>Description</th>
         <th></th>
-        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -30,8 +29,7 @@
         <td>{{c.courseName}}</td>
         <td>{{c.instructorFN}} {{c.instructorLN}}</td>
         <td>{{c.description}}</td>
-        <td><a href="/course/{{c.courseID}}" class="btn btn-primary">View</a></td>
-        <td><button class="btn btn-danger float-right" (click)="drop(c.courseID)">Drop</button></td>
+        <td><div class="btn-group float-right"><a href="/course/{{c.courseID}}" class="btn btn-primary">View</a><button class="btn btn-danger" (click)="drop(c.courseID)">Drop</button></div></td>
       </tr>
     </tbody>
   </table>
@@ -44,7 +42,6 @@
         <th>Instructor</th>
         <th>Description</th>
         <th></th>
-        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -54,8 +51,7 @@
         <td>{{c.courseName}}</td>
         <td>{{c.instructorFN}} {{c.instructorLN}}</td>
         <td>{{c.description}}</td>
-        <td><a href="/course/{{c.courseID}}" class="btn btn-primary">View</a></td>
-        <td><button class="btn btn-success float-right" (click)="register(c.courseID)">Register</button></td>
+        <td><div class="btn-group float-right"><a href="/course/{{c.courseID}}" class="btn btn-primary">View</a><button class="btn btn-success float-right" (click)="register(c.courseID)">Register</button></div></td>
       </tr>
     </tbody>
   </table>

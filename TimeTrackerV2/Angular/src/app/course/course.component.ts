@@ -14,6 +14,10 @@ export class CourseComponent implements OnInit {
 
   private courseID: any;
 
+  instructor: boolean = false;
+  student: boolean = false;
+  userID: string = '';
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -21,6 +25,17 @@ export class CourseComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+    // get user type
+    let currentUser = localStorage.getItem('currentUser');
+    var userDate = currentUser ? JSON.parse(currentUser) : null;
+    var userType = userDate.type;
+    this.userID = userDate.userID;
+    if(userType === 'instructor'){
+      this.instructor = true;
+    }else if(userType === 'student'){
+      this.student = true;
+    }
     
     this.courseID = this.activatedRoute.snapshot.params['id']; // get course id from URL
 

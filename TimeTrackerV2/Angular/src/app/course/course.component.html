@@ -1,8 +1,12 @@
 <div id="course">
   <h2>{{course.courseName}}
-    <div class="btn-group">
-      <a href="" class="btn btn-secondary">Edit</a>
-      <a href="/delete-course/{{course.courseID}}" class="btn btn-danger">Delete</a>
+    <div [ngSwitch]="true">
+      <div *ngSwitchCase="instructor">
+        <div class="btn-group">
+          <a href="" class="btn btn-secondary">Edit</a>
+          <a href="/delete-course/{{course.courseID}}" class="btn btn-danger">Delete</a>
+        </div>
+      </div>
     </div>
   </h2>
   <hr>
@@ -16,8 +20,11 @@
       <input class="form-control mr-3" type="search" placeholder="Search Projects" aria-label="Search">
       <button class="btn btn-primary" type="submit">Search</button>
     </form>
-  
-    <a href="/create-project/{{course.courseID}}" class="btn btn-success">Create New Project</a>
+    <div [ngSwitch]="true">
+      <div *ngSwitchCase="instructor">
+        <a href="/create-project/{{course.courseID}}" class="btn btn-success">Create New Project</a>
+      </div>
+    </div>
   </div>
   
 
@@ -35,7 +42,7 @@
       <tr *ngFor="let p of projects">
         <td>{{ p.projectName }}</td>
         <td>{{ p.description }}</td>
-        <td><a href="/project/{{p.projectID}}" class="btn btn-primary float-right">View Project</a></td>
+        <td><div class="btn-group float-right"><a href="/project/{{p.projectID}}" class="btn btn-primary">View</a><a href="" class="btn btn-success float-right">Join</a></div></td>
       </tr>
     
 
