@@ -21,6 +21,9 @@ import { CreateCourseComponent } from './create-course/create-course.component';
 import { DeleteCourseComponent } from './delete-course/delete-course.component';
 import { CreateProjectComponent } from './create-project/create-project.component';
 import { DeleteProjectComponent } from './delete-project/delete-project.component';
+import { InstructorReportsComponent } from './instructor-reports/instructor-reports.component';
+
+
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -43,7 +46,10 @@ const routes: Routes = [
   { path: 'create-course', component: CreateCourseComponent },
   { path: 'delete-course/:id', component: DeleteCourseComponent },
   { path: 'create-project/:id', component: CreateProjectComponent },
-  { path: 'delete-project/:id', component: DeleteProjectComponent},
+  { path: 'delete-project/:id', component: DeleteProjectComponent },
+  { path: 'instructor-reports', component: InstructorReportsComponent },
+
+
 ];
 
 @NgModule({
@@ -73,4 +79,5 @@ export const RoutingComponents = [
   CreateCourseComponent,
   DeleteCourseComponent,
   CreateProjectComponent,
+  InstructorReportsComponent,
 ]

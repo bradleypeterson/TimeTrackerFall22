@@ -1,0 +1,21 @@
+<mat-card *ngFor="let report of reports" class="report-card">
+    <mat-card-header (click)="toggleCard(report.studentName)">
+        <mat-card-title>{{ report.studentName }}</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content *ngIf="expandedCards[report.studentName]">
+        <div *ngFor="let course of report.courses" class="course-section">
+            <!-- <h4>{{ course.title }}</h4> -->
+
+            <div *ngFor="let project of course.projects" class="project-section">
+                <h5>{{ project.name }}</h5>
+
+                <ul class="time-log-list">
+                    <li *ngFor="let log of project.timeLogs">
+                        {{ log.date | date }} - {{ log.hours }} hours
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

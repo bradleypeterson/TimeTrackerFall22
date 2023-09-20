@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { MatCardModule } from '@angular/material/card';
 import { AppRoutingModule, RoutingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -9,6 +9,8 @@ import { TotalTimePipe } from './pipes/total-time.pipe';
 import { NgChartsModule } from 'ng2-charts';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavigationComponent } from './navigation/navigation.component';
+import { InstructorReportsComponent } from './instructor-reports/instructor-reports.component';
+import { UserReportsComponent } from './user-reports/user-reports.component';
 
 
 @NgModule({
@@ -18,6 +20,9 @@ import { NavigationComponent } from './navigation/navigation.component';
     LoginComponent,
     TotalTimePipe,
     NavigationComponent,
+    InstructorReportsComponent,
+    UserReportsComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -26,6 +31,7 @@ import { NavigationComponent } from './navigation/navigation.component';
     ReactiveFormsModule,
     HttpClientModule,
     NgChartsModule,
+    MatCardModule,
   ],
   providers: [FormBuilder],
   bootstrap: [AppComponent]

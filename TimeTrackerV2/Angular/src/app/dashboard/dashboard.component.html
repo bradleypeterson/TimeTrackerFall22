@@ -5,6 +5,7 @@
   <div *ngSwitchCase="student" id="dashboard">
 
     <h2>Dashboard</h2>
+    <!-- <a href="/user-reports" class="btn btn-success btn-elevated">Reports</a> -->
     <hr>
 
     <div class="alert alert-danger" *ngIf="projects?.length <= 0">
@@ -18,7 +19,7 @@
           <div class="card-body">
             <h5 class="card-title">{{p.courseName}}</h5>
             <p class="card-text">{{p.description}}</p>
-            <a routerLink="/project/{{p.projectID}}" class="btn btn-primary">View Project</a>
+            <a routerLink="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View Project</a>
           </div>
         </div>
       </div>
@@ -33,7 +34,9 @@
 
 
     <h2>Dashboard</h2>
-    <a href="/create-course" class="btn btn-success">Create New Course</a>
+    <a href="/create-course" class="btn btn-success btn-elevated">Create New Course</a>
+    <a href="/instructor-reports" class="btn btn-success btn-elevated">Reports</a>
+
     <app-navigation></app-navigation>
 
     <hr>
@@ -50,7 +53,8 @@
           <h5 class="card-header">{{ c.courseName }}</h5>
           <div class="card-body">
             <p class="card-text">{{ c.description }}</p>
-            <a href="/course/{{ c.courseID }}" class="btn btn-primary">View Course</a>
+            <a href="/course/{{ c.courseID }}" class="btn btn-primary btn-elevated">View Course</a>
+
           </div>
         </div>
       </div>

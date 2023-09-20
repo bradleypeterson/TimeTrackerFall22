@@ -28,6 +28,8 @@ export class NavigationComponent {
     { path: '../create-course', label: 'CreateCourseComponent' },
     // { path: 'delete-course/:id', label: 'DeleteCourseComponent' },
     // { path: 'create-project/:id', label: 'CreateProjectComponent' },
+    { path: '../instructor-reports', label: 'InstructorReportsComponent' },
+
 
 
 

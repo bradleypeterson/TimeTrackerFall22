@@ -12,7 +12,7 @@
   <hr>
 
 
-  
+
 
   <!-- ng-model="search" ??? -->
   <div class="form-inline mb-3">
@@ -26,7 +26,7 @@
       </div>
     </div>
   </div>
-  
+
 
   <table class="table table-hover">
     <thead>
@@ -38,13 +38,16 @@
     </thead>
     <tbody>
 
-      
+
       <tr *ngFor="let p of projects">
         <td>{{ p.projectName }}</td>
         <td>{{ p.description }}</td>
-        <td><div class="btn-group float-right"><a href="/project/{{p.projectID}}" class="btn btn-primary">View</a><a href="" class="btn btn-success float-right">Join</a></div></td>
+        <td>
+          <div class="btn-group float-right"><a href="/project/{{p.projectID}}" class="btn btn-primary">View</a><a
+              href="" class="btn btn-success">Join</a></div>
+        </td>
       </tr>
-    
+
 
 
     </tbody>
@@ -60,7 +63,7 @@
     <input class="form-control mr-3" type="search" placeholder="Search Students" aria-label="Search">
     <button class="btn btn-primary" type="submit">Search</button>
   </form>
-  
+
 
   <table class="table table-hover">
     <thead>
@@ -70,6 +73,7 @@
     </thead>
     <tbody>
 
+      <app-instructor-reports></app-instructor-reports>
       <!--
       <tr *ngFor="let s of students">
         <td>{{ s }}</td>
