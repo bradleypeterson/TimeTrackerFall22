@@ -52,6 +52,10 @@ export class ProjectComponent implements OnInit {
 
   currentUser: any;
 
+  instructor: boolean = false;
+  student: boolean = false;
+  userID: string = '';
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -68,6 +72,17 @@ export class ProjectComponent implements OnInit {
     this.projectId = this.activatedRoute.snapshot.params["id"];
     console.log("The current project is: " + this.projectId);
     if (this.projectId) {
+      // get user type
+      let currentUser = localStorage.getItem('currentUser');
+      var userDate = currentUser ? JSON.parse(currentUser) : null;
+      var userType = userDate.type;
+      this.userID = userDate.userID;
+      if(userType === 'instructor'){
+        this.instructor = true;
+      }else if(userType === 'student'){
+        this.student = true;
+      }
+
       let tempProjects = localStorage.getItem('projects');
       if (tempProjects) {
         const projects = JSON.parse(tempProjects);
