@@ -5,8 +5,8 @@ import { Component } from '@angular/core';
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.css']
 })
-export class NavigationComponent {
 
+export class NavigationComponent {
   routes = [
     { path: '', label: 'Login' },
     { path: '../admin-evals', label: 'Admin Evals' },
@@ -29,12 +29,7 @@ export class NavigationComponent {
     // { path: 'delete-course/:id', label: 'DeleteCourseComponent' },
     // { path: 'create-project/:id', label: 'CreateProjectComponent' },
     { path: '../instructor-reports', label: 'InstructorReportsComponent' },
-
-
-
-
   ];
 
   constructor() { }
-
 }

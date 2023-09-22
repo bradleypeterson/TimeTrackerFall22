@@ -30,3 +30,8 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
   }
 }
+
+.h3-inline {
+  vertical-align: middle;  /* To center the text inside the parent <></> https://stackoverflow.com/questions/31702017/moving-html-text-next-to-a-button */
+  display: inline;  /* Makes the button after it move next to the text */
+}

@@ -1,18 +1,32 @@
 <div [ngSwitch]="true">
-
-
-
   <div *ngSwitchCase="student" id="dashboard">
-
     <h2>Dashboard</h2>
     <!-- <a href="/user-reports" class="btn btn-success btn-elevated">Reports</a> -->
-    <hr>
 
+    <h3>Courses</h3>
+    <hr>
+    <div class="alert alert-danger" *ngIf="courses?.length <= 0">
+      You have not registered for any courses.
+    </div>
+    <div class="row">
+      <div class="col-sm-3 mb-3" *ngFor="let c of courses">
+        <div class="card">
+          <h5 class="card-header">{{ c.courseName }}</h5>
+          <div class="card-body">
+            <p class="card-text">{{ c.description }}</p>
+            <a href="/course/{{ c.courseID }}" class="btn btn-primary btn-elevated">View Course</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <h3>My Active Projects</h3>
+    <hr>
     <div class="alert alert-danger" *ngIf="projects?.length <= 0">
       You are not assigned any projects.
     </div>
     <div class="row">
-
       <div class="col-sm-3 mb-3" *ngFor="let p of projects">
         <div class="card">
           <h5 class="card-header">{{p.projectName}}</h5>
@@ -23,45 +37,32 @@
           </div>
         </div>
       </div>
-
     </div>
-
   </div>
 
-
-
   <div *ngSwitchCase="instructor" id="dashboard">
-
-
     <h2>Dashboard</h2>
-    <a href="/create-course" class="btn btn-success btn-elevated">Create New Course</a>
     <!-- <a href="/instructor-reports" class="btn btn-success btn-elevated">Reports</a> -->
-
     <app-navigation></app-navigation>
-
+    
+    <div>
+      <h3 class="h3-inline">Courses</h3>  <!-- This class will make the below button come next to it so they are on one line -->
+      <a href="/create-course" class="btn btn-success btn-elevated">Create New Course</a>
+    </div>
     <hr>
-
-
-
     <div class="alert alert-danger" *ngIf="courses?.length <= 0">
       You have not created any courses.
     </div>
     <div class="row">
-
       <div class="col-sm-3 mb-3" *ngFor="let c of courses">
         <div class="card">
           <h5 class="card-header">{{ c.courseName }}</h5>
           <div class="card-body">
             <p class="card-text">{{ c.description }}</p>
             <a href="/course/{{ c.courseID }}" class="btn btn-primary btn-elevated">View Course</a>
-
           </div>
         </div>
       </div>
-
     </div>
   </div>
-
-
-
 </div>

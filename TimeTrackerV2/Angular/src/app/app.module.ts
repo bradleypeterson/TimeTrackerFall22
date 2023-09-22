@@ -21,8 +21,6 @@ import { InstructorReportsComponent } from './instructor-reports/instructor-repo
     TotalTimePipe,
     NavigationComponent,
     InstructorReportsComponent,
-
-
   ],
   imports: [
     BrowserModule,

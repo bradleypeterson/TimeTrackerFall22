@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,9 +28,10 @@ export class DashboardComponent implements OnInit {
     var userDate = currentUser ? JSON.parse(currentUser) : null;
     var userType = userDate.type;
     this.userID = userDate.userID;
-    if(userType === 'instructor'){
+    if (userType === 'instructor') {
       this.instructor = true;
-    }else if(userType === 'student'){
+    }
+    else if (userType === 'student') {
       this.student = true;
     }
 
@@ -38,39 +39,50 @@ export class DashboardComponent implements OnInit {
     this.loadProjects();
     this.loadCourses();
 
-    if (!localStorage.getItem('foo')) { 
-      localStorage.setItem('foo', 'no reload') 
-      location.reload() 
-    } else {
-      localStorage.removeItem('foo') 
+    if (!localStorage.getItem('foo')) {
+      localStorage.setItem('foo', 'no reload')
+      location.reload()
     }
-    
+    else {
+      localStorage.removeItem('foo')
+    }
   }
 
   public pageTitle = 'TimeTrackerV2 | Dashboard';
 
   loadProjects(): void {
-    this.http.get(`http://localhost:8080/api/ProjectsForUser/${this.userID}`).subscribe((data: any) =>{ 
-    //console.log(data);
-    this.projects = data;
-    if(this.projects){
-      localStorage.setItem("projects", JSON.stringify(this.projects));
-    }
-  });
+    this.http.get(`http://localhost:8080/api/ProjectsForUser/${this.userID}`).subscribe((data: any) => {
+      //console.log(data);
+      this.projects = data;
+      if (this.projects) {
+        localStorage.setItem("projects", JSON.stringify(this.projects));
+      }
+    });
   }
 
   loadCourses(): void {
-    var request = 'http://localhost:8080/api/Courses/' + this.userID; // attempt to pull only the courses the instructor has created
-    this.http.get(request).subscribe((data: any) =>{
-    console.log(data);
-    this.courses = data;
-    for(let i = 0; i < data.length; i++) {
-      localStorage.setItem("courses", JSON.stringify(this.courses));
+    // attempt to pull only the courses the instructor has created
+    if (this.instructor) {
+      var request = `http://localhost:8080/api/Courses/${this.userID}`;
+      this.http.get(request).subscribe((data: any) => {
+        console.log(data);
+        this.courses = data;
+        for (let i = 0; i < data.length; i++) {
+          localStorage.setItem("courses", JSON.stringify(this.courses));
+        }
+      });
     }
-  });
+    
+    // attempt to pull the courses that the student is registered for
+    else if (this.student) {
+      var request = `http://localhost:8080/api/Users/${this.userID}/getUserCourses`
+      this.http.get(request).subscribe((data: any) => {
+        console.log(data);
+        this.courses = data;
+        for (let i = 0; i < data.length; i++) {
+          localStorage.setItem("courses", JSON.stringify(this.courses));
+        }
+      });
+    }
   }
-
 }
-
-
-
