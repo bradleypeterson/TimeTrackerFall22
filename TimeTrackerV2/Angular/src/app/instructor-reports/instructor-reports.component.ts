@@ -97,18 +97,3 @@ export class InstructorReportsComponent implements OnInit {
   }
 }
 
-// reports: StudentReport[] = [];
-
-// // Use dependency injection for the HttpClient
-// constructor(private http: HttpClient) { }
-
-// ngOnInit(): void {
-//   this.getStudentReport().subscribe(data => {
-//     this.reports = data;
-//   });
-// }
-
-// // Service call (typically you'd put this in a separate service, but we can define it here for simplicity)
-// getStudentReport(): Observable < StudentReport[] > {
-//   return this.http.get<StudentReport[]>('YOUR_API_ENDPOINT');
-// }
