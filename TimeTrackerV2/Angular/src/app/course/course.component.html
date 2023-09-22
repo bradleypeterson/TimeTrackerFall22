@@ -43,8 +43,10 @@
         <td>{{ p.projectName }}</td>
         <td>{{ p.description }}</td>
         <td>
-          <div class="btn-group float-right"><a href="/project/{{p.projectID}}" class="btn btn-primary">View</a><a
-              href="" class="btn btn-success">Join</a></div>
+          <div class="btn-group float-right">
+            <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+            <button class="btn btn-success" (click)="join(p.projectID)">Join</button>
+          </div>
         </td>
       </tr>
 

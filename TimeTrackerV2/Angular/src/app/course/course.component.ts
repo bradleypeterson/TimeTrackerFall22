@@ -11,6 +11,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class CourseComponent implements OnInit {
   public course: any;
   public projects: any = [];
+  public errMsg = '';
 
   private courseID: any;
 
@@ -18,19 +19,28 @@ export class CourseComponent implements OnInit {
   student: boolean = false;
   userID: string = '';
 
+  public currentUser: any;
+
   constructor(
     private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-  ) { }
+  ) {
+    const tempUser = localStorage.getItem('currentUser');
+    if (!tempUser) {
+      this.router.navigate(["/Login"]);
+      return;
+    }
+    this.currentUser = JSON.parse(tempUser);
+  }
 
   ngOnInit(): void {
 
     // get user type
     let currentUser = localStorage.getItem('currentUser');
-    var userDate = currentUser ? JSON.parse(currentUser) : null;
-    var userType = userDate.type;
-    this.userID = userDate.userID;
+    var userData = currentUser ? JSON.parse(currentUser) : null;
+    var userType = userData.type;
+    this.userID = userData.userID;
     if(userType === 'instructor'){
       this.instructor = true;
     }else if(userType === 'student'){
@@ -68,7 +78,22 @@ export class CourseComponent implements OnInit {
   });
   }
 
+  join(ProjectID: any) {
+    let req = {
+      userID: this.currentUser.userID,
+      projectID: ProjectID
+    };
 
+    this.http.post<any>('http://localhost:8080/api/joinGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        this.loadProjects();
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
 
 
 }
