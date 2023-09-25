@@ -14,6 +14,8 @@ export class CoursesComponent implements OnInit {
   public courses: any = [];
   public allUserCourses: any = [];
   public nonUserCourses: any = [];
+  public filteredCourses: any = [];
+  public searchQuery: any = '';
 
   public courseData: any = [];
 
@@ -157,6 +159,33 @@ export class CoursesComponent implements OnInit {
         this.errMsg = error['error']['message'];
       }
     });
+  }
+
+  searchCourses(): void {
+    let sizeOfFilteredCourses = 0;
+    if(this.searchQuery == '') {
+      this.filteredCourses = [];
+    }
+    else {
+      for (let c of this.nonUserCourses) {
+        if (c.courseName.toLowerCase().search(this.searchQuery.toLowerCase()) != -1) {
+          this.filteredCourses.push(c);
+        }
+        else {
+          sizeOfFilteredCourses = this.filteredCourses.length;
+          this.filteredCourses.splice(0, sizeOfFilteredCourses);
+        }
+      }
+      for (let c of this.allUserCourses) {
+        if (c.courseName.toLowerCase().search(this.searchQuery.toLowerCase()) != -1) {
+          this.filteredCourses.push(c);
+        }
+        else {
+          sizeOfFilteredCourses = this.filteredCourses.length;
+          this.filteredCourses.splice(0, sizeOfFilteredCourses);
+        }
+      }
+    }
   }
 
 }

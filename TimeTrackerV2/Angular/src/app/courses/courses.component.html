@@ -9,10 +9,32 @@
     
 
   <!-- ng-model="search" ??? -->
-  <form class="form-inline mb-3">
-    <input class="form-control mr-3" type="search" placeholder="Search" aria-label="Search">
+  <form class="form-inline mb-3" (ngSubmit)="searchCourses()">
+    <input class="form-control mr-3" [(ngModel)]="searchQuery" name="searchQuery" type="text" placeholder="Search" aria-label="Search">
     <button class="btn btn-primary" type="submit">Search</button>
   </form>
+
+  <div class="alert alert-danger" *ngIf="filteredCourses?.length <= 0">
+    No courses found.
+  </div>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Course Name</th>
+        <th>Instructor</th>
+        <th>Description</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let c of filteredCourses">
+        <td>{{c.courseName}}</td>
+        <td>{{c.instructorFN}} {{c.instructorLN}}</td>
+        <td>{{c.description}}</td>
+        <td><div class="btn-group float-right"><a href="/course/{{c.courseID}}" class="btn btn-primary">View</a></div></td>
+      </tr>
+    </tbody>
+  </table>
   
   <h3>Student Courses</h3>  
   <table class="table table-hover">
