@@ -38,6 +38,7 @@ chrome-profiler-events*.json
 
 # misc
 /.sass-cache
+/TimeTrackerV2/Angular/.angular/cache
 /connect.lock
 /coverage
 /libpeerconnection.log
