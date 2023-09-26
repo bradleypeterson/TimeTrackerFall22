@@ -167,6 +167,8 @@ export class CoursesComponent implements OnInit {
       this.filteredCourses = [];
     }
     else {
+      sizeOfFilteredCourses = this.filteredCourses.length;
+      this.filteredCourses.splice(0, sizeOfFilteredCourses);
       for (let c of this.nonUserCourses) {
         if (c.courseName.toLowerCase().search(this.searchQuery.toLowerCase()) != -1) {
           this.filteredCourses.push(c);
