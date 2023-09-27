@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 // import { Stopwatch } from "ts-stopwatch";
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
@@ -35,7 +35,7 @@ export class ProjectComponent implements OnInit {
 
   @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
-  description = new FormControl('');
+  description = new UntypedFormControl('');
   activities: any = [];
 
   date: Date = new Date();

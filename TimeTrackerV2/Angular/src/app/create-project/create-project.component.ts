@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -13,7 +13,7 @@ export class CreateProjectComponent implements OnInit {
   public courseID: any;
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
