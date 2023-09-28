@@ -71,3 +71,8 @@
         }
     }
 }
+
+img.expandedArrow {
+    width: 25px;
+    height: auto;
+}
