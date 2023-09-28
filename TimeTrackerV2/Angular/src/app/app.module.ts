@@ -7,7 +7,7 @@ import { LoginComponent } from './login/login.component';
 import { HttpClientModule } from '@angular/common/http';
 import { TotalTimePipe } from './pipes/total-time.pipe';
 import { NgChartsModule } from 'ng2-charts';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavigationComponent } from './navigation/navigation.component';
 import { InstructorReportsComponent } from './instructor-reports/instructor-reports.component';
 
@@ -31,7 +31,7 @@ import { InstructorReportsComponent } from './instructor-reports/instructor-repo
     NgChartsModule,
     MatCardModule,
   ],
-  providers: [FormBuilder],
+  providers: [UntypedFormBuilder],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

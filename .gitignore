@@ -1,5 +1,4 @@
-TimeTrackerV2/Angular/node_modules/
-TimeTrackerV2/node_modules/
+node_modules/
 .DS_Store
 package-lock.json
 

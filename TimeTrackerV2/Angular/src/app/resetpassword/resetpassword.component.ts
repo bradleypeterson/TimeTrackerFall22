@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common'
 
@@ -11,7 +11,7 @@ import { Location } from '@angular/common'
 export class ResetpasswordComponent implements OnInit {
 
   data!:any;
-  resetForm!:FormGroup;
+  resetForm!:UntypedFormGroup;
 
   constructor(private activeRoute:ActivatedRoute,private location: Location) { }
 
@@ -21,11 +21,11 @@ export class ResetpasswordComponent implements OnInit {
       this.data=data
     }})
 
-    this.resetForm=new FormGroup({
+    this.resetForm=new UntypedFormGroup({
 
-      username:new FormControl(this.data.username),
-      newPswd: new FormControl(null),
-      confirm:new FormControl(null)
+      username:new UntypedFormControl(this.data.username),
+      newPswd: new UntypedFormControl(null),
+      confirm:new UntypedFormControl(null)
     })
 
   }
