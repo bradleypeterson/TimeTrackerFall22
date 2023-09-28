@@ -14,7 +14,8 @@ export class CoursesComponent implements OnInit {
   public courses: any = [];
   public allUserCourses: any = [];
   public nonUserCourses: any = [];
-  public filteredCourses: any = [];
+  public allUserFilteredCourses: any = [];
+  public nonUserFilteredCourses: any = [];
   public searchQuery: any = '';
 
   public courseData: any = [];
@@ -162,29 +163,37 @@ export class CoursesComponent implements OnInit {
   }
 
   searchCourses(): void {
-    let sizeOfFilteredCourses = 0;
+    let sizeOfAllFilteredCourses = 0;
+    let sizeOfNonFilteredCourses = 0;
     if(this.searchQuery == '') {
-      this.filteredCourses = [];
+      this.allUserFilteredCourses = [];
+      this.nonUserFilteredCourses = [];
     }
     else {
-      sizeOfFilteredCourses = this.filteredCourses.length;
-      this.filteredCourses.splice(0, sizeOfFilteredCourses);
+      sizeOfAllFilteredCourses = this.allUserFilteredCourses.length;
+      sizeOfNonFilteredCourses = this.nonUserFilteredCourses.length;
+      this.allUserFilteredCourses.splice(0, sizeOfAllFilteredCourses);
+      this.nonUserFilteredCourses.splice(0, sizeOfNonFilteredCourses);
       for (let c of this.nonUserCourses) {
         if (c.courseName.toLowerCase().search(this.searchQuery.toLowerCase()) != -1) {
-          this.filteredCourses.push(c);
+          this.nonUserFilteredCourses.push(c);
         }
         else {
-          sizeOfFilteredCourses = this.filteredCourses.length;
-          this.filteredCourses.splice(0, sizeOfFilteredCourses);
+          sizeOfNonFilteredCourses = this.nonUserFilteredCourses.length;
+          this.nonUserFilteredCourses.splice(0, sizeOfNonFilteredCourses);
+          sizeOfAllFilteredCourses = this.allUserFilteredCourses.length;
+          this.allUserFilteredCourses.splice(0, sizeOfAllFilteredCourses);
         }
       }
       for (let c of this.allUserCourses) {
         if (c.courseName.toLowerCase().search(this.searchQuery.toLowerCase()) != -1) {
-          this.filteredCourses.push(c);
+          this.allUserFilteredCourses.push(c);
         }
         else {
-          sizeOfFilteredCourses = this.filteredCourses.length;
-          this.filteredCourses.splice(0, sizeOfFilteredCourses);
+          sizeOfAllFilteredCourses = this.allUserFilteredCourses.length;
+          this.allUserFilteredCourses.splice(0, sizeOfAllFilteredCourses);
+          sizeOfNonFilteredCourses = this.nonUserFilteredCourses.length;
+          this.nonUserFilteredCourses.splice(0, sizeOfNonFilteredCourses);
         }
       }
     }
