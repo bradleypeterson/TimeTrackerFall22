@@ -127,25 +127,6 @@ exports.DropCourse = async (req, res, next) => {
         }
     });
 }
-
-exports.JoinGroup = async (req, res, next) => {
-    console.log("UsersControllers.js file/JoinGroup route called");
-
-    let data = [];
-    data[0] = req.body["userID"];
-    data[1] = req.body["projectID"];
-
-    db.run(`INSERT INTO Project_Users(userID, projectID)
-        VALUES(?, ?)`, data, function (err, value) {
-        if (err) {
-            console.log(err)
-            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
-        }
-        else {
-            return res.status(200).json({ message: 'User Project added.' });
-        }
-    });
-}
 //#endregion
 
 //#region Instructor specific controllers

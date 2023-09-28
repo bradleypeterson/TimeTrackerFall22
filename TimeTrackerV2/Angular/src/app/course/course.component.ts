@@ -12,6 +12,8 @@ export class CourseComponent implements OnInit {
   public course: any;
   public projects: any = [];
   public errMsg = '';
+  public allUserGroups: any = [];
+  public nonUserGroups: any = [];
 
   private courseID: any;
 
@@ -65,17 +67,49 @@ export class CourseComponent implements OnInit {
 
     // get projects
     this.loadProjects();
-
-
+    this.loadAllUserGroups();
+    this.loadNonUserGroups();
   }
 
   loadProjects(): void {
     this.http.get("http://localhost:8080/api/Projects/" + this.courseID).subscribe((data: any) =>{ 
-    this.projects = data;
-    if(this.projects){
-      localStorage.setItem("projects", JSON.stringify(this.projects));
-    }
-  });
+      this.projects = data;
+      if(this.projects){
+        localStorage.setItem("projects", JSON.stringify(this.projects));
+      }
+    });
+  }
+
+  loadAllUserGroups(): void {
+    this.http.get<any>(`http://localhost:8080/api/ProjectsForUser/${this.courseID}/${this.userID}/userGroups`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        console.log(data);
+        this.allUserGroups = data;
+        if(this.allUserGroups){
+          localStorage.setItem("allUserGroups", JSON.stringify(this.allUserGroups));
+        }
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
+
+  loadNonUserGroups(): void {
+    this.http.get<any>(`http://localhost:8080/api/ProjectsForUser/${this.courseID}/${this.userID}/nonUserGroups`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        console.log(data);
+        this.nonUserGroups = data;
+        if(this.nonUserGroups){
+          localStorage.setItem("nonUserGroups", JSON.stringify(this.nonUserGroups));
+        }
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
   }
 
   join(ProjectID: any) {

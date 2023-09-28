@@ -72,3 +72,68 @@ exports.GetAllProjectsForCourse = (req, res) => { // grab all projects based on 
         }
     });
 }
+
+exports.GetUserProjectsForCourse = (req, res) => {
+    console.log("ProjectControllers.js file/GetUserProjectsForCourse route called");
+
+    let courseID = req.params["courseID"];
+    let userID = req.params["userID"];
+
+    let sql = `SELECT DISTINCT p.projectName, p.projectID, p.description
+        FROM Projects p
+        INNER JOIN Project_Users pu ON p.projectID = pu.projectID
+        WHERE p.courseID = ${courseID} AND pu.userID = ${userID}`;
+
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows) {
+            return res.send(rows);
+        }
+    });
+}
+
+exports.GetNonUserProjectsForCourse = (req, res) => {
+    console.log("ProjectControllers.js file/GetNonUserProjectsForCourse route called");
+
+    courseID = req.params["courseID"];
+    userID = req.params["userID"];
+
+    let sql = `SELECT DISTINCT p.projectName, p.projectID, p.description
+        FROM Projects p
+        WHERE p.courseID = ${courseID} AND p.projectID not in (
+            SELECT p.projectID
+            FROM Projects p
+            INNER JOIN Project_Users pu ON p.projectID = pu.projectID
+            WHERE pu.userID = ${userID}
+            )`;
+
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows) {
+            return res.send(rows);
+        }
+    });
+}
+
+exports.JoinGroup = async (req, res, next) => {
+    console.log("UsersControllers.js file/JoinGroup route called");
+
+    let data = [];
+    data[0] = req.body["userID"];
+    data[1] = req.body["projectID"];
+
+    db.run(`INSERT INTO Project_Users(userID, projectID)
+        VALUES(?, ?)`, data, function (err, value) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        else {
+            return res.status(200).json({ message: 'User Project added.' });
+        }
+    });
+}

@@ -22,6 +22,9 @@ const {
     GetAllProjectsForUser,
     GetUserTimesForProject,
     GetAllProjectsForCourse,
+    GetUserProjectsForCourse,
+    GetNonUserProjectsForCourse,
+    JoinGroup
 } = require("./controllers/ProjectControllers")
 
 const {
@@ -40,7 +43,6 @@ const {
     DeleteCourse,
     CreateProject,
     DeleteProject,
-    JoinGroup
 } = require("./controllers/UsersControllers")
 //#endregion
 
@@ -74,6 +76,10 @@ router.get('/ProjectsForUser/:userID', GetAllProjectsForUser);
 router.get('/Projects/:id/Users', GetUserTimesForProject);
 
 router.get('/Projects/:id', GetAllProjectsForCourse);
+
+router.get('/ProjectsForUser/:courseID/:userID/userGroups', GetUserProjectsForCourse);
+
+router.get('/ProjectsForUser/:courseID/:userID/nonUserGroups', GetNonUserProjectsForCourse);
 //#endregion
 
 //#region Time card routes
