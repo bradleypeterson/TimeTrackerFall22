@@ -24,7 +24,8 @@ const {
     GetAllProjectsForCourse,
     GetUserProjectsForCourse,
     GetNonUserProjectsForCourse,
-    JoinGroup
+    JoinGroup,
+    LeaveGroup
 } = require("./controllers/ProjectControllers")
 
 const {
@@ -103,6 +104,8 @@ router.post('/addUserCourse', RegisterForCourse);
 router.post('/deleteUserCourse', DropCourse);
 
 router.post('/joinGroup', JoinGroup);
+
+router.post('/leaveGroup', LeaveGroup);
 //#endregion
 
 //#region Instructor specific controllers

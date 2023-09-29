@@ -69,7 +69,7 @@
             <td>
               <div class="btn-group float-right">
                 <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
-                <button class="btn btn-danger">Leave</button>
+                <button class="btn btn-danger" (click)="leave(p.projectID)">Leave</button>
               </div>
             </td>
           </tr>

@@ -137,3 +137,24 @@ exports.JoinGroup = async (req, res, next) => {
         }
     });
 }
+
+exports.LeaveGroup = async (req, res, next) => {
+    console.log("UsersControllers.js file/LeaveGroup route called");
+
+    let data = [];
+    data[0] = req.body["userID"];
+    data[1] = req.body["projectID"];
+
+    let sql = `delete from Project_Users
+        where projectID = ${data[1]} and userID = ${data[0]};`;
+
+    db.run(sql, function (err, value) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        else {
+            return res.status(200).json({ message: 'User Project deleted.' });
+        }
+    });
+}

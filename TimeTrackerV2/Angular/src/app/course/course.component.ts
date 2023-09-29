@@ -17,9 +17,9 @@ export class CourseComponent implements OnInit {
 
   private courseID: any;
 
-  instructor: boolean = false;
-  student: boolean = false;
-  userID: string = '';
+  public instructor: boolean = false;
+  public student: boolean = false;
+  public userID: string = '';
 
   public currentUser: any;
 
@@ -65,10 +65,21 @@ export class CourseComponent implements OnInit {
       }
     }
 
+    this.loadPage();
+  }
+
+  loadPage(): void {
     // get projects
     this.loadProjects();
     this.loadAllUserGroups();
     this.loadNonUserGroups();
+
+    if (!localStorage.getItem('foo')) {
+      localStorage.setItem('foo', 'no reload');
+      location.reload();
+    } else {
+      localStorage.removeItem('foo');
+    }
   }
 
   loadProjects(): void {
@@ -121,7 +132,7 @@ export class CourseComponent implements OnInit {
     this.http.post<any>('http://localhost:8080/api/joinGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
-        this.loadProjects();
+        this.loadPage();
       },
       error: error => {
         this.errMsg = error['error']['message'];
@@ -129,5 +140,21 @@ export class CourseComponent implements OnInit {
     });
   }
 
+  leave(ProjectID: any) {
+    let req = {
+      userID: this.currentUser.userID,
+      projectID: ProjectID
+    };
+
+    this.http.post<any>('http://localhost:8080/api/leaveGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        this.loadPage();
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
 
 }
