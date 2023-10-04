@@ -29,6 +29,7 @@ const {
 } = require("./controllers/ProjectControllers")
 
 const {
+    GetTotalTimeOnProjectForUser,
     GetAllTimeCardsForUserInProject,
     GetAllTimeCardsForUser,
     SaveTimeCard,
@@ -84,9 +85,11 @@ router.get('/ProjectsForUser/:courseID/:userID/nonUserGroups', GetNonUserProject
 //#endregion
 
 //#region Time card routes
-router.get('/Users/:userId/:projectID/activities', GetAllTimeCardsForUserInProject);
+router.get('/Users/:userID/:projectID/totalTime', GetTotalTimeOnProjectForUser);
 
-router.get('/Users/:userId/activities', GetAllTimeCardsForUser);
+router.get('/Users/:userID/:projectID/activities', GetAllTimeCardsForUserInProject);
+
+router.get('/Users/:userID/activities', GetAllTimeCardsForUser);
 
 router.post('/clock', SaveTimeCard);
 //#endregion

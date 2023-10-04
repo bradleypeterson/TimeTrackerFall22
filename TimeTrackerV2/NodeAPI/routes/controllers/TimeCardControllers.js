@@ -2,18 +2,40 @@ const sqlite3 = require('sqlite3').verbose();
 
 const db = new sqlite3.Database('./database/main.db');
 
+exports.GetTotalTimeOnProjectForUser = (req, res) => {
+	console.log("TimeCardControllers.js file/GetTotalTimeOnProjectForUser route called");
+
+	let userID = req.params["userID"];
+    let projectID = req.params["projectID"];
+	console.log("userID: " + userID + " projectID: " + projectID);
+
+	let sql = `SELECT SUM(timeOut - timeIn) AS totalTime
+		FROM TimeCard
+        WHERE userID = ${userID} AND projectID = ${projectID}`;
+
+	db.all(sql, [], (err, rows) => {
+		if (err) {
+            console.log(err);
+			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+		}
+		if (rows) {
+			return res.send(rows);
+		}
+	});
+}
+
 exports.GetAllTimeCardsForUserInProject = (req, res) => {
 	console.log("TimeCardControllers.js file/GetAllTimeCardsForUserInProject route called");
 
-	let userId = req.params["userId"];
+	let userID = req.params["userID"];
 	let projectID = req.params["projectID"];
-	console.log("userID: " + userId + ", projectID: " + projectID);
+	console.log("userID: " + userID + ", projectID: " + projectID);
 
 	let sql = `SELECT timeIn, timeOut, description
     	FROM TimeCard
     	WHERE userID = ? AND projectID = ?`;
 
-	db.all(sql, [userId, projectID], (err, rows) => {
+	db.all(sql, [userID, projectID], (err, rows) => {
 		if (err) {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
@@ -26,11 +48,12 @@ exports.GetAllTimeCardsForUserInProject = (req, res) => {
 exports.GetAllTimeCardsForUser = (req, res) => {
 	console.log("TimeCardControllers.js file/GetAllTimeCardsForUser route called");
 
-	let userId = req.params["userId"];
-	console.log("userID: " + userId);
+	let userID = req.params["userID"];
+	console.log("userID: " + userID);
 
 	let sql = `SELECT timeIn, timeOut, description
-		FROM TimeCard WHERE userID = ${userId}`;
+		FROM TimeCard
+        WHERE userID = ${userID}`;
 
 	db.all(sql, [], (err, rows) => {
 		if (err) {

@@ -54,6 +54,10 @@ export class InstructorReportsComponent implements OnInit {
   }
   // Mock data to simulate an API call
   getStudentReportMock(): StudentReport[] {
+    // Grab a list of students registered for the course and the totalTimes for their projects
+
+    // process the data to make a Object that contains the data and add them to the array "reports"
+
     return [
       {
         cardID: 0,
