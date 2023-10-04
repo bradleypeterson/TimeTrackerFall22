@@ -27,9 +27,7 @@ const {
     JoinGroup,
     LeaveGroup,
     GetAllStudentsInProject,
-    GetAllStudentsNotInProject,
-    AddStudentToProject,
-    DropStudentFromProject
+    GetAllStudentsNotInProject
 } = require("./controllers/ProjectControllers")
 
 const {
@@ -89,10 +87,6 @@ router.get('/ProjectsForUser/:courseID/:userID/nonUserGroups', GetNonUserProject
 router.get('/AddToProject/:projectID/InProject', GetAllStudentsInProject);
 
 router.get('/AddToProject/:projectID/NotInProject', GetAllStudentsNotInProject);
-
-router.get('/AddToProject/:projectID/:userID/Add', AddStudentToProject);
-
-router.get('/AddToProject/:projectID/:userID/Drop', DropStudentFromProject);
 //#endregion
 
 //#region Time card routes

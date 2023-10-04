@@ -204,11 +204,3 @@ exports.GetAllStudentsNotInProject = (req, res) => {
 		}
 	});
 }
-
-exports.AddStudentToProject = (req, res) => {
-    console.log("ProjectControllers.js file/AddStudentToProject route called");
-}
-
-exports.DropStudentFromProject = (req, res) => {
-    console.log("ProjectControllers.js file/DropStudentFromProject route called");
-}
