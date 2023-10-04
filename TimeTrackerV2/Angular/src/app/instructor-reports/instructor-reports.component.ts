@@ -17,6 +17,7 @@ interface Course {
 }
 
 interface StudentReport {
+  cardID: number;
   studentName: string;
   courses: Course[];
 }
@@ -29,20 +30,33 @@ interface StudentReport {
 export class InstructorReportsComponent implements OnInit {
 
   reports: StudentReport[] = [];
-  expandedCards: { [studentName: string]: boolean } = {};
+  expandedCards: { [cardID: number]: boolean } = {};
 
   ngOnInit(): void {
     this.reports = this.getStudentReportMock();
   }
 
   // Method to toggle expanded state of student card
-  toggleCard(studentName: string) {
-    this.expandedCards[studentName] = !this.expandedCards[studentName];
+  toggleCard(cardID: number) {
+    this.expandedCards[cardID] = !this.expandedCards[cardID];
+    var cardArrow = document.getElementById(cardID.toString());
+    console.log(cardArrow);
+    //make sure that the element fetched is not null before changing it's class name
+    if (cardArrow === null) {
+        alert('oops, there is no element with the ID of ' + cardID);
+    }
+    else {
+        // since you've done the nullable check
+        // TS won't complain from this point on
+        // if they are expanding the card, change the image's class to be collapsedArrow, otherwise change it to expandedArrow
+        this.expandedCards[cardID] ? cardArrow.className = "collapseArrow" : cardArrow.className = "expandArrow";
+    } 
   }
   // Mock data to simulate an API call
   getStudentReportMock(): StudentReport[] {
     return [
       {
+        cardID: 0,
         studentName: 'John Doe',
         courses: [
           {
@@ -77,6 +91,7 @@ export class InstructorReportsComponent implements OnInit {
         ]
       },
       {
+        cardID: 1,
         studentName: 'Jane Smith',
         courses: [
           {

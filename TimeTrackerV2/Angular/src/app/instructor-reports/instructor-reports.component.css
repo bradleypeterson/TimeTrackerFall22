@@ -72,7 +72,13 @@
     }
 }
 
-img.expandedArrow {
+img.expandArrow {
     width: 25px;
     height: auto;
+}
+
+img.collapseArrow {
+    width: 25px;
+    height: auto;
+    transform: rotateX(180deg);
 }

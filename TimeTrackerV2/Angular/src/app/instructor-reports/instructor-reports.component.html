@@ -1,12 +1,12 @@
 <mat-card *ngFor="let report of reports" class="report-card">
     <mat-card-header>
         <mat-card-title>
-            <img src="../../assets/Images/icons8-dropdown-50.png" alt="Expand" class="expandedArrow" (click)="toggleCard(report.studentName)">
+            <img src="../../assets/Images/icons8-dropdown-50.png" alt="Expand" class="expandArrow" [id]="report.cardID" (click)="toggleCard(report.cardID)">
             {{ report.studentName }}
         </mat-card-title>
     </mat-card-header>
 
-    <mat-card-content *ngIf="expandedCards[report.studentName]">
+    <mat-card-content *ngIf="expandedCards[report.cardID]">
         <div *ngFor="let course of report.courses" class="course-section">
             <!-- <h4>{{ course.title }}</h4> -->
 
