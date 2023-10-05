@@ -5,7 +5,6 @@ const db = new sqlite3.Database('./database/main.db');
 exports.GetTotalTimeForAllUsersInCourse = (req, res) => {
     console.log("TimeCardControllers.js file/GetTotalTimeForAllUsersInCourse route called");
 
-
     let courseID = req.params["courseID"];
     console.log("courseID: " + courseID);
 
@@ -67,6 +66,35 @@ exports.GetTotalTimeForAllUsersInCourse = (req, res) => {
         }
     });
 }
+
+exports.test = (req, res) => {
+    console.log("TimeCardControllers.js file/test route called");
+
+    let courseID = req.params["courseID"];
+    console.log("courseID: " + courseID);
+
+    // This sql statement currently only selects the users if they have created a time card, need it so that it also selects them if they don't have a time card
+    let sql = `SELECT u.userID, u.firstName || " " || u.lastName As studentName, SUM(tc.timeOut - timeIn) AS totalTime
+		FROM TimeCard tc
+        RIGHT OUTER JOIN Users u ON tc.userID = u.userID  -- Grab all users regardless if they have a time card or not
+        GROUP BY studentName`;
+        // inside the SELECT ", p.projectName"
+        // WHERE p.courseID = ${courseID}
+        // RIGHT OUTER JOIN Projects p ON tc.projectID = p.projectID
+        // inside the GROUP BY ", p.projectName"
+
+
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows) {
+            return res.send(rows);
+        }
+    });
+}
+
 
 exports.GetAllTimeCardsForUserInProject = (req, res) => {
     console.log("TimeCardControllers.js file/GetAllTimeCardsForUserInProject route called");
