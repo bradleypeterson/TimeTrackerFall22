@@ -10,6 +10,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavigationComponent } from './navigation/navigation.component';
 import { InstructorReportsComponent } from './instructor-reports/instructor-reports.component';
+import { AddStudentProjectComponent } from './add-student-project/add-student-project.component';
 
 
 
@@ -21,6 +22,7 @@ import { InstructorReportsComponent } from './instructor-reports/instructor-repo
     TotalTimePipe,
     NavigationComponent,
     InstructorReportsComponent,
+    AddStudentProjectComponent,
   ],
   imports: [
     BrowserModule,

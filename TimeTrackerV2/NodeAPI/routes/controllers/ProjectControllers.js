@@ -120,7 +120,7 @@ exports.GetNonUserProjectsForCourse = (req, res) => {
 }
 
 exports.JoinGroup = async (req, res, next) => {
-    console.log("UsersControllers.js file/JoinGroup route called");
+    console.log("ProjectControllers.js file/JoinGroup route called");
 
     let data = [];
     data[0] = req.body["userID"];
@@ -139,7 +139,7 @@ exports.JoinGroup = async (req, res, next) => {
 }
 
 exports.LeaveGroup = async (req, res, next) => {
-    console.log("UsersControllers.js file/LeaveGroup route called");
+    console.log("ProjectControllers.js file/LeaveGroup route called");
 
     let data = [];
     data[0] = req.body["userID"];
@@ -157,4 +157,50 @@ exports.LeaveGroup = async (req, res, next) => {
             return res.status(200).json({ message: 'User Project deleted.' });
         }
     });
+}
+
+exports.GetAllStudentsInProject = (req, res) => {
+	console.log("ProjectControllers.js file/GetAllStudentsInProject route called");
+
+	let projectID = req.params["projectID"];
+
+	let sql = `SELECT u.firstName, u.lastName, u.userID
+		FROM Project_Users p
+        INNER JOIN Users u ON p.userID = u.userID
+        WHERE p.projectID = ?`;
+
+	db.all(sql, [projectID], (err, rows) => {
+		if (err) {
+			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+		}
+		if (rows) {
+			return res.send(rows);
+		}
+	});
+}
+
+exports.GetAllStudentsNotInProject = (req, res) => {
+	console.log("ProjectControllers.js file/GetAllStudentsInProject route called");
+
+	let courseID = req.params["courseID"];
+	let projectID = req.params["projectID"];
+
+	let sql = `SELECT u.firstName, u.lastName, u.userID
+		FROM Course_Users c
+        INNER JOIN Users u ON cu.userID = u.userID
+        WHERE c.courseID = ? AND u.userID not in (
+            SELECT pu.userID
+            FROM Project_Users pu
+            INNER JOIN Projects p ON p.projectID = pu.projectID
+            WHERE p.projectID = ?
+        )`;
+
+	db.all(sql, [courseID, projectID], (err, rows) => {
+		if (err) {
+			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+		}
+		if (rows) {
+			return res.send(rows);
+		}
+	});
 }
