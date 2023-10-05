@@ -11,7 +11,6 @@ const {
 const {
     GetAllCoursesNamesDescriptionIDs,
     GetAllCoursesForInstructorID,
-    GetAllCourses,
 } = require("./controllers/CourseControllers")
 
 const {
@@ -31,6 +30,7 @@ const {
 } = require("./controllers/ProjectControllers")
 
 const {
+    GetTotalTimeForAllUsersInCourse,
     GetAllTimeCardsForUserInProject,
     GetAllTimeCardsForUser,
     SaveTimeCard,
@@ -65,8 +65,6 @@ router.post("/login", Login);
 router.get('/Courses', GetAllCoursesNamesDescriptionIDs);
 
 router.get('/Courses/:id', GetAllCoursesForInstructorID);
-
-router.get('/Add-Courses', GetAllCourses);
 //#endregion
 
 //#region Miscellaneous routes
@@ -90,9 +88,11 @@ router.get('/AddToProject/:projectID/NotInProject', GetAllStudentsNotInProject);
 //#endregion
 
 //#region Time card routes
-router.get('/Users/:userId/:projectID/activities', GetAllTimeCardsForUserInProject);
+router.get('/Course/:courseID/userTotalTimes', GetTotalTimeForAllUsersInCourse);
 
-router.get('/Users/:userId/activities', GetAllTimeCardsForUser);
+router.get('/Users/:userID/:projectID/activities', GetAllTimeCardsForUserInProject);
+
+router.get('/Users/:userID/activities', GetAllTimeCardsForUser);
 
 router.post('/clock', SaveTimeCard);
 //#endregion
