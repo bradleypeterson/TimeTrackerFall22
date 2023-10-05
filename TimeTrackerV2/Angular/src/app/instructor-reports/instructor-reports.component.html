@@ -10,9 +10,9 @@
         <!-- <div *ngFor="let course of report.courses" class="course-section"> -->
             <!-- <h4>{{ course.title }}</h4> -->
 
-            <div *ngFor="let project of report.projects" class="project-section"> <!--course.-->
+            <div *ngFor="let project of report.projects" class="project-section">
                 <h5>{{ project.name }} </h5>
-                <p>&emsp;Total time: {{ project.totalTime }}</p>
+                <p>&emsp;Total time: {{ project.totalTime | totalTimePipe }}</p>
 
                 <!-- <ul class="time-log-list">
                     <li>

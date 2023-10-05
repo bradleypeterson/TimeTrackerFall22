@@ -10,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 
 interface Project {
     name: string;
-    totalTime: string;
+    totalTime: number;
 }
 
 // interface Course {
@@ -82,7 +82,7 @@ export class InstructorReportsComponent implements OnInit {
                 };
 
                 // for every project in entry.projects
-                entry.projects.forEach((project: any) => {
+                entry.projects.forEach((project: any, index: number) => {
                     toBeAdded.projects.push({
                         name: project.projectName,
                         totalTime: project.totalTime,
@@ -104,11 +104,11 @@ export class InstructorReportsComponent implements OnInit {
         //         projects: [
         //             {
         //                 name: 'Project 1',
-        //                 totalTime: "5 Hours"
+        //                 totalTime: 5 * 60 * 60 * 1000  // 5 hours
         //             },
         //             {
         //                 name: 'Project 2',
-        //                 totalTime: "4 Hours"
+        //                 totalTime: 4 * 60 * 60 * 1000  // 4 hours
         //             }
         //         ]
         //     },
@@ -118,7 +118,7 @@ export class InstructorReportsComponent implements OnInit {
         //         projects: [
         //             {
         //                 name: 'Project 1',
-        //                 totalTime: "3 Hours"
+        //                 totalTime: 3 * 60 * 60 * 1000  // 3 hours
         //             }
         //         ]
         //     }
