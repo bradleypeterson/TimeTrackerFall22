@@ -7,18 +7,19 @@
     </mat-card-header>
 
     <mat-card-content *ngIf="expandedCards[report.cardID]">
-        <div *ngFor="let course of report.courses" class="course-section">
+        <!-- <div *ngFor="let course of report.courses" class="course-section"> -->
             <!-- <h4>{{ course.title }}</h4> -->
 
-            <div *ngFor="let project of course.projects" class="project-section">
-                <h5>{{ project.name }}</h5>
+            <div *ngFor="let project of report.projects" class="project-section"> <!--course.-->
+                <h5>{{ project.name }} </h5>
+                <p>&emsp;Total time: {{ project.totalTime }}</p>
 
-                <ul class="time-log-list">
-                    <li *ngFor="let log of project.timeLogs">
-                        {{ log.date | date }} - {{ log.hours }} hours
+                <!-- <ul class="time-log-list">
+                    <li>
+                        
                     </li>
-                </ul>
+                </ul> -->
             </div>
-        </div>
+        <!-- </div> -->
     </mat-card-content>
 </mat-card>
