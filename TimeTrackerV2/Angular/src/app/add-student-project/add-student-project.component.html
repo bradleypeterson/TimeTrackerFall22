@@ -1,1 +1,40 @@
-<p>Display students to add to project here.</p>
+<div id="project-students">
+    <h2>Add Students to {{project.projectName}}</h2>
+    <hr>
+
+    <h3>Students in Project</h3>
+    <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of studentsInProject">
+            <td>{{u.firstName}}</td>
+            <td>{{u.lastName}}</td>
+            <td><button class="btn btn-danger float-right" (click)="drop(u.userID)">Drop</button></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>Students Not in Project</h3>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of studentsNotInProject">
+            <td>{{u.firstName}}</td>
+            <td>{{u.lastName}}</td>
+            <td><button class="btn btn-success float-right" (click)="add(u.userID)">Add</button></td>
+          </tr>
+        </tbody>
+      </table>
+</div>
