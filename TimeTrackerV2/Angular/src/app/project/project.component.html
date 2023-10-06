@@ -1,4 +1,4 @@
-<!-- COURSEID NOT WORKING FOR SOME REASON <a href="/course/{{project.courseID}}" class="btn btn-primary">Back to Course</a> -->
+<a href="/course/{{project.courseID}}" class="btn btn-primary">Back to Course</a>
 <h1 class="display-1" *ngIf="project">{{project.projectName}}</h1>
   <div [ngSwitch]="true">
     <div *ngSwitchCase="instructor">
