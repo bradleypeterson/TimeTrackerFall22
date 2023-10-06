@@ -34,27 +34,27 @@ export class UsersComponent implements OnInit {
 
 
 
-  loadUsers(users: Array<String>){
+  loadUsers(users: Array<String>) {
 
-    this.http.get("http://localhost:8080/api/Users").subscribe((data: any) =>{ 
+    this.http.get("http://localhost:8080/api/Users").subscribe((data: any) => {
 
-    for(let i = 0; i < data.length; i++) {
+      for (let i = 0; i < data.length; i++) {
 
-      users.push(data[i].username);
+        users.push(data[i].username);
 
-    }
+      }
 
-  });
+    });
 
   }
 
 
 
-  navToResetPassword(tag:any,body:any){
+  navToResetPassword(tag: any, body: any) {
 
-    let user=JSON.parse( localStorage.getItem('currentUser')|| '{}');
+    let user = JSON.parse(localStorage.getItem('currentUser') || '{}');
 
-    this.router.navigate(['resetpassword'],{queryParams:user})
+    this.router.navigate(['resetpassword'], { queryParams: user })
 
   }
 

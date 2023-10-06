@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -16,15 +16,15 @@ export class LoginComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private http: HttpClient,
     private router: Router,
-    ) {}
+  ) { }
 
   ngOnInit(): void {
     localStorage.removeItem("currentUser");
-    if (!localStorage.getItem('foo')) { 
-      localStorage.setItem('foo', 'no reload') 
-      location.reload() 
+    if (!localStorage.getItem('foo')) {
+      localStorage.setItem('foo', 'no reload')
+      location.reload()
     } else {
-      localStorage.removeItem('foo') 
+      localStorage.removeItem('foo')
     }
   }
   checkoutForm = this.formBuilder.group({
@@ -33,14 +33,14 @@ export class LoginComponent implements OnInit {
   });
 
   onSubmit(): void {
-    console.log("Username: "+this.checkoutForm.value['username'] + " | Password: " + this.checkoutForm.value['password']);
+    console.log("Username: " + this.checkoutForm.value['username'] + " | Password: " + this.checkoutForm.value['password']);
 
     let payload = {
       username: this.checkoutForm.value['username'],
       password: this.checkoutForm.value['password'],
     }
 
-    this.http.post<any>('http://localhost:8080/api/login/', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.post<any>('http://localhost:8080/api/login/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         localStorage.setItem('currentUser', JSON.stringify(data['user']));

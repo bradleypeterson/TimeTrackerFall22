@@ -79,9 +79,9 @@ export class ProjectComponent implements OnInit {
       var userDate = currentUser ? JSON.parse(currentUser) : null;
       var userType = userDate.type;
       this.userID = userDate.userID;
-      if(userType === 'instructor'){
+      if (userType === 'instructor') {
         this.instructor = true;
-      }else if(userType === 'student'){
+      } else if (userType === 'student') {
         this.student = true;
       }
 
@@ -183,15 +183,15 @@ export class ProjectComponent implements OnInit {
       }
     });
   }
-  
-  loadProjectUsers(): void{
+
+  loadProjectUsers(): void {
     this.http.get<any>(`http://localhost:8080/api/AddToProject/${this.projectId}/InProject`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
         this.projectUsers = data;
-        for (let user of this.projectUsers){
-          if(Number(user.userID) === Number(this.userID)){
+        for (let user of this.projectUsers) {
+          if (Number(user.userID) === Number(this.userID)) {
             this.isProjectUser = true;
           }
         }

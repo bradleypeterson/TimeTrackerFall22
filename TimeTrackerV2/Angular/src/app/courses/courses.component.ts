@@ -165,7 +165,7 @@ export class CoursesComponent implements OnInit {
   searchCourses(): void {
     let sizeOfAllFilteredCourses = 0;
     let sizeOfNonFilteredCourses = 0;
-    if(this.searchQuery == '') {
+    if (this.searchQuery == '') {
       this.allUserFilteredCourses = [];
       this.nonUserFilteredCourses = [];
     }

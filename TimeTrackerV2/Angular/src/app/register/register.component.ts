@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -16,7 +16,7 @@ export class RegisterComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private http: HttpClient,
     private router: Router,
-  ) {}
+  ) { }
 
   ngOnInit(): void {
   }
@@ -35,14 +35,14 @@ export class RegisterComponent implements OnInit {
       username: this.registrationForm.value['username'],
       firstName: this.registrationForm.value['firstName'],
       lastName: this.registrationForm.value['lastName'],
-      type : this.registrationForm.value['type'],
+      type: this.registrationForm.value['type'],
       password: this.registrationForm.value['password'],
       repeatPassword: this.registrationForm.value['repeatPassword'],
     }
 
 
 
-    this.http.post<any>('http://localhost:8080/api/register/', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.post<any>('http://localhost:8080/api/register/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         this.router.navigate(['./']);

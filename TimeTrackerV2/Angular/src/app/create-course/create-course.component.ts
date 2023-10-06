@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-course',
@@ -23,7 +23,7 @@ export class CreateCourseComponent implements OnInit {
     var userDate = currentUser ? JSON.parse(currentUser) : null;
     var userType = userDate.type;
     this.instructorID = userDate.userID;
-    if(userType !== 'instructor'){ // redirect to dashboard if the user isn't an instructor
+    if (userType !== 'instructor') { // redirect to dashboard if the user isn't an instructor
       window.location.replace("/dashboard");
     }
   }
@@ -43,7 +43,7 @@ export class CreateCourseComponent implements OnInit {
       instructorID: this.instructorID,
     }
 
-    this.http.post<any>('http://localhost:8080/api/createCourse', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.post<any>('http://localhost:8080/api/createCourse', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         this.router.navigate(['/dashboard']);

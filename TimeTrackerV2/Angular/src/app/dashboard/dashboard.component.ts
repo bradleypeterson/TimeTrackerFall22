@@ -72,7 +72,7 @@ export class DashboardComponent implements OnInit {
         }
       });
     }
-    
+
     // attempt to pull the courses that the student is registered for
     else if (this.student) {
       var request = `http://localhost:8080/api/Users/${this.userID}/getUserCourses`
