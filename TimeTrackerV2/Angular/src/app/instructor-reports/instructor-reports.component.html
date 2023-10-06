@@ -11,8 +11,13 @@
             <!-- <h4>{{ course.title }}</h4> -->
 
             <div *ngFor="let project of report.projects" class="project-section">
-                <h5>{{ project.name }} </h5>
-                <p>&emsp;Total time: {{ project.totalTime | totalTimePipe }}</p>
+                <div *ngIf="project.name !== null">
+                    <h5>{{ project.name }} </h5>
+                    <p>&emsp;Total time: {{ project.totalTime | totalTimePipe }}</p>
+                </div>
+                <div *ngIf="project.name === null">
+                    <p>This user has not been assigned to a project yet</p>
+                </div>
 
                 <!-- <ul class="time-log-list">
                     <li>

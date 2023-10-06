@@ -31,7 +31,6 @@ const {
 
 const {
     GetTotalTimeForAllUsersInCourse,
-    test,
     GetAllTimeCardsForUserInProject,
     GetAllTimeCardsForUser,
     SaveTimeCard,
@@ -90,8 +89,6 @@ router.get('/AddToProject/:projectID/NotInProject', GetAllStudentsNotInProject);
 
 //#region Time card routes
 router.get('/Course/:courseID/userTotalTimes', GetTotalTimeForAllUsersInCourse);
-
-router.get('/Course/:courseID/test', test);
 
 router.get('/Users/:userID/:projectID/activities', GetAllTimeCardsForUserInProject);
 
