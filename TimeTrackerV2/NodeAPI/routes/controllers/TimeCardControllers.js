@@ -17,7 +17,8 @@ exports.GetTotalTimeForAllUsersInCourse = (req, res) => {
     LEFT OUTER JOIN Projects p ON p.projectID = pu.projectID  -- Grab all the projects the user is assigned to, but if they they are not assigned to the project, return null
     LEFT OUTER JOIN TimeCard tc ON tc.userID = u.userID AND tc.projectID = p.projectID
     WHERE c.courseID = ${courseID}
-    GROUP BY studentName`;
+    GROUP BY studentName
+    ORDER BY studentName, p.projectName`;
 
     db.all(sql, [], (err, rows) => {
         if (err) {
