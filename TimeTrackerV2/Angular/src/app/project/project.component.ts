@@ -21,6 +21,7 @@ export class ProjectComponent implements OnInit {
   public errMsg = '';
   public project: any;
   public projectUsers: any;
+  public projectUserTimes: any;
   public totalTimeMap: Map<string, number> = new Map<string, number>();
   private projectId;
 
@@ -55,6 +56,7 @@ export class ProjectComponent implements OnInit {
   instructor: boolean = false;
   student: boolean = false;
   userID: string = '';
+  isProjectUser: boolean = false;
 
   constructor(
     private http: HttpClient,
@@ -94,7 +96,7 @@ export class ProjectComponent implements OnInit {
           if (Number(project.projectID) === Number(this.projectId)) {
             console.log(project);
             this.project = project;
-            this.loadProjectUsers();
+            this.loadProjectUserTimes();
           }
         }
       }
@@ -117,6 +119,9 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit(): void {
     this.getActivities();
+
+    // iterate through the projectUsers to check against current user ID
+    this.loadProjectUsers();
   }
 
   clockIn(): void {
@@ -130,7 +135,7 @@ export class ProjectComponent implements OnInit {
 
   calculateTotalTime(): void {
     this.totalTimeMap = new Map<string, number>();
-    for (let teamMate of this.projectUsers) {
+    for (let teamMate of this.projectUserTimes) {
       const fullName = `${teamMate.firstName} ${teamMate.lastName}`;
       if (!teamMate.timeIn) {
         this.totalTimeMap.set(fullName, 0);
@@ -164,14 +169,32 @@ export class ProjectComponent implements OnInit {
     return Number((value / 1000 / 60).toFixed(2));
   }
 
-  loadProjectUsers(): void {
+  loadProjectUserTimes(): void {
     this.http.get<any>(`http://localhost:8080/api/Projects/${this.projectId}/Users/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
-        this.projectUsers = data;
+        this.projectUserTimes = data;
         this.calculateTotalTime();
         this.populateGraph();
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
+  
+  loadProjectUsers(): void{
+    this.http.get<any>(`http://localhost:8080/api/AddToProject/${this.projectId}/InProject`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        console.log(data);
+        this.projectUsers = data;
+        for (let user of this.projectUsers){
+          if(Number(user.userID) === Number(this.userID)){
+            this.isProjectUser = true;
+          }
+        }
       },
       error: error => {
         this.errMsg = error['error']['message'];
@@ -203,7 +226,7 @@ export class ProjectComponent implements OnInit {
         console.log(req.isEdited);
         this.description.setValue("");
         this.getActivities();
-        this.loadProjectUsers();
+        this.loadProjectUserTimes();
         this.populateGraph();
 
         /// populate a label to inform the user that they successfully clocked out, maybe with the time.
