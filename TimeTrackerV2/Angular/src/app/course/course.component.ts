@@ -95,7 +95,7 @@ export class CourseComponent implements OnInit {
     this.http.get<any>(`http://localhost:8080/api/ProjectsForUser/${this.courseID}/${this.userID}/userGroups`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
-        console.log(data);
+        // console.log(data);
         this.allUserGroups = data;
         if(this.allUserGroups){
           localStorage.setItem("allUserGroups", JSON.stringify(this.allUserGroups));
@@ -111,7 +111,7 @@ export class CourseComponent implements OnInit {
     this.http.get<any>(`http://localhost:8080/api/ProjectsForUser/${this.courseID}/${this.userID}/nonUserGroups`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
-        console.log(data);
+        // console.log(data);
         this.nonUserGroups = data;
         if(this.nonUserGroups){
           localStorage.setItem("nonUserGroups", JSON.stringify(this.nonUserGroups));

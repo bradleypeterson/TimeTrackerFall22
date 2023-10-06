@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
     }else{
       this.nullType = true;
     }
-    console.log(this.userType);
+    // console.log(this.userType);
   }
   title = 'TimeTrackerV2';
 }

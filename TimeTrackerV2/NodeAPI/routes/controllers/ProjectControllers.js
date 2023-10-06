@@ -180,26 +180,29 @@ exports.GetAllStudentsInProject = (req, res) => {
 }
 
 exports.GetAllStudentsNotInProject = (req, res) => {
-	console.log("ProjectControllers.js file/GetAllStudentsInProject route called");
+	console.log("ProjectControllers.js file/GetAllStudentsNotInProject route called");
 
-	let courseID = req.params["courseID"];
 	let projectID = req.params["projectID"];
+    console.log("Project ID is: " + projectID);
 
-	let sql = `SELECT u.firstName, u.lastName, u.userID
-		FROM Course_Users c
+	let sql = `SELECT DISTINCT u.firstName, u.lastName, u.userID
+        FROM Projects p
+        INNER JOIN Courses c ON p.courseID = c.courseID
+        INNER JOIN Course_Users cu ON cu.courseID = c.courseID
         INNER JOIN Users u ON cu.userID = u.userID
-        WHERE c.courseID = ? AND u.userID not in (
-            SELECT pu.userID
-            FROM Project_Users pu
-            INNER JOIN Projects p ON p.projectID = pu.projectID
-            WHERE p.projectID = ?
+        WHERE p.projectID = ? AND u.userID not in (
+            SELECT userID
+            FROM Project_Users
+            WHERE projectID = ${projectID}
         )`;
 
-	db.all(sql, [courseID, projectID], (err, rows) => {
+	db.all(sql, [projectID], (err, rows) => {
 		if (err) {
+            console.log("Err reached");
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
 		if (rows) {
+            console.log("Rows returned:" + JSON.stringify(rows));
 			return res.send(rows);
 		}
 	});
