@@ -82,4 +82,6 @@ export const RoutingComponents = [
   DeleteCourseComponent,
   CreateProjectComponent,
   InstructorReportsComponent,
+  DeleteProjectComponent,
+  AddStudentProjectComponent
 ]

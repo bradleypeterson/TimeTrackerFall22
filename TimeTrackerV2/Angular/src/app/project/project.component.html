@@ -1,4 +1,5 @@
-<h1 class="display-1" *ngIf="project">{{project.projectName}}
+<a href="/course/{{project.courseID}}" class="btn btn-primary">Back to Course</a>
+<h1 class="display-1" *ngIf="project">{{project.projectName}}</h1>
   <div [ngSwitch]="true">
     <div *ngSwitchCase="instructor">
       <div class="btn-group">
@@ -6,9 +7,8 @@
         <a href="" class="btn btn-secondary">Edit</a>
         <a href="/delete-project/{{project.projectID}}" class="btn btn-danger">Delete</a>
       </div>
+    </div>
   </div>
-</div>
-</h1>
 <div class="container">
   <div class="row">
     <div class="col-6">
@@ -74,7 +74,7 @@
         </table>
         </div>
     </div>
-    <div class="col-6">
+    <div class="col-6" *ngIf="isProjectUser">
         <!--Date Row-->
         <div class="row, center">
           <h3>{{currDate}}</h3>
@@ -98,8 +98,8 @@
             </div>
           </form>
         </div>
-        </div>
-        </div>
+      </div>
+    </div>
         <div class="row">
           <div class="col align-self-center">
       <div class="row">
@@ -121,7 +121,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let user of projectUsers">
+            <tr *ngFor="let user of projectUserTimes">
               <td>{{user.firstName}} {{user.lastName}}</td>
               <td>{{user.timeIn| date:'medium'}}</td>
               <td>{{user.timeOut| date:'medium'}}</td>
