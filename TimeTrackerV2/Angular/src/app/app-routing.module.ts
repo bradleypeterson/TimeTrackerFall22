@@ -43,7 +43,7 @@ const routes: Routes = [
   { path: 'users', component: UsersComponent },
   { path: 'view-eval', component: ViewEvalComponent },
   { path: 'view-evals', component: ViewEvalsComponent },
-  { path: 'report/:uID/:pID', component: ViewReportComponent },  // uID is short for userID and pID is short for projectID, these are temporary until I can implement the code described here https://stackoverflow.com/a/54365098, where I can then drop them from the URL
+  { path: 'report', component: ViewReportComponent },
   { path: 'resetpassword', component: ResetpasswordComponent },
   { path: 'add-courses', component: AddCoursesComponent },
   { path: 'create-course', component: CreateCourseComponent },

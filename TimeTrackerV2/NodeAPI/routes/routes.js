@@ -18,6 +18,7 @@ const {
 } = require("./controllers/MiscellaneousControllers")
 
 const {
+    GetProjectInfo,
     GetAllProjectsForUser,
     GetUserTimesForProject,
     GetAllProjectsForCourse,
@@ -37,6 +38,7 @@ const {
 } = require("./controllers/TimeCardControllers")
 
 const {
+    GetUserInfo,
     GetAllFirstLastUserNames,
     GetCoursesRegisteredFor,
     GetCoursesNotRegisteredFor,
@@ -72,6 +74,8 @@ router.post('/createGroup', CreateNewGroup);
 //#endregion
 
 //#region Project routes
+router.get('/ProjectInfo/:id', GetProjectInfo);
+
 router.get('/ProjectsForUser/:userID', GetAllProjectsForUser);
 
 router.get('/Projects/:id/Users', GetUserTimesForProject);
@@ -98,6 +102,8 @@ router.post('/clock', SaveTimeCard);
 //#endregion
 
 //#region User routes
+router.get('/GetUserInfo/:id', GetUserInfo);
+
 router.get('/Users', GetAllFirstLastUserNames);
 
 //#region Student specific controllers

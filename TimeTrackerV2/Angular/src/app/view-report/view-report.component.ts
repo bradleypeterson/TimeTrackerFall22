@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-view-report',
@@ -11,27 +11,62 @@ export class ViewReportComponent implements OnInit {
     public reportHeader: string = "";
     public timeTables: any;
     public errMsg = '';
+    public cID: string = "";
+    public studentName: string = ""
+    public projectName: string = ""
 
-    uID: string = "";
+    sID: string = "";
     pID: string = "";
 
     constructor(
         private http: HttpClient,
-        private route: ActivatedRoute
-    ) { }
+        private router: Router,
+    ) {
+        // This will grab the userID and projectID values from the state of the navigate function we defined inside the instructor-reports.ts component in the function SeeTimeLogs().  This solution was found here https://stackoverflow.com/a/54365098
+        console.log(JSON.stringify(this.router.getCurrentNavigation()?.extras.state));
+        this.sID = this.router.getCurrentNavigation()?.extras.state?.studentID;
+        this.pID = this.router.getCurrentNavigation()?.extras.state?.projectID;
+        this.cID = this.router.getCurrentNavigation()?.extras.state?.courseID;
+    }
 
     ngOnInit(): void {
-
-        // The below line of code will grab the section of the URL that is ":uID" and ":pID" and store them into the respective variables.  Where I found this code https://stackoverflow.com/questions/44864303/send-data-through-routing-paths-in-angular.  This is temporary and will be replaced with this code as described here so we don't need to pass the parameters by the URL https://stackoverflow.com/a/54365098
-        // The '!' at the end is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be
-        this.uID = this.route.snapshot.paramMap.get('uID')!;
-        this.pID = this.route.snapshot.paramMap.get('pID')!;
-
+        this.GetUserInfo();
+        this.GetProjectInfo();
         this.GetDetailedReport();
     }
 
+    GetUserInfo(): void {
+        console.log(`Grabbing the user's info that has the userID of \"${this.sID}\"`);
+
+        this.http.get<any>(`http://localhost:8080/api/GetUserInfo/${this.sID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+            next: data => {
+                this.errMsg = "";
+                this.studentName = `${data.firstName} ${data.lastName}`;
+            },
+            error: error => {
+                this.errMsg = error['error']['message'];
+            }
+        });
+    }
+
+    GetProjectInfo(): void {
+        console.log(`Grabbing the project's info that has the projectID of \"${this.pID}\"`);
+
+        this.http.get<any>(`http://localhost:8080/api/ProjectInfo/${this.pID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+            next: data => {
+                this.errMsg = "";
+                this.projectName = data.projectName;
+            },
+            error: error => {
+                this.errMsg = error['error']['message'];
+            }
+        });
+    }
+
     GetDetailedReport(): void {
-        this.http.get<any>(`http://localhost:8080/api//Users/${this.uID}/${this.pID}/activities/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        console.log(`Finding the reports for the user with the id of \"${this.sID}\" for the project with the id of \"${this.pID}\"`);
+
+        this.http.get<any>(`http://localhost:8080/api/Users/${this.sID}/${this.pID}/activities/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 this.timeTables = data;

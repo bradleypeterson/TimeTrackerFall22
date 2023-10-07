@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 // Interfaces
 // interface TimeLog {
@@ -35,17 +35,20 @@ export class InstructorReportsComponent implements OnInit {
     studentReports: StudentReport[] = [];
     expandedCards: { [cardID: number]: boolean } = {};
 
+    courseID: number;
+
     constructor(
         private http: HttpClient,
-        private route: ActivatedRoute
-    ) { }
-
-    ngOnInit(): void {
+        private route: ActivatedRoute,
+        private router: Router
+    ) {
         // The below line of code will grab the section of the URL that is ":id" and store it into the variable courseID.  Where I found this code https://stackoverflow.com/questions/44864303/send-data-through-routing-paths-in-angular
         // The '!' at the end is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be
-        let courseID: string = this.route.snapshot.paramMap.get('id')!;
+        this.courseID = Number(this.route.snapshot.paramMap.get('id')!);
+     }
 
-        this.studentReports = this.getStudentReports(courseID);
+    ngOnInit(): void {
+        this.studentReports = this.getStudentReports(this.courseID);
     }
 
     // Method to toggle expanded state of student card
@@ -66,7 +69,7 @@ export class InstructorReportsComponent implements OnInit {
     }
 
     // Grab a list of students registered for the course and the totalTimes for their projects
-    getStudentReports(courseID: string): StudentReport[] {
+    getStudentReports(courseID: number): StudentReport[] {
         let returnData: StudentReport[] = []
 
         this.http.get(`http://localhost:8080/api/Course/${courseID}/GetReportsData`).subscribe((data: any) => {
@@ -99,7 +102,9 @@ export class InstructorReportsComponent implements OnInit {
     }
 
     SeeTimeLogs(studentID: number, projectID: number) {
-        console.log(`Navigate to the detailed report in the component \"view-report\" with the options for the userID of \"${studentID}\" and projectID of \"${projectID}\"`);
-        // navigate to the 'view-report' component using the code described here I think https://stackoverflow.com/a/54365098
+        let state = {studentID: studentID, projectID: projectID, courseID: this.courseID};
+        console.log(`Navigate to the detailed report in the component \"view-report\" with the the following states ${JSON.stringify(state)}`);
+        // navigate to the component that is attached to the url '/report' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+        this.router.navigate(['/report'], { state });
     }
 }
