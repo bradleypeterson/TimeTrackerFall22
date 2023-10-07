@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 // }
 
 interface Project {
+    id: number;
     name: string;
     totalTime: number;
 }
@@ -19,7 +20,7 @@ interface Project {
 // }
 
 interface StudentReport {
-    cardID: number;
+    id: number;
     studentName: string;
     projects: Project[];
 }
@@ -31,7 +32,7 @@ interface StudentReport {
 })
 export class InstructorReportsComponent implements OnInit {
 
-    reports: StudentReport[] = [];
+    studentReports: StudentReport[] = [];
     expandedCards: { [cardID: number]: boolean } = {};
 
     constructor(
@@ -44,7 +45,7 @@ export class InstructorReportsComponent implements OnInit {
         // The '!' at the end is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be
         let courseID: string = this.route.snapshot.paramMap.get('id')!;
 
-        this.reports = this.getStudentReports(courseID);
+        this.studentReports = this.getStudentReports(courseID);
     }
 
     // Method to toggle expanded state of student card
@@ -68,15 +69,14 @@ export class InstructorReportsComponent implements OnInit {
     getStudentReports(courseID: string): StudentReport[] {
         let returnData: StudentReport[] = []
 
-        this.http.get(`http://localhost:8080/api/Course/${courseID}/userTotalTimes`).subscribe((data: any) => {
+        this.http.get(`http://localhost:8080/api/Course/${courseID}/GetReportsData`).subscribe((data: any) => {
             // console.log("Data returned\n" + JSON.stringify(data));
 
-            let cardID: number = 1;
             // for every entry in data
             data.forEach((entry: any) => {
                 // console.log("Processing the data:\n" + JSON.stringify(entry));
                 var toBeAdded: StudentReport = {
-                    cardID,
+                    id: entry.userID,
                     studentName: entry.studentName,
                     projects: [],  // See about using map here
                 };
@@ -84,6 +84,7 @@ export class InstructorReportsComponent implements OnInit {
                 // for every project in entry.projects
                 entry.projects.forEach((project: any, index: number) => {
                     toBeAdded.projects.push({
+                        id: project.projectID,
                         name: project.projectName,
                         totalTime: project.totalTime,
                     });
@@ -91,37 +92,14 @@ export class InstructorReportsComponent implements OnInit {
 
                 // after processing the data, add it to the array "returnData" and increment the value of cardID
                 returnData.push(toBeAdded);
-                cardID++;
             });
         });
 
         return returnData;
+    }
 
-        // return [
-        //     {
-        //         cardID: 1,
-        //         studentName: 'John Doe',
-        //         projects: [
-        //             {
-        //                 name: 'Project 1',
-        //                 totalTime: 5 * 60 * 60 * 1000  // 5 hours
-        //             },
-        //             {
-        //                 name: 'Project 2',
-        //                 totalTime: 4 * 60 * 60 * 1000  // 4 hours
-        //             }
-        //         ]
-        //     },
-        //     {
-        //         cardID: 2,
-        //         studentName: 'Jane Smith',
-        //         projects: [
-        //             {
-        //                 name: 'Project 1',
-        //                 totalTime: 3 * 60 * 60 * 1000  // 3 hours
-        //             }
-        //         ]
-        //     }
-        // ];
+    SeeTimeLogs(studentID: number, projectID: number) {
+        console.log(`Navigate to the detailed report in the component \"view-report\" with the options for the userID of \"${studentID}\" and projectID of \"${projectID}\"`);
+        // navigate to the 'view-report' component using the code described here I think https://stackoverflow.com/a/54365098
     }
 }

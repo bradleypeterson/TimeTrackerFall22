@@ -2,22 +2,25 @@ const sqlite3 = require('sqlite3').verbose();
 
 const db = new sqlite3.Database('./database/main.db');
 
-exports.GetTotalTimeForAllUsersInCourse = (req, res) => {
+exports.GetReportsData = (req, res) => {
     console.log("TimeCardControllers.js file/GetTotalTimeForAllUsersInCourse route called");
 
     let courseID = req.params["courseID"];
     console.log("courseID: " + courseID);
 
-    // This sql statement will select all students that are part of a course and will at the same time, grabs all the projects that they have been/are a part of, even if they are not part of any project.  Such as when they have just joined course, they would not be assigned to a project yet.
-    let sql = `SELECT u.userID, u.firstName || " " || u.lastName AS studentName, p.projectName, SUM(tc.timeOut - timeIn) AS totalTime
+    // This sql statement is intended to select all students that are part of a course and will at the same time, grabs all the projects projects they have/are a part of, even if they are not have any time cards for them.  Such as when they have just joined course, they would not be assigned to a project yet to make a time card.
+    let sql = `SELECT u.userID, u.firstName || " " || u.lastName AS studentName, p.projectID, p.projectName, SUM(tc.timeOut - tc.timeIn) AS totalTime
+    -- Joins to get the students and courses for the students
     FROM Users u
     INNER JOIN Course_Users cu ON cu.userID = u.userID
     INNER JOIN Courses c ON c.courseID = cu.courseID
-    LEFT OUTER JOIN Project_Users pu ON pu.userID = u.userID  -- Grab the connections to the projects the user is assigned to, but if they are not connected to any projects, return null.  An issue might happen here, what if the user is part of a group and has made some timecards, but then they are voted out, this would cause it to break I think (need to do some testing).
-    LEFT OUTER JOIN Projects p ON p.projectID = pu.projectID  -- Grab all the projects the user is assigned to, but if they they are not assigned to the project, return null
-    LEFT OUTER JOIN TimeCard tc ON tc.userID = u.userID AND tc.projectID = p.projectID
+    -- Joins to grab the time cards and projects for the students
+    LEFT OUTER JOIN Project_Users pu ON pu.userID = u.userID  -- Grab the connections to the projects the user is assigned to, but if they are not connected to any projects, return null.  An issue occurs here, what if the user is part of a group and has made some timecards, but then they are voted out or they leave, this would make it so that the name of the project will not be displayed.  Need to find some solution to fix this.
+    LEFT OUTER JOIN Projects p ON p.projectID = pu.projectID  -- Grab all the projects the user has worked on, but if they have not part of the project, return null.
+    LEFT OUTER JOIN TimeCard tc ON tc.userID = u.userID AND tc.projectID = p.projectID  -- Grab all the time cards that the user has made for the project, but if the user has not made any time cards, return null.
+    -- Sort/Organize the data
     WHERE c.courseID = ${courseID}
-    GROUP BY studentName
+    GROUP BY u.userID, studentName, p.projectName
     ORDER BY studentName, p.projectName`;
 
     db.all(sql, [], (err, rows) => {
@@ -43,8 +46,10 @@ exports.GetTotalTimeForAllUsersInCourse = (req, res) => {
                     
                     // Replace what is currently stored inside the variable dataToBeAdded with the current data in the row
                     dataToBeAdded = {
+                        userID: row.userID,
                         studentName: row.studentName,
                         projects: [{
+                            projectID: row.projectID,
                             projectName: row.projectName,
                             totalTime: row.totalTime,
                         }],
@@ -53,6 +58,7 @@ exports.GetTotalTimeForAllUsersInCourse = (req, res) => {
                 // The user is already been processed before, so simply append the data to the projects portion of the dataToBeAdded
                 else {
                     dataToBeAdded.projects.push({
+                        projectID: row.projectID,
                         projectName: row.projectName,
                         totalTime: row.totalTime,
                     });

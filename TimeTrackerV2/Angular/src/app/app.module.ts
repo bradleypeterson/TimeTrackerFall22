@@ -11,6 +11,7 @@ import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/f
 import { NavigationComponent } from './navigation/navigation.component';
 import { InstructorReportsComponent } from './instructor-reports/instructor-reports.component';
 import { AddStudentProjectComponent } from './add-student-project/add-student-project.component';
+import { ViewReportComponent } from './view-report/view-report.component';
 
 
 
@@ -23,6 +24,7 @@ import { AddStudentProjectComponent } from './add-student-project/add-student-pr
     NavigationComponent,
     InstructorReportsComponent,
     AddStudentProjectComponent,
+    ViewReportComponent,
   ],
   imports: [
     BrowserModule,
