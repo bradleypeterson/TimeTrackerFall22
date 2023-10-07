@@ -26,11 +26,11 @@ const {
     JoinGroup,
     LeaveGroup,
     GetAllStudentsInProject,
-    GetAllStudentsNotInProject
+    GetAllStudentsNotInProject,
 } = require("./controllers/ProjectControllers")
 
 const {
-    GetTotalTimeForAllUsersInCourse,
+    GetReportsData,
     GetAllTimeCardsForUserInProject,
     GetAllTimeCardsForUser,
     SaveTimeCard,
@@ -88,7 +88,7 @@ router.get('/AddToProject/:projectID/NotInProject', GetAllStudentsNotInProject);
 //#endregion
 
 //#region Time card routes
-router.get('/Course/:courseID/userTotalTimes', GetTotalTimeForAllUsersInCourse);
+router.get('/Course/:courseID/GetReportsData', GetReportsData);
 
 router.get('/Users/:userID/:projectID/activities', GetAllTimeCardsForUserInProject);
 

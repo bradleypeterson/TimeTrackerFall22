@@ -16,6 +16,7 @@ import { UserComponent } from './user/user.component';
 import { UsersComponent } from './users/users.component';
 import { ViewEvalComponent } from './view-eval/view-eval.component';
 import { ViewEvalsComponent } from './view-evals/view-evals.component';
+import { ViewReportComponent } from './view-report/view-report.component';
 import { AddCoursesComponent } from './add-courses/add-courses.component';
 import { CreateCourseComponent } from './create-course/create-course.component';
 import { DeleteCourseComponent } from './delete-course/delete-course.component';
@@ -42,6 +43,7 @@ const routes: Routes = [
   { path: 'users', component: UsersComponent },
   { path: 'view-eval', component: ViewEvalComponent },
   { path: 'view-evals', component: ViewEvalsComponent },
+  { path: 'report/:uID/:pID', component: ViewReportComponent },  // uID is short for userID and pID is short for projectID, these are temporary until I can implement the code described here https://stackoverflow.com/a/54365098, where I can then drop them from the URL
   { path: 'resetpassword', component: ResetpasswordComponent },
   { path: 'add-courses', component: AddCoursesComponent },
   { path: 'create-course', component: CreateCourseComponent },
