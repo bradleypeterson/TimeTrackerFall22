@@ -1,19 +1,19 @@
 <div id="Add courses" class="position-relative" ng-cloak>
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>Course Name</th>
-          <th>Instructor</th>
-          <th>Register</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!--  ng-repeat="c in courses | filter: search" ng-if="c.isActive || config.showInactiveCourses" ng-class="{inactive: !c.isActive}" -->
-        <tr *ngFor="let c of courses">
-          <td><a href="/courses">{{c}}</a></td> 
-           <td>Instructor First Name, Instructor Last Name</td> 
-           <td><button class="btn btn-primary mr-1">Register</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Course Name</th>
+        <th>Instructor</th>
+        <th>Register</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!--  ng-repeat="c in courses | filter: search" ng-if="c.isActive || config.showInactiveCourses" ng-class="{inactive: !c.isActive}" -->
+      <tr *ngFor="let c of courses">
+        <td><a href="/courses">{{c}}</a></td>
+        <td>Instructor First Name, Instructor Last Name</td>
+        <td><button class="btn btn-primary mr-1">Register</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -10,33 +10,35 @@ import { Location } from '@angular/common'
 })
 export class ResetpasswordComponent implements OnInit {
 
-  data!:any;
-  resetForm!:UntypedFormGroup;
+  data!: any;
+  resetForm!: UntypedFormGroup;
 
-  constructor(private activeRoute:ActivatedRoute,private location: Location) { }
+  constructor(private activeRoute: ActivatedRoute, private location: Location) { }
 
   ngOnInit(): void {
-    
-    this.activeRoute.queryParams.subscribe({next:(data: any)=>{
-      this.data=data
-    }})
 
-    this.resetForm=new UntypedFormGroup({
+    this.activeRoute.queryParams.subscribe({
+      next: (data: any) => {
+        this.data = data
+      }
+    })
 
-      username:new UntypedFormControl(this.data.username),
+    this.resetForm = new UntypedFormGroup({
+
+      username: new UntypedFormControl(this.data.username),
       newPswd: new UntypedFormControl(null),
-      confirm:new UntypedFormControl(null)
+      confirm: new UntypedFormControl(null)
     })
 
   }
 
-  onSubmit(){
+  onSubmit() {
   }
-   changedPass(){
-      alert('Password has been changed');
-      this.location.back()
-    }
-    
-   }
+  changedPass() {
+    alert('Password has been changed');
+    this.location.back()
+  }
+
+}
 
 

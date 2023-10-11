@@ -16,8 +16,8 @@
 
   <!-- ng-model="search" ??? -->
   <div class="form-inline mb-3">
-    <form class="mr-3">
-      <input class="form-control mr-3" type="search" placeholder="Search Projects" aria-label="Search">
+    <form class="mr-3" (ngSubmit)="searchProjects()">
+      <input class="form-control mr-3" [(ngModel)]="projectSearchQuery" name="projectSearchQuery" type="text" placeholder="Search Projects" aria-label="Search">
       <button class="btn btn-primary" type="submit">Search</button>
     </form>
     <div [ngSwitch]="true">
@@ -29,63 +29,124 @@
 
   <div [ngSwitch]="true">
     <div *ngSwitchCase="instructor">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>Projects</th>
-            <th>Description</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let p of projects">
-            <td>{{ p.projectName }}</td>
-            <td>{{ p.description }}</td>
-            <td>
-              <div class="btn-group float-right">
-                <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div *ngIf="filteredProjects?.length > 0">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Searched Projects</th>
+              <th>Description</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of filteredProjects">
+              <td>{{ p.projectName }}</td>
+              <td>{{ p.description }}</td>
+              <td>
+                <div class="btn-group float-right">
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="filteredProjects?.length <= 0">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>All Projects</th>
+              <th>Description</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of projects">
+              <td>{{ p.projectName }}</td>
+              <td>{{ p.description }}</td>
+              <td>
+                <div class="btn-group float-right">
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
     </div>
   </div>
 
   <div [ngSwitch]="true">
     <div *ngSwitchCase="student">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th>Projects</th>
-            <th>Description</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let p of allUserGroups">
-            <td>{{ p.projectName }}</td>
-            <td>{{ p.description }}</td>
-            <td>
-              <div class="btn-group float-right">
-                <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
-                <button class="btn btn-danger" (click)="leave(p.projectID)">Leave</button>
-              </div>
-            </td>
-          </tr>
-
-          <tr *ngFor="let p of nonUserGroups">
-            <td>{{ p.projectName }}</td>
-            <td>{{ p.description }}</td>
-            <td>
-              <div class="btn-group float-right">
-                <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
-                <button class="btn btn-success" (click)="join(p.projectID)">Join</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div *ngIf="allUserFilteredProjects?.length > 0 || nonUserFilteredProjects?.length > 0">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Searched Projects</th>
+              <th>Description</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of allUserFilteredProjects">
+              <td>{{ p.projectName }}</td>
+              <td>{{ p.description }}</td>
+              <td>
+                <div class="btn-group float-right">
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <button class="btn btn-danger" (click)="leave(p.projectID)">Leave</button>
+                </div>
+              </td>
+            </tr>
+  
+            <tr *ngFor="let p of nonUserFilteredProjects">
+              <td>{{ p.projectName }}</td>
+              <td>{{ p.description }}</td>
+              <td>
+                <div class="btn-group float-right">
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <button class="btn btn-success" (click)="join(p.projectID)">Join</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="allUserFilteredProjects?.length <= 0 && nonUserFilteredProjects?.length <= 0">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>All Projects</th>
+              <th>Description</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of allUserGroups">
+              <td>{{ p.projectName }}</td>
+              <td>{{ p.description }}</td>
+              <td>
+                <div class="btn-group float-right">
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <button class="btn btn-danger" (click)="leave(p.projectID)">Leave</button>
+                </div>
+              </td>
+            </tr>
+  
+            <tr *ngFor="let p of nonUserGroups">
+              <td>{{ p.projectName }}</td>
+              <td>{{ p.description }}</td>
+              <td>
+                <div class="btn-group float-right">
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <button class="btn btn-success" (click)="join(p.projectID)">Join</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 

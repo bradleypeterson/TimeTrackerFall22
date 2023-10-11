@@ -11,6 +11,7 @@ import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/f
 import { NavigationComponent } from './navigation/navigation.component';
 import { InstructorReportsComponent } from './instructor-reports/instructor-reports.component';
 import { AddStudentProjectComponent } from './add-student-project/add-student-project.component';
+import { ViewReportComponent } from './view-report/view-report.component';
 import { EditCourseComponent } from './edit-course/edit-course.component';
 import { EditProjectComponent } from './edit-project/edit-project.component';
 
@@ -25,6 +26,7 @@ import { EditProjectComponent } from './edit-project/edit-project.component';
     NavigationComponent,
     InstructorReportsComponent,
     AddStudentProjectComponent,
+    ViewReportComponent,
     EditCourseComponent,
     EditProjectComponent,
   ],

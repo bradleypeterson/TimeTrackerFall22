@@ -11,31 +11,31 @@ import { Router } from '@angular/router';
 
 export class ChangePasswordComponent implements OnInit {
 
-  constructor(private router:Router,private http:HttpClient) { }
+  constructor(private router: Router, private http: HttpClient) { }
 
   ngOnInit(): void {
   }
-  navToChangePass(){
+  navToChangePass() {
     this.router.navigate(['resetpassword'])
   }
-  
+
 
   public pageTitle = 'TimeTrackerV2 | Change Password'
 
-  this.http.post<any>('http://localhost:8080/changepassword/', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
-      next: data => {
-        this.errMsg = "";
-        localStorage.setItem('currentUser', JSON.stringify(data['user']));
-        this.router.navigate(['./dashboard']);
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-      
-    });
+  this.http.post<any>('http://localhost:8080/changepassword/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    next: data => {
+      this.errMsg = "";
+      localStorage.setItem('currentUser', JSON.stringify(data['user']));
+      this.router.navigate(['./dashboard']);
+    },
+    error: error => {
+      this.errMsg = error['error']['message'];
+    }
+
+  });
   }
 
-  
-  
+
+
 
 

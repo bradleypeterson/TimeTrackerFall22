@@ -13,5 +13,5 @@ export class ManageEvalsComponent implements OnInit {
   }
 
   public pageTitle = 'TimeTrackerV2 | Manage Evals'
-  
+
 }

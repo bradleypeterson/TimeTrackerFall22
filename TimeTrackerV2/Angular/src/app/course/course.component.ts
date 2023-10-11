@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-course',
@@ -14,6 +14,10 @@ export class CourseComponent implements OnInit {
   public errMsg = '';
   public allUserGroups: any = [];
   public nonUserGroups: any = [];
+  public filteredProjects: any = [];
+  public projectSearchQuery: any = '';
+  public allUserFilteredProjects: any = [];
+  public nonUserFilteredProjects: any = [];
 
   private courseID: any;
 
@@ -43,22 +47,22 @@ export class CourseComponent implements OnInit {
     var userData = currentUser ? JSON.parse(currentUser) : null;
     var userType = userData.type;
     this.userID = userData.userID;
-    if(userType === 'instructor'){
+    if (userType === 'instructor') {
       this.instructor = true;
-    }else if(userType === 'student'){
+    } else if (userType === 'student') {
       this.student = true;
     }
-    
+
     this.courseID = this.activatedRoute.snapshot.params['id']; // get course id from URL
 
-    if(this.courseID) { // set course to course from local storage based on course ID
+    if (this.courseID) { // set course to course from local storage based on course ID
       let temp = localStorage.getItem('courses');
 
-      if(temp){
+      if (temp) {
         const courses = JSON.parse(temp);
 
-        for(let course of courses){
-          if(Number(course.courseID) === Number(this.courseID)){
+        for (let course of courses) {
+          if (Number(course.courseID) === Number(this.courseID)) {
             this.course = course;
           }
         }
@@ -83,9 +87,9 @@ export class CourseComponent implements OnInit {
   }
 
   loadProjects(): void {
-    this.http.get("http://localhost:8080/api/Projects/" + this.courseID).subscribe((data: any) =>{ 
+    this.http.get("http://localhost:8080/api/Projects/" + this.courseID).subscribe((data: any) => {
       this.projects = data;
-      if(this.projects){
+      if (this.projects) {
         localStorage.setItem("projects", JSON.stringify(this.projects));
       }
     });
@@ -97,7 +101,7 @@ export class CourseComponent implements OnInit {
         this.errMsg = "";
         // console.log(data);
         this.allUserGroups = data;
-        if(this.allUserGroups){
+        if (this.allUserGroups) {
           localStorage.setItem("allUserGroups", JSON.stringify(this.allUserGroups));
         }
       },
@@ -113,7 +117,7 @@ export class CourseComponent implements OnInit {
         this.errMsg = "";
         // console.log(data);
         this.nonUserGroups = data;
-        if(this.nonUserGroups){
+        if (this.nonUserGroups) {
           localStorage.setItem("nonUserGroups", JSON.stringify(this.nonUserGroups));
         }
       },
@@ -155,6 +159,59 @@ export class CourseComponent implements OnInit {
         this.errMsg = error['error']['message'];
       }
     });
+  }
+
+  searchProjects(): void {
+    let sizeOfFilteredProjects = 0;
+    let sizeOfAllUserFilteredProjects = 0;
+    let sizeOfNonUserFilteredProjects = 0;
+    if (this.projectSearchQuery == '') {
+      this.filteredProjects = [];
+      this.allUserFilteredProjects = [];
+      this.nonUserFilteredProjects = [];
+    }
+    else {
+      sizeOfFilteredProjects = this.filteredProjects.length;
+      this.filteredProjects.splice(0, sizeOfFilteredProjects);
+      sizeOfAllUserFilteredProjects = this.allUserFilteredProjects.length;
+      this.allUserFilteredProjects.splice(0, sizeOfAllUserFilteredProjects);
+      sizeOfNonUserFilteredProjects = this.nonUserFilteredProjects.length;
+      this.nonUserFilteredProjects.splice(0, sizeOfNonUserFilteredProjects);
+      
+      for (let p of this.projects) {
+        if (p.projectName.toLowerCase().search(this.projectSearchQuery.toLowerCase()) != -1) {
+          this.filteredProjects.push(p);
+        }
+        else {
+          sizeOfFilteredProjects = this.filteredProjects.length;
+          this.filteredProjects.splice(0, sizeOfFilteredProjects);
+        }
+      }
+
+      for (let p of this.allUserGroups) {
+        if (p.projectName.toLowerCase().search(this.projectSearchQuery.toLowerCase()) != -1) {
+          this.allUserFilteredProjects.push(p);
+        }
+        else {
+          sizeOfAllUserFilteredProjects = this.allUserFilteredProjects.length;
+          this.allUserFilteredProjects.splice(0, sizeOfAllUserFilteredProjects);
+          sizeOfNonUserFilteredProjects = this.nonUserFilteredProjects.length;
+          this.nonUserFilteredProjects.splice(0, sizeOfNonUserFilteredProjects);
+        }
+      }
+
+      for (let p of this.nonUserGroups) {
+        if (p.projectName.toLowerCase().search(this.projectSearchQuery.toLowerCase()) != -1) {
+          this.nonUserFilteredProjects.push(p);
+        }
+        else {
+          sizeOfNonUserFilteredProjects = this.nonUserFilteredProjects.length;
+          this.nonUserFilteredProjects.splice(0, sizeOfNonUserFilteredProjects);
+          sizeOfAllUserFilteredProjects = this.allUserFilteredProjects.length;
+          this.allUserFilteredProjects.splice(0, sizeOfAllUserFilteredProjects);
+        }
+      }
+    }
   }
 
 }

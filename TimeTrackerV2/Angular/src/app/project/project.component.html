@@ -13,18 +13,20 @@
   <div class="row">
     <div class="col-6">
       <div *ngIf="pieChartLabels.length != 0">
-        <canvas baseChart 
-          [type]="'pie'"
-          [datasets]="pieChartDatasets"
-          [labels]="pieChartLabels"
-          [options]="pieChartOptions"
-          [plugins]="pieChartPlugins"
-          [legend]="pieChartLegend">
-        </canvas>      
+        <canvas baseChart
+            [type]="'pie'"
+            [datasets]="pieChartDatasets"
+            [labels]="pieChartLabels"
+            [options]="pieChartOptions"
+            [plugins]="pieChartPlugins"
+            [legend]="pieChartLegend">
+        </canvas>
       </div>
     </div>
     <div class="col-6">
-      <div class="row"><h3>Team Times</h3></div>
+      <div class="row">
+        <h3>Team Times</h3>
+      </div>
       <div class="row">
         <table class="table table-light table-sm table-hover table-bordered border-dark">
           <thead>
@@ -41,13 +43,13 @@
           </tbody>
         </table>
       </div>
-  </div>
+    </div>
   </div>
   <div class="row">
     <div class="col-6">
       <div class="row">
         <div class="col-9">
-          <h3>Activity</h3>
+          <h3>My Activity</h3>
         </div>
         <div class="col-3">
           <!--<button type="button" class="btn btn-primary">All Activity</button>-->
@@ -72,36 +74,36 @@
             </tr>
           </tbody>
         </table>
-        </div>
-    </div>
-    <div class="col-6" *ngIf="isProjectUser">
-        <!--Date Row-->
-        <div class="row, center">
-          <h3>{{currDate}}</h3>
-        </div>
-        <!--Time Row-->
-        <div class="row, center">
-          <h1>{{hours}}:{{minutes}}:{{seconds}}</h1>
-        </div>
-        <!--Start/Stop Buttons-->
-        <div class="gap-2 d-md-flex justify-content-md-center">
-            <button (click)="clockIn()" type="button" class="btn btn-success">Start</button>
-        </div>
-        <!--Submit Button-->
-        <div class="gap-4 d-md-flex justify-content-md-center">
-          <form (ngSubmit)="submit()">
-            <div class="row mt-2">
-              <input type="text" placeholder="Description" class="form-control" [formControl]="description">
-            </div>
-            <div class="d-grid d-md-flex justify-content-md-center">
-              <button type="submit" class="btn btn-primary mt-2" [disabled]="this.description.value===''">Submit</button>
-            </div>
-          </form>
-        </div>
       </div>
     </div>
-        <div class="row">
-          <div class="col align-self-center">
+    <div class="col-6" *ngIf="isProjectUser">
+      <!--Date Row-->
+      <div class="row, center">
+        <h3>{{currDate}}</h3>
+      </div>
+      <!--Time Row-->
+      <div class="row, center">
+        <h1>{{hours}}:{{minutes}}:{{seconds}}</h1>
+      </div>
+      <!--Start/Stop Buttons-->
+      <div class="gap-2 d-md-flex justify-content-md-center">
+        <button (click)="clockIn()" type="button" class="btn btn-success">Start</button>
+      </div>
+      <!--Submit Button-->
+      <div class="gap-4 d-md-flex justify-content-md-center">
+        <form (ngSubmit)="submit()">
+          <div class="row mt-2">
+            <input type="text" placeholder="Description" class="form-control" [formControl]="description">
+          </div>
+          <div class="d-grid d-md-flex justify-content-md-center">
+            <button type="submit" class="btn btn-primary mt-2" [disabled]="this.description.value===''">Submit</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col align-self-center">
       <div class="row">
         <div class="col-10">
           <h3>History</h3>
@@ -111,7 +113,8 @@
         </div>
       </div>
       <div class="row">
-        <table class="table table-light table-sm table-hover table-bordered border-dark" style="max-height: 200px; overflow-y:scroll">
+        <table class="table table-light table-sm table-hover table-bordered border-dark"
+          style="max-height: 200px; overflow-y:scroll">
           <thead>
             <tr>
               <th scope="col">Name</th>
@@ -133,5 +136,3 @@
     </div>
   </div>
 </div>
-
-

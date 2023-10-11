@@ -2,6 +2,26 @@ const sqlite3 = require('sqlite3').verbose();
 
 const db = new sqlite3.Database('./database/main.db');
 
+exports.GetUserInfo = (req, res) => {
+    console.log("UsersControllers.js file/GetFirstLastUserName route called");
+
+    let userID = req.params["id"];
+    console.log("userID: " + userID)
+
+    let sql = `SELECT firstName, lastName, type, isActive
+        FROM Users
+        WHERE userID = ${userID}`;
+
+    db.get(sql, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows) {
+            return res.send(rows);
+        }
+    });
+}
+
 exports.GetAllFirstLastUserNames = (req, res) => {
     console.log("UsersControllers.js file/GetFirstLastUserName route called");
 

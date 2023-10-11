@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-student-project',
@@ -70,7 +70,7 @@ export class AddStudentProjectComponent implements OnInit {
         this.errMsg = "";
         console.log(data);
         this.studentsInProject = data;
-        if(this.studentsInProject){
+        if (this.studentsInProject) {
           localStorage.setItem("studentsInProject", JSON.stringify(this.studentsInProject));
         }
       },
@@ -86,7 +86,7 @@ export class AddStudentProjectComponent implements OnInit {
         this.errMsg = "";
         console.log(data);
         this.studentsNotInProject = data;
-        if(this.studentsNotInProject){
+        if (this.studentsNotInProject) {
           localStorage.setItem("studentsNotInProject", JSON.stringify(this.studentsNotInProject));
         }
       },

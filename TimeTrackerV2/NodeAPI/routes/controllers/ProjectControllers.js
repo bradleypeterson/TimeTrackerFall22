@@ -4,6 +4,30 @@ const sqlite3 = require('sqlite3').verbose();
 
 const db = new sqlite3.Database('./database/main.db');
 
+exports.GetProjectInfo = (req, res) => {
+    console.log("ProjectControllers.js file/GetProjectInfo route called");
+
+    let projectID = req.params["id"];
+    console.log(`projectID: ${projectID}`);
+
+    let sql = `SELECT projectName, isActive, courseID, description
+    FROM Projects
+    WHERE projectID = ${projectID}`;
+
+    db.get(sql, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows) {
+            console.log(`Rows retrieved:  ${JSON.stringify(rows)}`);
+            return res.send(rows);
+        }
+        else {
+            return res.send("No errors occurred, however no rows were found either.");
+        }
+    });
+}
+
 exports.GetAllProjectsForUser = (req, res) => {
     console.log("ProjectControllers.js file/GetAllProjectsForUser route called");
 
@@ -31,7 +55,6 @@ exports.GetAllProjectsForUser = (req, res) => {
     });
 }
 
-// This function is currently can't be implemented because the Join Table "Project_Users" is never inserted into.  But from what I can see with the SQL, it is going to select unique users and their timeIn and TimeOut using the desired projectID.
 exports.GetUserTimesForProject = (req, res) => {
     console.log("ProjectControllers.js file/GetUserTimesForProject route called");
 
@@ -54,14 +77,16 @@ exports.GetUserTimesForProject = (req, res) => {
     });
 }
 
-exports.GetAllProjectsForCourse = (req, res) => { // grab all projects based on provided courseID
+// grab all projects based on provided courseID
+exports.GetAllProjectsForCourse = (req, res) => {
     console.log("ProjectControllers.js file/GetAllProjectsForCourse route called");
 
     let courseID = req.params["id"];
     console.log(`courseID: ${courseID}`);
 
     let sql = `SELECT projectName, projectID, description, courseID
-        FROM Projects WHERE courseID = ?`;
+        FROM Projects
+        WHERE courseID = ?`;
 
     db.all(sql, [courseID], (err, rows) => {
         if (err) {

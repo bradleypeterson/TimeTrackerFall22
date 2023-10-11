@@ -16,6 +16,7 @@ import { UserComponent } from './user/user.component';
 import { UsersComponent } from './users/users.component';
 import { ViewEvalComponent } from './view-eval/view-eval.component';
 import { ViewEvalsComponent } from './view-evals/view-evals.component';
+import { ViewReportComponent } from './view-report/view-report.component';
 import { AddCoursesComponent } from './add-courses/add-courses.component';
 import { CreateCourseComponent } from './create-course/create-course.component';
 import { EditCourseComponent } from './edit-course/edit-course.component';
@@ -44,6 +45,7 @@ const routes: Routes = [
   { path: 'users', component: UsersComponent },
   { path: 'view-eval', component: ViewEvalComponent },
   { path: 'view-evals', component: ViewEvalsComponent },
+  { path: 'report', component: ViewReportComponent },
   { path: 'resetpassword', component: ResetpasswordComponent },
   { path: 'add-courses', component: AddCoursesComponent },
   { path: 'create-course', component: CreateCourseComponent },

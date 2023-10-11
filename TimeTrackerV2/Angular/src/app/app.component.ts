@@ -18,17 +18,17 @@ export class AppComponent implements OnInit {
     let currentUser = localStorage.getItem('currentUser');
     var userDate = currentUser ? JSON.parse(currentUser) : null;
     this.userType = userDate.type;
-    if(this.userType === 'admin') {
+    if (this.userType === 'admin') {
       this.admin = true;
       this.name = userDate.firstName + ' ' + userDate.lastName;
     }
-    else if(this.userType === 'instructor'){
+    else if (this.userType === 'instructor') {
       this.instructor = true;
       this.name = userDate.firstName + ' ' + userDate.lastName;
-    }else if(this.userType === 'student'){
+    } else if (this.userType === 'student') {
       this.student = true;
       this.name = userDate.firstName + ' ' + userDate.lastName;
-    }else{
+    } else {
       this.nullType = true;
     }
     // console.log(this.userType);
