@@ -1,0 +1,20 @@
+<div id="edit-project">
+    <h2>Edit Project</h2>
+    <hr>
+
+    <form [formGroup]="editProjectForm" (ngSubmit)="onSubmit()">
+        <p style="color: red;">{{ errMsg }}</p>
+
+        <div class="form-group">
+            <input id="projectName" formControlName="projectName" type="text" class="form-control" name="projectName" placeholder="Project Name" ng-model="project.projectName">
+        </div>
+        <div class="form-group">
+            <input id="description" formControlName="description" type="text" class="form-control" name="description" placeholder="Project Description" ng-model="project.description">
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-success">Done</button>
+            <a href="/project/{{projectID}}" class="btn btn-danger">Cancel</a>
+        </div>
+    </form>
+</div>

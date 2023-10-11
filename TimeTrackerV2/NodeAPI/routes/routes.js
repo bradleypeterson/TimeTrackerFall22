@@ -43,8 +43,10 @@ const {
     RegisterForCourse,
     DropCourse,
     CreateCourse,
+    EditCourse,
     DeleteCourse,
     CreateProject,
+    EditProject,
     DeleteProject,
 } = require("./controllers/UsersControllers")
 //#endregion
@@ -117,9 +119,13 @@ router.post('/leaveGroup', LeaveGroup);
 //#region Instructor specific controllers
 router.post('/createCourse', CreateCourse);
 
+router.post('/editCourse', EditCourse);
+
 router.post('/deleteCourse', DeleteCourse);
 
 router.post('/createProject', CreateProject);
+
+router.post('/editProject', EditProject);
 
 router.post('/deleteProject', DeleteProject);
 //#endregion
