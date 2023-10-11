@@ -14,6 +14,10 @@ export class CourseComponent implements OnInit {
   public errMsg = '';
   public allUserGroups: any = [];
   public nonUserGroups: any = [];
+  public filteredProjects: any = [];
+  public projectSearchQuery: any = '';
+  public allUserFilteredProjects: any = [];
+  public nonUserFilteredProjects: any = [];
 
   private courseID: any;
 
@@ -155,6 +159,59 @@ export class CourseComponent implements OnInit {
         this.errMsg = error['error']['message'];
       }
     });
+  }
+
+  searchProjects(): void {
+    let sizeOfFilteredProjects = 0;
+    let sizeOfAllUserFilteredProjects = 0;
+    let sizeOfNonUserFilteredProjects = 0;
+    if (this.projectSearchQuery == '') {
+      this.filteredProjects = [];
+      this.allUserFilteredProjects = [];
+      this.nonUserFilteredProjects = [];
+    }
+    else {
+      sizeOfFilteredProjects = this.filteredProjects.length;
+      this.filteredProjects.splice(0, sizeOfFilteredProjects);
+      sizeOfAllUserFilteredProjects = this.allUserFilteredProjects.length;
+      this.allUserFilteredProjects.splice(0, sizeOfAllUserFilteredProjects);
+      sizeOfNonUserFilteredProjects = this.nonUserFilteredProjects.length;
+      this.nonUserFilteredProjects.splice(0, sizeOfNonUserFilteredProjects);
+      
+      for (let p of this.projects) {
+        if (p.projectName.toLowerCase().search(this.projectSearchQuery.toLowerCase()) != -1) {
+          this.filteredProjects.push(p);
+        }
+        else {
+          sizeOfFilteredProjects = this.filteredProjects.length;
+          this.filteredProjects.splice(0, sizeOfFilteredProjects);
+        }
+      }
+
+      for (let p of this.allUserGroups) {
+        if (p.projectName.toLowerCase().search(this.projectSearchQuery.toLowerCase()) != -1) {
+          this.allUserFilteredProjects.push(p);
+        }
+        else {
+          sizeOfAllUserFilteredProjects = this.allUserFilteredProjects.length;
+          this.allUserFilteredProjects.splice(0, sizeOfAllUserFilteredProjects);
+          sizeOfNonUserFilteredProjects = this.nonUserFilteredProjects.length;
+          this.nonUserFilteredProjects.splice(0, sizeOfNonUserFilteredProjects);
+        }
+      }
+
+      for (let p of this.nonUserGroups) {
+        if (p.projectName.toLowerCase().search(this.projectSearchQuery.toLowerCase()) != -1) {
+          this.nonUserFilteredProjects.push(p);
+        }
+        else {
+          sizeOfNonUserFilteredProjects = this.nonUserFilteredProjects.length;
+          this.nonUserFilteredProjects.splice(0, sizeOfNonUserFilteredProjects);
+          sizeOfAllUserFilteredProjects = this.allUserFilteredProjects.length;
+          this.allUserFilteredProjects.splice(0, sizeOfAllUserFilteredProjects);
+        }
+      }
+    }
   }
 
 }
