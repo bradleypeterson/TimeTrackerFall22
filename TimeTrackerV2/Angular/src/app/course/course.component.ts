@@ -177,7 +177,7 @@ export class CourseComponent implements OnInit {
       this.allUserFilteredProjects.splice(0, sizeOfAllUserFilteredProjects);
       sizeOfNonUserFilteredProjects = this.nonUserFilteredProjects.length;
       this.nonUserFilteredProjects.splice(0, sizeOfNonUserFilteredProjects);
-      
+
       for (let p of this.projects) {
         if (p.projectName.toLowerCase().search(this.projectSearchQuery.toLowerCase()) != -1) {
           this.filteredProjects.push(p);

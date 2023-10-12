@@ -37,6 +37,9 @@ export class InstructorReportsComponent implements OnInit {
 
     courseID: number;
 
+    public filteredStudents: any = [];
+    public studentSearchQuery: any = '';
+
     constructor(
         private http: HttpClient,
         private route: ActivatedRoute,
@@ -106,5 +109,25 @@ export class InstructorReportsComponent implements OnInit {
         console.log(`Navigate to the detailed report in the component \"view-report\" with the the following states ${JSON.stringify(state)}`);
         // navigate to the component that is attached to the url '/report' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
         this.router.navigate(['/report'], { state });
+    }
+
+    searchStudents(): void {
+        let sizeOfFilteredStudents = 0;
+        if (this.studentSearchQuery == '') {
+            this.filteredStudents = [];
+        }
+        else {
+            sizeOfFilteredStudents = this.filteredStudents.length;
+            this.filteredStudents.splice(0, sizeOfFilteredStudents);
+            for (let s of this.studentReports) {
+                if (s.studentName.toLowerCase().search(this.studentSearchQuery.toLowerCase()) != -1) {
+                  this.filteredStudents.push(s);
+                }
+                else {
+                  sizeOfFilteredStudents = this.filteredStudents.length;
+                  this.filteredStudents.splice(0, sizeOfFilteredStudents);
+                }
+              }
+        }
     }
 }
