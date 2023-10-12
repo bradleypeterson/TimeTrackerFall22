@@ -34,7 +34,7 @@ exports.GetAllProjectsForUser = (req, res) => {
     let userID = req.params["userID"];
     console.log(`userID: ${userID}`);
 
-    let sql = `SELECT DISTINCT p.projectName, p.projectID, p.description, c.courseName, p.courseID
+    let sql = `SELECT DISTINCT p.projectName, p.projectID, p.description, c.courseName, p.courseID, p.isActive
         FROM Projects as p
         INNER JOIN Courses as c ON c.courseID = p.courseID
         INNER JOIN Course_Users as cu ON cu.CourseID = c.courseID
@@ -84,7 +84,7 @@ exports.GetAllProjectsForCourse = (req, res) => {
     let courseID = req.params["id"];
     console.log(`courseID: ${courseID}`);
 
-    let sql = `SELECT projectName, projectID, description, courseID
+    let sql = `SELECT projectName, projectID, description, courseID, isActive
         FROM Projects
         WHERE courseID = ?`;
 

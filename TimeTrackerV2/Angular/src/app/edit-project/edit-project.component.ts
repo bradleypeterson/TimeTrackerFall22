@@ -41,6 +41,7 @@ export class EditProjectComponent implements OnInit {
 
       this.editProjectForm.controls['projectName'].setValue(this.project.projectName);
       this.editProjectForm.controls['description'].setValue(this.project.description);
+      this.editProjectForm.controls['isActive'].setValue(this.project.isActive);
   }
 
   editProjectForm = this.formBuilder.group({
@@ -54,7 +55,7 @@ export class EditProjectComponent implements OnInit {
     let payload = {
       projectName: this.editProjectForm.value['projectName'],
       description: this.editProjectForm.value['description'],
-      isActive: true,
+      isActive: this.editProjectForm.value['isActive'],
       projectID: this.projectID,
     }
 

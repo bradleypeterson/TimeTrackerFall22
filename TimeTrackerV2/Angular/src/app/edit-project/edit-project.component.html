@@ -11,6 +11,10 @@
         <div class="form-group">
             <input id="description" formControlName="description" type="text" class="form-control" name="description" placeholder="Project Description" ng-model="project.description">
         </div>
+        <div class="form-group">
+                <input id="isActive" formControlName="isActive" type="checkbox" class="form-check-input" name="isActive" ng-model="project.isActive">
+                <label class="form-check-label" for="isActive">Active Project</label>
+        </div>
 
         <div class="btn-group">
             <button type="submit" class="btn btn-success">Done</button>
