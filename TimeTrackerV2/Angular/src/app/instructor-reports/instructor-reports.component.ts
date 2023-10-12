@@ -118,16 +118,18 @@ export class InstructorReportsComponent implements OnInit {
         }
         else {
             sizeOfFilteredStudents = this.filteredStudents.length;
+            this.filteredStudents.splice(0, sizeOfFilteredStudents-1);
             this.filteredStudents.splice(0, sizeOfFilteredStudents);
             for (let s of this.studentReports) {
                 if (s.studentName.toLowerCase().search(this.studentSearchQuery.toLowerCase()) != -1) {
-                  this.filteredStudents.push(s);
+                    this.filteredStudents.push(s);
                 }
                 else {
-                  sizeOfFilteredStudents = this.filteredStudents.length;
-                  this.filteredStudents.splice(0, sizeOfFilteredStudents);
+                    sizeOfFilteredStudents = this.filteredStudents.length;
+                    this.filteredStudents.splice(0, sizeOfFilteredStudents-1);
                 }
-              }
+            }
         }
+        
     }
 }
