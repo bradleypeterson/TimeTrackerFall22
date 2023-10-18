@@ -28,8 +28,8 @@ exports.GetProjectInfo = (req, res) => {
     });
 }
 
-exports.GetAllProjectsForUser = (req, res) => {
-    console.log("ProjectControllers.js file/GetAllProjectsForUser route called");
+exports.GetActiveProjectsForUser = (req, res) => {
+    console.log("ProjectControllers.js file/GetActiveProjectsForUser route called");
 
     let userID = req.params["userID"];
     console.log(`userID: ${userID}`);
@@ -39,7 +39,8 @@ exports.GetAllProjectsForUser = (req, res) => {
         INNER JOIN Courses as c ON c.courseID = p.courseID
         INNER JOIN Course_Users as cu ON cu.CourseID = c.courseID
         INNER JOIN Users as u on u.userID = ?
-        INNER JOIN Project_Users as pu on pu.userID = u.userID AND pu.projectID = p.projectID`;
+        INNER JOIN Project_Users as pu on pu.userID = u.userID AND pu.projectID = p.projectID
+        WHERE p.isActive`;
 
     db.all(sql, [userID], (err, rows) => {
         if (err) {
@@ -104,7 +105,7 @@ exports.GetUserProjectsForCourse = (req, res) => {
     let courseID = req.params["courseID"];
     let userID = req.params["userID"];
 
-    let sql = `SELECT DISTINCT p.projectName, p.projectID, p.description
+    let sql = `SELECT DISTINCT p.projectName, p.projectID, p.description, p.isActive
         FROM Projects p
         INNER JOIN Project_Users pu ON p.projectID = pu.projectID
         WHERE p.courseID = ${courseID} AND pu.userID = ${userID}`;
@@ -125,7 +126,7 @@ exports.GetNonUserProjectsForCourse = (req, res) => {
     courseID = req.params["courseID"];
     userID = req.params["userID"];
 
-    let sql = `SELECT DISTINCT p.projectName, p.projectID, p.description
+    let sql = `SELECT DISTINCT p.projectName, p.projectID, p.description, p.isActive
         FROM Projects p
         WHERE p.courseID = ${courseID} AND p.projectID not in (
             SELECT p.projectID

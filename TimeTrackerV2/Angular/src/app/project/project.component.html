@@ -76,7 +76,7 @@
         </table>
       </div>
     </div>
-    <div class="col-6" *ngIf="isProjectUser">
+    <div class="col-6" *ngIf="isProjectUser && project.isActive">
       <!--Date Row-->
       <div class="row, center">
         <h3>{{currDate}}</h3>
