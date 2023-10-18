@@ -61,7 +61,7 @@ exports.Register = async (req, res, next) => {
 		data[2] = firstName;
 		data[3] = lastName;
 		data[4] = type;
-		data[5] = false;
+		data[5] = false;  // Don't know why this is false, I (Braxton) would think this would be true because I think these refers to if the account is active or disabled and if you are registering, you would be making an active account.
 		data[6] = salt;
 
 		db.run(sql, data, function (err, rows) {

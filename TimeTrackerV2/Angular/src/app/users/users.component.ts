@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { concat } from 'rxjs';
 
 @Component({
     selector: 'app-users',
@@ -10,7 +9,7 @@ import { concat } from 'rxjs';
 })
 
 export class UsersComponent implements OnInit {
-    public users = [];
+    users: Array<any> = [];
 
     constructor(
         private http: HttpClient,
@@ -23,15 +22,15 @@ export class UsersComponent implements OnInit {
 
     public pageTitle = 'TimeTrackerV2 | Users'
 
-    loadUsers(users: Array<Object>) {
+    loadUsers(users: Array<object>) {
         this.http.get("http://localhost:8080/api/Users").subscribe((data: any) => {
             for (let i = 0; i < data.length; i++) {
-                let user: Object = data[i];
-
-                /*users.push({
-                    name: user.firstName + " " + user.lastName,
-                    username: user.username
-                });*/
+                users.push({
+                    name: data[i].firstName + " " + data[i].lastName,
+                    username: data[i].username,
+                    isActive: data[i].isActive,
+                    type: data[i].type
+                });
             }
         });
     }

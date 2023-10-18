@@ -22,10 +22,10 @@ exports.GetUserInfo = (req, res) => {
     });
 }
 
-exports.GetAllFirstLastUserNames = (req, res) => {
+exports.GetUsersInfo = (req, res) => {
     console.log("UsersControllers.js file/GetFirstLastUserName route called");
 
-    let sql = `SELECT username, firstName, lastName
+    let sql = `SELECT username, firstName, lastName, type, isActive
         FROM Users`;
 
     db.all(sql, [], (err, rows) => {
