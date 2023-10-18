@@ -129,7 +129,7 @@
               <td>
                 <div class="btn-group float-right">
                   <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
-                  <button class="btn btn-danger" (click)="leave(p.projectID)">Leave</button>
+                  <button class="btn btn-danger" (click)="leave(p.projectID)" *ngIf="p.isActive">Leave</button>
                 </div>
               </td>
             </tr>
@@ -140,7 +140,7 @@
               <td>
                 <div class="btn-group float-right">
                   <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
-                  <button class="btn btn-success" (click)="join(p.projectID)">Join</button>
+                  <button class="btn btn-success" (click)="join(p.projectID)" *ngIf="p.isActive">Join</button>
                 </div>
               </td>
             </tr>
