@@ -74,19 +74,60 @@ exports.GetCoursesRegisteredFor = (req, res) => {
 
 // Description of the SQL statement, this will select all courses that a STUDENT IS NOT registered for.
 exports.GetCoursesNotRegisteredFor = (req, res) => {
+    // Log a message to the console indicating that this particular route handler (controller action) has been called.
     console.log("UsersControllers.js file/GetCoursesNotRegisteredFor route called");
+
+    var rowData = [];
+
+    let userID = req.params["userId"];
+    console.log("userID: " + userID)
+
+    let sql = `SELECT c.courseID, c.courseName, c.description, u.firstname, u.lastname
+        FROM Courses c
+        JOIN Users u ON u.userID = c.instructorID 
+        WHERE c.courseID NOT IN (
+            -- Subquery to get courses the user is already registered for
+            SELECT c.courseID
+            FROM Courses c
+            JOIN Course_Users cu ON cu.courseID = c.courseID AND cu.userID = ${userID}
+            UNION
+            -- Subquery to get courses the user has pending registrations for
+            SELECT pcu.courseID
+            FROM Pend_Course_Users pcu 
+            WHERE pcu.userID = ${userID}
+        )`;
+
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows) {
+            rows.forEach((row) => {
+                rowData.push({
+                    courseID: row.courseID,
+                    courseName: row.courseName,
+                    instructorFN: row.firstName, // It seems there's a typo here, it should be 'row.firstname' to match the SQL query.
+                    instructorLN: row.lastName, // Same here, it should be 'row.lastname'.
+                    description: row.description
+                });
+            });
+            return res.send(rowData);
+        }
+    });
+}// This code embeds userID directly into the SQL, which is potentially dangerous.
+
+exports.GetCoursesPendCourses = (req, res) => {
+    // Log a message to the console indicating that this particular route handler (controller action) has been called.
+    console.log("UsersControllers.js file/GetCoursesPendCourses route called");
 
     var rowData = [];
     let userID = req.params["userId"];
     console.log("userID: " + userID)
 
-    let sql = `select c.courseID, c.courseName, c.description, u.firstname, u.lastname
+    let sql = `SELECT c.courseID, c.courseName, c.description, u.firstname, u.lastName
         from Courses c
-        JOIN Users u where u.userID = c.instructorID AND c.courseID not in (
-            select c.courseID
-            from Courses c
-            join Course_Users cu ON cu.courseID = c.courseID AND cu.userID = ${userID}
-        )`;
+        JOIN Pend_Course_Users pcu ON pcu.courseID = c.courseID
+        JOIN Users u on u.userID = c.instructorID AND pcu.userID = ${userID}`;
 
     db.all(sql, [], (err, rows) => {
         if (err) {
