@@ -42,6 +42,7 @@ const {
     GetAllFirstLastUserNames,
     GetCoursesRegisteredFor,
     GetCoursesNotRegisteredFor,
+    GetCoursesPendCourses,
     RegisterForCourse,
     DropCourse,
     CreateCourse,
@@ -112,6 +113,8 @@ router.get('/Users', GetAllFirstLastUserNames);
 router.get('/Users/:userId/getUserCourses', GetCoursesRegisteredFor);
 
 router.get('/Users/:userId/getNonUserCourses', GetCoursesNotRegisteredFor);
+
+router.get('/Users/:userId/getCoursesPendCourses', GetCoursesPendCourses);
 
 router.post('/addUserCourse', RegisterForCourse);
 
