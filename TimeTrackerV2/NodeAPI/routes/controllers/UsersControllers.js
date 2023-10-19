@@ -23,9 +23,9 @@ exports.GetUserInfo = (req, res) => {
 }
 
 exports.GetUsersInfo = (req, res) => {
-    console.log("UsersControllers.js file/GetFirstLastUserName route called");
+    console.log("UsersControllers.js file/GetUsersInfo route called");
 
-    let sql = `SELECT username, firstName, lastName, type, isActive
+    let sql = `SELECT userID, username, firstName, lastName, type, isActive
         FROM Users`;
 
     db.all(sql, [], (err, rows) => {

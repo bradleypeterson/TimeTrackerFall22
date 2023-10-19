@@ -25,7 +25,7 @@
 
                 <!--<tr *ngFor="let u of users" class="position-relative">-->
 
-                <td><a href="#">{{ u.name }}</a></td> <!-- User's first and last name -->
+                <td><a href="#">{{ u.name }}</a></td> <!-- User's first and last name, the user will click this to go to the user's profile page (NOT CURRENTLY IMPLEMENTED) where they can delete and reset the password for the user -->
                 <td>
                     <div class="full-width">{{ u.username }}</div> <!-- Username -->
                     <!--<div class="full-width">{{u}}</div> A copy of the username for some reason?-->
@@ -60,14 +60,20 @@
                     <!--  Jason Steadman     Notes: Removed the ability for a user to change their own type.-->
                     <!-- ng-model="u.type" ng-change="saveUser(u)" ng-disabled="$parent.user.userID === u.userID" -->
                     <select>
-                        <option value="S" [selected]="u.type[0] == 's'">Student</option>
-                        <option value="I" [selected]="u.type[0] == 'i'">Instructor</option>
-                        <option value="A" [selected]="u.type[0] == 'a'">Admin</option>
+                        <option value="S" [selected]="u.type == 'student'">Student</option>
+                        <option value="I" [selected]="u.type == 'instructor'">Instructor</option>
+                        <option value="A" [selected]="u.type == 'admin'">Admin</option>
                     </select>
                 </td>
+
+                <td class="text-center d-none d-sm-table-cell">
+                    <div class="btn-group float-right">
+                        <button type="button" class="btn btn-primary" (click)="navToResetPassword('current','')">Reset Password</button> <!-- To be modified to accept the userID of the user for the row -->
+                        <button type="button" class="btn btn-danger" (click)="DeleteUser(u)">Delete User</button>
+                    </div>      
+                </td>
             </tr>
-            <button type="button" class="btn btn-primary" (click)="navToResetPassword('current','')"> Change
-                Password</button>
+            <!-- To be moved to the profile page for the selected user -->
         </tbody>
     </table>
 </div>

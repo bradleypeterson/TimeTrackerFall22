@@ -117,3 +117,24 @@ exports.Login = async (req, res, next) => {
 		}
 	});
 }
+
+exports.DeleteAccount = async (req, res, next) => {
+	console.log("AccountControllers.js file/DeleteAccount route called");
+
+    let userID = req.body.userID;
+    console.log("userID: " + userID);
+
+    let sql = `DELETE FROM Users
+    WHERE userID = ${userID}`;
+
+    db.run(sql, [], (err, result) => {
+		if (err) {
+			console.log(err);
+			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+		}
+		if (result) {
+            console.log("Rows affected: " + result.affectedRows)
+            return res.status(200).json({ message: 'User has been deleted.' });
+        }
+	});
+}

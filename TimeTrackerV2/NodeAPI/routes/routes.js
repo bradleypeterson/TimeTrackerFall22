@@ -6,6 +6,7 @@ const router = express.Router();
 const {
     Register,
     Login,
+    DeleteAccount,
 } = require("./controllers/AccountControllers")
 
 const {
@@ -64,6 +65,8 @@ router.get("/", (req, res) => {
 router.post("/register", Register);
 
 router.post("/login", Login);
+
+router.delete("/deleteAccount", DeleteAccount);
 //#endregion
 
 //#region Course routes
