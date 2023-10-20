@@ -14,6 +14,7 @@ export class CoursesComponent implements OnInit {
   public courses: any = [];
   public allUserCourses: any = [];
   public nonUserCourses: any = [];
+  public PendUserCourses: any = [];
   public allUserFilteredCourses: any = [];
   public nonUserFilteredCourses: any = [];
   public searchQuery: any = '';
@@ -87,6 +88,7 @@ export class CoursesComponent implements OnInit {
 
     this.loadAllUserCourses();
     this.loadNonUserCourses();
+    this.loadPenUserCourses();
 
     if (!localStorage.getItem('foo')) {
       localStorage.setItem('foo', 'no reload')
@@ -125,6 +127,21 @@ export class CoursesComponent implements OnInit {
     });
   }
 
+
+  loadPenUserCourses(): void {
+    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/getCoursesPendCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        console.log(data);
+        this.PendUserCourses = data;
+        /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
+
   register(CourseId: any) {
     console.log(CourseId);
     console.log(this.currentUser.userID);
@@ -134,7 +151,7 @@ export class CoursesComponent implements OnInit {
       courseID: CourseId
     };
 
-    this.http.post<any>('http://localhost:8080/api/addUserCourse/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.post<any>('http://localhost:8080/api/putUserInPending/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         this.loadCourses();
@@ -161,6 +178,26 @@ export class CoursesComponent implements OnInit {
       }
     });
   }
+
+  cancel(CourseId: any) {
+    let req = {
+      userID: this.currentUser.userID,
+      courseID: CourseId
+    };
+
+    this.http.post<any>('http://localhost:8080/api/removePendUser/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        this.loadCourses();
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
+
+
+
 
   searchCourses(): void {
     let sizeOfAllFilteredCourses = 0;
