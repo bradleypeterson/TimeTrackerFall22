@@ -43,8 +43,10 @@ const {
     GetCoursesRegisteredFor,
     GetCoursesNotRegisteredFor,
     GetCoursesPendCourses,
+    PutUserInPending,
     RegisterForCourse,
     DropCourse,
+    RemovePendUser,
     CreateCourse,
     EditCourse,
     DeleteCourse,
@@ -116,9 +118,13 @@ router.get('/Users/:userId/getNonUserCourses', GetCoursesNotRegisteredFor);
 
 router.get('/Users/:userId/getCoursesPendCourses', GetCoursesPendCourses);
 
+router.post('/putUserInPending', PutUserInPending);
+
 router.post('/addUserCourse', RegisterForCourse);
 
 router.post('/deleteUserCourse', DropCourse);
+
+router.post('/removePendUser', RemovePendUser);
 
 router.post('/joinGroup', JoinGroup);
 

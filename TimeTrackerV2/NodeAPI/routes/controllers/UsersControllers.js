@@ -149,6 +149,25 @@ exports.GetCoursesPendCourses = (req, res) => {
     });
 }
 
+exports.PutUserInPending = async (req, res, next) => {
+    console.log("UsersControllers.js file/PutUserInPending route called");
+
+    let data = [];
+    data[0] = req.body["userID"];
+    data[1] = req.body["courseID"];
+
+    db.run(`INSERT INTO Pend_Course_Users(userID, courseID)
+        VALUES(?, ?)`, data, function (err, value) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        else {
+            return res.status(200).json({ message: 'User Course added.' });
+        }
+    });
+}
+
 exports.RegisterForCourse = async (req, res, next) => {
     console.log("UsersControllers.js file/RegisterForCourse route called");
 
@@ -176,6 +195,28 @@ exports.DropCourse = async (req, res, next) => {
     data[1] = req.body["courseID"];
 
     let sql = `delete from Course_Users
+        where courseID = ${data[1]} and userID = ${data[0]};`;
+
+    db.run(sql, function (err, value) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        else {
+            return res.status(200).json({ message: 'User Course deleted.' });
+        }
+    });
+}
+
+
+exports.RemovePendUser = async (req, res, next) => {
+    console.log("UsersControllers.js file/removePendUser route called");
+
+    let data = [];
+    data[0] = req.body["userID"];
+    data[1] = req.body["courseID"];
+
+    let sql = `delete from Pend_Course_Users
         where courseID = ${data[1]} and userID = ${data[0]};`;
 
     db.run(sql, function (err, value) {
