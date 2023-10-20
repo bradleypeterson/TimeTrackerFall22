@@ -20,7 +20,7 @@ const {
 
 const {
     GetProjectInfo,
-    GetAllProjectsForUser,
+    GetActiveProjectsForUser: GetAllProjectsForUser,
     GetUserTimesForProject,
     GetAllProjectsForCourse,
     GetUserProjectsForCourse,
