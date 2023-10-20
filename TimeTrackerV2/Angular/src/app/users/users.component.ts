@@ -41,7 +41,7 @@ export class UsersComponent implements OnInit {
         this.router.navigate(['resetpassword'], { queryParams: user })
     }
 
-    // normally, we would want to have the argument be of type 'object' instead of 'any'. However if the type is 'object', we get an error saying "Property 'propertyName' doesn't exist on type 'object'"
+    // Normally, we would want to have the argument be of type 'object' instead of 'any'. However if the type is 'object', we get an error saying "Property 'propertyName' doesn't exist on type 'object'"
     DeleteUser(userInfo: any) {
         console.log("Navigate to page to confirm deletion of user with userID: " + userInfo.userID);
 
@@ -54,13 +54,27 @@ export class UsersComponent implements OnInit {
                 userID: userInfo.userID
             };
 
-            this.http.delete("http://localhost:8080/api/deleteAccount", { body: requestBody }).subscribe((data: any) => {
-                console.log(data);
+            // This http delete request will delete the account attache attached to the user with the userID as specified in the body of the request, it will then remove the user from the local list of users so that the UI and the DB match.
+            // This code is also formatted so that it will handle any 500 status codes the server sends here and it will display the message to the user.  Source for this code format with some alterations https://stackoverflow.com/a/52610468
+            this.http.delete("http://localhost:8080/api/deleteAccount", { body: requestBody }).subscribe((res: any) => {
+                // This set of code will have the UI automatically updated because the content's of the variable "users" has been changed https://www.tutorialspoint.com/how-to-delete-a-row-from-table-using-angularjs
+                let index: number = this.users.indexOf(userInfo);
+                this.users.splice(index, 1);
+                // Now it will notify the user that the user has been deleted
+                this.ShowMessage(res.message);
+            },
+            err => {
+                this.ShowMessage(err.error.message);
             });
         }
         // The user doesn't want to delete the user (for debugging only)
         else {
             console.log("User not deleted");
         }
+    }
+
+    // Open an alert window with the supplied message
+    ShowMessage(message: string) {
+        alert(message);
     }
 }

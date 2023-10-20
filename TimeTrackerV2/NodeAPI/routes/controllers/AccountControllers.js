@@ -127,14 +127,13 @@ exports.DeleteAccount = async (req, res, next) => {
     let sql = `DELETE FROM Users
     WHERE userID = ${userID}`;
 
-    db.run(sql, [], (err, result) => {
+    db.run(sql, [], (err, value) => {
 		if (err) {
 			console.log(err);
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
-		if (result) {
-            console.log("Rows affected: " + result.affectedRows)
-            return res.status(200).json({ message: 'User has been deleted.' });
+		else {
+            return res.status(200).json({ message: 'The user has been deleted.' });
         }
 	});
 }
