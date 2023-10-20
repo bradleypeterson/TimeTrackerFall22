@@ -1,6 +1,4 @@
-import { TotalTimePipe } from './../pipes/total-time.pipe';
-import { ViewEvalComponent } from './../view-eval/view-eval.component';
-import { Component, Directive, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { formatDate } from '@angular/common';

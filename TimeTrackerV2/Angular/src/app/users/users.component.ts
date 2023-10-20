@@ -43,8 +43,6 @@ export class UsersComponent implements OnInit {
 
     // Normally, we would want to have the argument be of type 'object' instead of 'any'. However if the type is 'object', we get an error saying "Property 'propertyName' doesn't exist on type 'object'"
     DeleteUser(userInfo: any) {
-        console.log("Navigate to page to confirm deletion of user with userID: " + userInfo.userID);
-
         // Syntax for the below code was found here https://stackoverflow.com/questions/9334636/how-to-create-a-dialog-with-ok-and-cancel-options
         const response = confirm(`WARNING:  Deleting the user "${userInfo.name}" is irreversible.\n\nIf you continue with this process, the user will be deleted.\nDo you wish to continue?`);
         // The user wants to delete the user
