@@ -49,16 +49,16 @@ export class UsersComponent implements OnInit {
         const response = confirm(`WARNING:  Deleting the user "${userInfo.name}" is irreversible.\n\nIf you continue with this process, the user will be deleted.\nDo you wish to continue?`);
         // The user wants to delete the user
         if (response) {
-            // Make a body variable for the http.delete request so we can safely delete user instead of passing the variable in the URL.  https://stackoverflow.com/questions/38819336/body-of-http-delete-request-in-angular2
+            // Make a body variable for the http.delete request so we can safely delete user instead of passing the variable in the URL.  https://stackoverflow.com/a/40857437
             let requestBody = {
                 userID: userInfo.userID
             };
 
             this.http.delete("http://localhost:8080/api/deleteAccount", { body: requestBody }).subscribe((data: any) => {
-                console.log(data);    
+                console.log(data);
             });
         }
-        // The user doesn't want to delete the user (for debugging purposes only)
+        // The user doesn't want to delete the user (for debugging only)
         else {
             console.log("User not deleted");
         }

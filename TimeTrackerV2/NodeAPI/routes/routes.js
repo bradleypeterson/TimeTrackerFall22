@@ -20,7 +20,7 @@ const {
 
 const {
     GetProjectInfo,
-    GetAllProjectsForUser,
+    GetActiveProjectsForUser,
     GetUserTimesForProject,
     GetAllProjectsForCourse,
     GetUserProjectsForCourse,
@@ -85,7 +85,7 @@ router.post('/createGroup', CreateNewGroup);
 //#region Project routes
 router.get('/ProjectInfo/:id', GetProjectInfo);
 
-router.get('/ProjectsForUser/:userID', GetAllProjectsForUser);
+router.get('/ProjectsForUser/:userID', GetActiveProjectsForUser);
 
 router.get('/Projects/:id/Users', GetUserTimesForProject);
 
