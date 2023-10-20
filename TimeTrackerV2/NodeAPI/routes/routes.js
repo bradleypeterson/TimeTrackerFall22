@@ -6,6 +6,7 @@ const router = express.Router();
 const {
     Register,
     Login,
+    DeleteAccount,
 } = require("./controllers/AccountControllers")
 
 const {
@@ -19,7 +20,7 @@ const {
 
 const {
     GetProjectInfo,
-    GetActiveProjectsForUser: GetAllProjectsForUser,
+    GetAllProjectsForUser,
     GetUserTimesForProject,
     GetAllProjectsForCourse,
     GetUserProjectsForCourse,
@@ -40,11 +41,14 @@ const {
 const {
     GetUserInfo,
     GetUserProfile,
-    GetAllFirstLastUserNames,
+    GetUsersInfo,
     GetCoursesRegisteredFor,
     GetCoursesNotRegisteredFor,
+    GetCoursesPendCourses,
+    PutUserInPending,
     RegisterForCourse,
     DropCourse,
+    RemovePendUser,
     CreateCourse,
     EditCourse,
     DeleteCourse,
@@ -64,6 +68,8 @@ router.get("/", (req, res) => {
 router.post("/register", Register);
 
 router.post("/login", Login);
+
+router.delete("/deleteAccount", DeleteAccount);
 //#endregion
 
 //#region Course routes
@@ -109,16 +115,22 @@ router.get('/GetUserInfo/:id', GetUserInfo);
 
 router.get('/UserProfile/:userID', GetUserProfile);
 
-router.get('/Users', GetAllFirstLastUserNames);
+router.get('/Users', GetUsersInfo);
 
 //#region Student specific controllers
 router.get('/Users/:userId/getUserCourses', GetCoursesRegisteredFor);
 
 router.get('/Users/:userId/getNonUserCourses', GetCoursesNotRegisteredFor);
 
+router.get('/Users/:userId/getCoursesPendCourses', GetCoursesPendCourses);
+
+router.post('/putUserInPending', PutUserInPending);
+
 router.post('/addUserCourse', RegisterForCourse);
 
 router.post('/deleteUserCourse', DropCourse);
+
+router.post('/removePendUser', RemovePendUser);
 
 router.post('/joinGroup', JoinGroup);
 
