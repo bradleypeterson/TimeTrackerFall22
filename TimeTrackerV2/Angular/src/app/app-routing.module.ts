@@ -12,6 +12,8 @@ import { ManageEvalsComponent } from './manage-evals/manage-evals.component';
 import { ProjectComponent } from './project/project.component';
 import { RegisterComponent } from './register/register.component';
 import { ResetpasswordComponent } from './resetpassword/resetpassword.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { UserComponent } from './user/user.component';
 import { UsersComponent } from './users/users.component';
 import { ViewEvalComponent } from './view-eval/view-eval.component';
@@ -41,6 +43,8 @@ const routes: Routes = [
   { path: 'manage-evals', component: ManageEvalsComponent },
   { path: 'project/:id', component: ProjectComponent },
   { path: 'register', component: RegisterComponent },
+  { path: 'profile/:id', component: UserProfileComponent},
+  { path: 'edit-profile', component: EditProfileComponent},
   { path: 'user', component: UserComponent },
   { path: 'users', component: UsersComponent },
   { path: 'view-eval', component: ViewEvalComponent },

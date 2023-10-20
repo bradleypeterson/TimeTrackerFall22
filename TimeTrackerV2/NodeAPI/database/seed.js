@@ -34,6 +34,18 @@ db.serialize(() => {
             );`);
 });
 
+db.run(`CREATE TABLE IF NOT EXISTS Profiles(userID INTEGER NOT NULL,
+                            pronouns TEXT,
+                            bio TEXT,
+                            contact TEXT,
+                            FOREIGN KEY (userID) REFERENCES Users (userID) ON DELETE CASCADE);`);
+
+db.run(`CREATE TRIGGER IF NOT EXISTS profileTrigger
+                            AFTER INSERT ON Users
+                            BEGIN
+                              INSERT INTO Profiles(userID) VALUES (new.userID);
+                            END;`);
+
 db.run(`CREATE TABLE IF NOT EXISTS TimeCard(timeslotID INTEGER PRIMARY KEY, 
                             timeIn TEXT NOT NULL,
                             timeOut TEXT,

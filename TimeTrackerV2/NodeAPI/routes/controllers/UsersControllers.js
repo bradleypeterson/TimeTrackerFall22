@@ -38,6 +38,26 @@ exports.GetAllFirstLastUserNames = (req, res) => {
     });
 }
 
+exports.GetUserProfile = (req, res) => {
+    console.log("UsersControllers.js file/GetUserProfile route called");
+
+    let userID = req.params["userID"];
+
+    let sql = `SELECT u.firstName, u.lastName, p.pronouns, p.bio, p.contact
+        FROM Users u
+        INNER JOIN Profiles p ON u.userID = p.userID
+        WHERE u.userID = ?`
+
+    db.all(sql, [userID], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows) {
+            return res.send(rows);
+        }
+    });
+}
+
 //#region Student specific controllers
 // Description of the SQL statement, this will select all courses that a STUDENT IS registered for.  If you supply a id of a instructor, the very last condition "AND cu.userID = $(userID}" will make it return nothing.
 exports.GetCoursesRegisteredFor = (req, res) => {

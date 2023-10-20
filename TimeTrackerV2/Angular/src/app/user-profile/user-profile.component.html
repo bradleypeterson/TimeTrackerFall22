@@ -1,0 +1,9 @@
+<div id="profile">
+    <div *ngFor="let u of userProfile">
+        <h2>{{u.firstName}} {{u.lastName}}</h2>
+        <hr>
+        <h3>Pronouns: {{u.pronouns}}</h3>
+        <h3>Contact: {{u.contact}}</h3>
+        <p>{{u.bio}}</p>
+    </div>
+</div>

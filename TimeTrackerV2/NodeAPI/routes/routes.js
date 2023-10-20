@@ -39,6 +39,7 @@ const {
 
 const {
     GetUserInfo,
+    GetUserProfile,
     GetAllFirstLastUserNames,
     GetCoursesRegisteredFor,
     GetCoursesNotRegisteredFor,
@@ -105,6 +106,8 @@ router.post('/clock', SaveTimeCard);
 
 //#region User routes
 router.get('/GetUserInfo/:id', GetUserInfo);
+
+router.get('/UserProfile/:userID', GetUserProfile);
 
 router.get('/Users', GetAllFirstLastUserNames);
 

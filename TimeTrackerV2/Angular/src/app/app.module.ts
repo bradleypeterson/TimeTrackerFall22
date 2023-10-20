@@ -14,6 +14,8 @@ import { AddStudentProjectComponent } from './add-student-project/add-student-pr
 import { ViewReportComponent } from './view-report/view-report.component';
 import { EditCourseComponent } from './edit-course/edit-course.component';
 import { EditProjectComponent } from './edit-project/edit-project.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 
 
 
@@ -29,6 +31,8 @@ import { EditProjectComponent } from './edit-project/edit-project.component';
     ViewReportComponent,
     EditCourseComponent,
     EditProjectComponent,
+    UserProfileComponent,
+    EditProfileComponent,
   ],
   imports: [
     BrowserModule,
