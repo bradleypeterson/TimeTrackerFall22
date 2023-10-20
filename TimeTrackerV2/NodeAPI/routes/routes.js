@@ -6,6 +6,7 @@ const router = express.Router();
 const {
     Register,
     Login,
+    DeleteAccount,
 } = require("./controllers/AccountControllers")
 
 const {
@@ -19,7 +20,7 @@ const {
 
 const {
     GetProjectInfo,
-    GetActiveProjectsForUser: GetAllProjectsForUser,
+    GetAllProjectsForUser,
     GetUserTimesForProject,
     GetAllProjectsForCourse,
     GetUserProjectsForCourse,
@@ -39,7 +40,7 @@ const {
 
 const {
     GetUserInfo,
-    GetAllFirstLastUserNames,
+    GetUsersInfo,
     GetCoursesRegisteredFor,
     GetCoursesNotRegisteredFor,
     GetCoursesPendCourses,
@@ -66,6 +67,8 @@ router.get("/", (req, res) => {
 router.post("/register", Register);
 
 router.post("/login", Login);
+
+router.delete("/deleteAccount", DeleteAccount);
 //#endregion
 
 //#region Course routes
@@ -109,7 +112,7 @@ router.post('/clock', SaveTimeCard);
 //#region User routes
 router.get('/GetUserInfo/:id', GetUserInfo);
 
-router.get('/Users', GetAllFirstLastUserNames);
+router.get('/Users', GetUsersInfo);
 
 //#region Student specific controllers
 router.get('/Users/:userId/getUserCourses', GetCoursesRegisteredFor);
