@@ -50,14 +50,15 @@ export class UsersComponent implements OnInit {
         // The user wants to delete the user
         if (response) {
             // Make a body variable for the http.delete request so we can safely delete user instead of passing the variable in the URL.  https://stackoverflow.com/questions/38819336/body-of-http-delete-request-in-angular2
-            let requestBody = JSON.stringify({
+            let requestBody = {
                 userID: userInfo.userID
-            });
+            };
 
-            /*this.http.delete("http://localhost:8080/api/deleteAccount", { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }), body: requestBody }).subscribe((data: any) => {
-            });*/
+            this.http.delete("http://localhost:8080/api/deleteAccount", { body: requestBody }).subscribe((data: any) => {
+                console.log(data);    
+            });
         }
-        // The user doesn't want to delete the user (for debugging only)
+        // The user doesn't want to delete the user (for debugging purposes only)
         else {
             console.log("User not deleted");
         }
