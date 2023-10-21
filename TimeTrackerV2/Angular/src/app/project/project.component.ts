@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { formatDate } from '@angular/common';
 // import { Stopwatch } from "ts-stopwatch";
-import { UntypedFormControl } from '@angular/forms';
+import { FormGroup, UntypedFormControl } from '@angular/forms';
 import { ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 
@@ -33,11 +33,18 @@ export class ProjectComponent implements OnInit {
     public punches = [];
 
     @ViewChild(BaseChartDirective) chart: BaseChartDirective;
-    // Auto time card fields
+    // Shared fields, this is because this will allow this field's value to be shared in both forms, so if you typed the description but you are in the wrong mode, you don't have to copy and past the description to the other form before you switch modes
     description = new UntypedFormControl('');
+    // Forms
+    autoForm = new FormGroup({
+        description: this.description
+    });
     // Manual time card fields
-    timecardStart = new UntypedFormControl('');
-    timecardEnd = new UntypedFormControl('');
+    manualForm = new FormGroup({
+        timecardStart: new UntypedFormControl(''),
+        timecardEnd: new UntypedFormControl(''),
+        description: this.description
+    })
     activities: any = [];
 
     manualTimeCardEntry: boolean = false;  // See about grabbing this from local storage so when the page reloads, it stays in the last state that it was in
@@ -50,9 +57,8 @@ export class ProjectComponent implements OnInit {
     hours: any = '0' + 0;
 
     start: any;
-    isTimerRunning = false;
+    TimerRunning = false;
     totalTime: any = "00:00:00";
-    startClickedLast = false;
 
     currentUser: any;
 
@@ -130,10 +136,8 @@ export class ProjectComponent implements OnInit {
     }
 
     clockIn(): void {
-        if (!this.isTimerRunning) {
+        if (!this.TimerRunning) {
             localStorage.setItem("timeIn", Date.now().toString());
-
-            this.startClickedLast = true;
             this.startTimer();
         }
     }
@@ -216,29 +220,32 @@ export class ProjectComponent implements OnInit {
     }
 
     autoSubmit(): void {
-        this.startClickedLast = false;
-        this.isTimerRunning = true;
-        this.startTimer();
+        // An extra check condition to prevent submission of the data unless for form is valid 
+        if (!this.autoForm.valid) {
+            return;
+        }
+
+        this.TimerRunning = true;
+        this.stopTimer();
         let req = {
+            // the timeIn and timeOut is the number of milliseconds since midnight, January 1, 1970 UTC.
             timeIn: localStorage.getItem("timeIn"),
-            timeOut: Date.now(), /// pull date from the HTML
+            timeOut: Date.now(), // pull date from the HTML
             isEdited: false,
 
             userID: this.currentUser.userID,
             projectID: this.projectId,
-            description: this.description.value /// pull description from the HTML
+            description: this.autoForm.controls.description.value // pull the description field from the form
         };
-
-        // This if statement could be removed I (Braxton) think because I have specified the description field as required now
-        if (this.description.value === '') {
-            return;
-        }
 
         this.http.post<any>('http://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 console.log(`contents of \"req.isEdited\":` + req.isEdited);
-                this.description.setValue("");
+
+                // Clear the input inside the form
+                this.autoForm.controls.description.setValue("");  // you can also us the code "this.description.setValue("");" because the code currently being used references this variable.
+                
                 this.getActivities();
                 this.loadProjectUserTimes();
                 this.populateGraph();
@@ -252,12 +259,42 @@ export class ProjectComponent implements OnInit {
     }
 
     manualSubmit(): void {
-        console.log("Start Time field valid: " + this.timecardStart.valid);
-        console.log(this.timecardStart);
-        console.log("End Time field valid: " + this.timecardEnd.valid);
-        console.log(this.timecardEnd);
-        console.log("Description field valid: " + this.description.valid);
-        console.log(this.description);
+        // An extra check condition to prevent submission of the data unless for form is valid 
+        if (!this.manualForm.valid) {
+            return;
+        }
+
+        let req = {
+            // We format the timeIn and timeOut like this so that it will return the number of milliseconds since midnight, January 1, 1970 UTC.  https://stackoverflow.com/questions/9756120/how-do-i-get-a-utc-timestamp-in-javascript#:~:text=new%20Date().getTime()%20is%20always%20UTC
+            timeIn: new Date(this.manualForm.controls.timecardStart.value).getTime(),
+            timeOut: new Date(this.manualForm.controls.timecardEnd.value).getTime(),
+            isEdited: false,
+
+            userID: this.currentUser.userID,
+            projectID: this.projectId,
+            description: this.manualForm.controls.description.value // pull the description field from the form
+        };
+
+        this.http.post<any>('http://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+            next: data => {
+                this.errMsg = "";
+                console.log(`contents of \"req.isEdited\":` + req.isEdited);
+
+                // Clear the inputs inside the form
+                this.manualForm.controls.timecardStart.setValue("");
+                this.manualForm.controls.timecardEnd.setValue("");
+                this.manualForm.controls.description.setValue("");  // you can also us the code "this.description.setValue("");" because the code currently being used references this variable.
+                
+                this.getActivities();
+                this.loadProjectUserTimes();
+                this.populateGraph();
+
+                /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+            },
+            error: error => {
+                this.errMsg = error['error']['message'];
+            }
+        });
     }
 
     createGroup(): void {
@@ -280,8 +317,8 @@ export class ProjectComponent implements OnInit {
     }
 
     startTimer(): void {
-        if (!this.isTimerRunning) {
-            this.isTimerRunning = true;
+        if (!this.TimerRunning) {
+            this.TimerRunning = true;
             this.start = setInterval(() => {
                 this.seconds++;
                 this.seconds = this.seconds < 10 ? '0' + this.seconds : this.seconds;
@@ -298,14 +335,12 @@ export class ProjectComponent implements OnInit {
                     this.minutes = '0' + 0;
                 }
             }, 1000);
-        } else {
-            this.stopTimer();
         }
     }
 
     stopTimer(): void {
         clearInterval(this.start);
-        this.isTimerRunning = false;
+        this.TimerRunning = false;
 
         this.totalTime = this.hours.toString() + ":" + this.minutes.toString() + ":" + this.seconds.toString();
 
