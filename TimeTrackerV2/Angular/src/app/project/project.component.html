@@ -96,19 +96,23 @@
                 </div>
                 <!--Start/Stop Buttons-->
                 <div class="gap-2 d-md-flex justify-content-md-center">
-                    <button (click)="clockIn()" type="button" class="btn btn-success">Start</button>
+                    <button (click)="clockIn()" type="button" class="btn btn-success" [disabled]="TimerRunning">Start</button>
                 </div>
                 <!--Submit Button-->
                 <div class="gap-4 d-md-flex justify-content-md-center">
-                    <form (ngSubmit)="autoSubmit()">
+                    <form [formGroup]="autoForm" (ngSubmit)="autoSubmit()">
                         <div class="row mt-2">
-                            <input type="text" placeholder="Work Description" class="form-control"
-                                [formControl]="description" required>
+                            <input formControlName="description" type="text" placeholder="Work Description" class="form-control" required>
                         </div>
                         <div class="d-grid d-md-flex justify-content-md-center">
-                            <!-- If the input is not valid and the timer is not running, disable the submit button -->
+                            <!-- For debugging purposes only -->
+                            <!--<p>
+                                description valid {{autoForm.controls.description.valid}}
+                                TimerRunning {{TimerRunning}}
+                            </p>-->
+                            <!-- If the field is not valid, see the below form submission section for the explain why we don't check the form itself, and the timer is not running.  Then disable the submit button -->
                             <button type="submit" class="btn btn-primary mt-2"
-                                [disabled]="!(this.description.valid && isTimerRunning)">Submit</button>
+                                [disabled]="!(autoForm.controls.description.valid && TimerRunning)">Submit</button>
                         </div>
                     </form>
                 </div>
@@ -116,27 +120,31 @@
             <!-- Manual time card -->
             <div class="col" *ngIf="manualTimeCardEntry">
                 <div class="gap-4 d-md-flex justify-content-md-center">
-                    <form (ngSubmit)="manualSubmit()">
+                    <form [formGroup]="manualForm" (ngSubmit)="manualSubmit()">
                         <!-- Start time row -->
                         <div class="row mt-2">
-                            <label for="timeCardStart">Start Time</label>
-                            <input type="datetime-local" id="timeCardStart" class="form-control"
-                                [formControl]="timecardStart" required>
+                            <label for="Start">Start Time</label>
+                            <input formControlName="timecardStart" type="datetime-local" id="Start" class="form-control" required>
                         </div>
                         <!-- End time row -->
                         <div class="row mt-2">
-                            <label for="timecardEnd">Start Time</label>
-                            <input type="datetime-local" id="timecardEnd" class="form-control"
-                                [formControl]="timecardEnd" required>
+                            <label for="End">End Time</label>
+                            <input formControlName="timecardEnd" type="datetime-local" id="End" class="form-control" required>
                         </div>
                         <!-- Description row -->
                         <div class="row mt-2">
-                            <input type="text" placeholder="Work Description" class="form-control"
-                                [formControl]="description" required>
+                            <input formControlName="description" type="text" placeholder="Work Description" class="form-control" required>
                         </div>
                         <div class="d-grid d-md-flex justify-content-md-center">
+                            <!-- For debugging purposes only -->
+                            <!--<p>
+                                timecardStart valid {{manualForm.controls.timecardStart.valid}}
+                                timecardEnd valid {{manualForm.controls.timecardEnd.valid}}
+                                description valid {{manualForm.controls.description.valid}}
+                            </p>-->
+                            <!-- The reason why we are checking every individual field instead of the form to see if it is valid is because the form is only validated when you submit it -->
                             <button type="submit" class="btn btn-primary mt-2"
-                                [disabled]="!(this.timecardStart.valid && this.timecardEnd.valid && this.description.valid)">Submit</button>
+                                [disabled]="!(manualForm.controls.timecardStart.valid && manualForm.controls.timecardEnd.valid && manualForm.controls.description.valid)">Submit</button>
                         </div>
                     </form>
                 </div>
