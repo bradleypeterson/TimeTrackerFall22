@@ -8,7 +8,7 @@ exports.GetReportsData = (req, res) => {
     let courseID = req.params["courseID"];
     console.log("courseID: " + courseID);
 
-    // This sql statement is intended to select all students that are part of a course and will at the same time, grabs all the projects they have/are been a part of, even if they are not have any time cards for them.  Such as when they have just joined course, they would not be assigned to a project yet to make a time card.
+    // This sql statement is intended to select all students that are part of a course and will at the same time, grabs all the projects they are been a part of, even if they are not have any time cards for them.  Such as when they have just joined course, they would not be assigned to a project yet to make a time card.
     let sql = `SELECT u.userID, u.firstName || " " || u.lastName AS studentName, p.projectID, p.projectName, SUM(tc.timeOut - tc.timeIn) AS totalTime
     -- Joins to get the students and courses for the students
     FROM Users u
@@ -43,7 +43,7 @@ exports.GetReportsData = (req, res) => {
                         returnData.push(dataToBeAdded);
                     }
                     currentUserID = row.userID;
-                    
+
                     // Replace what is currently stored inside the variable dataToBeAdded with the current data in the row
                     dataToBeAdded = {
                         userID: row.userID,
@@ -142,34 +142,74 @@ exports.SaveTimeCard = async (req, res, next) => {
           return res.status(400).json({message: 'you have an outstanding clock in. Please clock out.'});
         }*/
 
-    let data = [];
-    data[0] = req.body["timeIn"];
-    data[1] = req.body["timeOut"];
-    data[2] = req.body["isEdited"];
-    data[3] = req.body["userID"];
-    data[4] = req.body["description"];
-    data[5] = req.body["projectID"];
+    let currentDate = new Date(Date.now());  // This is formatted this way so we can grab the year, month, and day from the current date.
+    // For debugging
+    console.log("currentDate:");
+    console.log(currentDate.toString());
+    console.log(currentDate.getTime());
 
-    db.run(`INSERT INTO TimeCard(timeIn, timeOut, isEdited, userID, description, projectID)
-		VALUES(?, ?, ?, ?, ?, ?)`, data, function (err, value) {
+    let LNMidnight = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate(), 0, 0, 0, 0); // LN = Last Night
+    // For debugging
+    console.log("LNMidnight:");
+    console.log(LNMidnight.toString());
+    console.log(LNMidnight.getTime());
+
+    let TNMidnight = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate() + 1, 0, 0, 0, 0); // TN = To Night
+    // For debugging
+    // console.log("TNMidnight:");
+    // console.log(TNMidnight.toString());
+    // console.log(TNMidnight.getTime());
+
+    let countSQL = `SELECT COUNT(timeslotID) AS manualEntryCountForToday
+        FROM TimeCard
+        WHERE timeCardCreation BETWEEN ${LNMidnight.getTime()} AND ${TNMidnight.getTime()} and isManualEntry = ${true ? 1 : 0}`;  // We have to format the isManualEntry this way because the DB stores it as 1 for true and 0 for false
+
+    db.all(countSQL, [], (err, result) => {
         if (err) {
-            console.log(err)
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
         else {
-            return res.status(200).json({ message: 'Clocked in successfully.' });
+            console.log(result[0].manualEntryCountForToday);
+            // If they have reached the 5 manual entries for the day
+            if (result[0].manualEntryCountForToday >= 5) {
+                return res.status(429).json({ message: 'You have reached your limit for manual time card submissions for today.\nIf you wish to add more, contact your instructor.' });  // HTTP status 429 is for "Too Many Requests".  If you want a list of HTTP requests, look in this link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+            }
+            // They have not reached the 5 manual entries for the day
+            else {
+                let insertData = [];
+                insertData[0] = currentDate.getTime();  // getTime() returns the date in the number of milliseconds since midnight, January 1, 1970 UTC, which is what is stored in the DB.
+                insertData[1] = req.body["isManualEntry"];
+                insertData[2] = req.body["timeIn"];
+                insertData[3] = req.body["timeOut"];
+                insertData[4] = req.body["isEdited"];
+                insertData[5] = req.body["userID"];
+                insertData[6] = req.body["description"];
+                insertData[7] = req.body["projectID"];
+
+                db.run(`INSERT INTO TimeCard(timeCardCreation, isManualEntry, timeIn, timeOut, isEdited, userID, description, projectID)
+                    VALUES(?, ?, ?, ?, ?, ?, ?, ?)`, insertData, function (err, value) {
+                    if (err) {
+                        console.log(err)
+                        return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+                    }
+                    else {
+                        return res.status(200).json({ message: 'Clocked in successfully.' });
+                    }
+                });
+
+                /*}
+                else{//clocking out
+                  console.log("clocking out.");
+                  let isNullTimeOut = false;
+                  let ID = 0;
+                  rows.every(row => {
+                    isNullTimeOut = row["timeOut"] === null;
+                    if(isNullTimeOut){
+                      ID = row["timeslotID"];
+                      return false;
+                    }
+                    return true;*/
+            }
         }
     });
-    /*}
-    else{//clocking out
-      console.log("clocking out.");
-      let isNullTimeOut = false;
-      let ID = 0;
-      rows.every(row => {
-        isNullTimeOut = row["timeOut"] === null;
-        if(isNullTimeOut){
-          ID = row["timeslotID"];
-          return false;
-        }
-        return true;*/
 }
