@@ -33,18 +33,20 @@ export class ProjectComponent implements OnInit {
     public punches = [];
 
     @ViewChild(BaseChartDirective) chart: BaseChartDirective;
-    // Shared fields, this is because this will allow this field's value to be shared in both forms, so if you typed the description but you are in the wrong mode, you don't have to copy and past the description to the other form before you switch modes
+    // Shared fields, this is because this will allow this field's value to be shared in both forms, so if you typed the description but you are in the wrong mode, you don't have to copy the description from the other form to another
     description = new UntypedFormControl('');
     // Forms
+    // Auto time card form
     autoForm = new FormGroup({
         description: this.description
     });
-    // Manual time card fields
+    // Manual time card form
     manualForm = new FormGroup({
         timecardStart: new UntypedFormControl(''),
         timecardEnd: new UntypedFormControl(''),
         description: this.description
     })
+
     activities: any = [];
 
     manualTimeCardEntry: boolean = false;  // See about grabbing this from local storage so when the page reloads, it stays in the last state that it was in
@@ -227,7 +229,9 @@ export class ProjectComponent implements OnInit {
 
         this.TimerRunning = true;
         this.stopTimer();
+
         let req = {
+            isManualEntry: false,
             // the timeIn and timeOut is the number of milliseconds since midnight, January 1, 1970 UTC.
             timeIn: localStorage.getItem("timeIn"),
             timeOut: Date.now(), // pull date from the HTML
@@ -237,6 +241,8 @@ export class ProjectComponent implements OnInit {
             projectID: this.projectId,
             description: this.autoForm.controls.description.value // pull the description field from the form
         };
+
+        console.log(JSON.stringify(req));  // For debugging
 
         this.http.post<any>('http://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
@@ -265,6 +271,7 @@ export class ProjectComponent implements OnInit {
         }
 
         let req = {
+            isManualEntry: true,
             // We format the timeIn and timeOut like this so that it will return the number of milliseconds since midnight, January 1, 1970 UTC.  https://stackoverflow.com/questions/9756120/how-do-i-get-a-utc-timestamp-in-javascript#:~:text=new%20Date().getTime()%20is%20always%20UTC
             timeIn: new Date(this.manualForm.controls.timecardStart.value).getTime(),
             timeOut: new Date(this.manualForm.controls.timecardEnd.value).getTime(),
@@ -274,6 +281,8 @@ export class ProjectComponent implements OnInit {
             projectID: this.projectId,
             description: this.manualForm.controls.description.value // pull the description field from the form
         };
+
+        console.log(JSON.stringify(req));  // For debugging
 
         this.http.post<any>('http://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
