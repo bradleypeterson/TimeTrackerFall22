@@ -177,8 +177,8 @@
                     <tbody>
                         <tr *ngFor="let user of projectUserTimes">
                             <td>{{user.firstName}} {{user.lastName}}</td>
-                            <td>{{user.timeIn| date:'medium'}}</td>
-                            <td>{{user.timeOut| date:'medium'}}</td>
+                            <td>{{user.timeIn | date:'medium'}}</td>
+                            <td>{{user.timeOut | date:'medium'}}</td>
                             <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
                         </tr>
                     </tbody>
