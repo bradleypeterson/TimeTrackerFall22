@@ -49,7 +49,7 @@ export class ProjectComponent implements OnInit {
 
     activities: any = [];
 
-    manualTimeCardEntry: boolean = false;  // See about grabbing this from local storage so when the page reloads, it stays in the last state that it was in
+    manualTimeCardEntry: boolean = false;  // This will be overwritten in the constructor() method below
 
     date: Date = new Date();
     currDate = formatDate(this.date, 'MM/dd/yyyy', 'en-US');
@@ -83,6 +83,9 @@ export class ProjectComponent implements OnInit {
         this.currentUser = JSON.parse(tempUser);
         console.log(`The current user is:`);
         console.log(this.currentUser)
+
+        this.manualTimeCardEntry = JSON.parse(localStorage.getItem('manualTimeCardEntry') || 'false');  // Determine if the local storage has the value manualTimeCardEntry inside it so we know what state the form should be in.  If however the local storage doesn't have the value, it will return what is after the || for the default.
+
         this.projectId = this.activatedRoute.snapshot.params["id"];
         console.log("The current project is: " + this.projectId);
         if (this.projectId) {
@@ -219,6 +222,7 @@ export class ProjectComponent implements OnInit {
 
     changeSubmitType(): void {
         this.manualTimeCardEntry = !this.manualTimeCardEntry;
+        localStorage.setItem('manualTimeCardEntry', JSON.stringify(this.manualTimeCardEntry));  // Save the new state for the local storage variable so when the user returns back to a project page, it loads the last used form used to submit a time card. 
     }
 
     autoSubmit(): void {
@@ -282,7 +286,7 @@ export class ProjectComponent implements OnInit {
             description: this.manualForm.controls.description.value // pull the description field from the form
         };
 
-        console.log(JSON.stringify(req));  // For debugging
+        //console.log(JSON.stringify(req));  // For debugging
 
         this.http.post<any>('http://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
@@ -292,7 +296,7 @@ export class ProjectComponent implements OnInit {
                 // Clear the inputs inside the form
                 this.manualForm.controls.timecardStart.setValue("");
                 this.manualForm.controls.timecardEnd.setValue("");
-                this.manualForm.controls.description.setValue("");  // you can also us the code "this.description.setValue("");" because the code currently being used references this variable.
+                this.manualForm.controls.description.setValue("");  // You can also us the code "this.description.setValue("");" because the code currently being used references this variable.
                 
                 this.getActivities();
                 this.loadProjectUserTimes();
@@ -302,6 +306,7 @@ export class ProjectComponent implements OnInit {
             },
             error: error => {
                 this.errMsg = error['error']['message'];
+                alert(error.error.message);  // Alert the user to the message that the server sent back so they know they have reached their limit
             }
         });
     }
