@@ -51,7 +51,7 @@ export class ProjectComponent implements OnInit {
 
     // This function is used to make sure that the starting date is before the ending date.  Source https://blog.angular-university.io/angular-custom-validators/#:~:text=our%20previous%20article.-,Form%2Dlevel%20(multi%2Dfield)%20Validators,-Besides%20being%20able
     CreateDateRangeValidator(): ValidatorFn {
-        // The AbstractControl replaces the FormGroup because apparently the above source uses a different typescript version than this project.  It seams to be caused by a bug in the TypeScript version.  Fix source https://stackoverflow.com/a/63306484
+        // The AbstractControl replaces the FormGroup because apparently the above source uses a different typescript version than this project.  It seems to be caused by a bug in the TypeScript version.  Fix source https://stackoverflow.com/a/63306484
         return (form: AbstractControl): ValidationErrors | null => {
             // The '!' inside the below constants is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be.
             // Also this has been modified by adding the new Date() around the grabbing fo the form fields
