@@ -143,22 +143,24 @@ exports.SaveTimeCard = async (req, res, next) => {
         }*/
 
     let currentDate = new Date(Date.now());  // This is formatted this way so we can grab the year, month, and day from the current date.
+    // For some reason the code "currentDate.getUTCMonth()" adds a day, it has been working until 10/24/2023
+    let LNMidnight = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate(), 0, 0, 0, 0); // LN = Last Night
+    let TNMidnight = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate() + 1, 0, 0, 0, 0); // TN = To Night
+
     // For debugging
+    // Last night midnight
+    console.log("LNMidnight:");
+    console.log(`Command used to make this variable: ${currentDate.getUTCFullYear()}, ${currentDate.getUTCMonth()}, ${currentDate.getUTCDate()}, 0, 0, 0, 0`);
+    console.log(LNMidnight.toString());
+    console.log(LNMidnight.getTime());
+    // Current 
     console.log("currentDate:");
     console.log(currentDate.toString());
     console.log(currentDate.getTime());
-
-    let LNMidnight = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate(), 0, 0, 0, 0); // LN = Last Night
-    // For debugging
-    console.log("LNMidnight:");
-    console.log(LNMidnight.toString());
-    console.log(LNMidnight.getTime());
-
-    let TNMidnight = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate() + 1, 0, 0, 0, 0); // TN = To Night
-    // For debugging
-    // console.log("TNMidnight:");
-    // console.log(TNMidnight.toString());
-    // console.log(TNMidnight.getTime());
+    // Tonight midnight
+    console.log("TNMidnight:");
+    console.log(TNMidnight.toString());
+    console.log(TNMidnight.getTime());
 
     let countSQL = `SELECT COUNT(timeslotID) AS manualEntryCountForToday
         FROM TimeCard
@@ -169,7 +171,7 @@ exports.SaveTimeCard = async (req, res, next) => {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
         else {
-            console.log(result[0].manualEntryCountForToday);
+            console.log("Manual time created today " + result[0].manualEntryCountForToday);
             // If they have reached the 5 manual entries for the day
             if (result[0].manualEntryCountForToday >= 5) {
                 return res.status(429).json({ message: 'You have reached your limit for manual time card submissions for today.\nIf you wish to add more, contact your instructor.' });  // HTTP status 429 is for "Too Many Requests".  If you want a list of HTTP requests, look in this link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status

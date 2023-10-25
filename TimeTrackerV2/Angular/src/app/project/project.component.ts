@@ -53,13 +53,14 @@ export class ProjectComponent implements OnInit {
     CreateDateRangeValidator(): ValidatorFn {
         // The AbstractControl replaces the FormGroup because apparently the above source uses a different typescript version than this project.  It seems to be caused by a bug in the TypeScript version.  Fix source https://stackoverflow.com/a/63306484
         return (form: AbstractControl): ValidationErrors | null => {
-            // The '!' inside the below constants is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be.
-            // Also this has been modified by adding the new Date() around the grabbing fo the form fields
-            const start: Date = new Date(form.get("timecardStart")!.value);
-            const end: Date = new Date(form.get("timecardEnd")!.value);
-    
+        // The '!' at the end is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be
+        const start: string = form.get("timecardStart")!.value;
+            const end: string = form.get("timecardEnd")!.value;
+   
             if (start && end) {
-                const isRangeValid = (end.getTime() - start.getTime() > 0);
+                const dateStart = new Date(start);
+                const dateEnd = new Date(end);
+                const isRangeValid = (dateEnd.getTime() - dateStart.getTime() > 0);
     
                 return isRangeValid ? null : {dateRange:true};
             }

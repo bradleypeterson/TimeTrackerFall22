@@ -52,7 +52,7 @@ export class UsersComponent implements OnInit {
                 userID: userInfo.userID
             };
 
-            // This http delete request will delete the account attache attached to the user with the userID as specified in the body of the request, it will then remove the user from the local list of users so that the UI and the DB match.
+            // This http delete request will delete the account attached to the user with the userID as specified in the body of the request, it will then remove the user from the local list of users so that the UI and the DB match.
             // This code is also formatted so that it will handle any 500 status codes the server sends here and it will display the message to the user.  Source for this code format with some alterations https://stackoverflow.com/a/52610468
             this.http.delete("http://localhost:8080/api/deleteAccount", { body: requestBody }).subscribe((res: any) => {
                 // This set of code will have the UI automatically updated because the content's of the variable "users" has been changed https://www.tutorialspoint.com/how-to-delete-a-row-from-table-using-angularjs

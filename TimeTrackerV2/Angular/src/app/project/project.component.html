@@ -131,6 +131,9 @@
                             <label for="End">End Time</label>
                             <input formControlName="timecardEnd" type="datetime-local" id="End" class="form-control" required>
                         </div>
+                        <div *ngIf="manualForm.errors?.dateRange" class="row mt-2 error">
+                            Your "Start Time" has to be before your "End Time"
+                        </div>
                         <!-- Description row -->
                         <div class="row mt-2">
                             <input formControlName="description" type="text" placeholder="Work Description" class="form-control" required>
@@ -144,7 +147,7 @@
                             </p>-->
                             <!-- The reason why we are checking every individual field instead of the form to see if it is valid is because the form is only validated when you submit it -->
                             <button type="submit" class="btn btn-primary mt-2"
-                                [disabled]="!(manualForm.controls.timecardStart.valid && manualForm.controls.timecardEnd.valid && manualForm.controls.description.valid)">Submit</button>
+                                [disabled]="!(!manualForm.errors?.dateRange && manualForm.controls.description.valid)">Submit</button>
                         </div>
                     </form>
                 </div>
