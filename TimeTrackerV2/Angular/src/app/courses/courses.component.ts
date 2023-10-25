@@ -18,7 +18,7 @@ export class CoursesComponent implements OnInit {
   public allUserFilteredCourses: any = [];
   public nonUserFilteredCourses: any = [];
   public searchQuery: any = '';
-
+  public searched = false;
   public courseData: any = [];
 
   public instructorID: any;
@@ -200,6 +200,7 @@ export class CoursesComponent implements OnInit {
 
 
   searchCourses(): void {
+    this.searched = true;
     let sizeOfAllFilteredCourses = 0;
     let sizeOfNonFilteredCourses = 0;
     if (this.searchQuery == '') {
