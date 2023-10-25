@@ -133,6 +133,30 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  cancelIns(CourseId: any, UserID: any) {
+    let req = {
+      userID: UserID,
+      courseID: CourseId
+    };
+
+    this.http.post<any>('http://localhost:8080/api/removePendUser/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        // Refresh the data on the page
+        this.loadCourses();
+        // The following line will refresh the page
+        location.reload();
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
+
+
+
+
+
   loadInstrPenUserCourses(): void {
     this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/getPendInstrCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
@@ -145,6 +169,29 @@ export class DashboardComponent implements OnInit {
         this.errMsg = error['error']['message'];
       }
     });
+  }
+
+  register(CourseId: any, UserID: any) {
+    console.log("Register function called");
+    console.log("the course ", CourseId);
+    console.log("student userID", UserID);
+
+    let req = {
+      userID: UserID,
+      courseID: CourseId
+    };
+
+    this.http.post<any>('http://localhost:8080/api/addUserCourse/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        this.cancelIns(CourseId, UserID);
+        // this.loadCourses();
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+
   }
 
 

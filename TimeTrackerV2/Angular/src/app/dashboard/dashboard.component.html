@@ -4,7 +4,7 @@
     <!-- <a href="/user-reports" class="btn btn-success btn-elevated">Reports</a> -->
 
     <h3>Courses</h3>
-    <hr>
+    <hr />
     <div class="alert alert-danger" *ngIf="courses?.length <= 0">
       You have not registered for any courses.
     </div>
@@ -20,12 +20,16 @@
       </thead>
       <tbody>
         <tr *ngFor="let c of PendUserCourses">
-          <td>{{c.courseName}}</td>
-          <td>{{c.instructorFN}} {{c.instructorLN}}</td>
-          <td>{{c.description}}</td>
+          <td>{{ c.courseName }}</td>
+          <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
+          <td>{{ c.description }}</td>
           <td>
-            <div class="btn-group float-right"><a href="/course/{{c.courseID}}" class="btn btn-primary">View</a><button
-                class="btn btn-warning" (click)="cancel(c.courseID)">Cancel</button></div>
+            <div class="btn-group float-right">
+              <a href="/course/{{ c.courseID }}" class="btn btn-primary">View</a
+              ><button class="btn btn-warning" (click)="cancel(c.courseID)">
+                Cancel
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -36,26 +40,33 @@
           <h5 class="card-header">{{ c.courseName }}</h5>
           <div class="card-body">
             <p class="card-text">{{ c.description }}</p>
-            <a href="/course/{{ c.courseID }}" class="btn btn-primary btn-elevated">View Course</a>
+            <a
+              href="/course/{{ c.courseID }}"
+              class="btn btn-primary btn-elevated"
+              >View Course</a
+            >
           </div>
         </div>
       </div>
     </div>
 
-
     <h3>My Active Projects</h3>
-    <hr>
+    <hr />
     <div class="alert alert-danger" *ngIf="projects?.length <= 0">
       You are not assigned any projects.
     </div>
     <div class="row">
       <div class="col-sm-3 mb-3" *ngFor="let p of projects">
         <div class="card">
-          <h5 class="card-header">{{p.projectName}}</h5>
+          <h5 class="card-header">{{ p.projectName }}</h5>
           <div class="card-body">
-            <h5 class="card-title">{{p.courseName}}</h5>
-            <p class="card-text">{{p.description}}</p>
-            <a routerLink="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View Project</a>
+            <h5 class="card-title">{{ p.courseName }}</h5>
+            <p class="card-text">{{ p.description }}</p>
+            <a
+              routerLink="/project/{{ p.projectID }}"
+              class="btn btn-primary btn-elevated"
+              >View Project</a
+            >
           </div>
         </div>
       </div>
@@ -70,9 +81,11 @@
     <div>
       <h3 class="h3-inline">Courses</h3>
       <!-- This class will make the below button come next to it so they are on one line -->
-      <a href="/create-course" class="btn btn-success btn-elevated">Create New Course</a>
+      <a href="/create-course" class="btn btn-success btn-elevated"
+        >Create New Course</a
+      >
     </div>
-    <hr>
+    <hr />
     <div class="alert alert-danger" *ngIf="courses?.length <= 0">
       You have not created any courses.
     </div>
@@ -82,13 +95,20 @@
           <h5 class="card-header">{{ c.courseName }}</h5>
           <div class="card-body">
             <p class="card-text">{{ c.description }}</p>
-            <a href="/course/{{ c.courseID }}" class="btn btn-primary btn-elevated">View Course</a>
+            <a
+              href="/course/{{ c.courseID }}"
+              class="btn btn-primary btn-elevated"
+              >View Course</a
+            >
           </div>
         </div>
       </div>
     </div>
     <!--  -->
     <h3 *ngIf="courses.length > 0">Pending Courses</h3>
+    <div class="alert alert-danger" *ngIf="PendInstrCourses?.length <= 0">
+      No Pending Requests
+    </div>
     <table class="table table-hover" *ngIf="PendInstrCourses.length > 0">
       <thead>
         <tr>
@@ -100,13 +120,24 @@
       </thead>
       <tbody>
         <tr *ngFor="let c of PendInstrCourses">
-          <td>{{c.courseName}}</td>
-          <td>{{c.studentFirstName}} {{c.studentLastName}}</td>
-          <td>{{c.description}}</td>
+          <td>{{ c.courseName }}</td>
+          <td>{{ c.studentFirstName }} {{ c.studentLastName }}</td>
+          <td>{{ c.description }}</td>
           <td>
-            <div class="btn-group float-right"><a href="/course/{{c.courseID}}"
-                class="btn btn-primary">Accept</a><button class="btn btn-warning"
-                (click)="cancel(c.courseID)">Deny</button></div>
+            <div class="btn-group float-right">
+              <button
+                class="btn btn-primary btn-elevated"
+                (click)="register(c.courseID, c.studentID)"
+              >
+                Approve
+              </button>
+              <button
+                class="btn btn-danger btn-elevated"
+                (click)="cancelIns(c.courseID, c.studentID)"
+              >
+                Deny
+              </button>
+            </div>
           </td>
         </tr>
       </tbody>
