@@ -13,6 +13,7 @@ export class DashboardComponent implements OnInit {
   public courses: any = [];
   public currentUser: any;
   public PendUserCourses: any = [];
+  public PendInstrCourses: any = [];
   public errMsg = '';
 
   instructor: boolean = false;
@@ -49,6 +50,7 @@ export class DashboardComponent implements OnInit {
     this.loadProjects();
     this.loadCourses();
     this.loadPenUserCourses();
+    this.loadInstrPenUserCourses()
 
     if (!localStorage.getItem('foo')) {
       localStorage.setItem('foo', 'no reload')
@@ -131,6 +133,19 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  loadInstrPenUserCourses(): void {
+    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/getPendInstrCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        console.log(data);
+        this.PendInstrCourses = data;
+        /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
 
 
 }

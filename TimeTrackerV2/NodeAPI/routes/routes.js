@@ -56,6 +56,7 @@ const {
     CreateProject,
     EditProject,
     DeleteProject,
+    GetPendInstrCourses,
 } = require("./controllers/UsersControllers")
 //#endregion
 
@@ -152,6 +153,8 @@ router.post('/createProject', CreateProject);
 router.post('/editProject', EditProject);
 
 router.post('/deleteProject', DeleteProject);
+
+router.get('/Users/:userId/getPendInstrCourses', GetPendInstrCourses);
 //#endregion
 //#endregion
 
