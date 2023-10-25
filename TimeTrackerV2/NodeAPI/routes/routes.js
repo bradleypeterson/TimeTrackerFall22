@@ -41,6 +41,7 @@ const {
 const {
     GetUserInfo,
     GetUserProfile,
+    EditUserProfile,
     GetUsersInfo,
     GetCoursesRegisteredFor,
     GetCoursesNotRegisteredFor,
@@ -114,6 +115,8 @@ router.post('/clock', SaveTimeCard);
 router.get('/GetUserInfo/:id', GetUserInfo);
 
 router.get('/UserProfile/:userID', GetUserProfile);
+
+router.post('/EditProfile', EditUserProfile);
 
 router.get('/Users', GetUsersInfo);
 

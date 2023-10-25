@@ -13,12 +13,14 @@
       <div *ngSwitchCase="instructor">
         <div class="navbar-nav W-100">
           <a class="nav-item nav-link active" routerLink="./dashboard">Dashboard</a>
+          <a class="nav-item nav-link active" routerLink="./profile/{{userID}}">Profile</a>
           <a class="nav-item nav-link ml-auto active" href="#">Logout</a>
         </div>
       </div>
       <div *ngSwitchCase="student">
         <div class="navbar-nav">
           <a class="nav-item nav-link active" routerLink="./dashboard">Dashboard</a>
+          <a class="nav-item nav-link active" routerLink="./profile/{{userID}}">Profile</a>
           <a class="nav-item nav-link active" routerLink="./courses">Courses</a>
           <a class="nav-item nav-link ml-auto active" href="#">Logout</a>
         </div>
@@ -26,6 +28,7 @@
       <div *ngSwitchCase="admin">
         <div class="navbar-nav W-100">
           <a class="nav-item nav-link active" routerLink="./dashboard">Dashboard</a>
+          <a class="nav-item nav-link active" routerLink="./profile/{{userID}}">Profile</a>
           <a class="nav-item nav-link active" routerLink="./users">Users</a>
           <a class="nav-item nav-link ml-auto active" href="#">Logout</a>
         </div>

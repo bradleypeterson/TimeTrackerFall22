@@ -6,13 +6,16 @@
         <p style="color: red;">{{ errMsg }}</p>
 
         <div class="form-group">
-            <input id="pronouns" formControlName="pronouns" type="text" class="form-control" name="pronouns" placeholder="Preferred pronouns" ng-model="profile.pronouns">
+            <label for="pronouns">Preferred Pronouns:</label><br>
+            <input id="pronouns" formControlName="pronouns" type="text" class="form-control" name="pronouns" placeholder="Preferred pronouns" ng-model="userProfile.pronouns">
         </div>
         <div class="form-group">
-            <input id="bio" formControlName="bio" type="text" class="form-control" name="bio" placeholder="Personal Bio" ng-model="profile.bio">
+            <label for="bio">Bio:</label><br>
+            <input id="bio" formControlName="bio" type="text" class="form-control" name="bio" placeholder="Personal Bio" ng-model="userProfile.bio">
         </div>
         <div class="form-group">
-            <input id="contact" formControlName="contact" type="text" class="form-control" name="contact" placeholder="Contact Method" ng-model="profile.contact">
+            <label for="contact">Contact Method:</label><br>
+            <input id="contact" formControlName="contact" type="text" class="form-control" name="contact" placeholder="Contact Method" ng-model="userProfile.contact">
         </div>
 
         <div class="btn-group">
