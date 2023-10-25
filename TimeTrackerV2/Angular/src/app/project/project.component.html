@@ -1,138 +1,189 @@
 <a href="/course/{{project.courseID}}" class="btn btn-primary">Back to Course</a>
 <h1 class="display-1" *ngIf="project">{{project.projectName}}</h1>
-  <div [ngSwitch]="true">
+
+<!-- Instructor Add Students, Edit, and Delete buttons -->
+<div [ngSwitch]="true">
     <div *ngSwitchCase="instructor">
-      <div class="btn-group">
-        <a href="/add-students-project/{{project.projectID}}" class="btn btn-primary">Add Students</a>
-        <a href="/edit-project/{{project.projectID}}" class="btn btn-secondary">Edit</a>
-        <a href="/delete-project/{{project.projectID}}" class="btn btn-danger">Delete</a>
-      </div>
+        <div class="btn-group">
+            <a href="/add-students-project/{{project.projectID}}" class="btn btn-primary">Add Students</a>
+            <a href="/edit-project/{{project.projectID}}" class="btn btn-secondary">Edit</a>
+            <a href="/delete-project/{{project.projectID}}" class="btn btn-danger">Delete</a>
+        </div>
     </div>
-  </div>
+</div>
+
+<!-- Team times section -->
 <div class="container">
-  <div class="row">
-    <div class="col-6">
-      <div *ngIf="pieChartLabels.length != 0">
-        <canvas baseChart
-            [type]="'pie'"
-            [datasets]="pieChartDatasets"
-            [labels]="pieChartLabels"
-            [options]="pieChartOptions"
-            [plugins]="pieChartPlugins"
-            [legend]="pieChartLegend">
-        </canvas>
-      </div>
-    </div>
-    <div class="col-6">
-      <div class="row">
-        <h3>Team Times</h3>
-      </div>
-      <div class="row">
-        <table class="table table-light table-sm table-hover table-bordered border-dark">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Total Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let teamMate of totalTimeMap | keyvalue">
-              <td>{{teamMate.key}}</td>
-              <td>{{teamMate.value | totalTimePipe}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-6">
-      <div class="row">
-        <div class="col-9">
-          <h3>My Activity</h3>
+    <div class="row">
+        <div class="col-6">
+            <div *ngIf="pieChartLabels.length != 0">
+                <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
+                    [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+                </canvas>
+            </div>
         </div>
-        <div class="col-3">
-          <!--<button type="button" class="btn btn-primary">All Activity</button>-->
+        <div class="col-6">
+            <div class="row">
+                <h3>Team Times</h3>
+            </div>
+            <div class="row">
+                <table class="table table-light table-sm table-hover table-bordered border-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Total Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let teamMate of totalTimeMap | keyvalue">
+                            <td>{{teamMate.key}}</td>
+                            <td>{{teamMate.value | totalTimePipe}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <table class="table table-light table-sm table-hover table-bordered border-dark">
-          <thead>
-            <tr>
-              <th scope="col">Start Time</th>
-              <th scope="col">End Time</th>
-              <th scope="col">Total Time</th>
-              <th scope="col">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let activity of activities">
-              <td>{{activity.timeIn | date:'medium'}}</td>
-              <td>{{activity.timeOut | date:'medium'}}</td>
-              <td>{{activity.timeOut - activity.timeIn | totalTimePipe}}</td>
-              <td>{{activity.description}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
-    <div class="col-6" *ngIf="isProjectUser && project.isActive">
-      <!--Date Row-->
-      <div class="row, center">
-        <h3>{{currDate}}</h3>
-      </div>
-      <!--Time Row-->
-      <div class="row, center">
-        <h1>{{hours}}:{{minutes}}:{{seconds}}</h1>
-      </div>
-      <!--Start/Stop Buttons-->
-      <div class="gap-2 d-md-flex justify-content-md-center">
-        <button (click)="clockIn()" type="button" class="btn btn-success">Start</button>
-      </div>
-      <!--Submit Button-->
-      <div class="gap-4 d-md-flex justify-content-md-center">
-        <form (ngSubmit)="submit()">
-          <div class="row mt-2">
-            <input type="text" placeholder="Description" class="form-control" [formControl]="description">
-          </div>
-          <div class="d-grid d-md-flex justify-content-md-center">
-            <button type="submit" class="btn btn-primary mt-2" [disabled]="this.description.value===''">Submit</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col align-self-center">
-      <div class="row">
-        <div class="col-10">
-          <h3>History</h3>
+
+    <!-- Current user's activity -->
+    <div class="row">
+        <div class="col-6">
+            <div class="row">
+                <div class="col-9">
+                    <h3>My Activity</h3>
+                </div>
+                <div class="col-3">
+                    <!--<button type="button" class="btn btn-primary">All Activity</button>-->
+                </div>
+            </div>
+            <div class="row">
+                <table class="table table-light table-sm table-hover table-bordered border-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col">Start Time</th>
+                            <th scope="col">End Time</th>
+                            <th scope="col">Total Time</th>
+                            <th scope="col">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let activity of activities">
+                            <td>{{activity.timeIn | date:'medium'}}</td>
+                            <td>{{activity.timeOut | date:'medium'}}</td>
+                            <td>{{activity.timeOut - activity.timeIn | totalTimePipe}}</td>
+                            <td>{{activity.description}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="col-2">
-          <!--<button type="button" class="btn btn-primary">All History</button>-->
+
+        <div class="col-6" *ngIf="isProjectUser && project.isActive">
+            <!-- Toggle button to change between auto and manual mode -->
+            <div class="gap-2 d-md-flex justify-content-md-left">
+                <button (click)="changeSubmitType()" class="btn btn-secondary">{{manualTimeCardEntry ? "Switch to Auto Mode" :
+                    "Switch to Manual Mode"}}</button>
+            </div>
+            <!-- Auto time card -->
+            <div class="col" *ngIf="!manualTimeCardEntry">
+                <!--Date Row-->
+                <div class="row, center">
+                    <h3>{{currDate}}</h3>
+                </div>
+                <!--Time Row-->
+                <div class="row, center">
+                    <h1>{{hours}}:{{minutes}}:{{seconds}}</h1>
+                </div>
+                <!--Start/Stop Buttons-->
+                <div class="gap-2 d-md-flex justify-content-md-center">
+                    <button (click)="clockIn()" type="button" class="btn btn-success" [disabled]="TimerRunning">Start</button>
+                </div>
+                <!--Submit Button-->
+                <div class="gap-4 d-md-flex justify-content-md-center">
+                    <form [formGroup]="autoForm" (ngSubmit)="autoSubmit()">
+                        <div class="row mt-2">
+                            <input formControlName="description" type="text" placeholder="Work Description" class="form-control" required>
+                        </div>
+                        <div class="d-grid d-md-flex justify-content-md-center">
+                            <!-- For debugging purposes only -->
+                            <!--<p>
+                                description valid {{autoForm.controls.description.valid}}
+                                TimerRunning {{TimerRunning}}
+                            </p>-->
+                            <!-- If the field is not valid, see the below form submission section for the explain why we don't check the form itself, and the timer is not running.  Then disable the submit button -->
+                            <button type="submit" class="btn btn-primary mt-2"
+                                [disabled]="!(autoForm.controls.description.valid && TimerRunning)">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- Manual time card -->
+            <div class="col" *ngIf="manualTimeCardEntry">
+                <div class="gap-4 d-md-flex justify-content-md-center">
+                    <form [formGroup]="manualForm" (ngSubmit)="manualSubmit()">
+                        <!-- Start time row -->
+                        <div class="row mt-2">
+                            <label for="Start">Start Time</label>
+                            <input formControlName="timecardStart" type="datetime-local" id="Start" class="form-control" required>
+                        </div>
+                        <!-- End time row -->
+                        <div class="row mt-2">
+                            <label for="End">End Time</label>
+                            <input formControlName="timecardEnd" type="datetime-local" id="End" class="form-control" required>
+                        </div>
+                        <!-- Description row -->
+                        <div class="row mt-2">
+                            <input formControlName="description" type="text" placeholder="Work Description" class="form-control" required>
+                        </div>
+                        <div class="d-grid d-md-flex justify-content-md-center">
+                            <!-- For debugging purposes only -->
+                            <!--<p>
+                                timecardStart valid {{manualForm.controls.timecardStart.valid}}
+                                timecardEnd valid {{manualForm.controls.timecardEnd.valid}}
+                                description valid {{manualForm.controls.description.valid}}
+                            </p>-->
+                            <!-- The reason why we are checking every individual field instead of the form to see if it is valid is because the form is only validated when you submit it -->
+                            <button type="submit" class="btn btn-primary mt-2"
+                                [disabled]="!(manualForm.controls.timecardStart.valid && manualForm.controls.timecardEnd.valid && manualForm.controls.description.valid)">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <table class="table table-light table-sm table-hover table-bordered border-dark"
-          style="max-height: 200px; overflow-y:scroll">
-          <thead>
-            <tr>
-              <th scope="col">Name</th>
-              <th scope="col">Time In</th>
-              <th scope="col">Time Out</th>
-              <th scope="col">Total Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let user of projectUserTimes">
-              <td>{{user.firstName}} {{user.lastName}}</td>
-              <td>{{user.timeIn| date:'medium'}}</td>
-              <td>{{user.timeOut| date:'medium'}}</td>
-              <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
-  </div>
+
+    <!-- History of project -->
+    <div class="row">
+        <div class="col align-self-center">
+            <div class="row">
+                <div class="col-10">
+                    <h3>History</h3>
+                </div>
+                <div class="col-2">
+                    <!--<button type="button" class="btn btn-primary">All History</button>-->
+                </div>
+            </div>
+            <div class="row">
+                <table class="table table-light table-sm table-hover table-bordered border-dark"
+                    style="max-height: 200px; overflow-y:scroll">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Time In</th>
+                            <th scope="col">Time Out</th>
+                            <th scope="col">Total Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of projectUserTimes">
+                            <td>{{user.firstName}} {{user.lastName}}</td>
+                            <td>{{user.timeIn | date:'medium'}}</td>
+                            <td>{{user.timeOut | date:'medium'}}</td>
+                            <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
