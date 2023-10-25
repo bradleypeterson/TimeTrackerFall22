@@ -142,8 +142,9 @@ exports.SaveTimeCard = async (req, res, next) => {
           return res.status(400).json({message: 'you have an outstanding clock in. Please clock out.'});
         }*/
 
+    let userID = req.body["userID"];
     let currentDate = new Date(Date.now());  // This is formatted this way so we can grab the year, month, and day from the current date.
-    // For some reason the code "currentDate.getUTCMonth()" adds a day, it has been working until 10/24/2023
+    // For some reason the code "currentDate.getUTCMonth()" adds a day, it has been working until 10/24/2023.  However on the morning of 10/25/2023 I tested again on both my main pc and laptop for both the main and Braxton’s brach and it works.  Need to test to see if it is time dependent, I.E. at around 9 P.M. does the issue come up again.  If not, it was a fluke error, otherwise I need to find out why this happens.
     let LNMidnight = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate(), 0, 0, 0, 0); // LN = Last Night
     let TNMidnight = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate() + 1, 0, 0, 0, 0); // TN = To Night
 
@@ -164,14 +165,14 @@ exports.SaveTimeCard = async (req, res, next) => {
 
     let countSQL = `SELECT COUNT(timeslotID) AS manualEntryCountForToday
         FROM TimeCard
-        WHERE timeCardCreation BETWEEN ${LNMidnight.getTime()} AND ${TNMidnight.getTime()} and isManualEntry = ${true ? 1 : 0}`;  // We have to format the isManualEntry this way because the DB stores it as 1 for true and 0 for false
+        WHERE userID = ${userID} AND isManualEntry = ${true ? 1 : 0} AND timeCardCreation BETWEEN ${LNMidnight.getTime()} AND ${TNMidnight.getTime()}`;  // We have to format the isManualEntry this way because the DB stores it as 1 for true and 0 for false
 
     db.all(countSQL, [], (err, result) => {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
         else {
-            console.log("Manual time created today " + result[0].manualEntryCountForToday);
+            console.log(`Manual created today for the userID ${userID}: ${result[0].manualEntryCountForToday}`);
             // If they have reached the 5 manual entries for the day
             if (result[0].manualEntryCountForToday >= 5) {
                 return res.status(429).json({ message: 'You have reached your limit for manual time card submissions for today.\nIf you wish to add more, contact your instructor.' });  // HTTP status 429 is for "Too Many Requests".  If you want a list of HTTP requests, look in this link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
@@ -184,7 +185,7 @@ exports.SaveTimeCard = async (req, res, next) => {
                 insertData[2] = req.body["timeIn"];
                 insertData[3] = req.body["timeOut"];
                 insertData[4] = req.body["isEdited"];
-                insertData[5] = req.body["userID"];
+                insertData[5] = userID;
                 insertData[6] = req.body["description"];
                 insertData[7] = req.body["projectID"];
 

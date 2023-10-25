@@ -60,8 +60,6 @@ const routes: Routes = [
   { path: 'delete-project/:id', component: DeleteProjectComponent },
   { path: 'add-students-project/:id', component: AddStudentProjectComponent },
   { path: 'instructor-reports', component: InstructorReportsComponent },
-
-
 ];
 
 @NgModule({

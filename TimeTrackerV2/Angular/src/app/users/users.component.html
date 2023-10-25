@@ -1,7 +1,6 @@
 <!-- ng-cloak ng-if="loaded" -->
 
 <div id="users">
-
     <div class="position-relative">
         <h3 class="mt-3">Users</h3>
         <!-- ng-model="search"  -->
@@ -15,6 +14,7 @@
                 <th>Username</th>
                 <th class="text-center">Active</th>
                 <th class="text-center d-none d-sm-table-cell">Type</th>
+                <th class="text-center">User Controls</th>
             </tr>
         </thead>
 
@@ -25,7 +25,7 @@
 
                 <!--<tr *ngFor="let u of users" class="position-relative">-->
 
-                <td><a href="#">{{ u.name }}</a></td> <!-- User's first and last name, the user will click this to go to the user's profile page (NOT CURRENTLY IMPLEMENTED) where they can delete and reset the password for the user -->
+                <td><a href="#">{{ u.name }}</a></td> <!-- User's first and last name, the user will click this to go to the user's profile page (CURRENTLY BEING IMPLEMENTED) where they can delete and reset the password for the user (Need to see with the group if this is desired) -->
                 <td>
                     <div class="full-width">{{ u.username }}</div> <!-- Username -->
                     <!--<div class="full-width">{{u}}</div> A copy of the username for some reason?-->
@@ -67,7 +67,7 @@
                 </td>
 
                 <td class="text-center d-none d-sm-table-cell">
-                    <div class="btn-group float-right">
+                    <div class="btn-group">
                         <button type="button" class="btn btn-primary" (click)="navToResetPassword('current','')">Reset Password</button> <!-- To be modified to accept the userID of the user for the row -->
                         <button type="button" class="btn btn-danger" (click)="DeleteUser(u)">Delete User</button>
                     </div>      

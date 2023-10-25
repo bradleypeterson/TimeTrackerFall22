@@ -45,26 +45,26 @@ export class ProjectComponent implements OnInit {
         timecardStart: new UntypedFormControl(''),
         timecardEnd: new UntypedFormControl(''),
         description: this.description
-    },{
+    }, {
         validators: [this.CreateDateRangeValidator()]
     })
 
-    // This function is used to make sure that the starting date is before the ending date.  Source https://blog.angular-university.io/angular-custom-validators/#:~:text=our%20previous%20article.-,Form%2Dlevel%20(multi%2Dfield)%20Validators,-Besides%20being%20able
+    // This function is used to make sure that the starting date is always before the ending date.  Source https://blog.angular-university.io/angular-custom-validators/#:~:text=our%20previous%20article.-,Form%2Dlevel%20(multi%2Dfield)%20Validators,-Besides%20being%20able
     CreateDateRangeValidator(): ValidatorFn {
         // The AbstractControl replaces the FormGroup because apparently the above source uses a different typescript version than this project.  It seems to be caused by a bug in the TypeScript version.  Fix source https://stackoverflow.com/a/63306484
         return (form: AbstractControl): ValidationErrors | null => {
-        // The '!' at the end is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be
-        const start: string = form.get("timecardStart")!.value;
+            // The '!' at the end is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be
+            const start: string = form.get("timecardStart")!.value;
             const end: string = form.get("timecardEnd")!.value;
-   
+
             if (start && end) {
                 const dateStart = new Date(start);
                 const dateEnd = new Date(end);
                 const isRangeValid = (dateEnd.getTime() - dateStart.getTime() > 0);
-    
-                return isRangeValid ? null : {dateRange:true};
+
+                return isRangeValid ? null : { dateRange: true };
             }
-    
+
             return null;
         }
     }
@@ -277,7 +277,7 @@ export class ProjectComponent implements OnInit {
 
                 // Clear the input inside the form
                 this.autoForm.controls.description.setValue("");  // you can also us the code "this.description.setValue("");" because the code currently being used references this variable.
-                
+
                 this.getActivities();
                 this.loadProjectUserTimes();
                 this.populateGraph();
@@ -319,7 +319,7 @@ export class ProjectComponent implements OnInit {
                 this.manualForm.controls.timecardStart.setValue("");
                 this.manualForm.controls.timecardEnd.setValue("");
                 this.manualForm.controls.description.setValue("");  // You can also us the code "this.description.setValue("");" because the code currently being used references this variable.
-                
+
                 this.getActivities();
                 this.loadProjectUserTimes();
                 this.populateGraph();
