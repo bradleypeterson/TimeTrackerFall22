@@ -143,15 +143,14 @@ exports.SaveTimeCard = async (req, res, next) => {
         }*/
 
     let userID = req.body["userID"];
-    let currentDate = new Date(Date.now());  // This is formatted this way so we can grab the year, month, and day from the current date.
-    // For some reason the code "currentDate.getUTCMonth()" adds a day, it has been working until 10/24/2023.  However on the morning of 10/25/2023 I tested again on both my main pc and laptop for both the main and Braxton’s brach and it works.  Need to test to see if it is time dependent, I.E. at around 9 P.M. does the issue come up again.  If not, it was a fluke error, otherwise I need to find out why this happens.
-    let LNMidnight = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate(), 0, 0, 0, 0); // LN = Last Night
-    let TNMidnight = new Date(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate() + 1, 0, 0, 0, 0); // TN = To Night
+    let currentDate = new Date(Date.now());  // This is formatted this way so we can grab the year, month, and day from the variable in the below code.
+    // We don't grab the UTC Year, Month, and Day (Date = day of the month) because the source, currentDate, is already in UTC.  It doesn't need to be converted.
+    let LNMidnight = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 0, 0, 0, 0); // LN = Last Night
+    let TNMidnight = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() + 1, 0, 0, 0, 0); // TN = To Night
 
-    // For debugging
+    // For debugging, we don't convert to UTC because the root date, currentDate, is already in UTC time and all the other variables are derived from it
     // Last night midnight
     console.log("LNMidnight:");
-    console.log(`Command used to make this variable: ${currentDate.getUTCFullYear()}, ${currentDate.getUTCMonth()}, ${currentDate.getUTCDate()}, 0, 0, 0, 0`);
     console.log(LNMidnight.toString());
     console.log(LNMidnight.getTime());
     // Current 
@@ -172,12 +171,12 @@ exports.SaveTimeCard = async (req, res, next) => {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
         else {
-            console.log(`Manual created today for the userID ${userID}: ${result[0].manualEntryCountForToday}`);
+            console.log(`Manual created today for the userID ${userID}: ${result[0].manualEntryCountForToday} ${result[0].manualEntryCountForToday >= 5 ? " LIMIT REACHED" : ""}`);
             // If they have reached the 5 manual entries for the day
             if (result[0].manualEntryCountForToday >= 5) {
                 return res.status(429).json({ message: 'You have reached your limit for manual time card submissions for today.\nIf you wish to add more, contact your instructor.' });  // HTTP status 429 is for "Too Many Requests".  If you want a list of HTTP requests, look in this link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
             }
-            // They have not reached the 5 manual entries for the day
+            // They have not reached the 5 manual entries for the day, enter the timecard to the DB
             else {
                 let insertData = [];
                 insertData[0] = currentDate.getTime();  // getTime() returns the date in the number of milliseconds since midnight, January 1, 1970 UTC, which is what is stored in the DB.
