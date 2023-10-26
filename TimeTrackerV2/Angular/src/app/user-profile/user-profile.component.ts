@@ -15,6 +15,7 @@ export class UserProfileComponent {
   public instructor: boolean = false;
   public student: boolean = false;
   public userID: string = '';
+  public sameUser: boolean = false;
 
   public currentUser: any;
 
@@ -45,6 +46,9 @@ export class UserProfileComponent {
     }
 
     this.profileID = this.activatedRoute.snapshot.params['id']; // get profile id from URL
+    if(this.profileID == this.userID){
+      this.sameUser = true;
+    }
 
     this.loadProfile();
 
@@ -53,7 +57,6 @@ export class UserProfileComponent {
   loadProfile(): void {
     this.http.get<any>(`http://localhost:8080/api/UserProfile/${this.profileID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
-        console.log("Data returned");
         this.errMsg = "";
         this.userProfile = data;
         if (this.userProfile) {

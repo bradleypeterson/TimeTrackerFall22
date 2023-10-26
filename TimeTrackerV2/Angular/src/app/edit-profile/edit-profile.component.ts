@@ -11,7 +11,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class EditProfileComponent implements OnInit {
   public errMsg = '';
   userID: string = '';
-  public profile: any;
+  public userProfile: any;
+  public profileData: any;
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -28,10 +29,6 @@ export class EditProfileComponent implements OnInit {
 
     // set the edit page to the one for the current user
     this.loadProfile();
-
-    this.editProfileForm.controls['pronouns'].setValue(this.profile.pronouns);
-    this.editProfileForm.controls['bio'].setValue(this.profile.bio);
-    this.editProfileForm.controls['contact'].setValue(this.profile.contact);
   }
 
   editProfileForm = this.formBuilder.group({
@@ -49,9 +46,12 @@ export class EditProfileComponent implements OnInit {
       userID: this.userID,
     }
 
-    this.http.post<any>('http://localhost:8080/api/editProfile/', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    console.log("onSubmit reached");
+
+    this.http.post<any>('http://localhost:8080/api/EditProfile', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
+        console.log("data posted");
         this.router.navigate(['/dashboard/']);
       },
       error: error => {
@@ -64,9 +64,21 @@ export class EditProfileComponent implements OnInit {
     this.http.get<any>(`http://localhost:8080/api/UserProfile/${this.userID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
-        this.profile = data;
-        if (this.profile) {
-          localStorage.setItem("user", JSON.stringify(this.profile));
+        this.profileData = data;
+        if (this.profileData) {
+          localStorage.setItem("userProfile", JSON.stringify(this.profileData));
+          let temp = localStorage.getItem('userProfile');
+          if(temp){
+            const prof = JSON.parse(temp);  
+            for(let profile of prof){
+              if(Number(this.userID) === Number(profile.userID)){
+                this.userProfile = profile;
+              }
+            }
+            this.editProfileForm.controls['pronouns'].setValue(this.userProfile.pronouns);
+            this.editProfileForm.controls['bio'].setValue(this.userProfile.bio);
+            this.editProfileForm.controls['contact'].setValue(this.userProfile.contact);
+          }
         }
       },
       error: error => {

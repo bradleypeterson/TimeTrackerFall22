@@ -43,7 +43,7 @@ exports.GetUserProfile = (req, res) => {
 
     let userID = req.params["userID"];
 
-    let sql = `SELECT u.firstName, u.lastName, p.pronouns, p.bio, p.contact
+    let sql = `SELECT u.firstName, u.lastName, p.pronouns, p.bio, p.contact, u.userID
         FROM Users u
         INNER JOIN Profiles p ON u.userID = p.userID
         WHERE u.userID = ?`
@@ -54,6 +54,28 @@ exports.GetUserProfile = (req, res) => {
         }
         if (rows) {
             return res.send(rows);
+        }
+    });
+}
+
+exports.EditUserProfile = (req, res) => {
+    console.log("UsersControllers.js file/EditUserProfile route called");
+
+    let data = [];
+    data[0] = req.body["pronouns"];
+    data[1] = req.body["bio"];
+    data[2] = req.body["contact"];
+    data[3] = req.body["userID"];
+
+    sql = `UPDATE Profiles
+    SET pronouns = ?, bio = ?, contact = ?
+    WHERE userID = ?`;
+
+    db.run(sql, data, function (err, rows) {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        } else {
+            return res.status(200).json({ course: data });
         }
     });
 }
@@ -376,4 +398,78 @@ exports.DeleteProject = async (req, res, next) => {
         }
     });
 }
+
+exports.GetPendInstrCourses = (req, res) => {
+    console.log("UsersControllers.js file/getPendInstrCourses route called");
+
+    let userID = req.params["userId"];
+    console.log("userID: " + userID)
+
+    let sql = `
+        SELECT 
+            c.courseID,
+            c.courseName,
+            pcu.userID AS studentID,
+            user.firstName AS studentFirstName,
+            user.lastName AS studentLastName
+        FROM Courses c
+        JOIN Pend_Course_Users pcu ON pcu.courseID = c.courseID
+        JOIN Users instr ON instr.userID = c.instructorID
+        JOIN Users user ON user.userID = pcu.userID
+        WHERE instr.userID = ?`;
+
+    db.all(sql, [userID], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        return res.send(rows);
+    });
+}
+
+
+
+// exports.GetPendInstrCourses = (req, res) => {
+//     // Log a message to the console indicating that this particular route handler (controller action) has been called.
+//     console.log("UsersControllers.js file/getPendInstrCourses route called");
+
+//     var rowData = [];
+//     let userID = req.params["userId"];
+//     console.log("userID: " + userID)
+
+//     let sql = `
+//         SELECT
+//             c.courseID,
+//             c.courseName,
+//             c.description,
+//             instr.firstname AS instructorFirstName,
+//             instr.lastName AS instructorLastName,
+//             user.firstName AS userFirstName,
+//             user.lastName AS userLastName
+//         FROM Courses c
+//         JOIN Pend_Course_Users pcu ON pcu.courseID = c.courseID
+//         JOIN Users instr ON instr.userID = c.instructorID
+//         JOIN Users user ON user.userID = pcu.userID
+//         WHERE instr.userID = ${userID}`;
+
+
+//     db.all(sql, [], (err, rows) => {
+//         if (err) {
+//             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+//         }
+//         if (rows) {
+//             rows.forEach((row) => {
+
+//                 rowData.push({
+//                     courseID: row.courseID,
+//                     courseName: row.courseName,
+//                     userFirstName: row.userFirstName,
+//                     userLastName: row.userLastName,
+//                     description: row.description
+//                 });
+//             });
+
+//             return res.send(rowData);
+//         }
+//     });
+// }
 //#endregion

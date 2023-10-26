@@ -41,6 +41,7 @@ const {
 const {
     GetUserInfo,
     GetUserProfile,
+    EditUserProfile,
     GetUsersInfo,
     GetCoursesRegisteredFor,
     GetCoursesNotRegisteredFor,
@@ -55,6 +56,7 @@ const {
     CreateProject,
     EditProject,
     DeleteProject,
+    GetPendInstrCourses,
 } = require("./controllers/UsersControllers")
 //#endregion
 
@@ -115,6 +117,8 @@ router.get('/GetUserInfo/:id', GetUserInfo);
 
 router.get('/UserProfile/:userID', GetUserProfile);
 
+router.post('/EditProfile', EditUserProfile);
+
 router.get('/Users', GetUsersInfo);
 
 //#region Student specific controllers
@@ -149,6 +153,8 @@ router.post('/createProject', CreateProject);
 router.post('/editProject', EditProject);
 
 router.post('/deleteProject', DeleteProject);
+
+router.get('/Users/:userId/getPendInstrCourses', GetPendInstrCourses);
 //#endregion
 //#endregion
 

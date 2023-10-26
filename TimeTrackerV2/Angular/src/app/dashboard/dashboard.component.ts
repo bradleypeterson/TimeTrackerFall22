@@ -11,6 +11,10 @@ import { Router } from '@angular/router';
 export class DashboardComponent implements OnInit {
   public projects: any = [];
   public courses: any = [];
+  public currentUser: any;
+  public PendUserCourses: any = [];
+  public PendInstrCourses: any = [];
+  public errMsg = '';
 
   instructor: boolean = false;
   student: boolean = false;
@@ -19,7 +23,14 @@ export class DashboardComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-  ) { }
+  ) {
+    const tempUser = localStorage.getItem('currentUser');
+    if (!tempUser) {
+      this.router.navigate(["/Login"]);
+      return;
+    }
+    this.currentUser = JSON.parse(tempUser);
+  }
 
   ngOnInit(): void {
 
@@ -38,6 +49,8 @@ export class DashboardComponent implements OnInit {
     // get projects and courses
     this.loadProjects();
     this.loadCourses();
+    this.loadPenUserCourses();
+    this.loadInstrPenUserCourses()
 
     if (!localStorage.getItem('foo')) {
       localStorage.setItem('foo', 'no reload')
@@ -85,4 +98,101 @@ export class DashboardComponent implements OnInit {
       });
     }
   }
+
+  loadPenUserCourses(): void {
+    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/getCoursesPendCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        console.log(data);
+        this.PendUserCourses = data;
+        /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
+
+  cancel(CourseId: any) {
+    let req = {
+      userID: this.currentUser.userID,
+      courseID: CourseId
+    };
+
+    this.http.post<any>('http://localhost:8080/api/removePendUser/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        // Refresh the data on the page
+        this.loadCourses();
+        // The following line will refresh the page
+        location.reload();
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
+
+  cancelIns(CourseId: any, UserID: any) {
+    let req = {
+      userID: UserID,
+      courseID: CourseId
+    };
+
+    this.http.post<any>('http://localhost:8080/api/removePendUser/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        // Refresh the data on the page
+        this.loadCourses();
+        // The following line will refresh the page
+        location.reload();
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
+
+
+
+
+
+  loadInstrPenUserCourses(): void {
+    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/getPendInstrCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        console.log(data);
+        this.PendInstrCourses = data;
+        /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
+
+  register(CourseId: any, UserID: any) {
+    console.log("Register function called");
+    console.log("the course ", CourseId);
+    console.log("student userID", UserID);
+
+    let req = {
+      userID: UserID,
+      courseID: CourseId
+    };
+
+    this.http.post<any>('http://localhost:8080/api/addUserCourse/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        this.cancelIns(CourseId, UserID);
+        // this.loadCourses();
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+
+  }
+
+
 }
