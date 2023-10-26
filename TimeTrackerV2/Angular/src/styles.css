@@ -374,13 +374,15 @@ pretty .state .check-label label:after, .pretty .state .check-label label:before
   height: 60px;
   display: flex;
   align-items: center;
-  background-color: #492365;
-  color: #007bff;
+  background-color: #6e4097;
   font-weight: 600;
+  box-shadow: 0 3px 10px #492365;
 }
 
   .navbar img {
     margin: 0 16px;
+    box-shadow: 0 3px 3px #492365;
+    border-radius: 50%;
   }
 
   .navbar #usernamelbl {
@@ -394,5 +396,17 @@ a:hover {
 }
 
   a:hover {
-    color: #125699;
+    color: #6e4097;
   }
+
+  .navbar-nav .nav-link.active {
+    color: white;
+    text-shadow: 0 3px 3px #492365;
+  }
+
+.btn-primary {
+  background-color: #492365;
+}
+/* * {
+  font-family:  Century Schoolbook, TeX Gyre Schola, serif;
+} */

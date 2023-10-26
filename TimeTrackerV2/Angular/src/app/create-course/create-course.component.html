@@ -1,5 +1,5 @@
 <div id="create-course">
-    <h2>Create a new course</h2>
+    <h2 class="create-course-head">Create a new course</h2>
     <hr>
 
     <form [formGroup]="createCourseForm" (ngSubmit)="onSubmit()">
@@ -15,8 +15,8 @@
         </div>
 
         <div class="btn-group">
-            <button type="submit" class="btn btn-success">Create course</button>
-            <a href="/dashboard" class="btn btn-danger">Cancel</a>
+            <button type="submit" class="btn btn-success btn-elevated">Create course</button>
+            <a href="/dashboard" class="btn btn-danger btn-elevated">Cancel</a>
         </div>
     </form>
 </div>

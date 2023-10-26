@@ -1,9 +1,9 @@
 <div [ngSwitch]="true">
   <div *ngSwitchCase="student" id="dashboard">
-    <h2>Dashboard</h2>
+    <h2 class="dashboard-head">Dashboard</h2>
     <!-- <a href="/user-reports" class="btn btn-success btn-elevated">Reports</a> -->
 
-    <h3>Courses</h3>
+    <h3 class="box-head">Courses</h3>
     <hr />
     <div class="alert alert-danger" *ngIf="courses?.length <= 0">
       You have not registered for any courses.
@@ -12,10 +12,10 @@
     <table class="table table-hover" *ngIf="PendUserCourses.length > 0">
       <thead>
         <tr>
-          <th>Course Name</th>
-          <th>Instructor</th>
-          <th>Description</th>
-          <th></th>
+          <th class="table-head">Course Name</th>
+          <th class="table-head">Instructor</th>
+          <th class="table-head">Description</th>
+          <th class="table-head"></th>
         </tr>
       </thead>
       <tbody>
@@ -25,8 +25,8 @@
           <td>{{ c.description }}</td>
           <td>
             <div class="btn-group float-right">
-              <a href="/course/{{ c.courseID }}" class="btn btn-primary">View</a
-              ><button class="btn btn-warning" (click)="cancel(c.courseID)">
+              <a href="/course/{{ c.courseID }}" class="btn btn-primary btn-elevated">View</a
+              ><button class="btn btn-warning btn-elevated" (click)="cancel(c.courseID)">
                 Cancel
               </button>
             </div>
@@ -50,7 +50,7 @@
       </div>
     </div>
 
-    <h3>My Active Projects</h3>
+    <h3 class="box-head">My Active Projects</h3>
     <hr />
     <div class="alert alert-danger" *ngIf="projects?.length <= 0">
       You are not assigned any projects.
@@ -74,14 +74,14 @@
   </div>
 
   <div *ngSwitchCase="instructor" id="dashboard">
-    <h2>Dashboard</h2>
+    <h2 class="dashboard-head">Dashboard</h2>
     <!-- <a href="/instructor-reports" class="btn btn-success btn-elevated">Reports</a> -->
     <app-navigation></app-navigation>
 
     <div>
       <h3 class="h3-inline">Courses</h3>
       <!-- This class will make the below button come next to it so they are on one line -->
-      <a href="/create-course" class="btn btn-success btn-elevated"
+      <a href="/create-course" class="btn btn-primary btn-elevated"
         >Create New Course</a
       >
     </div>
@@ -105,17 +105,18 @@
       </div>
     </div>
     <!--  -->
-    <h3 *ngIf="courses.length > 0">Pending Requests to Courses</h3>
+    <h3 *ngIf="courses.length > 0" class="box-head">Pending Requests to Courses</h3>
+    <hr />
     <div class="alert alert-danger" *ngIf="PendInstrCourses?.length <= 0">
       No Pending Requests
     </div>
     <table class="table table-hover" *ngIf="PendInstrCourses.length > 0">
       <thead>
         <tr>
-          <th>Course Name</th>
-          <th>Student</th>
-          <th>Description</th>
-          <th></th>
+          <th class="table-head">Course Name</th>
+          <th class="table-head">Student</th>
+          <th class="table-head">Description</th>
+          <th class="table-head"></th>
         </tr>
       </thead>
       <tbody>

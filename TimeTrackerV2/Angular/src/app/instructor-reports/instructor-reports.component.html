@@ -1,7 +1,7 @@
 <div class="form-inline mb-3">
-    <form class="form-inline mb-3" (ngSubmit)="searchStudents()">
-        <input class="form-control mr-3" [(ngModel)]="studentSearchQuery" name="studentSearchQuery" type="text" placeholder="Search Students" aria-label="Search">
-        <button class="btn btn-primary" type="submit">Search</button>
+    <form class="mr-3" (ngSubmit)="searchStudents()">
+        <input class="form-control mr-3 search-students" [(ngModel)]="studentSearchQuery" name="studentSearchQuery" type="text" placeholder="Search Students" aria-label="Search">
+        <button class="btn btn-primary btn-elevated search-students" type="submit">Search</button>
     </form>
 </div>
 
@@ -9,7 +9,7 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>All Students</th>
+            <th class="table-head">All Students</th>
         </tr>
         </thead>
         <tbody>
@@ -52,7 +52,7 @@
     <table class="table table-hover">
         <thead>
         <tr>
-            <th>Searched Students</th>
+            <th class="table-head">Searched Students</th>
         </tr>
         </thead>
         <tbody>

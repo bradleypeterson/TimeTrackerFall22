@@ -1,10 +1,10 @@
 <div id="course">
-  <h2>{{course.courseName}}
+  <h2 class="course-head">{{course.courseName}}
     <div [ngSwitch]="true">
       <div *ngSwitchCase="instructor">
         <div class="btn-group">
-          <a href="/edit-course/{{course.courseID}}" class="btn btn-secondary">Edit</a>
-          <a href="/delete-course/{{course.courseID}}" class="btn btn-danger">Delete</a>
+          <a href="/edit-course/{{course.courseID}}" class="btn btn-secondary btn-elevated">Edit</a>
+          <a href="/delete-course/{{course.courseID}}" class="btn btn-danger btn-elevated">Delete</a>
         </div>
       </div>
     </div>
@@ -18,11 +18,11 @@
   <div class="form-inline mb-3">
     <form class="mr-3" (ngSubmit)="searchProjects()">
       <input class="form-control mr-3" [(ngModel)]="projectSearchQuery" name="projectSearchQuery" type="text" placeholder="Search Projects" aria-label="Search">
-      <button class="btn btn-primary" type="submit">Search</button>
+      <button class="btn btn-primary btn-elevated" type="submit">Search</button>
     </form>
     <div [ngSwitch]="true">
       <div *ngSwitchCase="instructor">
-        <a href="/create-project/{{course.courseID}}" class="btn btn-success">Create New Project</a>
+        <a href="/create-project/{{course.courseID}}" class="btn btn-success btn-elevated">Create New Project</a>
       </div>
     </div>
   </div>
@@ -33,18 +33,18 @@
         <table class="table table-hover">
           <thead>
             <tr>
-              <th>Searched Projects</th>
-              <th>Description</th>
-              <th></th>
+              <th class="table-head">Searched Projects</th>
+              <th class="table-head">Description</th>
+              <th class="table-head"></th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let p of filteredProjects">
               <td>{{ p.projectName }}</td>
-              <td>{{ p.description }}</td>
+              <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View</a>
                 </div>
               </td>
             </tr>
@@ -55,18 +55,18 @@
         <table class="table table-hover">
           <thead>
             <tr>
-              <th>All Projects</th>
-              <th>Description</th>
-              <th></th>
+              <th class="table-head">All Projects</th>
+              <th class="table-head">Description</th>
+              <th class="table-head"></th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let p of projects">
               <td>{{ p.projectName }}</td>
-              <td>{{ p.description }}</td>
+              <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View</a>
                 </div>
               </td>
             </tr>
@@ -83,30 +83,30 @@
         <table class="table table-hover">
           <thead>
             <tr>
-              <th>Searched Projects</th>
-              <th>Description</th>
-              <th></th>
+              <th class="table-head">Searched Projects</th>
+              <th class="table-head">Description</th>
+              <th class="table-head"></th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let p of allUserFilteredProjects">
               <td>{{ p.projectName }}</td>
-              <td>{{ p.description }}</td>
+              <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
-                  <button class="btn btn-danger" (click)="leave(p.projectID)">Leave</button>
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View</a>
+                  <button class="btn btn-danger btn-elevated" (click)="leave(p.projectID)">Leave</button>
                 </div>
               </td>
             </tr>
   
             <tr *ngFor="let p of nonUserFilteredProjects">
               <td>{{ p.projectName }}</td>
-              <td>{{ p.description }}</td>
+              <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
-                  <button class="btn btn-success" (click)="join(p.projectID)">Join</button>
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View</a>
+                  <button class="btn btn-success btn-elevated" (click)="join(p.projectID)">Join</button>
                 </div>
               </td>
             </tr>
@@ -117,30 +117,30 @@
         <table class="table table-hover">
           <thead>
             <tr>
-              <th>All Projects</th>
-              <th>Description</th>
-              <th></th>
+              <th class="table-head">All Projects</th>
+              <th class="table-head">Description</th>
+              <th class="table-head"></th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let p of allUserGroups">
               <td>{{ p.projectName }}</td>
-              <td>{{ p.description }}</td>
+              <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
-                  <button class="btn btn-danger" (click)="leave(p.projectID)" *ngIf="p.isActive">Leave</button>
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View</a>
+                  <button class="btn btn-danger btn-elevated" (click)="leave(p.projectID)" *ngIf="p.isActive">Leave</button>
                 </div>
               </td>
             </tr>
   
             <tr *ngFor="let p of nonUserGroups">
               <td>{{ p.projectName }}</td>
-              <td>{{ p.description }}</td>
+              <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
-                  <button class="btn btn-success" (click)="join(p.projectID)" *ngIf="p.isActive">Join</button>
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View</a>
+                  <button class="btn btn-success btn-elevated" (click)="join(p.projectID)" *ngIf="p.isActive">Join</button>
                 </div>
               </td>
             </tr>

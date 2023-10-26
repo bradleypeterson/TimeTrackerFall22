@@ -1,6 +1,6 @@
 <!-- ng-cloak && user.type == student-->
 <div id="courses">
-  <h2>Courses</h2>
+  <h2 class="course-head">Courses</h2>
   <hr />
 
   <!-- ng-model="search" ??? -->
@@ -13,7 +13,7 @@
       placeholder="Search"
       aria-label="Search"
     />
-    <button class="btn btn-primary" type="submit">Search</button>
+    <button class="btn btn-primary btn-elevated" type="submit">Search</button>
   </form>
   <div
     class="alert alert-danger"
@@ -31,7 +31,7 @@
       allUserFilteredCourses?.length > 0 || nonUserFilteredCourses?.length > 0
     "
   >
-    <h3>Searched Courses</h3>
+    <h3 class="sub-head">Searched Courses</h3>
     <!-- <div
       class="alert alert-danger"
       *ngIf="
@@ -44,21 +44,21 @@
     <table class="table table-hover">
       <thead>
         <tr>
-          <th>Course Name</th>
-          <th>Instructor</th>
-          <th>Description</th>
-          <th></th>
+          <th class="table-head">Course Name</th>
+          <th class="table-head">Instructor</th>
+          <th class="table-head">Description</th>
+          <th class="table-head"></th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let c of allUserFilteredCourses">
           <td>{{ c.courseName }}</td>
           <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
-          <td>{{ c.description }}</td>
+          <td class="desc">{{ c.description }}</td>
           <td>
             <div class="btn-group float-right">
-              <a href="/course/{{ c.courseID }}" class="btn btn-primary">View</a
-              ><button class="btn btn-danger" (click)="drop(c.courseID)">
+              <a href="/course/{{ c.courseID }}" class="btn btn-primary btn-elevated">View</a
+              ><button class="btn btn-danger btn-elevated" (click)="drop(c.courseID)">
                 Drop
               </button>
             </div>
@@ -67,12 +67,12 @@
         <tr *ngFor="let c of nonUserFilteredCourses">
           <td>{{ c.courseName }}</td>
           <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
-          <td>{{ c.description }}</td>
+          <td class="desc">{{ c.description }}</td>
           <td>
             <div class="btn-group float-right">
-              <a href="/course/{{ c.courseID }}" class="btn btn-primary">View</a
+              <a href="/course/{{ c.courseID }}" class="btn btn-primary btn-elevated">View</a
               ><button
-                class="btn btn-success float-right"
+                class="btn btn-success float-right btn-elevated"
                 (click)="register(c.courseID)"
               >
                 Register
@@ -84,25 +84,25 @@
     </table>
   </div>
   <!---->
-  <h3 *ngIf="PendUserCourses.length > 0">Pending Courses</h3>
+  <h3 *ngIf="PendUserCourses.length > 0" class="sub-head">Pending Courses</h3>
   <table class="table table-hover" *ngIf="PendUserCourses.length > 0">
     <thead>
       <tr>
-        <th>Course Name</th>
-        <th>Instructor</th>
-        <th>Description</th>
-        <th></th>
+        <th class="table-head">Course Name</th>
+        <th class="table-head">Instructor</th>
+        <th class="table-head">Description</th>
+        <th class="table-head"></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let c of PendUserCourses">
         <td>{{ c.courseName }}</td>
         <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
-        <td>{{ c.description }}</td>
+        <td class="desc">{{ c.description }}</td>
         <td>
           <div class="btn-group float-right">
-            <a href="/course/{{ c.courseID }}" class="btn btn-primary">View</a
-            ><button class="btn btn-warning" (click)="cancel(c.courseID)">
+            <a href="/course/{{ c.courseID }}" class="btn btn-primary btn-elevated">View</a
+            ><button class="btn btn-warning btn-elevated" (click)="cancel(c.courseID)">
               Cancel
             </button>
           </div>
@@ -111,25 +111,25 @@
     </tbody>
   </table>
   <!---->
-  <h3>Student Courses</h3>
+  <h3 class="sub-head">Student Courses</h3>
   <table class="table table-hover">
     <thead>
       <tr>
-        <th>Course Name</th>
-        <th>Instructor</th>
-        <th>Description</th>
-        <th></th>
+        <th class="table-head">Course Name</th>
+        <th class="table-head">Instructor</th>
+        <th class="table-head">Description</th>
+        <th class="table-head"></th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let c of allUserCourses">
         <td>{{ c.courseName }}</td>
         <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
-        <td>{{ c.description }}</td>
+        <td class="desc">{{ c.description }}</td>
         <td>
           <div class="btn-group float-right">
-            <a href="/course/{{ c.courseID }}" class="btn btn-primary">View</a
-            ><button class="btn btn-danger" (click)="drop(c.courseID)">
+            <a href="/course/{{ c.courseID }}" class="btn btn-primary btn-elevated">View</a
+            ><button class="btn btn-danger btn-elevated" (click)="drop(c.courseID)">
               Drop
             </button>
           </div>
@@ -138,14 +138,14 @@
     </tbody>
   </table>
 
-  <h3>Register for Courses</h3>
+  <h3 class="sub-head">Register for Courses</h3>
   <table class="table table-hover">
     <thead>
       <tr>
-        <th>Course Name</th>
-        <th>Instructor</th>
-        <th>Description</th>
-        <th></th>
+        <th class="table-head">Course Name</th>
+        <th class="table-head">Instructor</th>
+        <th class="table-head">Description</th>
+        <th class="table-head"></th>
       </tr>
     </thead>
     <tbody>
@@ -153,12 +153,12 @@
       <tr *ngFor="let c of nonUserCourses">
         <td>{{ c.courseName }}</td>
         <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
-        <td>{{ c.description }}</td>
+        <td class="desc">{{ c.description }}</td>
         <td>
           <div class="btn-group float-right">
-            <a href="/course/{{ c.courseID }}" class="btn btn-primary">View</a
+            <a href="/course/{{ c.courseID }}" class="btn btn-primary btn-elevated">View</a
             ><button
-              class="btn btn-success float-right"
+              class="btn btn-success float-right btn-elevated"
               (click)="register(c.courseID)"
             >
               Register
