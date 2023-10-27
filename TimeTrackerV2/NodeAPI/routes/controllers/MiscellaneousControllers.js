@@ -1,6 +1,6 @@
-const sqlite3 = require('sqlite3').verbose();
+const ConnectToDB = require('../../database/DBConnection');
 
-const db = new sqlite3.Database('./database/main.db');
+let db = ConnectToDB();
 
 exports.CreateNewGroup = async (req, res, next) => {
     console.log("MiscellaneousControllers.js file/CreateNewGroup route called");

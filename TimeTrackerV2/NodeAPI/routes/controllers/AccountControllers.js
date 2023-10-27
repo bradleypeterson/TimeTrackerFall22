@@ -1,7 +1,7 @@
-const sqlite3 = require('sqlite3').verbose();
 const crypto = require('crypto');
+const ConnectToDB = require('../../database/DBConnection');
 
-const db = new sqlite3.Database('./database/main.db');
+let db = ConnectToDB();
 
 exports.Register = async (req, res, next) => {
 	console.log("AccountControllers.js file/Register route called");

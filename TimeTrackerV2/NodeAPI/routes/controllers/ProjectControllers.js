@@ -1,8 +1,7 @@
 const { json } = require('body-parser');
+const ConnectToDB = require('../../database/DBConnection');
 
-const sqlite3 = require('sqlite3').verbose();
-
-const db = new sqlite3.Database('./database/main.db');
+let db = ConnectToDB();
 
 exports.GetProjectInfo = (req, res) => {
     console.log("ProjectControllers.js file/GetProjectInfo route called");
