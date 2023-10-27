@@ -5,7 +5,7 @@ const ConnectToDB = () => {
     let db = new sqlite3.Database('./database/main.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (err) => {
         if (err) {
             console.error(err.message);
-            application.quit(1);
+            process.exit(1);  //documentation can be found here for this function https://nodejs.org/api/process.html#process_process_exit_code
         }
     });
 
@@ -14,4 +14,4 @@ const ConnectToDB = () => {
     return db;  // Return the connection to the calling function
 };
 
-module.exports = ConnectToDB;
+module.exports = ConnectToDB;  //export the constant "ConnectToDB" so that we can make use of it outside this file
