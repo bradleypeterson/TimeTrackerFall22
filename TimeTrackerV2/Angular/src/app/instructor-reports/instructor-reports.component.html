@@ -29,7 +29,7 @@
                             <div *ngIf="project.name !== null">
                                 <h5>{{ project.name }} </h5>
                                 <p>&emsp;Total time: {{ project.totalTime | totalTimePipe }}</p>
-                                <button class="btn btn-primary" (click)="SeeTimeLogs(studentReport.id, project.id)">View detailed report</button>
+                                <button class="btn btn-primary btn-elevated" (click)="SeeTimeLogs(studentReport.id, project.id)">View detailed report</button>
                             </div>
                             <div *ngIf="project.name === null">
                                 <p>This user has not been assigned to any project(s) yet</p>
