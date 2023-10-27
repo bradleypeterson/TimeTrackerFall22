@@ -1,7 +1,7 @@
 /* give the card a hover effect */
 .card {
   transition: all 0.1s ease-in-out;
-  background-color: lightgray;
+  background-color: #f2f2f2;
 }
 
 .table-head {
@@ -54,15 +54,11 @@
   background-color: #6e4097;
 }
 
-.dashboard-head {
-  text-shadow: 0 2px 2px #492365;
-}
-
 .box-head {
   color: white;
   letter-spacing: 3px;
   /* box behind text */
   display: inline-block;
-  box-shadow: -10px 10px 0 #492365;
+  box-shadow: -8px 8px 2px #492365;
   background-color: #6e4097;
 }
