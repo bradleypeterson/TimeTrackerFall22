@@ -125,9 +125,9 @@ exports.DeleteAccount = async (req, res, next) => {
     console.log("userID: " + userID);
 
     let sql = `DELETE FROM Users
-    WHERE userID = ${userID}`;
+    WHERE userID = ?`;
 
-    db.run(sql, [], (err, value) => {
+    db.run(sql, [userID], (err, value) => {
 		if (err) {
 			console.log(err);
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });

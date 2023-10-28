@@ -3,27 +3,27 @@ const ConnectToDB = require('../../database/DBConnection');
 let db = ConnectToDB();
 
 exports.GetReportsData = (req, res) => {
-    console.log("TimeCardControllers.js file/GetTotalTimeForAllUsersInCourse route called");
+    console.log("TimeCardControllers.js file/GetReportsData route called");
 
     let courseID = req.params["courseID"];
     console.log("courseID: " + courseID);
 
-    // This sql statement is intended to select all students that are part of a course and will at the same time, grabs all the projects they are been a part of, even if they are not have any time cards for them.  Such as when they have just joined course, they would not be assigned to a project yet to make a time card.
+    // This sql statement is intended to select all students that are part of a course and will at the same time, grabs all the projects they are a part of, even if they are not have any time cards for them.  Such as when they have just joined the course, they would not be assigned to a project yet to make a time card.
     let sql = `SELECT u.userID, u.firstName || " " || u.lastName AS studentName, p.projectID, p.projectName, SUM(tc.timeOut - tc.timeIn) AS totalTime
     -- Joins to get the students and courses for the students
     FROM Users u
     INNER JOIN Course_Users cu ON cu.userID = u.userID
     INNER JOIN Courses c ON c.courseID = cu.courseID
     -- Joins to grab the time cards and projects for the students
-    LEFT OUTER JOIN Project_Users pu ON pu.userID = u.userID  -- Grab the connections to the projects the user is assigned to, but if they are not connected to any projects, return null.  An issue occurs here, what if the user is part of a group and has made some timecards, but then they are voted out or they leave, this would make it so that the name of the project would be null, thus not display the project to the user.  Need to find some solution to fix this or leave it and leave it so it only displays all the projects that the user is currently in.
+    LEFT OUTER JOIN Project_Users pu ON pu.userID = u.userID  -- Grab the connections to the projects the user is assigned to, but if they are not connected to any projects, return null.  An issue occurs here, what if the user is part of a group and has made some timecards, but then they are voted out or they leave, this would make it so that the name of the project would be null, thus not display the project to the user.  Need to find some solution to fix this or leave it so it only displays all the projects that the user is currently in.
     LEFT OUTER JOIN Projects p ON p.projectID = pu.projectID  -- Grab all the projects the user has worked on, but if they have not part of the project, return null.
     LEFT OUTER JOIN TimeCard tc ON tc.userID = u.userID AND tc.projectID = p.projectID  -- Grab all the time cards that the user has made for the project, but if the user has not made any time cards, return null.
     -- Sort/Organize the data
-    WHERE c.courseID = ${courseID}
+    WHERE c.courseID = ?
     GROUP BY u.userID, studentName, p.projectName
     ORDER BY studentName, p.projectName`;
 
-    db.all(sql, [], (err, rows) => {
+    db.all(sql, [courseID], (err, rows) => {
         if (err) {
             console.log(err);
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
@@ -105,9 +105,9 @@ exports.GetAllTimeCardsForUser = (req, res) => {
 
     let sql = `SELECT timeIn, timeOut, description
 		FROM TimeCard
-        WHERE userID = ${userID}`;
+        WHERE userID = ?`;
 
-    db.all(sql, [], (err, rows) => {
+    db.all(sql, [userID], (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
@@ -164,22 +164,30 @@ exports.SaveTimeCard = async (req, res, next) => {
 
     let countSQL = `SELECT COUNT(timeslotID) AS manualEntryCountForToday
         FROM TimeCard
-        WHERE userID = ${userID} AND isManualEntry = ${true ? 1 : 0} AND timeCardCreation BETWEEN ${LNMidnight.getTime()} AND ${TNMidnight.getTime()}`;  // We have to format the isManualEntry this way because the DB stores it as 1 for true and 0 for false
+        WHERE userID = ? AND isManualEntry = ? AND timeCardCreation BETWEEN ? AND ?`;  
 
-    db.all(countSQL, [], (err, result) => {
+    // Can't use dictionaries for queries so order matters!
+    let selectData = [];
+    selectData[0] = userID;
+    selectData[1] = true ? 1 : 0;  // We have to format this entry this way because the DB stores it as 1 for true and 0 for false
+    selectData[2] = LNMidnight.getTime();
+    selectData[3] = TNMidnight.getTime();
+
+    db.all(countSQL, selectData, (err, row) => {
         if (err) {
+            console.log(err);
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
         else {
-            console.log(`Manual created today for the userID ${userID}: ${result[0].manualEntryCountForToday} ${result[0].manualEntryCountForToday >= 5 ? " LIMIT REACHED" : ""}`);
+            console.log(`Manual created today for the userID ${userID}: ${row[0].manualEntryCountForToday} ${row[0].manualEntryCountForToday >= 5 ? " LIMIT REACHED" : ""}`);
             // If they have reached the 5 manual entries for the day
-            if (result[0].manualEntryCountForToday >= 5) {
+            if (row[0].manualEntryCountForToday >= 5) {
                 return res.status(429).json({ message: 'You have reached your limit for manual time card submissions for today.\nIf you wish to add more, contact your instructor.' });  // HTTP status 429 is for "Too Many Requests".  If you want a list of HTTP requests, look in this link https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
             }
             // They have not reached the 5 manual entries for the day, enter the timecard to the DB
             else {
                 let insertData = [];
-                insertData[0] = currentDate.getTime();  // getTime() returns the date in the number of milliseconds since midnight, January 1, 1970 UTC, which is what is stored in the DB.
+                insertData[0] = currentDate
                 insertData[1] = req.body["isManualEntry"];
                 insertData[2] = req.body["timeIn"];
                 insertData[3] = req.body["timeOut"];
@@ -191,7 +199,7 @@ exports.SaveTimeCard = async (req, res, next) => {
                 db.run(`INSERT INTO TimeCard(timeCardCreation, isManualEntry, timeIn, timeOut, isEdited, userID, description, projectID)
                     VALUES(?, ?, ?, ?, ?, ?, ?, ?)`, insertData, function (err, value) {
                     if (err) {
-                        console.log(err)
+                        console.log(err);
                         return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
                     }
                     else {

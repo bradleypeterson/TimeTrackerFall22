@@ -10,9 +10,9 @@ exports.GetUserInfo = (req, res) => {
 
     let sql = `SELECT firstName, lastName, type, isActive
         FROM Users
-        WHERE userID = ${userID}`;
+        WHERE userID = ?`;
 
-    db.get(sql, [], (err, rows) => {
+    db.get(sql, [userID], (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
@@ -92,9 +92,9 @@ exports.GetCoursesRegisteredFor = (req, res) => {
     let sql = `SELECT c.courseID, c.courseName, c.description, u.firstname, u.lastName
         from Courses c
         JOIN Course_Users cu ON cu.courseID = c.courseID
-        JOIN Users u on u.userID = c.instructorID AND cu.userID = ${userID}`;
+        JOIN Users u on u.userID = c.instructorID AND cu.userID = ?`;
 
-    db.all(sql, [], (err, rows) => {
+    db.all(sql, [userID], (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
@@ -124,22 +124,22 @@ exports.GetCoursesNotRegisteredFor = (req, res) => {
     let userID = req.params["userId"];
     console.log("userID: " + userID)
 
-    let sql = `SELECT c.courseID, c.courseName, c.description, u.firstname, u.lastname
+    let sql = `SELECT c.courseID, c.courseName, c.description, u.firstName, u.lastName
         FROM Courses c
         JOIN Users u ON u.userID = c.instructorID 
         WHERE c.courseID NOT IN (
             -- Subquery to get courses the user is already registered for
             SELECT c.courseID
             FROM Courses c
-            JOIN Course_Users cu ON cu.courseID = c.courseID AND cu.userID = ${userID}
+            JOIN Course_Users cu ON cu.courseID = c.courseID AND cu.userID = ?
             UNION
             -- Subquery to get courses the user has pending registrations for
             SELECT pcu.courseID
             FROM Pend_Course_Users pcu 
-            WHERE pcu.userID = ${userID}
+            WHERE pcu.userID = ?
         )`;
 
-    db.all(sql, [], (err, rows) => {
+    db.all(sql, [userID, userID], (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
@@ -148,8 +148,8 @@ exports.GetCoursesNotRegisteredFor = (req, res) => {
                 rowData.push({
                     courseID: row.courseID,
                     courseName: row.courseName,
-                    instructorFN: row.firstName, // It seems there's a typo here, it should be 'row.firstname' to match the SQL query.
-                    instructorLN: row.lastName, // Same here, it should be 'row.lastname'.
+                    instructorFN: row.firstName,
+                    instructorLN: row.lastName,
                     description: row.description
                 });
             });
@@ -169,9 +169,9 @@ exports.GetCoursesPendCourses = (req, res) => {
     let sql = `SELECT c.courseID, c.courseName, c.description, u.firstname, u.lastName
         from Courses c
         JOIN Pend_Course_Users pcu ON pcu.courseID = c.courseID
-        JOIN Users u on u.userID = c.instructorID AND pcu.userID = ${userID}`;
+        JOIN Users u on u.userID = c.instructorID AND pcu.userID = ?`;
 
-    db.all(sql, [], (err, rows) => {
+    db.all(sql, [userID], (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
@@ -233,13 +233,13 @@ exports.DropCourse = async (req, res, next) => {
     console.log("UsersControllers.js file/DropCourse route called");
 
     let data = [];
-    data[0] = req.body["userID"];
-    data[1] = req.body["courseID"];
+    data[0] = req.body["courseID"];
+    data[1] = req.body["userID"];
 
     let sql = `delete from Course_Users
-        where courseID = ${data[1]} and userID = ${data[0]};`;
+        where courseID = ? and userID = ?;`;
 
-    db.run(sql, function (err, value) {
+    db.run(sql, data, function (err, value) {
         if (err) {
             console.log(err)
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
@@ -255,13 +255,13 @@ exports.RemovePendUser = async (req, res, next) => {
     console.log("UsersControllers.js file/removePendUser route called");
 
     let data = [];
-    data[0] = req.body["userID"];
-    data[1] = req.body["courseID"];
+    data[0] = req.body["courseID"];
+    data[1] = req.body["userID"];
 
     let sql = `delete from Pend_Course_Users
-        where courseID = ${data[1]} and userID = ${data[0]};`;
+        where courseID = ? and userID = ?;`;
 
-    db.run(sql, function (err, value) {
+    db.run(sql, data, function (err, value) {
         if (err) {
             console.log(err)
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
@@ -319,14 +319,12 @@ exports.EditCourse = async (req, res, next) => {
 exports.DeleteCourse = async (req, res, next) => {
     console.log("UsersControllers.js file/DeleteCourse route called");
 
-    db.get("PRAGMA foreign_keys = ON");
-
     let courseID = req.body["courseID"];
 
-    let sql = `delete from Courses
-    where courseID = ${courseID};`;
+    let sql = `DELETE FROM Courses
+    WHERE courseID = ?;`;
 
-    db.run(sql, function (err, value) {
+    db.run(sql, [courseID], function (err, value) {
         if (err) {
             console.log(err);
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
@@ -381,14 +379,12 @@ exports.EditProject = async (req, res, next) => {
 exports.DeleteProject = async (req, res, next) => {
     console.log("UsersControllers.js file/DeleteProject route called");
 
-    db.get("PRAGMA foreign_keys = ON");
-
     let projectID = req.body["projectID"];
 
-    let sql = `delete from Projects
-            where projectID = ${projectID};`;
+    let sql = `DELETE FROM Projects
+            WHERE projectID = ?;`;
 
-    db.run(sql, function (err, value) {
+    db.run(sql, [projectID], function (err, value) {
         if (err) {
             console.log(err)
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
@@ -449,10 +445,10 @@ exports.GetPendInstrCourses = (req, res) => {
 //         JOIN Pend_Course_Users pcu ON pcu.courseID = c.courseID
 //         JOIN Users instr ON instr.userID = c.instructorID
 //         JOIN Users user ON user.userID = pcu.userID
-//         WHERE instr.userID = ${userID}`;
+//         WHERE instr.userID = ?`;
 
 
-//     db.all(sql, [], (err, rows) => {
+//     db.all(sql, [userID], (err, rows) => {
 //         if (err) {
 //             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 //         }

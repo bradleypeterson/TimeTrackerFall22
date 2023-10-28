@@ -11,9 +11,9 @@ exports.GetProjectInfo = (req, res) => {
 
     let sql = `SELECT projectName, isActive, courseID, description
     FROM Projects
-    WHERE projectID = ${projectID}`;
+    WHERE projectID = ?`;
 
-    db.get(sql, [], (err, rows) => {
+    db.get(sql, [projectID], (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
@@ -65,9 +65,9 @@ exports.GetUserTimesForProject = (req, res) => {
         FROM Users as u
         INNER JOIN Project_Users as pu ON u.userID = pu.userID
         LEFT JOIN TimeCard as t ON u.userID = t.userID
-        WHERE t.projectID = ${projectID}`;
+        WHERE t.projectID = ?`;
 
-    db.all(sql, [], (err, rows) => {
+    db.all(sql, [projectID], (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
@@ -107,9 +107,9 @@ exports.GetUserProjectsForCourse = (req, res) => {
     let sql = `SELECT DISTINCT p.projectName, p.projectID, p.description, p.isActive
         FROM Projects p
         INNER JOIN Project_Users pu ON p.projectID = pu.projectID
-        WHERE p.courseID = ${courseID} AND pu.userID = ${userID}`;
+        WHERE p.courseID = ? AND pu.userID = ?`;
 
-    db.all(sql, [], (err, rows) => {
+    db.all(sql, [courseID, userID], (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
@@ -127,14 +127,14 @@ exports.GetNonUserProjectsForCourse = (req, res) => {
 
     let sql = `SELECT DISTINCT p.projectName, p.projectID, p.description, p.isActive
         FROM Projects p
-        WHERE p.courseID = ${courseID} AND p.projectID not in (
+        WHERE p.courseID = ? AND p.projectID not in (
             SELECT p.projectID
             FROM Projects p
             INNER JOIN Project_Users pu ON p.projectID = pu.projectID
-            WHERE pu.userID = ${userID}
+            WHERE pu.userID = ?
             )`;
 
-    db.all(sql, [], (err, rows) => {
+    db.all(sql, [courseID, userID], (err, rows) => {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
@@ -144,7 +144,7 @@ exports.GetNonUserProjectsForCourse = (req, res) => {
     });
 }
 
-exports.JoinGroup = async (req, res, next) => {
+exports.JoinGroup = async (req, res) => {
     console.log("ProjectControllers.js file/JoinGroup route called");
 
     let data = [];
@@ -152,7 +152,7 @@ exports.JoinGroup = async (req, res, next) => {
     data[1] = req.body["projectID"];
 
     db.run(`INSERT INTO Project_Users(userID, projectID)
-        VALUES(?, ?)`, data, function (err, value) {
+        VALUES(?, ?)`, data, function (err) {
         if (err) {
             console.log(err)
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
@@ -163,17 +163,17 @@ exports.JoinGroup = async (req, res, next) => {
     });
 }
 
-exports.LeaveGroup = async (req, res, next) => {
+exports.LeaveGroup = async (req, res) => {
     console.log("ProjectControllers.js file/LeaveGroup route called");
 
     let data = [];
-    data[0] = req.body["userID"];
-    data[1] = req.body["projectID"];
+    data[0] = req.body["projectID"];
+    data[1] = req.body["userID"];
 
     let sql = `delete from Project_Users
-        where projectID = ${data[1]} and userID = ${data[0]};`;
+        where projectID = ? and userID = ?;`;
 
-    db.run(sql, function (err, value) {
+    db.run(sql, data, function (err) {
         if (err) {
             console.log(err)
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
@@ -218,10 +218,10 @@ exports.GetAllStudentsNotInProject = (req, res) => {
         WHERE p.projectID = ? AND u.userID not in (
             SELECT userID
             FROM Project_Users
-            WHERE projectID = ${projectID}
+            WHERE projectID = ?
         )`;
 
-	db.all(sql, [projectID], (err, rows) => {
+	db.all(sql, [projectID, projectID], (err, rows) => {
 		if (err) {
             console.log("Err reached");
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
