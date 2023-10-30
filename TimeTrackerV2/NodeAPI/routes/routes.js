@@ -7,6 +7,7 @@ const {
     Register,
     Login,
     DeleteAccount,
+    DefaultAdminAccountCreated,
 } = require("./controllers/AccountControllers")
 
 const {
@@ -72,6 +73,8 @@ router.post("/register", Register);
 router.post("/login", Login);
 
 router.delete("/deleteAccount", DeleteAccount);
+
+router.get("/defaultAdminCreated", DefaultAdminAccountCreated);
 //#endregion
 
 //#region Course routes

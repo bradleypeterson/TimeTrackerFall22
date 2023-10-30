@@ -1,7 +1,9 @@
+var localStorage = require('node-localstorage').LocalStorage;
 const crypto = require('crypto');
 const ConnectToDB = require('../../database/DBConnection');
 
 let db = ConnectToDB();
+localStorage = new localStorage('./scratch');
 
 exports.Register = async (req, res, next) => {
 	console.log("AccountControllers.js file/Register route called");
@@ -136,4 +138,19 @@ exports.DeleteAccount = async (req, res, next) => {
             return res.status(200).json({ message: 'The user has been deleted.' });
         }
 	});
+}
+
+exports.DefaultAdminAccountCreated = async (req, res, next) => {
+    console.log("AccountControllers.js file/DefaultAdminAccountCreated route called");
+
+    // The below variable is set in the seed.js file and if it is true, then the default admin account has been generated.
+    let defaultAdminCreatedAndNotViewed = JSON.parse(localStorage.getItem('defaultAdminCreatedAndNotViewed')) === true;
+
+    if(defaultAdminCreatedAndNotViewed) {
+        res.send(true);
+        localStorage.setItem('defaultAdminCreatedAndNotViewed', false);  //this will make it so that only the first person that uses this API call will see the message.
+    }
+    else {
+        res.send(false);
+    }
 }

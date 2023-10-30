@@ -1,6 +1,8 @@
+var localStorage = require('node-localstorage').LocalStorage;
 const ConnectToDB = require('./DBConnection');
 
 let db = ConnectToDB();
+localStorage = new localStorage('./scratch');
 
 //db.serialize();  // Serialize all following commands (not needed because we only need to serialize the Users and Profile tables and all actions attached to them) https://stackoverflow.com/questions/72620312/in-node-sqlite3-how-to-wait-until-run-is-finished
 
@@ -40,7 +42,21 @@ db.serialize(() => {
             FROM Users
             WHERE type = 'admin'
             LIMIT 1
-        );`);
+        );`, [], function (err) {  // Can' use a lambda function for some reason as described here https://github.com/TryGhost/node-sqlite3/issues/962 and as shown here https://medium.com/@codesprintpro/getting-started-sqlite3-with-nodejs-8ef387ad31c4#:~:text=without%20touching%20it.-,Executing%20run()%20Method,-All%20the%20above
+            if (err) {
+                console.log('The following error happened with the insert of the default admin.');
+                console.log(err);
+                localStorage.setItem('defaultAdminCreatedAndNotViewed', false);
+            }
+            // If the a row was inserted, then "this.lastID" returns the ID of the row it was inserted into.  And because any thing above 0 is considered true, set the variable "global.defaultAdminCreated" to true because the default admin account was inserted.
+            else if(this.lastID) {
+                console.log(`Default admin account created with an ID of: ${this.lastID}`);
+                localStorage.setItem('defaultAdminCreatedAndNotViewed', true);
+            }
+            else {
+                localStorage.setItem('defaultAdminCreatedAndNotViewed', false);
+            }
+        });
 });
 
 // Create the TimeCard table
