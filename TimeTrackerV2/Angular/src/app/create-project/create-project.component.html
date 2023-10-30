@@ -15,6 +15,7 @@
         </div>
 
         <div class="btn-group">
+                        <!-- The reason why we are checking every individual field instead of the form to see if it is valid is because the form is only validated when you submit it -->
             <button type="submit" class="btn btn-success" [disabled]="!(createProjectForm.controls.projectName.valid && createProjectForm.controls.description.valid)">Create project</button>
             <a href="/course/{{courseID}}" class="btn btn-danger">Cancel</a>
         </div>
