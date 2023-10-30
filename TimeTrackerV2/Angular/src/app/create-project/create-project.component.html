@@ -7,15 +7,15 @@
 
         <div class="form-group">
             <input id="projectName" formControlName="projectName" type="text" class="form-control" name="projectName"
-                placeholder="Project Name" ng-model="project.projectName">
+                placeholder="Project Name" ng-model="project.projectName" required>
         </div>
         <div class="form-group">
             <input id="description" formControlName="description" type="text" class="form-control" name="description"
-                placeholder="Project Description" ng-model="project.description">
+                placeholder="Project Description" ng-model="project.description" required>
         </div>
 
         <div class="btn-group">
-            <button type="submit" class="btn btn-success">Create project</button>
+            <button type="submit" class="btn btn-success" [disabled]="!(createProjectForm.controls.projectName.valid && createProjectForm.controls.description.valid)">Create project</button>
             <a href="/course/{{courseID}}" class="btn btn-danger">Cancel</a>
         </div>
     </form>
