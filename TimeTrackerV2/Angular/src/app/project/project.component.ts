@@ -142,7 +142,7 @@ export class ProjectComponent implements OnInit {
     }
 
     getActivities(): void {
-        this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/${this.projectId}/activities/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/${this.projectId}/activities/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 console.log(`Data returned from API call for the function getActivites()\n` + JSON.stringify(data));
@@ -210,7 +210,7 @@ export class ProjectComponent implements OnInit {
     }
 
     loadProjectUserTimes(): void {
-        this.http.get<any>(`http://localhost:8080/api/Projects/${this.projectId}/Users/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.get<any>(`https://localhost:8080/api/Projects/${this.projectId}/Users/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 console.log(`Data returned from API call for the function loadProjectUserTimes()\n` + JSON.stringify(data));
@@ -225,7 +225,7 @@ export class ProjectComponent implements OnInit {
     }
 
     loadProjectUsers(): void {
-        this.http.get<any>(`http://localhost:8080/api/AddToProject/${this.projectId}/InProject`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.get<any>(`https://localhost:8080/api/AddToProject/${this.projectId}/InProject`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 console.log(`Data returned from API call for the function loadProjectUsers()\n` + JSON.stringify(data));
@@ -270,7 +270,7 @@ export class ProjectComponent implements OnInit {
 
         console.log(JSON.stringify(req));  // For debugging
 
-        this.http.post<any>('http://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.post<any>('https://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 console.log(`contents of \"req.isEdited\":` + req.isEdited);
@@ -310,7 +310,7 @@ export class ProjectComponent implements OnInit {
 
         //console.log(JSON.stringify(req));  // For debugging
 
-        this.http.post<any>('http://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.post<any>('https://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 console.log(`contents of \"req.isEdited\":` + req.isEdited);
@@ -340,7 +340,7 @@ export class ProjectComponent implements OnInit {
         }
         console.log(`Payload is:` + payload);
 
-        this.http.post<any>('http://localhost:8080/api/createGroup/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.post<any>('https://localhost:8080/api/createGroup/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 localStorage.setItem('currentGroup', JSON.stringify(data['group']));

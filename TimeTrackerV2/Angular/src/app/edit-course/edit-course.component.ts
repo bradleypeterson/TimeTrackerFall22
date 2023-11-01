@@ -66,7 +66,7 @@ export class EditCourseComponent implements OnInit {
       courseID: this.courseID,
     }
 
-    this.http.post<any>('http://localhost:8080/api/editCourse/', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.post<any>('https://localhost:8080/api/editCourse/', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         console.log("data reached");
         this.errMsg = "";

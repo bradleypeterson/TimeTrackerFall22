@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
             password: this.checkoutForm.value['password'],
         }
 
-        this.http.post<any>('http://localhost:8080/api/login/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.post<any>('https://localhost:8080/api/login/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 localStorage.setItem('currentUser', JSON.stringify(data['user']));
@@ -56,7 +56,7 @@ export class LoginComponent implements OnInit {
     }
 
     defaultAdminCreated(): void {
-        this.http.get<any>('http://localhost:8080/api/defaultAdminCreated', { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.get<any>('https://localhost:8080/api/defaultAdminCreated', { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: defaultAdminCreated => {
                 this.errMsg = "";
                 if (defaultAdminCreated) {

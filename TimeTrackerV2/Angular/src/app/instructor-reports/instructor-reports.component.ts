@@ -75,7 +75,7 @@ export class InstructorReportsComponent implements OnInit {
     getStudentReports(courseID: number): StudentReport[] {
         let returnData: StudentReport[] = []
 
-        this.http.get(`http://localhost:8080/api/Course/${courseID}/GetReportsData`).subscribe((data: any) => {
+        this.http.get(`https://localhost:8080/api/Course/${courseID}/GetReportsData`).subscribe((data: any) => {
             // console.log("Data returned\n" + JSON.stringify(data));
 
             // for every entry in data

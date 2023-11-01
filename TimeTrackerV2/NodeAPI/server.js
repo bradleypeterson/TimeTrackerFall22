@@ -1,5 +1,8 @@
 const cors = require('cors');
 const express = require('express');
+const https = require('https');
+const path = require('path');
+const fs = require('fs');
 const ConnectToDB = require('./database/DBConnection');
 
 require('./database/seed.js'); //this runs the file seed.js to make the database if it doesn't exist
@@ -15,7 +18,7 @@ let db = ConnectToDB();
 // App
 const app = express();
 app.use(cors({
-    origin: "http://localhost:4200",  //added with professor (allows the supplied url to talk to the server)
+    origin: "http://localhost:4200",  // allows the supplied url to talk to the server
     credentials: true  // Allows credentials from the origin
 }));
 app.use(express.json({
@@ -36,7 +39,13 @@ app.get('/', (req, res) => {
 // using our routes we defined inside our "routes.js" file
 app.use("/api", ExternalRoutes);  //adds our custom http responses from the file specified for "ExternalRoutes"
 
-app.listen(PORT, () => {
-    console.log(`Running on http://localhost:${PORT}`);
+// We are using the readFileSync() because this information is vital for the server.  I.E. without these certificates, the server should not be started
+const sslServer = https.createServer({
+    key: fs.readFileSync(path.join(__dirname, 'certificates/key.pem')),  // __dirname = current directory.  And then grab the file key.pem located in the certificates folder
+    cert: fs.readFileSync(path.join(__dirname, 'certificates/cert.pem')),
+}, app);
+
+sslServer.listen(PORT, () => {
+    console.log(`Running on https://localhost:${PORT}`);
     if (db) { console.log('Connected to the main database.'); }
-});
+})

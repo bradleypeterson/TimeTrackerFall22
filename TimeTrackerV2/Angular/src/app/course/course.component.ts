@@ -87,7 +87,7 @@ export class CourseComponent implements OnInit {
   }
 
   loadProjects(): void {
-    this.http.get("http://localhost:8080/api/Projects/" + this.courseID).subscribe((data: any) => {
+    this.http.get("https://localhost:8080/api/Projects/" + this.courseID).subscribe((data: any) => {
       this.projects = data;
       if (this.projects) {
         localStorage.setItem("projects", JSON.stringify(this.projects));
@@ -96,7 +96,7 @@ export class CourseComponent implements OnInit {
   }
 
   loadAllUserGroups(): void {
-    this.http.get<any>(`http://localhost:8080/api/ProjectsForUser/${this.courseID}/${this.userID}/userGroups`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.get<any>(`https://localhost:8080/api/ProjectsForUser/${this.courseID}/${this.userID}/userGroups`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         // console.log(data);
@@ -112,7 +112,7 @@ export class CourseComponent implements OnInit {
   }
 
   loadNonUserGroups(): void {
-    this.http.get<any>(`http://localhost:8080/api/ProjectsForUser/${this.courseID}/${this.userID}/nonUserGroups`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.get<any>(`https://localhost:8080/api/ProjectsForUser/${this.courseID}/${this.userID}/nonUserGroups`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         // console.log(data);
@@ -133,7 +133,7 @@ export class CourseComponent implements OnInit {
       projectID: ProjectID
     };
 
-    this.http.post<any>('http://localhost:8080/api/joinGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.post<any>('https://localhost:8080/api/joinGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         this.loadPage();
@@ -150,7 +150,7 @@ export class CourseComponent implements OnInit {
       projectID: ProjectID
     };
 
-    this.http.post<any>('http://localhost:8080/api/leaveGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.post<any>('https://localhost:8080/api/leaveGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         this.loadPage();

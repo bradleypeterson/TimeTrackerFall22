@@ -49,7 +49,7 @@ export class DeleteProjectComponent implements OnInit {
       projectID: ProjectId
     };
 
-    this.http.post<any>('http://localhost:8080/api/deleteProject/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.post<any>('https://localhost:8080/api/deleteProject/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
       },

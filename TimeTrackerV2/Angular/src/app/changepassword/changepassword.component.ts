@@ -22,7 +22,7 @@ export class ChangePasswordComponent implements OnInit {
 
   public pageTitle = 'TimeTrackerV2 | Change Password'
 
-  this.http.post<any>('http://localhost:8080/changepassword/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+  this.http.post<any>('https://localhost:8080/changepassword/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
     next: data => {
       this.errMsg = "";
       localStorage.setItem('currentUser', JSON.stringify(data['user']));

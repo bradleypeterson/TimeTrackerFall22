@@ -65,7 +65,7 @@ export class AddStudentProjectComponent implements OnInit {
   }
 
   loadStudentsInProject(): void {
-    this.http.get<any>(`http://localhost:8080/api/AddToProject/${this.projectID}/InProject`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.get<any>(`https://localhost:8080/api/AddToProject/${this.projectID}/InProject`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
@@ -81,7 +81,7 @@ export class AddStudentProjectComponent implements OnInit {
   }
 
   loadStudentsNotInProject(): void {
-    this.http.get<any>(`http://localhost:8080/api/AddToProject/${this.projectID}/NotInProject`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.get<any>(`https://localhost:8080/api/AddToProject/${this.projectID}/NotInProject`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
@@ -102,7 +102,7 @@ export class AddStudentProjectComponent implements OnInit {
       projectID: this.projectID
     };
 
-    this.http.post<any>('http://localhost:8080/api/joinGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.post<any>('https://localhost:8080/api/joinGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         this.loadPage();
@@ -119,7 +119,7 @@ export class AddStudentProjectComponent implements OnInit {
       projectID: this.projectID
     };
 
-    this.http.post<any>('http://localhost:8080/api/leaveGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.post<any>('https://localhost:8080/api/leaveGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         this.loadPage();

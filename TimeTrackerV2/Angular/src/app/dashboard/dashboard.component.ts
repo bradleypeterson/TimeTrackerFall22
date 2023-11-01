@@ -64,7 +64,7 @@ export class DashboardComponent implements OnInit {
   public pageTitle = 'TimeTrackerV2 | Dashboard';
 
   loadProjects(): void {
-    this.http.get(`http://localhost:8080/api/ProjectsForUser/${this.userID}`).subscribe((data: any) => {
+    this.http.get(`https://localhost:8080/api/ProjectsForUser/${this.userID}`).subscribe((data: any) => {
       //console.log(data);
       this.projects = data;
       if (this.projects) {
@@ -76,7 +76,7 @@ export class DashboardComponent implements OnInit {
   loadCourses(): void {
     // attempt to pull only the courses the instructor has created
     if (this.instructor) {
-      var request = `http://localhost:8080/api/Courses/${this.userID}`;
+      var request = `https://localhost:8080/api/Courses/${this.userID}`;
       this.http.get(request).subscribe((data: any) => {
         console.log(data);
         this.courses = data;
@@ -88,7 +88,7 @@ export class DashboardComponent implements OnInit {
 
     // attempt to pull the courses that the student is registered for
     else if (this.student) {
-      var request = `http://localhost:8080/api/Users/${this.userID}/getUserCourses`
+      var request = `https://localhost:8080/api/Users/${this.userID}/getUserCourses`
       this.http.get(request).subscribe((data: any) => {
         console.log(data);
         this.courses = data;
@@ -100,7 +100,7 @@ export class DashboardComponent implements OnInit {
   }
 
   loadPenUserCourses(): void {
-    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/getCoursesPendCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/getCoursesPendCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
@@ -119,7 +119,7 @@ export class DashboardComponent implements OnInit {
       courseID: CourseId
     };
 
-    this.http.post<any>('http://localhost:8080/api/removePendUser/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.post<any>('https://localhost:8080/api/removePendUser/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         // Refresh the data on the page
@@ -139,7 +139,7 @@ export class DashboardComponent implements OnInit {
       courseID: CourseId
     };
 
-    this.http.post<any>('http://localhost:8080/api/removePendUser/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.post<any>('https://localhost:8080/api/removePendUser/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         // Refresh the data on the page
@@ -158,7 +158,7 @@ export class DashboardComponent implements OnInit {
 
 
   loadInstrPenUserCourses(): void {
-    this.http.get<any>(`http://localhost:8080/api/Users/${this.currentUser.userID}/getPendInstrCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/getPendInstrCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
@@ -181,7 +181,7 @@ export class DashboardComponent implements OnInit {
       courseID: CourseId
     };
 
-    this.http.post<any>('http://localhost:8080/api/addUserCourse/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.post<any>('https://localhost:8080/api/addUserCourse/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         this.cancelIns(CourseId, UserID);

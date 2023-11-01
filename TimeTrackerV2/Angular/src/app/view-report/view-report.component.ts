@@ -38,7 +38,7 @@ export class ViewReportComponent implements OnInit {
     GetUserInfo(): void {
         console.log(`Grabbing the user's info that has the userID of \"${this.sID}\"`);
 
-        this.http.get<any>(`http://localhost:8080/api/GetUserInfo/${this.sID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.get<any>(`https://localhost:8080/api/GetUserInfo/${this.sID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 this.studentName = `${data.firstName} ${data.lastName}`;
@@ -52,7 +52,7 @@ export class ViewReportComponent implements OnInit {
     GetProjectInfo(): void {
         console.log(`Grabbing the project's info that has the projectID of \"${this.pID}\"`);
 
-        this.http.get<any>(`http://localhost:8080/api/ProjectInfo/${this.pID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.get<any>(`https://localhost:8080/api/ProjectInfo/${this.pID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 this.projectName = data.projectName;
@@ -66,7 +66,7 @@ export class ViewReportComponent implements OnInit {
     GetDetailedReport(): void {
         console.log(`Finding the reports for the user with the id of \"${this.sID}\" for the project with the id of \"${this.pID}\"`);
 
-        this.http.get<any>(`http://localhost:8080/api/Users/${this.sID}/${this.pID}/activities/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.get<any>(`https://localhost:8080/api/Users/${this.sID}/${this.pID}/activities/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 this.timeTables = data;

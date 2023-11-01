@@ -55,7 +55,7 @@ export class UserProfileComponent {
   }
 
   loadProfile(): void {
-    this.http.get<any>(`http://localhost:8080/api/UserProfile/${this.profileID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.get<any>(`https://localhost:8080/api/UserProfile/${this.profileID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         this.userProfile = data;

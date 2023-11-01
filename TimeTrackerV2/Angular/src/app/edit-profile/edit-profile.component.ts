@@ -48,7 +48,7 @@ export class EditProfileComponent implements OnInit {
 
     console.log("onSubmit reached");
 
-    this.http.post<any>('http://localhost:8080/api/EditProfile', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.post<any>('https://localhost:8080/api/EditProfile', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
         console.log("data posted");
@@ -61,7 +61,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   loadProfile(): void {
-    this.http.get<any>(`http://localhost:8080/api/UserProfile/${this.userID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.get<any>(`https://localhost:8080/api/UserProfile/${this.userID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         this.profileData = data;
