@@ -18,7 +18,7 @@ let db = ConnectToDB();
 // App
 const app = express();
 app.use(cors({
-    origin: "http://localhost:4200",  // allows the supplied url to talk to the server
+    origin: "https://localhost:4200",  // allows the supplied url to talk to the server
     credentials: true  // Allows credentials from the origin
 }));
 app.use(express.json({

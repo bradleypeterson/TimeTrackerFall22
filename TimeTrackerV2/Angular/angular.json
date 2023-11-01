@@ -74,7 +74,12 @@
               "browserTarget": "TimeTrackerV2:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+                "ssl": true,
+                "sslKey": "certificates/key.pem",
+                "sslCert": "certificates/cert.pem"
+            }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
