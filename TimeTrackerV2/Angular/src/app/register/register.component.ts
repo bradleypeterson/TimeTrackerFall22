@@ -40,8 +40,6 @@ export class RegisterComponent implements OnInit {
       repeatPassword: this.registrationForm.value['repeatPassword'],
     }
 
-
-
     this.http.post<any>('https://localhost:8080/api/register/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";

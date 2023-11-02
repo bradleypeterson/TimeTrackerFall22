@@ -33,6 +33,11 @@ export class CreateProjectComponent implements OnInit {
   });
 
   onSubmit(): void {
+    // An extra check condition to prevent submission of the data unless for form is valid 
+    if (!this.createProjectForm.valid) {
+        return;
+    }
+
     let payload = {
       projectName: this.createProjectForm.value['projectName'],
       description: this.createProjectForm.value['description'],

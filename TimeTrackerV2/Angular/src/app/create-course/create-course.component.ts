@@ -36,6 +36,11 @@ export class CreateCourseComponent implements OnInit {
   });
 
   onSubmit(): void {
+    // An extra check condition to prevent submission of the data unless for form is valid 
+    if (!this.createCourseForm.valid) {
+        return;
+    }
+
     let payload = {
       courseName: this.createCourseForm.value['courseName'],
       description: this.createCourseForm.value['description'],

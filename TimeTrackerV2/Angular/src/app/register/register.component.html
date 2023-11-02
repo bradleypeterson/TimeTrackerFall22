@@ -1,5 +1,4 @@
 <div id="register" ng-cloak>
-
   <div class="row no-gutters">
     <div class="col"></div> <!-- Extra col div for some auto bootstrap centering -->
     <div class="card mt-5 col-10 col-sm-6 col-md-5 col-xl-3">
@@ -37,20 +36,14 @@
             <div class="input-group-prepend"><span class="input-group-text"
                 style="width:40px; border: none; border-top-left-radius: 0; border-bottom-left-radius: 0;"><i
                   class="fa fa-user" aria-hidden="true"></i></span></div>
-            <div class="col-md-4">
+            <div style="margin-left: 15px;">
               <div class="radio">
-                <label>
-                  Instructor
-                  <input id="type" formControlName="type" ng-model="type" type="radio" name="type" value="instructor"
-                    ng-value="'student'">
-                </label>
+                <input type="radio" id="instructor" name="type" value="instructor" formControlName="type" ng-model="type" ng-value="'student'">
+                <label for="instructor">&nbsp;Instructor</label><br>
               </div>
-              <div class="radio">
-                <label>
-                  Student
-                  <input id="type" formControlName="type" ng-model="type" type="radio" name="type" value="student"
-                    ng-value="'instructor'">
-                </label>
+              <div>
+                <input type="radio" id="student" name="type" value="student" formControlName="type" ng-model="type" ng-value="'instructor'">
+                <label for="student">&nbsp;Student</label>
               </div>
             </div>
           </div>
@@ -81,5 +74,4 @@
     </div>
     <div class="col"></div> <!-- Extra col div for some auto bootstrap centering -->
   </div>
-
 </div>

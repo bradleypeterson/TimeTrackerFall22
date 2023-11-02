@@ -29,8 +29,6 @@ import { DeleteProjectComponent } from './delete-project/delete-project.componen
 import { AddStudentProjectComponent } from './add-student-project/add-student-project.component';
 import { InstructorReportsComponent } from './instructor-reports/instructor-reports.component';
 
-
-
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'admin-evals', component: AdminEvalsComponent },
