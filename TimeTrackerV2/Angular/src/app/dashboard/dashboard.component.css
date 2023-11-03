@@ -16,32 +16,6 @@
   transform: scale(105%);
 }
 
-/* Elevated Button Styles */
-.btn-elevated {
-  font-style: normal;
-  border: 2px solid currentColor;
-  /* An outline using the text color */
-  box-shadow: 0 2px 8px #492365;
-  /* Initial shadow */
-  transition: all 0.3s ease;
-  /* For a smooth transition effect */
-
-  /* On hover, make the button lift slightly and change shadow */
-  &:hover {
-    transform: translateY(-2px);
-    /* Lift button slightly */
-    box-shadow: 0 3px 6px #492365;
-    background-color: #6e4097;
-    /* Increased shadow */
-  }
-
-  /* On active (click), push the button down a bit and adjust shadow */
-  &:active {
-    transform: translateY(1px);
-    box-shadow: 0 3px 6px #492365;
-  }
-}
-
 .h3-inline {
   vertical-align: middle;  /* To center the text inside the parent <></> https://stackoverflow.com/questions/31702017/moving-html-text-next-to-a-button */
   display: inline;  /* Makes the button after it move next to the text */
@@ -61,4 +35,8 @@
   display: inline-block;
   box-shadow: -8px 8px 2px #492365;
   background-color: #6e4097;
+}
+
+.btn-success {
+  margin-left: 20px;
 }

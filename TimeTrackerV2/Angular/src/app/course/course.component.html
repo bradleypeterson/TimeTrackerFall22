@@ -3,8 +3,8 @@
     <div [ngSwitch]="true">
       <div *ngSwitchCase="instructor">
         <div class="btn-group">
-          <a href="/edit-course/{{course.courseID}}" class="btn btn-secondary btn-elevated">Edit</a>
-          <a href="/delete-course/{{course.courseID}}" class="btn btn-danger btn-elevated">Delete</a>
+          <a href="/edit-course/{{course.courseID}}" class="btn btn-secondary">Edit</a>
+          <a href="/delete-course/{{course.courseID}}" class="btn btn-danger">Delete</a>
         </div>
       </div>
     </div>
@@ -22,7 +22,7 @@
     </form>
     <div [ngSwitch]="true">
       <div *ngSwitchCase="instructor">
-        <a href="/create-project/{{course.courseID}}" class="btn btn-success btn-elevated">Create New Project</a>
+        <a href="/create-project/{{course.courseID}}" class="btn btn-success">Create New Project</a>
       </div>
     </div>
   </div>
@@ -44,7 +44,7 @@
               <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View</a>
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
                 </div>
               </td>
             </tr>
@@ -66,7 +66,7 @@
               <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View</a>
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
                 </div>
               </td>
             </tr>
@@ -94,8 +94,8 @@
               <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View</a>
-                  <button class="btn btn-danger btn-elevated" (click)="leave(p.projectID)">Leave</button>
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <button class="btn btn-danger" (click)="leave(p.projectID)">Leave</button>
                 </div>
               </td>
             </tr>
@@ -105,8 +105,8 @@
               <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View</a>
-                  <button class="btn btn-success btn-elevated" (click)="join(p.projectID)">Join</button>
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <button class="btn btn-success" (click)="join(p.projectID)">Join</button>
                 </div>
               </td>
             </tr>
@@ -128,8 +128,8 @@
               <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View</a>
-                  <button class="btn btn-danger btn-elevated" (click)="leave(p.projectID)" *ngIf="p.isActive">Leave</button>
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <button class="btn btn-danger" (click)="leave(p.projectID)" *ngIf="p.isActive">Leave</button>
                 </div>
               </td>
             </tr>
@@ -139,8 +139,8 @@
               <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary btn-elevated">View</a>
-                  <button class="btn btn-success btn-elevated" (click)="join(p.projectID)" *ngIf="p.isActive">Join</button>
+                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <button class="btn btn-success" (click)="join(p.projectID)" *ngIf="p.isActive">Join</button>
                 </div>
               </td>
             </tr>

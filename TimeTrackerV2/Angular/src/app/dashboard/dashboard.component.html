@@ -1,7 +1,7 @@
 <div [ngSwitch]="true">
   <div *ngSwitchCase="student" id="dashboard">
     <h2 class="dashboard-head">Dashboard</h2>
-    <!-- <a href="/user-reports" class="btn btn-success btn-elevated">Reports</a> -->
+    <!-- <a href="/user-reports" class="btn btn-primary btn-elevated">Reports</a> -->
 
     <h3 class="box-head">Courses</h3>
     <hr />
@@ -25,8 +25,8 @@
           <td>{{ c.description }}</td>
           <td>
             <div class="btn-group float-right">
-              <a href="/course/{{ c.courseID }}" class="btn btn-primary btn-elevated">View</a
-              ><button class="btn btn-danger btn-elevated" (click)="cancel(c.courseID)">
+              <a href="/course/{{ c.courseID }}" class="btn btn-primary">View</a
+              ><button class="btn btn-danger" (click)="cancel(c.courseID)">
                 Cancel
               </button>
             </div>
@@ -75,15 +75,13 @@
 
   <div *ngSwitchCase="instructor" id="dashboard">
     <h2 class="dashboard-head">Dashboard</h2>
-    <!-- <a href="/instructor-reports" class="btn btn-success btn-elevated">Reports</a> -->
+    <!-- <a href="/instructor-reports" class="btn btn-primary btn-elevated">Reports</a> -->
     <app-navigation></app-navigation>
 
     <div>
       <h3 class="h3-inline">Courses</h3>
       <!-- This class will make the below button come next to it so they are on one line -->
-      <a href="/create-course" class="btn btn-primary btn-elevated"
-        >Create New Course</a
-      >
+      <a href="/create-course" class="btn btn-success">Create New Course</a>
     </div>
     <hr />
     <div class="alert alert-danger" *ngIf="courses?.length <= 0">
@@ -127,13 +125,13 @@
           <td>
             <div class="btn-group float-right">
               <button
-                class="btn btn-primary btn-elevated"
+                class="btn btn-primary"
                 (click)="register(c.courseID, c.studentID)"
               >
                 Approve
               </button>
               <button
-                class="btn btn-danger btn-elevated"
+                class="btn btn-danger"
                 (click)="cancelIns(c.courseID, c.studentID)"
               >
                 Deny

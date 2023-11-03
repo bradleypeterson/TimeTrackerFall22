@@ -406,6 +406,46 @@ a:hover {
 
 .btn-primary {
   background-color: #492365;
+  font-style: normal;
+  border: 2px solid #492365;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #6e4097;
+    border: 2px solid #634097;
+  }
+
+  /* On active (click), push the button down a bit and adjust shadow */
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 6px #492365;
+  }
+}
+
+/* Elevated Button Styles */
+.btn-elevated {
+  font-style: normal;
+  border: 2px solid currentColor;
+  /* An outline using the text color */
+  box-shadow: 0 2px 8px #492365;
+  /* Initial shadow */
+  transition: all 0.3s ease;
+  /* For a smooth transition effect */
+
+  /* On hover, make the button lift slightly and change shadow */
+  &:hover {
+    transform: translateY(-2px);
+    /* Lift button slightly */
+    box-shadow: 0 3px 6px #492365;
+    background-color: #6e4097;
+    /* Increased shadow */
+  }
+
+  /* On active (click), push the button down a bit and adjust shadow */
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 6px #492365;
+  }
 }
 /* * {
   font-family:  Century Schoolbook, TeX Gyre Schola, serif;
