@@ -41,8 +41,8 @@ app.use("/api", ExternalRoutes);  //adds our custom http responses from the file
 
 // We are using the readFileSync() because this information is vital for the server.  I.E. without these certificates, the server should not be started
 const sslServer = https.createServer({
-    key: fs.readFileSync(path.join(__dirname, 'certificates/key.pem')),  // __dirname = current directory.  And then grab the file key.pem located in the certificates folder
-    cert: fs.readFileSync(path.join(__dirname, 'certificates/cert.pem')),
+    key: fs.readFileSync(path.join(__dirname, 'certificates/key.key')),  // __dirname = current directory.  And then grab the file key.pem located in the certificates folder
+    cert: fs.readFileSync(path.join(__dirname, 'certificates/cert.crt')),
 }, app);
 
 sslServer.listen(PORT, () => {
