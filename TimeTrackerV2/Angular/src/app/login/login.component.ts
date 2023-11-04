@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import CryptoES from 'crypto-es';
 
 @Component({
     selector: 'app-login',
@@ -36,18 +37,36 @@ export class LoginComponent implements OnInit {
     }
 
     onSubmit(): void {
-        console.log("Username: " + this.checkoutForm.value['username'] + " | Password: " + this.checkoutForm.value['password']);
-
-        let payload = {
-            username: this.checkoutForm.value['username'],
-            password: this.checkoutForm.value['password'],
+        if(!this.checkoutForm.valid) {
+            this.errMsg = "Missing required field";
+            return;
         }
 
-        this.http.post<any>('https://localhost:8080/api/login/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        //console.log("Username: " + this.checkoutForm.value['username'] + " | Password: " + this.checkoutForm.value['password']);
+
+        let username = this.checkoutForm.value['username'];
+
+        this.http.get<any>(`https://localhost:8080/api/saltForUser/${username}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
-                localStorage.setItem('currentUser', JSON.stringify(data['user']));
-                this.router.navigate(['./dashboard']);
+                const salt = data;
+                const hashedPassword = CryptoES.PBKDF2(this.checkoutForm.value['password'], salt, { keySize: 512/32, iterations: 1000 }).toString();
+
+                let payload = {
+                    username: username,
+                    password: hashedPassword,
+                }
+        
+                this.http.post<any>('https://localhost:8080/api/login/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+                    next: data => {
+                        this.errMsg = "";
+                        localStorage.setItem('currentUser', JSON.stringify(data['user']));
+                        this.router.navigate(['./dashboard']);
+                    },
+                    error: error => {
+                        this.errMsg = error['error']['message'];
+                    }
+                });        
             },
             error: error => {
                 this.errMsg = error['error']['message'];

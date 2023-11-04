@@ -5,6 +5,7 @@ const router = express.Router();
 //#region Controller imports (imports everything inside the {} to this file)
 const {
     Register,
+    GrabSaltForUser,
     Login,
     DeleteAccount,
     DefaultAdminAccountCreated,
@@ -70,6 +71,8 @@ router.get("/", (req, res) => {
 
 //#region Account routes
 router.post("/register", Register);
+
+router.get("/saltForUser/:username", GrabSaltForUser);
 
 router.post("/login", Login);
 

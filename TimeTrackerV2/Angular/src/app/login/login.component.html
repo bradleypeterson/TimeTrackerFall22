@@ -13,14 +13,14 @@
                 style="width: 40px; border: none; border-bottom-left-radius: 0;"><i class="fa fa-user"
                   aria-hidden="true"></i></span></div>
             <input formControlName="username" id="username" type="text" class="form-control bg-light"
-              style="border: none; border-bottom-right-radius: 0;" name="username" placeholder="Username" ng-model="">
+              style="border: none; border-bottom-right-radius: 0;" name="username" placeholder="Username" ng-model="" required>
           </div>
           <div class="input-group" style="margin-top: 1px;">
             <div class="input-group-prepend"><span class="input-group-text"
                 style="width:40px; border: none; border-top-left-radius: 0;"><i class="fa fa-lock"
                   aria-hidden="true"></i></span></div>
             <input formControlName="password" id="password" type="password" class="form-control bg-light"
-              style="border: none; border-top-right-radius: 0;" name="password" placeholder="Password" ng-model="">
+              style="border: none; border-top-right-radius: 0;" name="password" placeholder="Password" ng-model="" required>
           </div>
           <div class="row mt-2 pl-3 pr-3">
             <button type="button" class="btn btn-primary col mr-1" [routerLink]="['/register',]">Register</button>
