@@ -47,7 +47,7 @@ export class ProjectComponent implements OnInit {
         description: this.description
     }, {
         validators: [this.CreateDateRangeValidator()]
-    })
+    });
 
     // This function is used to make sure that the starting date is always before the ending date.  Source https://blog.angular-university.io/angular-custom-validators/#:~:text=our%20previous%20article.-,Form%2Dlevel%20(multi%2Dfield)%20Validators,-Besides%20being%20able
     CreateDateRangeValidator(): ValidatorFn {
