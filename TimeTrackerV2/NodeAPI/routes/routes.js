@@ -8,6 +8,7 @@ const {
     Login,
     DeleteAccount,
     DefaultAdminAccountCreated,
+    ChangePassword,
 } = require("./controllers/AccountControllers")
 
 const {
@@ -75,6 +76,8 @@ router.post("/login", Login);
 router.delete("/deleteAccount", DeleteAccount);
 
 router.get("/defaultAdminCreated", DefaultAdminAccountCreated);
+
+router.put("/resetPassword/:userID", ChangePassword);
 //#endregion
 
 //#region Course routes
@@ -160,6 +163,5 @@ router.post('/deleteProject', DeleteProject);
 router.get('/Users/:userId/getPendInstrCourses', GetPendInstrCourses);
 //#endregion
 //#endregion
-
 
 module.exports = router;  //export the constant "router" (which contains the get, post, put, and delete http responses) so that we can make use of it outside this file.  This is the middleware that Router.use() requires to run.  https://stackoverflow.com/questions/27465850/typeerror-router-use-requires-middleware-function-but-got-a-object

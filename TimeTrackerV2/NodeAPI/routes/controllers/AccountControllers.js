@@ -154,3 +154,26 @@ exports.DefaultAdminAccountCreated = async (req, res, next) => {
         res.send(false);
     }
 }
+
+exports.ChangePassword = (req, res) => {
+    console.log("AccountControllers.js file/ChangePassword route called");
+
+    let userID = req.params["userID"];
+    console.log(JSON.stringify(req.body));
+    let password = req.body.password;
+    let salt = req.body.salt;
+
+    let sql = `UPDATE Users
+    SET password = ?, salt = ?
+    WHERE userID = ?`;
+
+    db.run(sql, [password, salt, userID], (err, value) => {
+		if (err) {
+			console.log(err);
+			return res.status(500).json({ message: 'Something went wrong in resetting the user\'s password.\nPlease try again later.' });
+		}
+		else {
+            return res.status(200).json({ message: 'The user\'s password has been changed.' });
+        }
+    });
+}
