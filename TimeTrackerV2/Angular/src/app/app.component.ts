@@ -13,6 +13,8 @@ export class AppComponent implements OnInit {
   nullType: boolean = false;
   name: string = '';
   userID: string = '';
+  isNavbarExpanded = false;
+
 
 
   ngOnInit(): void {
