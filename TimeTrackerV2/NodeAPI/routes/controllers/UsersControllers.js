@@ -321,7 +321,8 @@ exports.DeleteCourse = async (req, res, next) => {
 
     let courseID = req.body["courseID"];
 
-    let sql = `DELETE FROM Courses
+    let sql = `DELETE
+    FROM Courses
     WHERE courseID = ?;`;
 
     db.run(sql, [courseID], function (err, value) {
@@ -381,8 +382,9 @@ exports.DeleteProject = async (req, res, next) => {
 
     let projectID = req.body["projectID"];
 
-    let sql = `DELETE FROM Projects
-            WHERE projectID = ?;`;
+    let sql = `DELETE
+        FROM Projects
+        WHERE projectID = ?;`;
 
     db.run(sql, [projectID], function (err, value) {
         if (err) {

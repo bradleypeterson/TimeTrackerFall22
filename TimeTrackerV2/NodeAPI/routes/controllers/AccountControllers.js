@@ -116,7 +116,8 @@ exports.DeleteAccount = async (req, res, next) => {
     let userID = req.body.userID;
     console.log("userID: " + userID);
 
-    let sql = `DELETE FROM Users
+    let sql = `DELETE
+    FROM Users
     WHERE userID = ?`;
 
     db.run(sql, [userID], (err, value) => {
@@ -135,6 +136,8 @@ exports.DefaultAdminAccountCreated = async (req, res, next) => {
 
     // The below variable is set in the seed.js file and if it is true, then the default admin account has been generated.
     let defaultAdminCreatedAndNotViewed = JSON.parse(localStorage.getItem('defaultAdminCreatedAndNotViewed')) === true;
+
+    console.log(`defaultAdminCreatedAndNotViewed: ${defaultAdminCreatedAndNotViewed}`)
 
     if(defaultAdminCreatedAndNotViewed) {
         res.send(true);
