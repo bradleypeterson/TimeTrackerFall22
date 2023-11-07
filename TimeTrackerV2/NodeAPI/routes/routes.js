@@ -5,9 +5,11 @@ const router = express.Router();
 //#region Controller imports (imports everything inside the {} to this file)
 const {
     Register,
+    GrabSaltForUser,
     Login,
     DeleteAccount,
     DefaultAdminAccountCreated,
+    ChangePassword,
 } = require("./controllers/AccountControllers")
 
 const {
@@ -71,11 +73,15 @@ router.get("/", (req, res) => {
 //#region Account routes
 router.post("/register", Register);
 
+router.get("/saltForUser/:username", GrabSaltForUser);
+
 router.post("/login", Login);
 
 router.delete("/deleteAccount", DeleteAccount);
 
 router.get("/defaultAdminCreated", DefaultAdminAccountCreated);
+
+router.put("/resetPassword/:userID", ChangePassword);
 //#endregion
 
 //#region Course routes
@@ -166,6 +172,5 @@ router.post('/EditProfile', EditUserProfile);
 router.get('/Users', GetUsersInfo);
 
 //#endregion
-
 
 module.exports = router;  //export the constant "router" (which contains the get, post, put, and delete http responses) so that we can make use of it outside this file.  This is the middleware that Router.use() requires to run.  https://stackoverflow.com/questions/27465850/typeerror-router-use-requires-middleware-function-but-got-a-object

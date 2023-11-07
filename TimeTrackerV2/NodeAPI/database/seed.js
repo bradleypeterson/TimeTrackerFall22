@@ -36,7 +36,7 @@ db.serialize(() => {
         // Create a super admin account with a username and password of "admin" if there are no admins in the DB
         // It is formatted this way because the syntax order for this type of insert has to be INSERT ... SELECT instead of INSERT ... VALUES https://stackoverflow.com/a/66644198 and https://mitch.codes/sql-tip-insert-where-not-exists/
         .run(`INSERT INTO Users(username, password, firstName, lastName, type, isActive, salt)
-        SELECT 'admin', 'b30425b2679cfee195e07569ec1f933bac6a12759b74eccba310e75afe1313da45af4438e4be69b998d4c3bbd5ad1c990ecb6c76b8072580b49990a065ac81b6', 'sudo', 'admin', 'admin', false, '21d20429770a51657e5b6c245c796d79'
+        SELECT 'admin', '729698d2e7e3f792312a663f441767813c2e15465836f2c11300f9daafbd9fc36da0c0dc1e06c02e473e8fb76a8e58ad4673e9d833304ccaa733c2d667bb1fc1', 'sudo', 'admin', 'admin', false, '851d1de4be2b408af82cb83255136747'
         WHERE NOT EXISTS (
             SELECT userID
             FROM Users

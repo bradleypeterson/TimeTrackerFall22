@@ -13,22 +13,9 @@ exports.Register = async (req, res, next) => {
 	let lastName = req.body["lastName"];
 	let type = req.body["type"];
 	let password = req.body["password"];
-	let repeatPassword = req.body["repeatPassword"];
+	let salt = req.body["salt"];
 
-	function isEmpty(str) {
-		return (!str || str.length === 0);
-	}
-
-	if (isEmpty(username) ||
-		isEmpty(firstName) ||
-		isEmpty(lastName) ||
-		isEmpty(type) ||
-		isEmpty(password) ||
-		isEmpty(repeatPassword)) {
-		return res.status(400).json({ message: 'Missing one or more required arguments.' });
-	};
-
-	// Validate user doesn't already exist
+	// Validate user doesn't already exist (can be handled by the unique constraint, but this is left in so we have more control without having to determine what cause the error)
 	let sql = `SELECT *
 		FROM Users
 		WHERE username = ?`;
@@ -42,38 +29,55 @@ exports.Register = async (req, res, next) => {
 		if (rows) {
 			return res.status(400).json({ message: 'A user of this name already exists' });
 		}
-
-		// Validate passwords match
-		if (password !== repeatPassword) {
-			return res.status(400).json({ message: 'Given passwords do not match' });
-		}
-
-		let salt = crypto.randomBytes(16).toString('hex');
-
-		let hash = crypto.pbkdf2Sync(password, salt,
-			1000, 64, `sha512`).toString(`hex`);
-
-		let sql = `INSERT INTO Users(username, password, firstName, lastName, type, isActive, salt)
-			VALUES(?, ?, ?, ?, ?, ?, ?)`;
-
-		// Can't use dictionaries for queries so order matters!
-		let data = [];
-		data[0] = username;
-		data[1] = hash;
-		data[2] = firstName;
-		data[3] = lastName;
-		data[4] = type;
-		data[5] = false;  // Don't know why this is false, I (Braxton) would think this would be true because I think these refers to if the account is active or disabled and if you are registering, you would be making an active account.
-		data[6] = salt;
-
-		db.run(sql, data, function (err, rows) {
-			if (err) {
-				return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
-			} else {
-				return res.status(200).json({ message: 'User registered' });
-			}
-		});
+        
+        let sql = `INSERT INTO Users(username, password, firstName, lastName, type, isActive, salt)
+        VALUES(?, ?, ?, ?, ?, ?, ?)`;
+    
+        // Can't use dictionaries for queries so order matters!
+        let data = [];
+        data[0] = username;
+        data[1] = password;
+        data[2] = firstName;
+        data[3] = lastName;
+        data[4] = type;
+        data[5] = false;  // Don't know why this is false, I (Braxton) would think this would be true because I think these refers to if the account is active or disabled and if you are registering, you would be making an active account.
+        data[6] = salt;
+    
+        db.run(sql, data, function (err, rows) {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({ message: 'Something went wrong in creating the account. Please try again later.' });
+            } else {
+                return res.status(200).json({ message: 'User registered' });
+            }
+        });
 	});
+}
+
+exports.GrabSaltForUser = (req, res) => {
+	console.log("AccountControllers.js file/GrabSaltForUsername route called");
+
+    let username = req.params["username"];
+    console.log(`Searching for user with the username of "${username}"`);
+
+    let sql = `SELECT salt
+    FROM Users
+    WHERE username = ?`;
+
+    db.get(sql, [username], (err, row) => {
+		if (err) {
+			console.log(err);
+			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+		}
+		if (row) {
+            console.log("Salt found, returning it back to client");
+            res.send(JSON.stringify(row['salt']));
+		}
+		else {
+			console.log("No user with that username, unable to grab a salt value");
+			return res.status(401).json({ message: 'Username or password is incorrect.' });
+		}
+    });
 }
 
 exports.Login = async (req, res, next) => {
@@ -81,15 +85,6 @@ exports.Login = async (req, res, next) => {
 
 	let username = req.body["username"];
 	let password = req.body["password"];
-
-	function isEmpty(str) {
-		return (!str || str.length === 0);
-	}
-
-	if (isEmpty(username) ||
-		isEmpty(password)) {
-		return res.status(400).json({ message: 'Missing one or more required arguments.' });
-	};
 
 	let sql = `SELECT *
 		FROM Users
@@ -101,12 +96,7 @@ exports.Login = async (req, res, next) => {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
 		if (rows) {
-			salt = rows['salt'];
-
-			let hash = crypto.pbkdf2Sync(password, salt,
-				1000, 64, `sha512`).toString(`hex`);
-
-			if (rows['password'] === hash) {
+			if (rows['password'] === password) {
 				return res.status(200).json({ user: rows });
 			} else {
 				console.log("Wrong Password");
@@ -126,7 +116,8 @@ exports.DeleteAccount = async (req, res, next) => {
     let userID = req.body.userID;
     console.log("userID: " + userID);
 
-    let sql = `DELETE FROM Users
+    let sql = `DELETE
+    FROM Users
     WHERE userID = ?`;
 
     db.run(sql, [userID], (err, value) => {
@@ -146,6 +137,8 @@ exports.DefaultAdminAccountCreated = async (req, res, next) => {
     // The below variable is set in the seed.js file and if it is true, then the default admin account has been generated.
     let defaultAdminCreatedAndNotViewed = JSON.parse(localStorage.getItem('defaultAdminCreatedAndNotViewed')) === true;
 
+    console.log(`defaultAdminCreatedAndNotViewed: ${defaultAdminCreatedAndNotViewed}`)
+
     if(defaultAdminCreatedAndNotViewed) {
         res.send(true);
         localStorage.setItem('defaultAdminCreatedAndNotViewed', false);  //this will make it so that only the first person that uses this API call will see the message.
@@ -153,4 +146,27 @@ exports.DefaultAdminAccountCreated = async (req, res, next) => {
     else {
         res.send(false);
     }
+}
+
+exports.ChangePassword = (req, res) => {
+    console.log("AccountControllers.js file/ChangePassword route called");
+
+    let userID = req.params["userID"];
+    console.log(JSON.stringify(req.body));
+    let password = req.body.password;
+    let salt = req.body.salt;
+
+    let sql = `UPDATE Users
+    SET password = ?, salt = ?
+    WHERE userID = ?`;
+
+    db.run(sql, [password, salt, userID], (err, value) => {
+		if (err) {
+			console.log(err);
+			return res.status(500).json({ message: 'Something went wrong in resetting the user\'s password.\nPlease try again later.' });
+		}
+		else {
+            return res.status(200).json({ message: 'The user\'s password has been changed.' });
+        }
+    });
 }

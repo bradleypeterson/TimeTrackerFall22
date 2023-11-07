@@ -68,9 +68,9 @@ export class UsersComponent implements OnInit {
             });
         }
         // The user doesn't want to delete the user (for debugging only)
-        else {
+        /*else {
             console.log("User not deleted");
-        }
+        }*/
     }
 
     // Open an alert window with the supplied message

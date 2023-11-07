@@ -43,7 +43,8 @@ exports.GetAllCoursesForInstructorID = (req, res) => { // dynamic courses based 
 
 	let instructorID = req.params["id"];
 	let sql = `SELECT courseName, courseID, description
-		FROM Courses WHERE instructorID = ?`;
+		FROM Courses
+        WHERE instructorID = ?`;
 	console.log("instructorID: " + instructorID);
 
 	db.all(sql, [instructorID], (err, rows) => {

@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, UntypedFormControl, UntypedFormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import CryptoES from 'crypto-es';
 
 @Component({
     selector: 'app-resetpassword',
@@ -13,29 +15,12 @@ export class ResetpasswordComponent implements OnInit {
     sID!: number;
     sUsername!: string;
     resetForm!: UntypedFormGroup;
-    formValid: boolean = true;
-
-    // This function is used to make sure that the two passwords are the same.  Modified code from here https://blog.angular-university.io/angular-custom-validators/#:~:text=our%20previous%20article.-,Form%2Dlevel%20(multi%2Dfield)%20Validators,-Besides%20being%20able
-    CreatePasswordValidator(): ValidatorFn {
-        // The AbstractControl replaces the FormGroup because apparently the above source uses a different typescript version than this project.  It seems to be caused by a bug in the TypeScript version.  Fix source https://stackoverflow.com/a/63306484
-        return (form: AbstractControl): ValidationErrors | null => {
-            // The '!' at the end is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be
-            const pass1: string = form.get("newPswd")!.value;
-            const pass2: string = form.get("confirm")!.value;
-
-            if (pass1 && pass2) {
-                const isValid = (pass1 === pass2);
-
-                return isValid ? null : { passwordMisMatch: true };
-            }
-
-            return null;
-        }
-    }
+    errorMessage: string = "";
 
     constructor(
         private activeRoute: ActivatedRoute,
         private location: Location,
+        private http: HttpClient,
         private router: Router,
     ) {
         // This will grab the userID and username values from the state of the navigate function we defined inside the users.ts component in the function navToResetPassword().  This solution was found here https://stackoverflow.com/a/54365098
@@ -49,31 +34,49 @@ export class ResetpasswordComponent implements OnInit {
             username: new UntypedFormControl(this.sUsername),
             newPswd: new UntypedFormControl(null),
             confirm: new UntypedFormControl(null)
-        }, {
-            validators: [this.CreatePasswordValidator()]
         });
     }
 
     onSubmit() {
+        // If th reset form is not valid
+        if (!this.resetForm.valid) {
+            this.errorMessage = "A password field has not been supplied";
+            return;
+        }
+        this.errorMessage = "";
+
         let pass1 = this.resetForm.get("newPswd")!.value;
         let pass2 = this.resetForm.get("confirm")!.value;
 
-        console.log(`${pass1} !== ${pass2}:  ${pass1 !== pass2}`)
-
+        // if the two passwords don't match
         if(pass1 !== pass2)
         {
-            this.formValid = false;
-            console.log("Passwords don't match")
+            this.errorMessage = "Your passwords do not match";
             return;
         }
-        else
-        {
-            this.formValid = true;
-            console.log("Passwords match")
-        }
+        this.errorMessage = "";
+
+        const salt = CryptoES.lib.WordArray.random(16).toString();  //Creates a salt value that is 16*2 (default encoder for toString() is hexadecimal) values long (this is because hex uses 1/2 of the byte while a character uses the full byte)
+        const hashedPassword = CryptoES.PBKDF2(pass1, salt, { keySize: 512/32, iterations: 1000 }).toString();
+
+        // Make a body variable for the http.put request so we can update the users password
+        let requestBody = {
+            password: hashedPassword,
+            salt: salt
+        };
+
+        this.http.put(`https://localhost:8080/api/resetPassword/${this.sID}`, requestBody).subscribe((res: any) => {
+            this.ShowMessage(res.message);
+            this.location.back()
+        },
+        err => {
+            this.ShowMessage(err.error.message);
+        });
     }
-    changedPass() {
-        //alert('Password has been changed');
-        //this.location.back()
+
+    // Open an alert window with the supplied message
+    ShowMessage(message: string) {
+        alert(message);
     }
+    
 }
