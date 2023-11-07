@@ -22,10 +22,8 @@ import { ViewReportComponent } from './view-report/view-report.component';
 import { AddCoursesComponent } from './add-courses/add-courses.component';
 import { CreateCourseComponent } from './create-course/create-course.component';
 import { EditCourseComponent } from './edit-course/edit-course.component';
-import { DeleteCourseComponent } from './delete-course/delete-course.component';
 import { CreateProjectComponent } from './create-project/create-project.component';
 import { EditProjectComponent } from './edit-project/edit-project.component';
-import { DeleteProjectComponent } from './delete-project/delete-project.component';
 import { AddStudentProjectComponent } from './add-student-project/add-student-project.component';
 import { InstructorReportsComponent } from './instructor-reports/instructor-reports.component';
 
@@ -52,10 +50,8 @@ const routes: Routes = [
   { path: 'add-courses', component: AddCoursesComponent },
   { path: 'create-course', component: CreateCourseComponent },
   { path: 'edit-course/:id', component: EditCourseComponent },
-  { path: 'delete-course/:id', component: DeleteCourseComponent },
   { path: 'create-project/:id', component: CreateProjectComponent },
   { path: 'edit-project/:id', component: EditProjectComponent },
-  { path: 'delete-project/:id', component: DeleteProjectComponent },
   { path: 'add-students-project/:id', component: AddStudentProjectComponent },
   { path: 'instructor-reports', component: InstructorReportsComponent },
 ];
@@ -85,9 +81,7 @@ export const RoutingComponents = [
   ResetpasswordComponent,
   AddCoursesComponent,
   CreateCourseComponent,
-  DeleteCourseComponent,
   CreateProjectComponent,
   InstructorReportsComponent,
-  DeleteProjectComponent,
   AddStudentProjectComponent
 ]

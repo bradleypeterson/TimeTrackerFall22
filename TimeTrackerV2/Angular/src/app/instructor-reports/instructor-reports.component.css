@@ -1,9 +1,9 @@
 /* General Reset (Optional but recommended) */
-* {
+/* * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-}
+} */
 
 /* Main Report Card Styling */
 .report-card {

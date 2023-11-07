@@ -13,39 +13,68 @@
         </tr>
         </thead>
         <tbody>
-            <mat-card *ngFor="let studentReport of studentReports" class="report-card">
-                <mat-card-header>
-                    <mat-card-title>
-                        <img src="../../assets/Images/icons8-dropdown-50.png" alt="Expand" class="expandArrow" [id]="studentReport.id" (click)="toggleCard(studentReport.id)">
-                        {{ studentReport.studentName }}
-                    </mat-card-title>
-                </mat-card-header>
-            
-                <mat-card-content *ngIf="expandedCards[studentReport.id]">
-                    <!-- <div *ngFor="let course of report.courses" class="course-section"> -->
-                    <!-- <h4>{{ course.title }}</h4> -->
-            
-                        <div *ngFor="let project of studentReport.projects" class="project-section">
-                            <div *ngIf="project.name !== null">
-                                <h5>{{ project.name }} </h5>
-                                <p>&emsp;Total time: {{ project.totalTime | totalTimePipe }}</p>
-                                <button class="btn btn-purple btn-elevated" (click)="SeeTimeLogs(studentReport.id, project.id)">View detailed report</button>
-                            </div>
-                            <div *ngIf="project.name === null">
-                                <p>This user has not been assigned to any project(s) yet</p>
-                            </div>
-            
-                        <!-- <ul class="time-log-list">
-                                <li>
-                                    
-                                </li>
-                            </ul> -->
-                    </div>
-                    <!-- </div> -->
-                </mat-card-content>
-            </mat-card>
         </tbody>
-    </table>   
+    </table>
+    <div class="row align-items-start">
+        <div *ngFor="let studentReport of studentReports" class="col-md-4 col-6">
+            <div class="card report-card">
+                <div class="card-header" (click)="toggleCard(studentReport.id)">
+                    <img src="../../assets/Images/icons8-dropdown-50.png" alt="Expand" class="expandArrow" [id]="studentReport.id">
+                    {{ studentReport.studentName }}
+                </div>
+                <div class="card-body" *ngIf="expandedCards[studentReport.id]">
+                    <div *ngFor="let project of studentReport.projects" class="project-section">
+                        <div *ngIf="project.name !== null">
+                            <h5>{{ project.name }} </h5>
+                            <p>&emsp;Total time: {{ project.totalTime | totalTimePipe }}</p>
+                            <button class="btn btn-purple btn-sm" (click)="SeeTimeLogs(studentReport.id, project.id)">View detailed report</button>
+                        </div>
+                        <div *ngIf="project.name === null">
+                            <p>This user has not been assigned to any project(s) yet</p>
+                        </div>
+        
+                    <!-- <ul class="time-log-list">
+                            <li>
+                                
+                            </li>
+                        </ul> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <mat-card *ngFor="let studentReport of studentReports" class="report-card col-md-4 col-6">
+            <mat-card-header>
+                <mat-card-title>
+                    <img src="../../assets/Images/icons8-dropdown-50.png" alt="Expand" class="expandArrow" [id]="studentReport.id" (click)="toggleCard(studentReport.id)">
+                    {{ studentReport.studentName }}
+                </mat-card-title>
+            </mat-card-header>
+        
+            <mat-card-content *ngIf="expandedCards[studentReport.id]">
+                <div *ngFor="let course of report.courses" class="course-section">
+                <h4>{{ course.title }}</h4>
+        
+                    <div *ngFor="let project of studentReport.projects" class="project-section">
+                        <div *ngIf="project.name !== null">
+                            <h5>{{ project.name }} </h5>
+                            <p>&emsp;Total time: {{ project.totalTime | totalTimePipe }}</p>
+                            <button class="btn btn-purple btn-sm" (click)="SeeTimeLogs(studentReport.id, project.id)">View detailed report</button>
+                        </div>
+                        <div *ngIf="project.name === null">
+                            <p>This user has not been assigned to any project(s) yet</p>
+                        </div>
+        
+                    <ul class="time-log-list">
+                            <li>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card> -->
+    </div>   
 </div>
 
 <div *ngIf="filteredStudents?.length > 0">
@@ -56,7 +85,37 @@
         </tr>
         </thead>
         <tbody>
-            <mat-card *ngFor="let studentReport of filteredStudents" class="report-card">
+        </tbody>
+    </table>
+    <div class="row align-items-start">
+        <div *ngFor="let studentReport of filteredStudents" class="col-md-4 col-6">
+            <div class="card report-card">
+                <div class="card-header" (click)="toggleCard(studentReport.id)">
+                    <img src="../../assets/Images/icons8-dropdown-50.png" alt="Expand" class="expandArrow" [id]="studentReport.id">
+                    {{ studentReport.studentName }}
+                </div>
+                <div class="card-body" *ngIf="expandedCards[studentReport.id]">
+                    <div *ngFor="let project of studentReport.projects" class="project-section">
+                        <div *ngIf="project.name !== null">
+                            <h5>{{ project.name }} </h5>
+                            <p>&emsp;Total time: {{ project.totalTime | totalTimePipe }}</p>
+                            <button class="btn btn-purple btn-sm" (click)="SeeTimeLogs(studentReport.id, project.id)">View detailed report</button>
+                        </div>
+                        <div *ngIf="project.name === null">
+                            <p>This user has not been assigned to any project(s) yet</p>
+                        </div>
+        
+                    <!-- <ul class="time-log-list">
+                            <li>
+                                
+                            </li>
+                        </ul> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+            <!-- <mat-card *ngFor="let studentReport of filteredStudents" class="report-card">
                 <mat-card-header>
                     <mat-card-title>
                         <img src="../../assets/Images/icons8-dropdown-50.png" alt="Expand" class="expandArrow" [id]="studentReport.id" (click)="toggleCard(studentReport.id)">
@@ -65,8 +124,8 @@
                 </mat-card-header>
             
                 <mat-card-content *ngIf="expandedCards[studentReport.id]">
-                    <!-- <div *ngFor="let course of report.courses" class="course-section"> -->
-                    <!-- <h4>{{ course.title }}</h4> -->
+                    <div *ngFor="let course of report.courses" class="course-section">
+                    <h4>{{ course.title }}</h4>
             
                         <div *ngFor="let project of studentReport.projects" class="project-section">
                             <div *ngIf="project.name !== null">
@@ -78,15 +137,13 @@
                                 <p>This user has not been assigned to any project(s) yet</p>
                             </div>
             
-                        <!-- <ul class="time-log-list">
+                        <ul class="time-log-list">
                                 <li>
                                     
                                 </li>
-                            </ul> -->
+                            </ul>
                     </div>
-                    <!-- </div> -->
+                    </div>
                 </mat-card-content>
-            </mat-card>
-        </tbody>
-    </table> 
+            </mat-card> -->
 </div>

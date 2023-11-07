@@ -26,7 +26,6 @@ export class NavigationComponent {
     { path: '../resetpassword', label: 'ResetpasswordComponent' },
     { path: '../add-courses', label: 'AddCoursesComponent' },
     { path: '../create-course', label: 'CreateCourseComponent' },
-    // { path: 'delete-course/:id', label: 'DeleteCourseComponent' },
     // { path: 'create-project/:id', label: 'CreateProjectComponent' },
     { path: '../instructor-reports', label: 'InstructorReportsComponent' },
   ];
