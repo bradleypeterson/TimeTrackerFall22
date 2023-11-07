@@ -3,7 +3,7 @@
     <h3 class="mt-3">Manage Evaluations</h3>
     <div class="mt-2 position-absolute" style="top: 15px; right: 95px;">
       <!-- ng-click="createBlankEvaluation()" -->
-      <button class="btn btn-primary">Create Evaluation</button>
+      <button class="btn btn-purple">Create Evaluation</button>
     </div>
     <div class="mt-2 position-absolute" style="top: 15px; right: 15px;">
       <!-- ng-disabled="evaluations[config.currentTemplate].inUse" -->
@@ -64,9 +64,9 @@
           <th style="min-width: 150px;">
             Options
             <!-- ng-click="addQuestion(0)" ng-disabled="evaluations[config.currentTemplate].inUse" -->
-            <button class="btn btn-primary float-right">New Question</button>
+            <button class="btn btn-purple float-right">New Question</button>
             <!-- ng-click="createCategory()" ng-disabled="evaluations[config.currentTemplate].inUse" -->
-            <button class="btn btn-primary float-right mr-2">New Category</button>
+            <button class="btn btn-purple float-right mr-2">New Category</button>
           </th>
         </tr>
       </thead>
@@ -110,7 +110,7 @@
             <!-- ng-click="deleteCategory(c)" ng-disabled="evaluations[config.currentTemplate].inUse" -->
             <button class="btn btn-danger float-right">Delete</button>
             <!-- ng-click="addQuestion(c.evalTemplateQuestionCategoryID)" ng-disabled="evaluations[config.currentTemplate].inUse" -->
-            <button class="btn btn-primary float-right mr-2">New Question</button>
+            <button class="btn btn-purple float-right mr-2">New Question</button>
           </td>
         </tr>
         <!-- ng-repeat="tq in evaluations[config.currentTemplate].templateQuestions | orderObjectBy : 'number' | filter: {evalTemplateQuestionCategoryID: c.evalTemplateQuestionCategoryID}"

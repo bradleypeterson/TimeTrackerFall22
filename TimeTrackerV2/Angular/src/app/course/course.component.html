@@ -15,7 +15,7 @@
   <div class="form-inline mb-3">
     <form class="mr-3" (ngSubmit)="searchProjects()">
       <input class="form-control mr-3" [(ngModel)]="projectSearchQuery" name="projectSearchQuery" type="text" placeholder="Search Projects" aria-label="Search">
-      <button class="btn btn-primary btn-elevated" type="submit">Search</button>
+      <button class="btn btn-purple btn-elevated" type="submit">Search</button>
     </form>
     <div [ngSwitch]="true">
       <div *ngSwitchCase="instructor">
@@ -40,7 +40,7 @@
             <td class="desc">{{ p.description }}</td>
             <td>
               <div class="btn-group float-right">
-                <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                <a href="/project/{{p.projectID}}" class="btn btn-purple">View</a>
               </div>
             </td>
           </tr>
@@ -62,7 +62,7 @@
             <td class="desc">{{ p.description }}</td>
             <td>
               <div class="btn-group float-right">
-                <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                <a href="/project/{{p.projectID}}" class="btn btn-purple">View</a>
               </div>
             </td>
           </tr>
@@ -88,7 +88,7 @@
               <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <a href="/project/{{p.projectID}}" class="btn btn-purple">View</a>
                   <button class="btn btn-danger" (click)="leave(p.projectID)">Leave</button>
                 </div>
               </td>
@@ -99,7 +99,7 @@
               <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <a href="/project/{{p.projectID}}" class="btn btn-purple">View</a>
                   <button class="btn btn-success" (click)="join(p.projectID)">Join</button>
                 </div>
               </td>
@@ -126,7 +126,7 @@
               <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <a href="/project/{{p.projectID}}" class="btn btn-purple">View</a>
                   <button class="btn btn-danger" (click)="leave(p.projectID)" *ngIf="p.isActive">Leave</button>
                 </div>
               </td>
@@ -138,7 +138,7 @@
               <td class="desc">{{ p.description }}</td>
               <td>
                 <div class="btn-group float-right">
-                  <a href="/project/{{p.projectID}}" class="btn btn-primary">View</a>
+                  <a href="/project/{{p.projectID}}" class="btn btn-purple">View</a>
                   <button class="btn btn-success" (click)="join(p.projectID)" *ngIf="p.isActive">Join</button>
                 </div>
               </td>
@@ -152,7 +152,7 @@
   <!-- ng-model="search" ??? -->
   <!-- <form class="form-inline mb-3">
     <input class="form-control mr-3" type="search" placeholder="Search Students" aria-label="Search">
-    <button class="btn btn-primary" type="submit">Search</button>
+    <button class="btn btn-purple" type="submit">Search</button>
   </form> -->
 
 

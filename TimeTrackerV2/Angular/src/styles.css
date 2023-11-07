@@ -404,20 +404,24 @@ a:hover {
     text-shadow: 0 3px 3px #492365;
   }
 
-.btn-primary {
+.btn-purple {
   background-color: #492365;
   font-style: normal;
+  color:white;
   border: 2px solid #492365;
   transition: all 0.3s ease;
 
-  &:hover {
+  &:hover, &:disabled, &.disabled {
+    color:white;
     background-color: #6e4097;
     border: 2px solid #634097;
   }
 
   /* On active (click), push the button down a bit and adjust shadow */
-  &:active {
+  &:active, &.active, &:active:focus, &:focus, &.focus {
+    color:white;
     transform: translateY(1px);
+    background-color: #492365;
     box-shadow: 0 3px 6px #492365;
     border: 2px solid #492365;
   }

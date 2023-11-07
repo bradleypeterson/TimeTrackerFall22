@@ -1,7 +1,7 @@
 <div class="form-inline mb-3">
     <form class="mr-3" (ngSubmit)="searchStudents()">
         <input class="form-control mr-3 search-students" [(ngModel)]="studentSearchQuery" name="studentSearchQuery" type="text" placeholder="Search Students" aria-label="Search">
-        <button class="btn btn-primary btn-elevated search-students" type="submit">Search</button>
+        <button class="btn btn-purple btn-elevated search-students" type="submit">Search</button>
     </form>
 </div>
 
@@ -29,7 +29,7 @@
                             <div *ngIf="project.name !== null">
                                 <h5>{{ project.name }} </h5>
                                 <p>&emsp;Total time: {{ project.totalTime | totalTimePipe }}</p>
-                                <button class="btn btn-primary btn-elevated" (click)="SeeTimeLogs(studentReport.id, project.id)">View detailed report</button>
+                                <button class="btn btn-purple btn-elevated" (click)="SeeTimeLogs(studentReport.id, project.id)">View detailed report</button>
                             </div>
                             <div *ngIf="project.name === null">
                                 <p>This user has not been assigned to any project(s) yet</p>
@@ -72,7 +72,7 @@
                             <div *ngIf="project.name !== null">
                                 <h5>{{ project.name }} </h5>
                                 <p>&emsp;Total time: {{ project.totalTime | totalTimePipe }}</p>
-                                <button class="btn btn-primary" (click)="SeeTimeLogs(studentReport.id, project.id)">View detailed report</button>
+                                <button class="btn btn-purple" (click)="SeeTimeLogs(studentReport.id, project.id)">View detailed report</button>
                             </div>
                             <div *ngIf="project.name === null">
                                 <p>This user has not been assigned to any project(s) yet</p>

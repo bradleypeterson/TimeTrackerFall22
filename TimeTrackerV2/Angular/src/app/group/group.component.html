@@ -33,7 +33,7 @@
         <!-- ng-if="!($parent.user.type === 'A')" -->
         <div class="float-right top-right-buttons">
           <!-- ng-click="joinGroup()", ng-if="(!userInGroup() || !group.users[$parent.user.userID].isActive) && $parent.user.userID !== course.instructorId"  -->
-          <button class="btn btn-primary">
+          <button class="btn btn-purple">
             Join
             Group
           </button>
@@ -67,12 +67,12 @@
       <!-- Eval buttons -->
       <div>
         <!-- ng-click="completeEval()" ng-if="userInGroup()" -->
-        <button class="btn btn-primary mt-2">
+        <button class="btn btn-purple mt-2">
           Complete
           Eval
         </button>
         <!-- ng-click="viewEvals()" ng-if="userInGroup() || $parent.user.type === 'A' || $parent.user.type === 'I'" -->
-        <button class="btn btn-primary mt-2">
+        <button class="btn btn-purple mt-2">
           View Evals
         </button>
       </div>

@@ -1,7 +1,7 @@
 <div [ngSwitch]="true">
   <div *ngSwitchCase="student" id="dashboard">
     <h2 class="dashboard-head">Dashboard</h2>
-    <!-- <a href="/user-reports" class="btn btn-primary btn-elevated">Reports</a> -->
+    <!-- <a href="/user-reports" class="btn btn-purple btn-elevated">Reports</a> -->
 
     <h3 class="box-head">Courses</h3>
     <hr />
@@ -25,7 +25,7 @@
           <td>{{ c.description }}</td>
           <td>
             <div class="btn-group float-right">
-              <a href="/course/{{ c.courseID }}" class="btn btn-primary">View</a
+              <a href="/course/{{ c.courseID }}" class="btn btn-purple">View</a
               ><button class="btn btn-danger" (click)="cancel(c.courseID)">
                 Cancel
               </button>
@@ -42,7 +42,7 @@
             <p class="card-text">{{ c.description }}</p>
             <a
               href="/course/{{ c.courseID }}"
-              class="btn btn-primary btn-elevated btn-sm"
+              class="btn btn-purple btn-elevated btn-sm"
               >View Course</a
             >
           </div>
@@ -64,7 +64,7 @@
             <p class="card-text">{{ p.description }}</p>
             <a
               routerLink="/project/{{ p.projectID }}"
-              class="btn btn-primary btn-elevated btn-sm"
+              class="btn btn-purple btn-elevated btn-sm"
               >View Project</a
             >
           </div>
@@ -75,7 +75,7 @@
 
   <div *ngSwitchCase="instructor" id="dashboard">
     <h2 class="dashboard-head">Dashboard</h2>
-    <!-- <a href="/instructor-reports" class="btn btn-primary btn-elevated">Reports</a> -->
+    <!-- <a href="/instructor-reports" class="btn btn-purple btn-elevated">Reports</a> -->
     <app-navigation></app-navigation>
 
     <div>
@@ -95,7 +95,7 @@
             <p class="card-text">{{ c.description }}</p>
             <a
               href="/course/{{ c.courseID }}"
-              class="btn btn-primary btn-elevated btn-sm"
+              class="btn btn-purple btn-elevated btn-sm"
               >View Course</a
             >
           </div>
@@ -125,7 +125,7 @@
           <td>
             <div class="btn-group float-right">
               <button
-                class="btn btn-primary"
+                class="btn btn-purple"
                 (click)="register(c.courseID, c.studentID)"
               >
                 Approve
