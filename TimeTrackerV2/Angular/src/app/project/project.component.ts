@@ -384,4 +384,22 @@ export class ProjectComponent implements OnInit {
         this.minutes = '0' + 0;
         this.seconds = '0' + 0;
     }
+
+    delete() {
+        if(confirm("Are you sure you want to delete " + this.project.projectName + "?")){
+            let req = {
+                projectID: this.projectId
+            };
+          
+            this.http.post<any>('https://localhost:8080/api/deleteProject/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+                next: data => {
+                    this.errMsg = "";
+                    window.location.replace("/course/" + this.project.courseID);
+                },
+                error: error => {
+                    this.errMsg = error['error']['message'];
+                }
+            });
+        }
+      }
 }

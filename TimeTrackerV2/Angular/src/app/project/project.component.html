@@ -7,7 +7,7 @@
         <div class="btn-group">
             <a href="/add-students-project/{{project.projectID}}" class="btn btn-primary">Add Students</a>
             <a href="/edit-project/{{project.projectID}}" class="btn btn-secondary">Edit</a>
-            <a href="/delete-project/{{project.projectID}}" class="btn btn-danger">Delete</a>
+            <button class="btn btn-danger" (click)="delete()">Delete</button>
         </div>
     </div>
 </div>

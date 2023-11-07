@@ -179,6 +179,24 @@ export class CourseComponent implements OnInit {
     });
   }
 
+  delete() {
+    if(confirm("Are you sure you want to delete " + this.course.courseName + "?")){
+      let req = {
+        courseID: this.courseID
+      };
+  
+      this.http.post<any>('https://localhost:8080/api/deleteCourse/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        next: data => {
+          this.errMsg = "";
+          window.location.replace("/dashboard");
+        },
+        error: error => {
+          this.errMsg = error['error']['message'];
+        }
+      });
+    }
+  }
+
   searchProjects(): void {
     let sizeOfFilteredProjects = 0;
     let sizeOfAllUserFilteredProjects = 0;
