@@ -13,6 +13,18 @@ const {
 const {
     GetAllCoursesNamesDescriptionIDs,
     GetAllCoursesForInstructorID,
+    CheckUserInCourse,
+    CreateCourse,
+    EditCourse,
+    DeleteCourse,
+    GetPendInstrCourses,
+    GetCoursesRegisteredFor,
+    GetCoursesNotRegisteredFor,
+    GetCoursesPendCourses,
+    PutUserInPending,
+    RegisterForCourse,
+    DropCourse,
+    RemovePendUser,
 } = require("./controllers/CourseControllers")
 
 const {
@@ -30,6 +42,9 @@ const {
     LeaveGroup,
     GetAllStudentsInProject,
     GetAllStudentsNotInProject,
+    CreateProject,
+    EditProject,
+    DeleteProject,
 } = require("./controllers/ProjectControllers")
 
 const {
@@ -44,20 +59,6 @@ const {
     GetUserProfile,
     EditUserProfile,
     GetUsersInfo,
-    GetCoursesRegisteredFor,
-    GetCoursesNotRegisteredFor,
-    GetCoursesPendCourses,
-    PutUserInPending,
-    RegisterForCourse,
-    DropCourse,
-    RemovePendUser,
-    CreateCourse,
-    EditCourse,
-    DeleteCourse,
-    CreateProject,
-    EditProject,
-    DeleteProject,
-    GetPendInstrCourses,
 } = require("./controllers/UsersControllers")
 //#endregion
 
@@ -81,6 +82,36 @@ router.get("/defaultAdminCreated", DefaultAdminAccountCreated);
 router.get('/Courses', GetAllCoursesNamesDescriptionIDs);
 
 router.get('/Courses/:id', GetAllCoursesForInstructorID);
+
+router.get('/Courses/UserInCourse/:courseID/:userID', CheckUserInCourse);
+
+//#region Instructor specific controllers
+router.post('/createCourse', CreateCourse);
+
+router.post('/editCourse', EditCourse);
+
+router.post('/deleteCourse', DeleteCourse);
+
+router.get('/Users/:userId/getPendInstrCourses', GetPendInstrCourses);
+//#endregion
+
+//#region Student specific controllers
+router.get('/Users/:userId/getUserCourses', GetCoursesRegisteredFor);
+
+router.get('/Users/:userId/getNonUserCourses', GetCoursesNotRegisteredFor);
+
+router.get('/Users/:userId/getCoursesPendCourses', GetCoursesPendCourses);
+
+router.post('/putUserInPending', PutUserInPending);
+
+router.post('/addUserCourse', RegisterForCourse);
+
+router.post('/deleteUserCourse', DropCourse);
+
+router.post('/removePendUser', RemovePendUser);
+
+//#endregion
+
 //#endregion
 
 //#region Miscellaneous routes
@@ -99,6 +130,16 @@ router.get('/Projects/:id', GetAllProjectsForCourse);
 router.get('/ProjectsForUser/:courseID/:userID/userGroups', GetUserProjectsForCourse);
 
 router.get('/ProjectsForUser/:courseID/:userID/nonUserGroups', GetNonUserProjectsForCourse);
+
+router.post('/joinGroup', JoinGroup);
+
+router.post('/leaveGroup', LeaveGroup);
+
+router.post('/createProject', CreateProject);
+
+router.post('/editProject', EditProject);
+
+router.post('/deleteProject', DeleteProject);
 
 router.get('/AddToProject/:projectID/InProject', GetAllStudentsInProject);
 
@@ -124,41 +165,6 @@ router.post('/EditProfile', EditUserProfile);
 
 router.get('/Users', GetUsersInfo);
 
-//#region Student specific controllers
-router.get('/Users/:userId/getUserCourses', GetCoursesRegisteredFor);
-
-router.get('/Users/:userId/getNonUserCourses', GetCoursesNotRegisteredFor);
-
-router.get('/Users/:userId/getCoursesPendCourses', GetCoursesPendCourses);
-
-router.post('/putUserInPending', PutUserInPending);
-
-router.post('/addUserCourse', RegisterForCourse);
-
-router.post('/deleteUserCourse', DropCourse);
-
-router.post('/removePendUser', RemovePendUser);
-
-router.post('/joinGroup', JoinGroup);
-
-router.post('/leaveGroup', LeaveGroup);
-//#endregion
-
-//#region Instructor specific controllers
-router.post('/createCourse', CreateCourse);
-
-router.post('/editCourse', EditCourse);
-
-router.post('/deleteCourse', DeleteCourse);
-
-router.post('/createProject', CreateProject);
-
-router.post('/editProject', EditProject);
-
-router.post('/deleteProject', DeleteProject);
-
-router.get('/Users/:userId/getPendInstrCourses', GetPendInstrCourses);
-//#endregion
 //#endregion
 
 

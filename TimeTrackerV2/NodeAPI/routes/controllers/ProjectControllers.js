@@ -232,3 +232,63 @@ exports.GetAllStudentsNotInProject = (req, res) => {
 		}
 	});
 }
+
+exports.CreateProject = async (req, res, next) => {
+    console.log("UsersControllers.js file/CreateProject route called");
+
+    let data = [];
+    data[0] = req.body["projectName"];
+    data[1] = req.body["isActive"];
+    data[2] = req.body["courseID"];
+    data[3] = req.body["description"];
+
+    db.run(`INSERT INTO Projects(projectName, isActive, courseID, description)
+        VALUES(?, ?, ?, ?)`, data, function (err, rows) {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        } else {
+            return res.status(200).json({ project: data });
+        }
+    });
+}
+
+exports.EditProject = async (req, res, next) => {
+    console.log("UsersControllers.js file/EditProject route called");
+
+    let data = [];
+    data[0] = req.body["projectName"];
+    data[1] = req.body["isActive"];
+    data[2] = req.body["description"];
+    data[3] = req.body["projectID"];
+
+    sql = `UPDATE Projects
+    SET projectName = ?, isActive = ?, description = ?
+    WHERE projectID = ?`;
+
+    db.run(sql, data, function (err, rows) {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        } else {
+            return res.status(200).json({ project: data });
+        }
+    });
+}
+
+exports.DeleteProject = async (req, res, next) => {
+    console.log("UsersControllers.js file/DeleteProject route called");
+
+    let projectID = req.body["projectID"];
+
+    let sql = `DELETE FROM Projects
+            WHERE projectID = ?;`;
+
+    db.run(sql, [projectID], function (err, value) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        else {
+            return res.status(200).json({ message: 'Project deleted.' });
+        }
+    });
+}

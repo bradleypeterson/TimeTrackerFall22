@@ -24,6 +24,7 @@ export class CourseComponent implements OnInit {
   public instructor: boolean = false;
   public student: boolean = false;
   public userID: string = '';
+  public userInCourse: boolean = false;
 
   public currentUser: any;
 
@@ -68,6 +69,8 @@ export class CourseComponent implements OnInit {
         }
       }
     }
+
+    this.checkUserInCourse();
 
     this.loadPage();
   }
@@ -119,6 +122,21 @@ export class CourseComponent implements OnInit {
         this.nonUserGroups = data;
         if (this.nonUserGroups) {
           localStorage.setItem("nonUserGroups", JSON.stringify(this.nonUserGroups));
+        }
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
+
+  checkUserInCourse(): void {
+    this.http.get<any>(`https://localhost:8080/api/Courses/UserInCourse/${this.courseID}/${this.userID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+      next: data => {
+        this.errMsg = "";
+        let dataCheck = data;
+        if (Object.keys(dataCheck).length > 0) {
+          this.userInCourse = true;
         }
       },
       error: error => {
