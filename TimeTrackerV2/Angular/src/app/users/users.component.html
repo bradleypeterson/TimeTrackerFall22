@@ -1,12 +1,30 @@
 <!-- ng-cloak ng-if="loaded" -->
 
 <div id="users">
-    <div class="position-relative">
+    <div >
         <h3 class="mt-3">Users</h3>
         <!-- ng-model="search"  -->
-        <form [formGroup]="searchForm" (ngSubmit)="Submit()">
-            <input formControlName="studentName" class="bottom-right-search" type="text" name="search" placeholder="Search..." />
-            <button class="bottom-right-search" type="submit">Search</button> <!-- btn btn-purple btn-elevated -->
+        <form [formGroup]="searchForm" (ngSubmit)="filterUsers()">
+            <label for="name">User's name:</label>
+            <input formControlName="name" type="text" id="name"/>
+
+            <label for="isActive">Active:</label>
+            <select formControlName="active" id="isActive">
+                <option value="" selected></option>
+                <option value="true">True</option>
+                <option value="false">False</option>
+            </select>
+
+            <label for="type">User Type:</label>
+            <select formControlName="type" id="type">
+                <option value="" selected></option>
+                <option value="student">Student</option>
+                <option value="instructor">Instructor</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <button class="btn btn-purple btn-elevated" type="submit">Search</button>
+            <button class="btn btn-purple btn-elevated" type="reset">Clear</button>
         </form>
     </div>
 
@@ -63,9 +81,9 @@
                     <!--  Jason Steadman     Notes: Removed the ability for a user to change their own type.-->
                     <!-- ng-model="u.type" ng-change="saveUser(u)" ng-disabled="$parent.user.userID === u.userID" -->
                     <select>
-                        <option value="S" [selected]="u.type == 'student'">Student</option>
-                        <option value="I" [selected]="u.type == 'instructor'">Instructor</option>
-                        <option value="A" [selected]="u.type == 'admin'">Admin</option>
+                        <option value="student" [selected]="u.type == 'student'">Student</option>
+                        <option value="instructor" [selected]="u.type == 'instructor'">Instructor</option>
+                        <option value="admin" [selected]="u.type == 'admin'">Admin</option>
                     </select>
                 </td>
 

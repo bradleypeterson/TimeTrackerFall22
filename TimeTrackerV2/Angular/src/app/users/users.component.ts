@@ -13,7 +13,9 @@ export class UsersComponent implements OnInit {
     users: Array<any> = [];
     filteredUsers: Array<any> = [];
     searchForm = new FormGroup({
-        studentName: new UntypedFormControl('')
+        name: new UntypedFormControl(''),
+        active: new UntypedFormControl(''),
+        type: new UntypedFormControl('')
     });
 
     constructor(
@@ -27,19 +29,23 @@ export class UsersComponent implements OnInit {
 
     public pageTitle = 'TimeTrackerV2 | Users'
 
-    Submit() {
-        this.filteredUsers = [];  // clear the filter
-        const searchName = this.searchForm.get("studentName")?.value
-        if(searchName !== "") {
-            this.users.forEach(user => {
-                if(user.name.toLowerCase().search(searchName.toLowerCase()) != -1) {
-                    this.filteredUsers.push(user);
-                };
-            });    
-        }
-        else {
-            this.filteredUsers = this.users;
-        }
+    filterUsers() {
+        this.filteredUsers = [];  // clear the list of filtered users
+
+        // Grab the inputs from the form so they are in an easy to access variable
+        const name = this.searchForm.controls.name.value
+        const active = this.searchForm.controls.active.value;
+        const type = this.searchForm.controls.type.value;
+
+        // This function will filter all every user in the variable "this.users" for any combination of the three input fields.
+        this.filteredUsers = this.users.filter((user) => {
+            // The below Match conditions are read as follows, if the field is not supplied OR the field's data matches the current user, then it is considered a match.  This is filtered this way so that if they don't supply the field, it will exclude it from the filtering
+            const nameMatch = !name || user.name.toLowerCase().includes(name.toLowerCase());
+            const activeMatch = !active || user.isActive == (active === 'true' ? 1 : 0);  // This filter condition is formatted this way because the UI and the logic uses true/false for boolean while the DB uses 1/0 for booleans.
+            const typeMatch = !type || user.type === type;
+
+            return nameMatch && activeMatch && typeMatch;
+        });
     }
 
     loadUsers(users: Array<object>) {
