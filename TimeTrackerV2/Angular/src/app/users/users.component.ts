@@ -37,7 +37,7 @@ export class UsersComponent implements OnInit {
         const active = this.searchForm.controls.active.value;
         const type = this.searchForm.controls.type.value;
 
-        // This function will filter all every user in the variable "this.users" for any combination of the three input fields.
+        // This function will filter all every user in the variable "this.users" for any combination of the three input fields.  Source for this code with some modifications https://www.geeksforgeeks.org/how-to-filter-multiple-values-in-angularjs/#:~:text=Filter%20multiple%20values%20using%20a%20Custom%20Filter%20Function
         this.filteredUsers = this.users.filter((user) => {
             // The below Match conditions are read as follows, if the field is not supplied OR the field's data matches the current user, then it is considered a match.  This is filtered this way so that if they don't supply the field, it will exclude it from the filtering
             const nameMatch = !name || user.name.toLowerCase().includes(name.toLowerCase());
