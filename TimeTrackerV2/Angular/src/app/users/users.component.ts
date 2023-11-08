@@ -30,8 +30,6 @@ export class UsersComponent implements OnInit {
     public pageTitle = 'TimeTrackerV2 | Users'
 
     filterUsers() {
-        this.filteredUsers = [];  // clear the list of filtered users
-
         // Grab the inputs from the form so they are in an easy to access variable
         const name = this.searchForm.controls.name.value
         const active = this.searchForm.controls.active.value;
@@ -44,7 +42,7 @@ export class UsersComponent implements OnInit {
             const activeMatch = !active || user.isActive == (active === 'true' ? 1 : 0);  // This filter condition is formatted this way because the UI and the logic uses true/false for boolean while the DB uses 1/0 for booleans.
             const typeMatch = !type || user.type === type;
 
-            return nameMatch && activeMatch && typeMatch;
+            return nameMatch && activeMatch && typeMatch;  // If all three of these conditions are true, then the variable "user" is included inside the array "this.filteredUsers".
         });
     }
 
