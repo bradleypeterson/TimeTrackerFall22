@@ -104,7 +104,7 @@ export class ProjectComponent implements OnInit {
         }
         this.currentUser = JSON.parse(tempUser);
         console.log(`The current user is:`);
-        console.log(this.currentUser)
+        console.log(this.currentUser);
 
         this.manualTimeCardEntry = JSON.parse(localStorage.getItem('manualTimeCardEntry') || 'false');  // Determine if the local storage has the value manualTimeCardEntry inside it so we know what state the form should be in.  If however the local storage doesn't have the value, it will return what is after the || for the default.
 
@@ -122,22 +122,22 @@ export class ProjectComponent implements OnInit {
                 this.student = true;
             }
 
-            let tempProjects = localStorage.getItem('projects');
-            if (tempProjects) {
-                const projects = JSON.parse(tempProjects);
-                console.log(`projects from local storage is`);
-                console.log(projects);
-                for (let project of projects) {
-                    console.log(`Processing the data for the project:\n` + JSON.stringify(project));
-                    console.log(`Contents of \"this.projectId\": ` + this.projectId);
-                    console.log(`Current project's ID is: ` + project.projectID);
-                    if (Number(project.projectID) === Number(this.projectId)) {
-                        console.log(`Found the project inside local storage:\n` + JSON.stringify(project));
-                        this.project = project;
-                        this.loadProjectUserTimes();
-                    }
-                }
-            }
+            // let tempProjects = localStorage.getItem('projects');
+            // if (tempProjects) {
+            //     const projects = JSON.parse(tempProjects);
+            //     console.log(`projects from local storage is`);
+            //     console.log(projects);
+            //     for (let project of projects) {
+            //         console.log(`Processing the data for the project:\n` + JSON.stringify(project));
+            //         console.log(`Contents of \"this.projectId\": ` + this.projectId);
+            //         console.log(`Current project's ID is: ` + project.projectID);
+            //         if (Number(project.projectID) === Number(this.projectId)) {
+            //             console.log(`Found the project inside local storage:\n` + JSON.stringify(project));
+            //             this.project = project;
+            //             this.loadProjectUserTimes();
+            //         }
+            //     }
+            // }
         }
     }
 
@@ -156,10 +156,26 @@ export class ProjectComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.getProjectInfo();
+
+        this.loadProjectUserTimes();
+
         this.getActivities();
 
         // iterate through the projectUsers to check against current user ID
         this.loadProjectUsers();
+    }
+
+    getProjectInfo(): void {
+        this.http.get<any>(`https://localhost:8080/api/ProjectInfo/${this.projectId}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+            next: data => {
+                this.errMsg = "";
+                this.project = data;
+            },
+            error: error => {
+                this.errMsg = error['error']['message'];
+            }
+        });
     }
 
     clockIn(): void {

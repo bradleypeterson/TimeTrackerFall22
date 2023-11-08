@@ -74,7 +74,7 @@ db.run(`CREATE TABLE IF NOT EXISTS TimeCard(
     FOREIGN KEY (projectID) REFERENCES Projects (projectID) ON DELETE CASCADE
 );`);
 
-// Create the TimeCard table
+// Create the Courses table
 db.run(`CREATE TABLE IF NOT EXISTS Courses(
     courseID INTEGER PRIMARY KEY, 
     courseName TEXT NOT NULL,

@@ -32,22 +32,35 @@ export class EditCourseComponent implements OnInit {
 
     this.courseID = this.activatedRoute.snapshot.params['id']; // get course id from URL
 
-    if(this.courseID) { // set course to course from local storage based on course ID
-      let temp = localStorage.getItem('courses');
+    // if(this.courseID) { // set course to course from local storage based on course ID
+    //   let temp = localStorage.getItem('courses');
 
-      if(temp){
-        const courses = JSON.parse(temp);
+    //   if(temp){
+    //     const courses = JSON.parse(temp);
 
-        for(let course of courses){
-          if(Number(course.courseID) === Number(this.courseID)){
-            this.course = course;
-          }
+    //     for(let course of courses){
+    //       if(Number(course.courseID) === Number(this.courseID)){
+    //         this.course = course;
+    //       }
+    //     }
+    //   }
+    // }
+
+    this.getCourseInfo();
+  }
+
+  getCourseInfo(): void {
+    this.http.get<any>(`https://localhost:8080/api/CourseInfo/${this.courseID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        next: data => {
+            this.errMsg = "";
+            this.course = data;
+            this.editCourseForm.controls['courseName'].setValue(this.course.courseName);
+            this.editCourseForm.controls['description'].setValue(this.course.description);
+        },
+        error: error => {
+            this.errMsg = error['error']['message'];
         }
-      }
-    }
-
-    this.editCourseForm.controls['courseName'].setValue(this.course.courseName);
-    this.editCourseForm.controls['description'].setValue(this.course.description);
+    });
   }
 
   editCourseForm = this.formBuilder.group({

@@ -37,6 +37,29 @@ exports.CheckUserInCourse = (req, res) => {
 	});
 }
 
+exports.GetCourseInfo = (req, res) => {
+    console.log("CourseControllers.js file/GetCourseInfo route called");
+
+    let courseID = req.params["id"];
+
+    let sql = `SELECT courseName, isActive, courseID, description
+    FROM Courses
+    WHERE courseID = ?`;
+
+    db.get(sql, [courseID], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows) {
+            console.log(`Rows retrieved:  ${JSON.stringify(rows)}`);
+            return res.send(rows);
+        }
+        else {
+            return res.send("No errors occurred, however no rows were found either.");
+        }
+    });
+}
+
 //#region Instructor specific controllers
 exports.GetAllCoursesForInstructorID = (req, res) => { // dynamic courses based on instructor id
 	console.log("CourseControllers.js file/GetAllCoursesForInstructorID route called");

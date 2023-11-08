@@ -24,24 +24,39 @@ export class EditProjectComponent implements OnInit {
 
     this.projectID = this.activatedRoute.snapshot.params['id']; // get project id from URL
 
-    let tempProjects = localStorage.getItem('projects');
-      if (tempProjects) {
-        const projects = JSON.parse(tempProjects);
-        console.log(projects);
-        for (let project of projects) {
-          console.log(project);
-          console.log(this.projectID);
-          console.log(project.projectID);
-          if (Number(project.projectID) === Number(this.projectID)) {
-            console.log(project);
-            this.project = project;
-          }
-        }
-      }
+    // let tempProjects = localStorage.getItem('projects');
+    //   if (tempProjects) {
+    //     const projects = JSON.parse(tempProjects);
+    //     console.log(projects);
+    //     for (let project of projects) {
+    //       console.log(project);
+    //       console.log(this.projectID);
+    //       console.log(project.projectID);
+    //       if (Number(project.projectID) === Number(this.projectID)) {
+    //         console.log(project);
+    //         this.project = project;
+    //       }
+    //     }
+    //   }
 
-      this.editProjectForm.controls['projectName'].setValue(this.project.projectName);
-      this.editProjectForm.controls['description'].setValue(this.project.description);
-      this.editProjectForm.controls['isActive'].setValue(this.project.isActive);
+    this.getProjectInfo();
+  }
+
+  getProjectInfo(): void {
+    this.http.get<any>(`https://localhost:8080/api/ProjectInfo/${this.projectID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        next: data => {
+            this.errMsg = "";
+            this.project = data;
+            if (this.project) {
+              this.editProjectForm.controls['projectName'].setValue(this.project.projectName);
+              this.editProjectForm.controls['description'].setValue(this.project.description);
+              this.editProjectForm.controls['isActive'].setValue(this.project.isActive);
+            }
+        },
+        error: error => {
+            this.errMsg = error['error']['message'];
+        }
+    });
   }
 
   editProjectForm = this.formBuilder.group({

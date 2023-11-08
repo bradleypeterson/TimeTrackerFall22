@@ -56,19 +56,19 @@ export class CourseComponent implements OnInit {
 
     this.courseID = this.activatedRoute.snapshot.params['id']; // get course id from URL
 
-    if (this.courseID) { // set course to course from local storage based on course ID
-      let temp = localStorage.getItem('courses');
+    // if (this.courseID) { // set course to course from local storage based on course ID
+    //   let temp = localStorage.getItem('courses');
 
-      if (temp) {
-        const courses = JSON.parse(temp);
+    //   if (temp) {
+    //     const courses = JSON.parse(temp);
 
-        for (let course of courses) {
-          if (Number(course.courseID) === Number(this.courseID)) {
-            this.course = course;
-          }
-        }
-      }
-    }
+    //     for (let course of courses) {
+    //       if (Number(course.courseID) === Number(this.courseID)) {
+    //         this.course = course;
+    //       }
+    //     }
+    //   }
+    // }
 
     this.checkUserInCourse();
 
@@ -76,6 +76,8 @@ export class CourseComponent implements OnInit {
   }
 
   loadPage(): void {
+    this.getCourseInfo();
+
     // get projects
     this.loadProjects();
     this.loadAllUserGroups();
@@ -87,6 +89,18 @@ export class CourseComponent implements OnInit {
     } else {
       localStorage.removeItem('foo');
     }
+  }
+
+  getCourseInfo(): void {
+    this.http.get<any>(`https://localhost:8080/api/CourseInfo/${this.courseID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        next: data => {
+            this.errMsg = "";
+            this.course = data;
+        },
+        error: error => {
+            this.errMsg = error['error']['message'];
+        }
+    });
   }
 
   loadProjects(): void {

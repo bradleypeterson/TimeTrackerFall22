@@ -15,6 +15,7 @@ const {
 const {
     GetAllCoursesNamesDescriptionIDs,
     GetAllCoursesForInstructorID,
+    GetCourseInfo,
     CheckUserInCourse,
     CreateCourse,
     EditCourse,
@@ -88,6 +89,8 @@ router.put("/resetPassword/:userID", ChangePassword);
 router.get('/Courses', GetAllCoursesNamesDescriptionIDs);
 
 router.get('/Courses/:id', GetAllCoursesForInstructorID);
+
+router.get('/CourseInfo/:id', GetCourseInfo);
 
 router.get('/Courses/UserInCourse/:courseID/:userID', CheckUserInCourse);
 

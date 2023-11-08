@@ -9,7 +9,7 @@ exports.GetProjectInfo = (req, res) => {
     let projectID = req.params["id"];
     console.log(`projectID: ${projectID}`);
 
-    let sql = `SELECT projectName, isActive, courseID, description
+    let sql = `SELECT projectName, isActive, courseID, description, projectID
     FROM Projects
     WHERE projectID = ?`;
 
