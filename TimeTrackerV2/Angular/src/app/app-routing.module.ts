@@ -25,7 +25,6 @@ import { EditCourseComponent } from './edit-course/edit-course.component';
 import { CreateProjectComponent } from './create-project/create-project.component';
 import { EditProjectComponent } from './edit-project/edit-project.component';
 import { AddStudentProjectComponent } from './add-student-project/add-student-project.component';
-import { InstructorReportsComponent } from './instructor-reports/instructor-reports.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -53,7 +52,6 @@ const routes: Routes = [
   { path: 'create-project/:id', component: CreateProjectComponent },
   { path: 'edit-project/:id', component: EditProjectComponent },
   { path: 'add-students-project/:id', component: AddStudentProjectComponent },
-  { path: 'instructor-reports', component: InstructorReportsComponent },
 ];
 
 @NgModule({
@@ -82,6 +80,5 @@ export const RoutingComponents = [
   AddCoursesComponent,
   CreateCourseComponent,
   CreateProjectComponent,
-  InstructorReportsComponent,
   AddStudentProjectComponent
 ]

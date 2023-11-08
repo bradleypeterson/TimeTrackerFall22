@@ -9,7 +9,6 @@ import { TotalTimePipe } from './pipes/total-time.pipe';
 import { NgChartsModule } from 'ng2-charts';
 import { UntypedFormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavigationComponent } from './navigation/navigation.component';
-import { InstructorReportsComponent } from './instructor-reports/instructor-reports.component';
 import { AddStudentProjectComponent } from './add-student-project/add-student-project.component';
 import { ViewReportComponent } from './view-report/view-report.component';
 import { EditCourseComponent } from './edit-course/edit-course.component';
@@ -27,7 +26,6 @@ import { CourseReportsComponent } from './course-reports/course-reports.componen
     LoginComponent,
     TotalTimePipe,
     NavigationComponent,
-    InstructorReportsComponent,
     AddStudentProjectComponent,
     ViewReportComponent,
     EditCourseComponent,
