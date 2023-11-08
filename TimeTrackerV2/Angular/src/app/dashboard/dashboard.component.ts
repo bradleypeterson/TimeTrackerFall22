@@ -18,6 +18,7 @@ export class DashboardComponent implements OnInit {
 
   instructor: boolean = false;
   student: boolean = false;
+  admin: boolean = false;
   userID: string = '';
 
   constructor(
@@ -44,6 +45,9 @@ export class DashboardComponent implements OnInit {
     }
     else if (userType === 'student') {
       this.student = true;
+    }
+    else if (userType === 'admin') {
+        this.admin = true;
     }
 
     // get projects and courses

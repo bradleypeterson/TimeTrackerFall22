@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { FormGroup, UntypedFormControl } from '@angular/forms';
 
 @Component({
     selector: 'app-users',
@@ -10,6 +11,10 @@ import { Router } from '@angular/router';
 
 export class UsersComponent implements OnInit {
     users: Array<any> = [];
+    filteredUsers: Array<any> = [];
+    searchForm = new FormGroup({
+        studentName: new UntypedFormControl('')
+    });
 
     constructor(
         private http: HttpClient,
@@ -22,6 +27,21 @@ export class UsersComponent implements OnInit {
 
     public pageTitle = 'TimeTrackerV2 | Users'
 
+    Submit() {
+        this.filteredUsers = [];  // clear the filter
+        const searchName = this.searchForm.get("studentName")?.value
+        if(searchName !== "") {
+            this.users.forEach(user => {
+                if(user.name.toLowerCase().search(searchName.toLowerCase()) != -1) {
+                    this.filteredUsers.push(user);
+                };
+            });    
+        }
+        else {
+            this.filteredUsers = this.users;
+        }
+    }
+
     loadUsers(users: Array<object>) {
         this.http.get("https://localhost:8080/api/Users").subscribe((data: any) => {
             for (let i = 0; i < data.length; i++) {
@@ -33,6 +53,8 @@ export class UsersComponent implements OnInit {
                     type: data[i].type
                 });
             }
+
+            this.filteredUsers = this.users;
         });
     }
 
