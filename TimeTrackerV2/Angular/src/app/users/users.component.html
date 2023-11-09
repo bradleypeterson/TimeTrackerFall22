@@ -2,7 +2,6 @@
 
 <div id="users">
     <div >
-        <h3 class="mt-3">Users</h3>
         <!-- ng-model="search"  -->
         <form [formGroup]="searchForm" (ngSubmit)="filterUsers()">
             <label for="name">User's name:</label>
@@ -29,6 +28,7 @@
     </div>
 
     <table class="table table-hover">
+        <caption style="caption-side: top;"><h3>Users</h3></caption>
         <thead>
             <tr>
                 <th>Name</th>
@@ -46,7 +46,7 @@
 
                 <!--<tr *ngFor="let u of users" class="position-relative">-->
 
-                <td><a href="#">{{ u.name }}</a></td> <!-- User's first and last name, the user will click this to go to the user's profile page (CURRENTLY BEING IMPLEMENTED) where they can delete and reset the password for the user (Need to see with the group if this is desired) -->
+                <td><a href="profile/{{u.userID}}">{{ u.name }}</a></td> <!-- User's first and last name, the user will click this to go to the user's profile page where they can delete and reset the password for the user (Need to see with the group if this is desired) -->
                 <td>
                     <div class="full-width">{{ u.username }}</div> <!-- Username -->
                     <!--<div class="full-width">{{u}}</div> A copy of the username for some reason?-->
