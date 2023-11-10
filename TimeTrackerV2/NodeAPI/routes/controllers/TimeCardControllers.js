@@ -223,3 +223,65 @@ exports.SaveTimeCard = async (req, res, next) => {
         }
     });
 }
+
+exports.DeleteTimeCard = async (req, res, next) => {
+    console.log("TimeCardControllers.js file/DeleteTimeCard route called");
+
+    let timeslotID = req.body["timeslotID"];
+    console.log(timeslotID);
+
+    let sql = 'DELETE FROM TimeCard WHERE timeslotID = ?;';
+
+    db.run(sql, [timeslotID], function (err, value) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        else {
+            console.log("inside else")
+            return res.status(200).json({ message: 'Timecard deleted.' });
+        }
+    });
+}
+
+exports.EditTimeCard = async (req, res, next) => {
+    console.log("TimeCardControllers.js file/EditTimeCard route called");
+
+    let data = [];
+    data[0] = req.body["timeIn"];
+    data[1] = req.body["timeOut"];
+    data[2] = req.body["timeslotID"];
+
+    sql = `UPDATE TimeCard
+    SET timeIn = ?, timeOut = ?
+    WHERE timeslotID = ?`;
+
+    db.run(sql, data, function (err, rows) {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        } else {
+            return res.status(200).json({ project: data });
+        }
+    });
+}
+
+exports.GetTimeCardInfo = (req, res) => {
+    console.log("TimeCardControllers.js file/GetTimeCardInfo route called");
+
+    let timeslotID = req.params["timeslotID"];
+    console.log("timeslotID: " + timeslotID);
+
+    let sql = `SELECT u.firstName || " " || u.lastName AS studentName, t.timeIn, t.timeOut
+		FROM TimeCard t
+        INNER JOIN Users u ON u.userID = t.userID
+        WHERE t.timeslotID = ?`;
+
+    db.all(sql, [timeslotID], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows) {
+            return res.send(rows);
+        }
+    });
+}

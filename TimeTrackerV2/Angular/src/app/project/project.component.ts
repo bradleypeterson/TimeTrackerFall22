@@ -417,5 +417,23 @@ export class ProjectComponent implements OnInit {
                 }
             });
         }
-      }
+    }
+
+    deleteTimecard(timeslotID: number) {
+        if(confirm("Are you sure you want to delete this time entry?")) {
+            let req = {
+                timeslotID: timeslotID
+            };
+
+            this.http.post<any>('https://localhost:8080/api/deleteTimeCard/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+                next: data => {
+                    this.errMsg = "";
+                    window.location.reload();
+                },
+                error: error => {
+                    this.errMsg = error['error']['message'];
+                }
+            });
+        }
+    }
 }
