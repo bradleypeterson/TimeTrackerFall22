@@ -61,7 +61,7 @@ exports.GetUserTimesForProject = (req, res) => {
     let projectID = req.params["id"];
     console.log("projectID: " + projectID);
 
-    let sql = `SELECT DISTINCT u.userID, u.firstName, u.lastName, t.timeIn, t.timeOut
+    let sql = `SELECT DISTINCT u.userID, u.firstName, u.lastName, t.timeIn, t.timeOut, t.timeslotID
         FROM Users as u
         INNER JOIN Project_Users as pu ON u.userID = pu.userID
         LEFT JOIN TimeCard as t ON u.userID = t.userID

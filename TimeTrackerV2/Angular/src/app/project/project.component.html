@@ -199,8 +199,8 @@
     </div>
 </div>
 
-<!-- Not project user version -->
-<div class="container" *ngIf="!isProjectUser">
+<!-- Not project user or instructor version -->
+<div class="container" *ngIf="!isProjectUser && !instructor">
     <div class="row">
         <div class="col-6">
             <div *ngIf="pieChartLabels.length != 0">
@@ -262,6 +262,86 @@
                             <td>{{user.timeIn | date:'medium'}}</td>
                             <td>{{user.timeOut | date:'medium'}}</td>
                             <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Not project user or instructor version -->
+<div class="container" *ngIf="instructor">
+    <div class="row">
+        <div class="col-6">
+            <div *ngIf="pieChartLabels.length != 0">
+                <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
+                    [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+                </canvas>
+            </div>
+        </div>
+
+        <!-- Team Times -->
+        <div class="col-6">
+            <div class="row">
+                <h3>Team Times</h3>
+            </div>
+            <div class="row">
+                <table class="table table-light table-sm table-hover table-bordered border-dark">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Total Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let teamMate of totalTimeMap | keyvalue">
+                            <td>{{teamMate.key}}</td>
+                            <td>{{teamMate.value | totalTimePipe}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- History of project -->
+    <div class="row">
+        <div class="col align-self-center">
+            <div class="row">
+                <div class="col-10">
+                    <h3>History</h3>
+                </div>
+                <div class="col-2">
+                    <!--<button type="button" class="btn btn-purple">All History</button>-->
+                </div>
+            </div>
+            <div class="row">
+                <table class="table table-light table-sm table-hover table-bordered border-dark"
+                    style="max-height: 200px; overflow-y:scroll">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Time In</th>
+                            <th scope="col">Time Out</th>
+                            <th scope="col">Total Time</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let user of projectUserTimes">
+                            <td>{{user.firstName}} {{user.lastName}}</td>
+                            <td>{{user.timeIn | date:'medium'}}</td>
+                            <td>{{user.timeOut | date:'medium'}}</td>
+                            <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
+                            <td>
+                                <div class="btn-group float-right">
+                                    <a href="/edit-timecard/{{user.timeslotID}}" class="btn btn-secondary">Edit</a>
+                                  <button class="btn btn-danger" (click)="deleteTimecard(user.timeslotID)">
+                                    Delete
+                                  </button>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
