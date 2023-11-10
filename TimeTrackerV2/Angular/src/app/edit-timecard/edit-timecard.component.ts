@@ -12,6 +12,7 @@ export class EditTimecardComponent implements OnInit {
   public errMsg = '';
   public timeslotID: any;
   public timecard: any;
+  public projectID: any;
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -43,7 +44,7 @@ export class EditTimecardComponent implements OnInit {
   }
 
   editTimecardForm = this.formBuilder.group({
-    studentName: '',
+    //studentName: '',
     timeIn: '',
     timeOut: '',
     timeslotID: '',
@@ -51,7 +52,7 @@ export class EditTimecardComponent implements OnInit {
 
   onSubmit(): void {
     let payload = {
-      studentName: this.editTimecardForm.value['studentName'],
+      //studentName: this.editTimecardForm.value['studentName'],
       timeIn: this.editTimecardForm.value['timeIn'],
       timeOut: this.editTimecardForm.value['timeOut'],
       timeslotID: this.timeslotID,
@@ -60,6 +61,7 @@ export class EditTimecardComponent implements OnInit {
     this.http.post<any>(`https://localhost:8080/api/editTimeCard`, payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
+        this.projectID = this.timecard.projectID;
         this.router.navigate(['/project/' + this.timecard.projectID]);
       },
       error: error => {
