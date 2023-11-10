@@ -77,7 +77,7 @@ export class EditProjectComponent implements OnInit {
     this.http.post<any>(`https://localhost:8080/api/editProject`, payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
-        this.router.navigate(['/course/' + this.project.courseID]);
+        this.router.navigate(['/project/' + this.projectID]);
       },
       error: error => {
         this.errMsg = error['error']['message'];
