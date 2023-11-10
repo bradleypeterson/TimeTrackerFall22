@@ -23,7 +23,31 @@
                     {{ studentReport.studentName }}
                 </div>
                 <div class="card-body" *ngIf="expandedCards[studentReport.id]">
-                    <div *ngFor="let project of studentReport.projects" class="project-section">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="table-head">Project</th>
+                                <th class="table-head">Total Time</th>
+                                <th class="table-head"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let project of studentReport.projects">
+                                <td *ngIf="project.name !== null">
+                                    {{ project.name }}
+                                </td>
+                                <td *ngIf="project.name !== null">
+                                    {{ project.totalTime | totalTimePipe }}
+                                </td>
+                                <td *ngIf="project.name !== null">
+                                    <button class="btn btn-purple btn-sm" (click)="SeeTimeLogs(studentReport.id, project.id)">Details</button>
+                                </td>
+                                <td *ngIf="project.name === null">This user has not been assigned to any projects yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- <div *ngFor="let project of studentReport.projects" class="project-section">
                         <div *ngIf="project.name !== null">
                             <h5>{{ project.name }} </h5>
                             <p>&emsp;Total time: {{ project.totalTime | totalTimePipe }}</p>
@@ -33,12 +57,12 @@
                             <p>This user has not been assigned to any project(s) yet</p>
                         </div>
         
-                    <!-- <ul class="time-log-list">
+                    <ul class="time-log-list">
                             <li>
                                 
                             </li>
-                        </ul> -->
-                    </div>
+                        </ul>
+                    </div> -->
                 </div>
             </div>
         </div>
