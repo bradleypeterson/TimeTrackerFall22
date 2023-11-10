@@ -1,29 +1,38 @@
 <!-- ng-cloak ng-if="loaded" -->
 
 <div id="users">
-    <div >
+    <div class="row g-2">
         <!-- ng-model="search"  -->
-        <form [formGroup]="searchForm" (ngSubmit)="filterUsers()">
-            <label for="name">User's name:</label>
-            <input formControlName="name" type="text" id="name"/>
+        <form [formGroup]="searchForm" (ngSubmit)="filterUsers()" class="col-6 mx-auto">
+            <!-- mb/mt stand for margin bottom/top -->
+            <div class="input-group mb-1 mt-2">
+                <span class="input-group-text">Name</span>
+                <input formControlName="name" type="text" id="name" class="form-control"/>
+            </div>
+        
+            <div class="input-group mb-1 mt-2">
+                <span class="input-group-text">Active</span>
+                <select formControlName="active" id="isActive" class="form-select form-control">
+                    <option value="" selected></option>
+                    <option value="true">True</option>
+                    <option value="false">False</option>
+                </select>
+            </div>
 
-            <label for="isActive">Active:</label>
-            <select formControlName="active" id="isActive">
-                <option value="" selected></option>
-                <option value="true">True</option>
-                <option value="false">False</option>
-            </select>
+            <div class="input-group mb-1">
+                <span class="input-group-text">User Type</span>
+                <select formControlName="type" id="type" class="form-select form-control">
+                    <option value="" selected></option>
+                    <option value="student">Student</option>
+                    <option value="instructor">Instructor</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
 
-            <label for="type">User Type:</label>
-            <select formControlName="type" id="type">
-                <option value="" selected></option>
-                <option value="student">Student</option>
-                <option value="instructor">Instructor</option>
-                <option value="admin">Admin</option>
-            </select>
-
-            <button class="btn btn-purple btn-elevated" type="submit">Search</button>
-            <button class="btn btn-purple btn-elevated" type="reset">Clear</button>
+            <div class="mb-1 text-center">
+                <button class="btn btn-purple btn-elevated" type="submit">Search</button>
+                <button class="btn btn-purple btn-elevated" type="reset">Clear</button>
+            </div>
         </form>
     </div>
 
