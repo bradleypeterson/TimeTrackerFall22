@@ -67,11 +67,15 @@ export class ResetpasswordComponent implements OnInit {
 
         this.http.put(`https://localhost:8080/api/resetPassword/${this.sID}`, requestBody).subscribe((res: any) => {
             this.ShowMessage(res.message);
-            this.location.back()
+            this.router.navigate(['/users']);
         },
         err => {
             this.ShowMessage(err.error.message);
         });
+    }
+
+    onCancel() {
+        this.router.navigate(['/users']);
     }
 
     // Open an alert window with the supplied message
