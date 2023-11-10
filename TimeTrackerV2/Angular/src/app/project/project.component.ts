@@ -21,7 +21,7 @@ export class ProjectComponent implements OnInit {
     public projectUsers: any;
     public projectUserTimes: any;
     public totalTimeMap: Map<string, number> = new Map<string, number>();
-    private projectId;
+    public projectId;
 
     public pieChartOptions: ChartOptions<'pie'> = {
         responsive: false,
@@ -435,5 +435,11 @@ export class ProjectComponent implements OnInit {
                 }
             });
         }
+    }
+
+    editTimeCard(projectID: number, timeslotID: number, firstName: any, lastName: any) {
+        //href="/edit-timecard/{{user.timeslotID}}"
+        let state = {projectID: projectID, timeslotID: timeslotID, firstName: firstName, lastName: lastName};
+        this.router.navigate([`/edit-timecard/${timeslotID}`], { state });
     }
 }

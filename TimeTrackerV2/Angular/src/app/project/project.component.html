@@ -32,7 +32,8 @@
                     "Switch to Manual Mode"}}</button>
             </div> -->
             <div class="row">
-                <button (click)="changeSubmitType()" class="btn btn-secondary">{{manualTimeCardEntry ? "Switch to Auto Mode" :
+                <button (click)="changeSubmitType()" class="btn btn-secondary">{{manualTimeCardEntry ? "Switch to Auto
+                    Mode" :
                     "Switch to Manual Mode"}}</button>
             </div>
 
@@ -48,13 +49,15 @@
                 </div>
                 <!--Start/Stop Buttons-->
                 <div class="gap-2 d-md-flex justify-content-md-center">
-                    <button (click)="clockIn()" type="button" class="btn btn-success" [disabled]="TimerRunning">Start</button>
+                    <button (click)="clockIn()" type="button" class="btn btn-success"
+                        [disabled]="TimerRunning">Start</button>
                 </div>
                 <!--Submit Button-->
                 <div class="gap-4 d-md-flex justify-content-md-center">
                     <form [formGroup]="autoForm" (ngSubmit)="autoSubmit()">
                         <div class="row mt-2">
-                            <input formControlName="description" type="text" placeholder="Work Description" class="form-control" required>
+                            <input formControlName="description" type="text" placeholder="Work Description"
+                                class="form-control" required>
                         </div>
                         <div class="d-grid d-md-flex justify-content-md-center">
                             <!-- For debugging purposes only -->
@@ -76,19 +79,22 @@
                         <!-- Start time row -->
                         <div class="row mt-2">
                             <label for="Start">Start Time</label>
-                            <input formControlName="timecardStart" type="datetime-local" id="Start" class="form-control" required>
+                            <input formControlName="timecardStart" type="datetime-local" id="Start" class="form-control"
+                                required>
                         </div>
                         <!-- End time row -->
                         <div class="row mt-2">
                             <label for="End">End Time</label>
-                            <input formControlName="timecardEnd" type="datetime-local" id="End" class="form-control" required>
+                            <input formControlName="timecardEnd" type="datetime-local" id="End" class="form-control"
+                                required>
                         </div>
                         <div *ngIf="manualForm.errors?.dateRange" class="row mt-2 error">
                             Your "Start Time" has to be before your "End Time"
                         </div>
                         <!-- Description row -->
                         <div class="row mt-2">
-                            <input formControlName="description" type="text" placeholder="Work Description" class="form-control" required>
+                            <input formControlName="description" type="text" placeholder="Work Description"
+                                class="form-control" required>
                         </div>
                         <div class="d-grid d-md-flex justify-content-md-center">
                             <!-- For debugging purposes only -->
@@ -336,10 +342,11 @@
                             <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
                             <td>
                                 <div class="btn-group float-right">
-                                    <a href="/edit-timecard/{{user.timeslotID}}" class="btn btn-secondary">Edit</a>
-                                  <button class="btn btn-danger" (click)="deleteTimecard(user.timeslotID)">
-                                    Delete
-                                  </button>
+                                    <button class="btn btn-secondary"
+                                        (click)="editTimeCard(projectId, user.timeslotID, user.firstName, user.lastName)">Edit</button>
+                                    <button class="btn btn-danger" (click)="deleteTimecard(user.timeslotID)">
+                                        Delete
+                                    </button>
                                 </div>
                             </td>
                         </tr>
