@@ -26,12 +26,11 @@ interface StudentReport {
 }
 
 @Component({
-    selector: 'app-instructor-reports',
-    templateUrl: './instructor-reports.component.html',
-    styleUrls: ['./instructor-reports.component.css']
+  selector: 'app-course-reports',
+  templateUrl: './course-reports.component.html',
+  styleUrls: ['./course-reports.component.css']
 })
-export class InstructorReportsComponent implements OnInit {
-
+export class CourseReportsComponent implements OnInit {
     studentReports: StudentReport[] = [];
     expandedCards: { [cardID: number]: boolean } = {};
 

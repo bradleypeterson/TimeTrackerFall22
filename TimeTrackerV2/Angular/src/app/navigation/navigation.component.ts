@@ -27,7 +27,6 @@ export class NavigationComponent {
     { path: '../add-courses', label: 'AddCoursesComponent' },
     { path: '../create-course', label: 'CreateCourseComponent' },
     // { path: 'create-project/:id', label: 'CreateProjectComponent' },
-    { path: '../instructor-reports', label: 'InstructorReportsComponent' },
   ];
 
   constructor() { }
