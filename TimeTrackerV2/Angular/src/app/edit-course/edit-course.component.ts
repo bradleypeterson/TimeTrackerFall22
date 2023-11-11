@@ -19,7 +19,11 @@ export class EditCourseComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-  ) { }
+  ) {
+    // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
+    console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
+    this.courseID = this.router.getCurrentNavigation()?.extras.state?.returnCourseID;
+  }
 
   ngOnInit(): void {
     let currentUser = localStorage.getItem('currentUser');
@@ -30,7 +34,7 @@ export class EditCourseComponent implements OnInit {
       window.location.replace("/dashboard");
     }
 
-    this.courseID = this.activatedRoute.snapshot.params['id']; // get course id from URL
+    //this.courseID = this.activatedRoute.snapshot.params['id']; // get course id from URL
 
     // if(this.courseID) { // set course to course from local storage based on course ID
     //   let temp = localStorage.getItem('courses');
@@ -83,7 +87,7 @@ export class EditCourseComponent implements OnInit {
       next: data => {
         console.log("data reached");
         this.errMsg = "";
-        this.router.navigate(['/dashboard/']);
+        this.GoBackToCourse();
       },
       error: error => {
         console.log("Error reached");
@@ -92,4 +96,9 @@ export class EditCourseComponent implements OnInit {
     });
   }
 
+  GoBackToCourse() {
+    let state = {courseID: this.courseID};
+    // navigate to the component that is attached to the url '/course' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    this.router.navigate(['/course'], { state });
+  }
 }

@@ -117,6 +117,12 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  GoToCourse(courseID: number) {
+        let state = {courseID: courseID};
+        // navigate to the component that is attached to the url '/course' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+        this.router.navigate(['/course'], { state });
+    }
+
   cancel(CourseId: any) {
     let req = {
       userID: this.currentUser.userID,

@@ -25,10 +25,8 @@
           <td>{{ c.description }}</td>
           <td>
             <div class="btn-group float-right">
-              <a href="/course/{{ c.courseID }}" class="btn btn-purple">View</a
-              ><button class="btn btn-danger" (click)="cancel(c.courseID)">
-                Cancel
-              </button>
+              <button class="btn btn-purple" (click)="GoToCourse(c.courseID)">View</button>
+              <button class="btn btn-danger" (click)="cancel(c.courseID)">Cancel</button>
             </div>
           </td>
         </tr>
@@ -40,11 +38,7 @@
           <h5 class="card-header">{{ c.courseName }}</h5>
           <div class="card-body">
             <p class="card-text">{{ c.description }}</p>
-            <a
-              href="/course/{{ c.courseID }}"
-              class="btn btn-purple btn-sm"
-              >View Course</a
-            >
+            <button class="btn btn-purple btn-sm" (click)="GoToCourse(c.courseID)">View Course</button>
           </div>
         </div>
       </div>
@@ -92,11 +86,7 @@
           <h5 class="card-header">{{ c.courseName }}</h5>
           <div class="card-body">
             <p class="card-text">{{ c.description }}</p>
-            <a
-              href="/course/{{ c.courseID }}"
-              class="btn btn-purple btn-sm"
-              >View Course</a
-            >
+            <button class="btn btn-purple btn-sm" (click)="GoToCourse(c.courseID)">View Course</button>
           </div>
         </div>
       </div>

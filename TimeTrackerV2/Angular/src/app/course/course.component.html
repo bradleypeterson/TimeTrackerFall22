@@ -3,7 +3,7 @@
     <div [ngSwitch]="true">
       <div *ngSwitchCase="instructor">
         <div class="btn-group">
-          <a href="/edit-course/{{course.courseID}}" class="btn btn-secondary">Edit</a>
+          <button class="btn btn-secondary" (click)="NavigateToEditCourse()">Edit</button>
           <button class="btn btn-danger" (click)="delete()">Delete</button>
         </div>
       </div>
@@ -19,7 +19,7 @@
     </form>
     <div [ngSwitch]="true">
       <div *ngSwitchCase="instructor">
-        <a href="/create-project/{{course.courseID}}" class="btn btn-success">Create New Project</a>
+        <button class="btn btn-success" (click)="NavigateToAddProject()">Create New Project</button>
       </div>
     </div>
   </div>

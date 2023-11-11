@@ -22,7 +22,7 @@ export class ViewReportComponent implements OnInit {
         private http: HttpClient,
         private router: Router,
     ) {
-        // This will grab the userID and projectID values from the state of the navigate function we defined inside the instructor-reports.ts component in the function SeeTimeLogs().  This solution was found here https://stackoverflow.com/a/54365098
+        // This will grab values from the state variable of the navigate function we defined inside the instructor-reports.ts component in the function SeeTimeLogs().  This solution was found here https://stackoverflow.com/a/54365098
         console.log(JSON.stringify(this.router.getCurrentNavigation()?.extras.state));
         this.sID = this.router.getCurrentNavigation()?.extras.state?.studentID;
         this.pID = this.router.getCurrentNavigation()?.extras.state?.projectID;
@@ -75,5 +75,11 @@ export class ViewReportComponent implements OnInit {
                 this.errMsg = error['error']['message'];
             }
         });
+    }
+
+    GoBackToCourse() {
+        let state = {courseID: this.cID};
+        // navigate to the component that is attached to the url '/course' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+        this.router.navigate(['/course'], { state });
     }
 }

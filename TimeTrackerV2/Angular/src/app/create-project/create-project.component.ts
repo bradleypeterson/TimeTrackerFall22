@@ -17,11 +17,14 @@ export class CreateProjectComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-  ) { }
+  ) {
+    console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
+    this.courseID = this.router.getCurrentNavigation()?.extras.state?.returnCourseID;
+  }
 
   ngOnInit(): void {
 
-    this.courseID = this.activatedRoute.snapshot.params['id']; // get course id from URL
+    //this.courseID = this.activatedRoute.snapshot.params['id']; // get course id from URL
 
   }
 
@@ -48,7 +51,7 @@ export class CreateProjectComponent implements OnInit {
     this.http.post<any>('https://localhost:8080/api/createProject', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
-        this.router.navigate(['/course/' + this.courseID]);
+        this.GoBackToCourse();
       },
       error: error => {
         this.errMsg = error['error']['message'];
@@ -56,4 +59,9 @@ export class CreateProjectComponent implements OnInit {
     });
   }
 
+  GoBackToCourse() {
+    let state = {courseID: this.courseID};
+    // navigate to the component that is attached to the url '/course' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    this.router.navigate(['/course'], { state });
+  }
 }

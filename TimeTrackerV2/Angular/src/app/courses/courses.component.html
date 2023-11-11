@@ -57,10 +57,8 @@
           <td class="desc">{{ c.description }}</td>
           <td>
             <div class="btn-group float-right">
-              <a href="/course/{{ c.courseID }}" class="btn btn-purple">View</a
-              ><button class="btn btn-danger" (click)="drop(c.courseID)">
-                Drop
-              </button>
+              <button class="btn btn-purple" (click)="GoToCourse(c.courseID)">View</button>
+              <button class="btn btn-danger" (click)="drop(c.courseID)">Drop</button>
             </div>
           </td>
         </tr>
@@ -70,13 +68,8 @@
           <td class="desc">{{ c.description }}</td>
           <td>
             <div class="btn-group float-right">
-              <a href="/course/{{ c.courseID }}" class="btn btn-purple">View</a
-              ><button
-                class="btn btn-success float-right"
-                (click)="register(c.courseID)"
-              >
-                Register
-              </button>
+                <button class="btn btn-purple" (click)="GoToCourse(c.courseID)">View</button>
+                <button class="btn btn-success float-right" (click)="register(c.courseID)">Register</button>
             </div>
           </td>
         </tr>
@@ -101,10 +94,8 @@
         <td class="desc">{{ c.description }}</td>
         <td>
           <div class="btn-group float-right">
-            <a href="/course/{{ c.courseID }}" class="btn btn-purple">View</a
-            ><button class="btn btn-danger" (click)="cancel(c.courseID)">
-              Cancel
-            </button>
+            <button class="btn btn-purple" (click)="GoToCourse(c.courseID)">View</button>
+            <button class="btn btn-danger" (click)="cancel(c.courseID)">Cancel</button>
           </div>
         </td>
       </tr>
@@ -128,10 +119,8 @@
         <td class="desc">{{ c.description }}</td>
         <td>
           <div class="btn-group float-right">
-            <a href="/course/{{ c.courseID }}" class="btn btn-purple">View</a
-            ><button class="btn btn-danger" (click)="drop(c.courseID)">
-              Drop
-            </button>
+            <button class="btn btn-purple" (click)="GoToCourse(c.courseID)">View</button>
+            <button class="btn btn-danger" (click)="drop(c.courseID)">Drop</button>
           </div>
         </td>
       </tr>
@@ -156,13 +145,8 @@
         <td class="desc">{{ c.description }}</td>
         <td>
           <div class="btn-group float-right">
-            <a href="/course/{{ c.courseID }}" class="btn btn-purple">View</a
-            ><button
-              class="btn btn-success float-right"
-              (click)="register(c.courseID)"
-            >
-              Register
-            </button>
+            <button class="btn btn-purple" (click)="GoToCourse(c.courseID)">View</button>
+            <button class="btn btn-success float-right" (click)="register(c.courseID)">Register</button>
           </div>
         </td>
       </tr>

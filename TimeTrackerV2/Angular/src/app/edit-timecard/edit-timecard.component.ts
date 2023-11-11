@@ -21,8 +21,9 @@ export class EditTimecardComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-  ) { 
-    console.log(JSON.stringify(this.router.getCurrentNavigation()?.extras.state));
+  ) {
+    // This will grab values from the state variable of the navigate function we defined inside the users.ts component in the function navToResetPassword().  This solution was found here https://stackoverflow.com/a/54365098
+    console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
     this.timeslotID = this.router.getCurrentNavigation()?.extras.state?.timeslotID;
     this.projectID = this.router.getCurrentNavigation()?.extras.state?.projectID;
     this.firstName = this.router.getCurrentNavigation()?.extras.state?.firstName;

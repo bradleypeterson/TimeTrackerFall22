@@ -46,7 +46,10 @@ export class CourseReportsComponent implements OnInit {
     ) {
         // The below line of code will grab the section of the URL that is ":id" and store it into the variable courseID.  Where I found this code https://stackoverflow.com/questions/44864303/send-data-through-routing-paths-in-angular
         // The '!' at the end is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be
-        this.courseID = Number(this.route.snapshot.paramMap.get('id')!);
+        // this.courseID = Number(this.route.snapshot.paramMap.get('id')!);
+        
+        // This will grab values from the state variable of the navigate function we defined while navigating to the page THAT MAKES USE OF THIS COMPONENT I.E. the course component.  This solution was found here https://stackoverflow.com/a/54365098
+        this.courseID = this.router.getCurrentNavigation()?.extras.state?.courseID;
      }
 
     ngOnInit(): void {

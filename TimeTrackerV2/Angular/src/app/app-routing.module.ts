@@ -31,7 +31,7 @@ const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'admin-evals', component: AdminEvalsComponent },
   { path: 'assign-evals', component: AssignEvalsComponent },
-  { path: 'course/:id', component: CourseComponent },
+  { path: 'course', component: CourseComponent },  // Previously course/:id
   { path: 'courses', component: CoursesComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'eval', component: EvalComponent },

@@ -39,10 +39,12 @@ export class CourseComponent implements OnInit {
       return;
     }
     this.currentUser = JSON.parse(tempUser);
+    // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
+    console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
+    this.courseID = this.router.getCurrentNavigation()?.extras.state?.courseID;
   }
 
   ngOnInit(): void {
-
     // get user type
     let currentUser = localStorage.getItem('currentUser');
     var userData = currentUser ? JSON.parse(currentUser) : null;
@@ -53,8 +55,6 @@ export class CourseComponent implements OnInit {
     } else if (userType === 'student') {
       this.student = true;
     }
-
-    this.courseID = this.activatedRoute.snapshot.params['id']; // get course id from URL
 
     // if (this.courseID) { // set course to course from local storage based on course ID
     //   let temp = localStorage.getItem('courses');
@@ -157,6 +157,18 @@ export class CourseComponent implements OnInit {
         this.errMsg = error['error']['message'];
       }
     });
+  }
+
+  NavigateToEditCourse() {
+    let state = {returnCourseID: this.courseID};
+    // navigate to the component that is attached to the url '/course' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    this.router.navigate([`/edit-course/${this.courseID}`], { state });
+  }
+
+  NavigateToAddProject() {
+    let state = {returnCourseID: this.courseID};
+    // navigate to the component that is attached to the url '/course' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    this.router.navigate([`/create-project/${this.courseID}`], { state });
   }
 
   join(ProjectID: any) {
