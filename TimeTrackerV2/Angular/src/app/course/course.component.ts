@@ -161,13 +161,13 @@ export class CourseComponent implements OnInit {
 
   NavigateToEditCourse() {
     let state = {returnCourseID: this.courseID};
-    // navigate to the component that is attached to the url '/course' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate([`/edit-course/${this.courseID}`], { state });
   }
 
   NavigateToAddProject() {
     let state = {returnCourseID: this.courseID};
-    // navigate to the component that is attached to the url '/course' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate([`/create-project/${this.courseID}`], { state });
   }
 

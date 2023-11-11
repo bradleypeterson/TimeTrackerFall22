@@ -109,7 +109,7 @@ export class CourseReportsComponent implements OnInit {
     SeeTimeLogs(studentID: number, projectID: number) {
         let state = {studentID: studentID, projectID: projectID, courseID: this.courseID};
         console.log(`Navigate to the detailed report in the component \"view-report\" with the the following states ${JSON.stringify(state)}`);
-        // navigate to the component that is attached to the url '/report' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+        // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
         this.router.navigate(['/report'], { state });
     }
 

@@ -416,7 +416,7 @@ export class ProjectComponent implements OnInit {
                     this.errMsg = "";
 
                     let state = {courseID: this.project.courseID};
-                    // navigate to the component that is attached to the url '/course' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+                    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
                     // This method of navigating is special, the "replaceUrl" will make it will prevent the user from going back to this page when they delete the project.  This is documented here https://angular.io/api/router/NavigationBehaviorOptions
                     this.router.navigate(['/course'], { replaceUrl: true, state });
                 },
@@ -429,7 +429,7 @@ export class ProjectComponent implements OnInit {
 
     GoBackToCourse() {
         let state = {courseID: this.project.courseID};
-        // navigate to the component that is attached to the url '/course' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+        // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
         this.router.navigate(['/course'], { state });
     }
 

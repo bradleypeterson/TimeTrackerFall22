@@ -98,7 +98,7 @@ export class EditCourseComponent implements OnInit {
 
   GoBackToCourse() {
     let state = {courseID: this.courseID};
-    // navigate to the component that is attached to the url '/course' and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate(['/course'], { state });
   }
 }
