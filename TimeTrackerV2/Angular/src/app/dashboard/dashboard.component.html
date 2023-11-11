@@ -56,11 +56,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ p.courseName }}</h5>
             <p class="card-text">{{ p.description }}</p>
-            <a
-              routerLink="/project/{{ p.projectID }}"
-              class="btn btn-purple btn-sm"
-              >View Project</a
-            >
+            <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View Project</button>
           </div>
         </div>
       </div>

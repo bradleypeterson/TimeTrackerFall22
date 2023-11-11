@@ -123,6 +123,12 @@ export class DashboardComponent implements OnInit {
         this.router.navigate(['/course'], { state });
     }
 
+    GoToProject(projectID: number) {
+        let state = {projectID: projectID};
+        // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+        this.router.navigate(['/project'], { state });
+    }
+
   cancel(CourseId: any) {
     let req = {
       userID: this.currentUser.userID,

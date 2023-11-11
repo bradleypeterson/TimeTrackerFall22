@@ -32,9 +32,7 @@
                     "Switch to Manual Mode"}}</button>
             </div> -->
             <div class="row">
-                <button (click)="changeSubmitType()" class="btn btn-secondary">{{manualTimeCardEntry ? "Switch to Auto
-                    Mode" :
-                    "Switch to Manual Mode"}}</button>
+                <button (click)="changeSubmitType()" class="btn btn-secondary">{{manualTimeCardEntry ? "Switch to AutoMode" : "Switch to Manual Mode"}}</button>
             </div>
 
             <!-- Auto time card -->
@@ -343,7 +341,7 @@
                             <td>
                                 <div class="btn-group float-right">
                                     <button class="btn btn-secondary"
-                                        (click)="editTimeCard(projectId, user.timeslotID, user.firstName, user.lastName)">Edit</button>
+                                        (click)="editTimeCard(projectID, user.timeslotID, user.firstName, user.lastName)">Edit</button>
                                     <button class="btn btn-danger" (click)="deleteTimecard(user.timeslotID)">
                                         Delete
                                     </button>

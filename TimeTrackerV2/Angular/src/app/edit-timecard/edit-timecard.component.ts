@@ -95,11 +95,17 @@ CreateDateRangeValidator(): ValidatorFn {
     this.http.post<any>(`https://localhost:8080/api/editTimeCard`, payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
       next: data => {
         this.errMsg = "";
-        this.router.navigate(['/project/' + this.projectID]);
+        this.NavigateBackToProject();
       },
       error: error => {
         this.errMsg = error['error']['message'];
       }
     });
+  }
+
+  NavigateBackToProject() {
+    let state = {projectID: this.projectID};
+    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    this.router.navigate(['/project'], { state });
   }
 }

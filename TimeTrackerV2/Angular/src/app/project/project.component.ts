@@ -21,7 +21,7 @@ export class ProjectComponent implements OnInit {
     public projectUsers: any;
     public projectUserTimes: any;
     public totalTimeMap: Map<string, number> = new Map<string, number>();
-    public projectId;
+    public projectID;
 
     public pieChartOptions: ChartOptions<'pie'> = {
         responsive: false,
@@ -108,9 +108,13 @@ export class ProjectComponent implements OnInit {
 
         this.manualTimeCardEntry = JSON.parse(localStorage.getItem('manualTimeCardEntry') || 'false');  // Determine if the local storage has the value manualTimeCardEntry inside it so we know what state the form should be in.  If however the local storage doesn't have the value, it will return what is after the || for the default.
 
-        this.projectId = this.activatedRoute.snapshot.params["id"];
-        console.log("The current project is: " + this.projectId);
-        if (this.projectId) {
+        //this.projectID = this.activatedRoute.snapshot.params["id"];
+        // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
+        console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
+        this.projectID = this.router.getCurrentNavigation()?.extras.state?.projectID;
+        
+        console.log("The current project is: " + this.projectID);
+        if (this.projectID) {
             // get user type
             let currentUser = localStorage.getItem('currentUser');
             var userDate = currentUser ? JSON.parse(currentUser) : null;
@@ -129,9 +133,9 @@ export class ProjectComponent implements OnInit {
             //     console.log(projects);
             //     for (let project of projects) {
             //         console.log(`Processing the data for the project:\n` + JSON.stringify(project));
-            //         console.log(`Contents of \"this.projectId\": ` + this.projectId);
+            //         console.log(`Contents of \"this.projectID\": ` + this.projectID);
             //         console.log(`Current project's ID is: ` + project.projectID);
-            //         if (Number(project.projectID) === Number(this.projectId)) {
+            //         if (Number(project.projectID) === Number(this.projectID)) {
             //             console.log(`Found the project inside local storage:\n` + JSON.stringify(project));
             //             this.project = project;
             //             this.loadProjectUserTimes();
@@ -142,7 +146,7 @@ export class ProjectComponent implements OnInit {
     }
 
     getActivities(): void {
-        this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/${this.projectId}/activities/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/${this.projectID}/activities/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 console.log(`Data returned from API call for the function getActivites()\n` + JSON.stringify(data));
@@ -167,7 +171,7 @@ export class ProjectComponent implements OnInit {
     }
 
     getProjectInfo(): void {
-        this.http.get<any>(`https://localhost:8080/api/ProjectInfo/${this.projectId}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.get<any>(`https://localhost:8080/api/ProjectInfo/${this.projectID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 this.project = data;
@@ -226,7 +230,7 @@ export class ProjectComponent implements OnInit {
     }
 
     loadProjectUserTimes(): void {
-        this.http.get<any>(`https://localhost:8080/api/Projects/${this.projectId}/Users/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.get<any>(`https://localhost:8080/api/Projects/${this.projectID}/Users/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 console.log(`Data returned from API call for the function loadProjectUserTimes()\n` + JSON.stringify(data));
@@ -241,7 +245,7 @@ export class ProjectComponent implements OnInit {
     }
 
     loadProjectUsers(): void {
-        this.http.get<any>(`https://localhost:8080/api/AddToProject/${this.projectId}/InProject`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        this.http.get<any>(`https://localhost:8080/api/AddToProject/${this.projectID}/InProject`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
                 console.log(`Data returned from API call for the function loadProjectUsers()\n` + JSON.stringify(data));
@@ -280,7 +284,7 @@ export class ProjectComponent implements OnInit {
             isEdited: false,
 
             userID: this.currentUser.userID,
-            projectID: this.projectId,
+            projectID: this.projectID,
             description: this.autoForm.controls.description.value // pull the description field from the form
         };
 
@@ -320,7 +324,7 @@ export class ProjectComponent implements OnInit {
             isEdited: false,
 
             userID: this.currentUser.userID,
-            projectID: this.projectId,
+            projectID: this.projectID,
             description: this.manualForm.controls.description.value // pull the description field from the form
         };
 
@@ -404,7 +408,7 @@ export class ProjectComponent implements OnInit {
     delete() {
         if(confirm("Are you sure you want to delete " + this.project.projectName + "?")){
             let req = {
-                projectID: this.projectId
+                projectID: this.projectID
             };
             
             this.http.post<any>('https://localhost:8080/api/deleteProject/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({

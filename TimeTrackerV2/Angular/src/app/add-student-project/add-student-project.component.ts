@@ -129,4 +129,10 @@ export class AddStudentProjectComponent implements OnInit {
       }
     });
   }
+
+  NavigateBackToProject() {
+    let state = {projectID: this.projectID};
+    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    this.router.navigate(['/project'], { state });
+  }
 }
