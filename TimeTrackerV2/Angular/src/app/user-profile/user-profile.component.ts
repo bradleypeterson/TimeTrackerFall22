@@ -30,6 +30,10 @@ export class UserProfileComponent {
       return;
     }
     this.currentUser = JSON.parse(tempUser);
+
+    // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
+    console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
+    this.profileID = this.router.getCurrentNavigation()?.extras.state?.userID;
   }
 
   ngOnInit(): void {
@@ -45,7 +49,6 @@ export class UserProfileComponent {
       this.student = true;
     }
 
-    this.profileID = this.activatedRoute.snapshot.params['id']; // get profile id from URL
     if(this.profileID == this.userID){
       this.sameUser = true;
     }

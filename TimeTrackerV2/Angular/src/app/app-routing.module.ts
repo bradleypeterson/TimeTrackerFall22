@@ -39,7 +39,7 @@ const routes: Routes = [
   { path: 'manage-evals', component: ManageEvalsComponent },
   { path: 'project', component: ProjectComponent },  // Previously project/:id
   { path: 'register', component: RegisterComponent },
-  { path: 'profile/:id', component: UserProfileComponent},
+  { path: 'profile', component: UserProfileComponent},  // Previously profile/:id
   { path: 'edit-profile', component: EditProfileComponent},
   { path: 'user', component: UserComponent },
   { path: 'users', component: UsersComponent },

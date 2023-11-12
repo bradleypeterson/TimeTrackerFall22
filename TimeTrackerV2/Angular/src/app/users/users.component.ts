@@ -62,6 +62,12 @@ export class UsersComponent implements OnInit {
         });
     }
 
+    ViewProfile(userID: number) {
+        let state = {userID: userID};
+        // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+        this.router.navigate(['/profile'], { state });
+    }
+    
     navToResetPassword(studentID: number, username: string) {
         let state = {studentID: studentID, username: username};
         console.log(`Navigate to the \"resetpassword\" component with the the following states ${JSON.stringify(state)}`);

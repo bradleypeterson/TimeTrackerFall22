@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,9 @@ export class AppComponent implements OnInit {
   userID: string = '';
   isNavbarExpanded = false;
 
-
+  constructor (
+    private router: Router,
+  ) { }
 
   ngOnInit(): void {
     let currentUser = localStorage.getItem('currentUser');
@@ -38,4 +41,10 @@ export class AppComponent implements OnInit {
     // console.log(this.userType);
   }
   title = 'TimeTrackerV2';
+
+  ViewProfile() {
+    let state = {userID: this.userID};
+    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    this.router.navigate(['/profile'], { state });
+  }
 }

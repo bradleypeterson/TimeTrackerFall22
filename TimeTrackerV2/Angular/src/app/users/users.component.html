@@ -55,7 +55,7 @@
 
                 <!--<tr *ngFor="let u of users" class="position-relative">-->
 
-                <td><a href="profile/{{u.userID}}">{{ u.name }}</a></td> <!-- User's first and last name, the user will click this to go to the user's profile page where they can delete and reset the password for the user (Need to see with the group if this is desired) -->
+                <td><button class="btn-link" (click)="ViewProfile(u.userID)">{{ u.name }}</button></td>  <!-- User's first and last name, the user will click this to go to the user's profile page where they can delete and reset the password for the user (Need to see with the group if this is desired) -->
                 <td>
                     <div class="full-width">{{ u.username }}</div> <!-- Username -->
                     <!--<div class="full-width">{{u}}</div> A copy of the username for some reason?-->

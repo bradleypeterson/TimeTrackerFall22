@@ -16,16 +16,14 @@
       <div *ngSwitchCase="instructor">
         <div class="navbar-nav mx-auto">
           <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./dashboard">Dashboard</a>
-          <a class="nav-item nav-link active dark-nav-link centered-on-small"
-            routerLink="./profile/{{userID}}">Profile</a>
+          <button class="nav-item nav-link active dark-nav-link centered-on-small" (click)="ViewProfile()">Profile</button>
           <a class="nav-item nav-link ml-auto active dark-nav-link centered-on-small" href="#">Logout</a>
         </div>
       </div>
       <div *ngSwitchCase="student">
         <div class="navbar-nav mx-auto">
           <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./dashboard">Dashboard</a>
-          <a class="nav-item nav-link active dark-nav-link centered-on-small"
-            routerLink="./profile/{{userID}}">Profile</a>
+          <button class="nav-item nav-link active dark-nav-link centered-on-small" (click)="ViewProfile()">Profile</button>
           <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./courses">Courses</a>
           <a class="nav-item nav-link ml-auto active dark-nav-link centered-on-small" href="#">Logout</a>
         </div>
@@ -33,8 +31,7 @@
       <div *ngSwitchCase="admin">
         <div class="navbar-nav mx-auto">
           <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./dashboard">Dashboard</a>
-          <a class="nav-item nav-link active dark-nav-link centered-on-small"
-            routerLink="./profile/{{userID}}">Profile</a>
+          <button class="nav-item nav-link active dark-nav-link centered-on-small" (click)="ViewProfile()">Profile</button>
           <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./users">Users</a>
           <a class="nav-item nav-link ml-auto active dark-nav-link centered-on-small" href="#">Logout</a>
         </div>
