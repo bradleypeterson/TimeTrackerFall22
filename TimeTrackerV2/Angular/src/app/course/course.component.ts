@@ -160,9 +160,9 @@ export class CourseComponent implements OnInit {
   }
 
   NavigateToEditCourse() {
-    let state = {returnCourseID: this.courseID};
+    let state = {courseID: this.courseID};
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
-    this.router.navigate([`/edit-course/${this.courseID}`], { state });
+    this.router.navigate([`/edit-course`], { state });
   }
 
   NavigateToAddProject() {

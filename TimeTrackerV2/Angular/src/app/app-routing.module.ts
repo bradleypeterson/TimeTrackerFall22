@@ -49,7 +49,7 @@ const routes: Routes = [
   { path: 'resetpassword', component: ResetpasswordComponent },
   { path: 'add-courses', component: AddCoursesComponent },
   { path: 'create-course', component: CreateCourseComponent },
-  { path: 'edit-course/:id', component: EditCourseComponent },
+  { path: 'edit-course', component: EditCourseComponent },  // Previously edit-course/:id
   { path: 'create-project/:id', component: CreateProjectComponent },
   { path: 'edit-project/:id', component: EditProjectComponent },
   { path: 'add-students-project/:id', component: AddStudentProjectComponent },

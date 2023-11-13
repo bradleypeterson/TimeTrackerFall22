@@ -22,7 +22,7 @@ export class EditCourseComponent implements OnInit {
   ) {
     // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
     console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
-    this.courseID = this.router.getCurrentNavigation()?.extras.state?.returnCourseID;
+    this.courseID = this.router.getCurrentNavigation()?.extras.state?.courseID;
   }
 
   ngOnInit(): void {
@@ -33,8 +33,6 @@ export class EditCourseComponent implements OnInit {
     if(userType !== 'instructor'){ // redirect to dashboard if the user isn't an instructor
       window.location.replace("/dashboard");
     }
-
-    //this.courseID = this.activatedRoute.snapshot.params['id']; // get course id from URL
 
     // if(this.courseID) { // set course to course from local storage based on course ID
     //   let temp = localStorage.getItem('courses');
