@@ -5,7 +5,7 @@
 <div [ngSwitch]="true">
     <div *ngSwitchCase="instructor">
         <div class="btn-group">
-            <a href="/add-students-project/{{project.projectID}}" class="btn btn-purple">Add Students</a>
+            <button class="btn btn-purple" (click)="AddStudents()">Add Students</button>
             <button class="btn btn-secondary" (click)="Edit()">Edit</button>
             <button class="btn btn-danger" (click)="delete()">Delete</button>
         </div>

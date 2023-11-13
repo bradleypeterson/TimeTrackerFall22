@@ -405,6 +405,12 @@ export class ProjectComponent implements OnInit {
         this.seconds = '0' + 0;
     }
 
+    AddStudents() {
+        let state = {projectID: this.projectID};
+        // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+        this.router.navigate(['/add-students-project'], { state });    
+    }
+
     Edit() {
         let state = {projectID: this.projectID};
         // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098

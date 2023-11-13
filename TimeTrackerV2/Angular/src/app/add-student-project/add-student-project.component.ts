@@ -22,17 +22,19 @@ export class AddStudentProjectComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
-    const tempUser = localStorage.getItem('currentUser');
-    if (!tempUser) {
-      this.router.navigate(["/Login"]);
-      return;
+      const tempUser = localStorage.getItem('currentUser');
+      if (!tempUser) {
+        this.router.navigate(["/Login"]);
+        return;
+      }
+      this.currentUser = JSON.parse(tempUser);
+
+      // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
+      console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
+      this.projectID = this.router.getCurrentNavigation()?.extras.state?.projectID;
     }
-    this.currentUser = JSON.parse(tempUser);
-  }
 
   ngOnInit(): void {
-    this.projectID = this.activatedRoute.snapshot.params["id"]; // get projectID from url
-
     // set to project from local storage
     if (this.projectID) {
       let tempProjects = localStorage.getItem('projects');
