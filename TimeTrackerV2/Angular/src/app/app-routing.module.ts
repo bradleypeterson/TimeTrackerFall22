@@ -50,7 +50,7 @@ const routes: Routes = [
   { path: 'add-courses', component: AddCoursesComponent },
   { path: 'create-course', component: CreateCourseComponent },
   { path: 'edit-course', component: EditCourseComponent },  // Previously edit-course/:id
-  { path: 'create-project/:id', component: CreateProjectComponent },
+  { path: 'create-project', component: CreateProjectComponent },  // Previously create-project/:id
   { path: 'edit-project/:id', component: EditProjectComponent },
   { path: 'add-students-project/:id', component: AddStudentProjectComponent },
   { path: 'edit-timecard/:id', component: EditTimecardComponent },

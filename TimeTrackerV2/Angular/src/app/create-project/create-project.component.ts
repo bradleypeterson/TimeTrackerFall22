@@ -19,12 +19,10 @@ export class CreateProjectComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
   ) {
     console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
-    this.courseID = this.router.getCurrentNavigation()?.extras.state?.returnCourseID;
+    this.courseID = this.router.getCurrentNavigation()?.extras.state?.courseID;
   }
 
   ngOnInit(): void {
-
-    //this.courseID = this.activatedRoute.snapshot.params['id']; // get course id from URL
 
   }
 
