@@ -53,7 +53,7 @@ const routes: Routes = [
   { path: 'create-project', component: CreateProjectComponent },  // Previously create-project/:id
   { path: 'edit-project', component: EditProjectComponent },  // Previously edit-project/:id
   { path: 'add-students-project', component: AddStudentProjectComponent },  // Previously add-students-project/:id
-  { path: 'edit-timecard/:id', component: EditTimecardComponent },
+  { path: 'edit-timecard', component: EditTimecardComponent },  // Previously edit-timecard/:id
 ];
 
 @NgModule({

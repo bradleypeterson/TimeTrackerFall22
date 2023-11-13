@@ -464,8 +464,8 @@ export class ProjectComponent implements OnInit {
     }
 
     editTimeCard(projectID: number, timeslotID: number, firstName: any, lastName: any) {
-        //href="/edit-timecard/{{user.timeslotID}}"
         let state = {projectID: projectID, timeslotID: timeslotID, firstName: firstName, lastName: lastName};
-        this.router.navigate([`/edit-timecard/${timeslotID}`], { state });
+        // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+        this.router.navigate([`/edit-timecard`], { state });
     }
 }
