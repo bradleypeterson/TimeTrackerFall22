@@ -6,7 +6,7 @@
       <div class="card-body">
         <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
           <div>
-            <p style="color: red;">{{ errMsg }}</p>
+            <p class="errorText">{{ errMsg }}</p>
           </div>
           <div class="input-group">
             <div class="input-group-prepend"><span class="input-group-text"

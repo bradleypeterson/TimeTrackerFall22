@@ -3,7 +3,7 @@
     <hr>
 
     <form [formGroup]="createProjectForm" (ngSubmit)="onSubmit()">
-        <p style="color: red;">{{ errMsg }}</p>
+        <p class="errorText">{{ errMsg }}</p>
 
         <div class="form-group">
             <input id="projectName" formControlName="projectName" type="text" class="form-control" name="projectName"

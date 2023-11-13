@@ -86,7 +86,7 @@
                             <input formControlName="timecardEnd" type="datetime-local" id="End" class="form-control"
                                 required>
                         </div>
-                        <div *ngIf="manualForm.errors?.dateRange" class="row mt-2 error">
+                        <div *ngIf="manualForm.errors?.dateRange" class="row mt-2 errorText">
                             Your "Start Time" has to be before your "End Time"
                         </div>
                         <!-- Description row -->

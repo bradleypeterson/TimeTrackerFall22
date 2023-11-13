@@ -3,7 +3,7 @@
     <hr>
 
     <form [formGroup]="editTimecardForm" (ngSubmit)="onSubmit()">
-        <p style="color: red;">{{ errMsg }}</p>
+        <p class="errorText">{{ errMsg }}</p>
 
         <div class="form-group">
             <input id="studentName" formControlName="studentName" type="text" class="form-control" name="studentName" placeholder="{{firstName}} {{lastName}}" readonly>
@@ -15,7 +15,7 @@
             <input id="timeOut" formControlName="timeOut" type="datetime-local" class="form-control" name="timeOut" ng-model="timecard.timeOut">
         </div>
 
-        <div *ngIf="editTimecardForm.errors?.dateRange" class="row mt-2 error">
+        <div *ngIf="editTimecardForm.errors?.dateRange" class="row mt-2 errorText">
             Your "Start Time" has to be before your "End Time"
         </div>
 
