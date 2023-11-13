@@ -18,11 +18,13 @@ export class EditProjectComponent implements OnInit {
     private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-  ) { }
+  ) {
+      // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
+      console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only    
+      this.projectID = this.router.getCurrentNavigation()?.extras.state?.projectID;
+    }
 
   ngOnInit(): void {
-
-    this.projectID = this.activatedRoute.snapshot.params['id']; // get project id from URL
 
     // let tempProjects = localStorage.getItem('projects');
     //   if (tempProjects) {

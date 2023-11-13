@@ -405,6 +405,12 @@ export class ProjectComponent implements OnInit {
         this.seconds = '0' + 0;
     }
 
+    Edit() {
+        let state = {projectID: this.projectID};
+        // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+        this.router.navigate(['/edit-project'], { state });    
+    }
+
     delete() {
         if(confirm("Are you sure you want to delete " + this.project.projectName + "?")){
             let req = {
