@@ -10,14 +10,15 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 export class CourseComponent implements OnInit {
   public course: any;
-  public projects: any = [];
+  public projects: any = [];  // This is redundant information, if the user is not part of any project, or the variable allUserGroups size is 0, then the variable nonUserGroups contains every project for the course.  I am however am not the one that created this logic so I am not removing it because I don't know if it is used in local storage in anywhere else but here, it will simply not be used in the HTML for the component.
   public errMsg = '';
   public allUserGroups: any = [];
   public nonUserGroups: any = [];
-  public filteredProjects: any = [];
+  public filteredProjects: any = [];  // This is redundant information because of the same reason as stated above.
   public projectSearchQuery: any = '';
   public allUserFilteredProjects: any = [];
   public nonUserFilteredProjects: any = [];
+  public filtering: boolean = false;
 
   private courseID: any;
 
@@ -118,6 +119,7 @@ export class CourseComponent implements OnInit {
         this.errMsg = "";
         // console.log(data);
         this.allUserGroups = data;
+        this.allUserFilteredProjects = data;
         if (this.allUserGroups) {
           localStorage.setItem("allUserGroups", JSON.stringify(this.allUserGroups));
         }
@@ -134,6 +136,7 @@ export class CourseComponent implements OnInit {
         this.errMsg = "";
         // console.log(data);
         this.nonUserGroups = data;
+        this.nonUserFilteredProjects = data;
         if (this.nonUserGroups) {
           localStorage.setItem("nonUserGroups", JSON.stringify(this.nonUserGroups));
         }
@@ -230,55 +233,22 @@ export class CourseComponent implements OnInit {
   }
 
   searchProjects(): void {
-    let sizeOfFilteredProjects = 0;
-    let sizeOfAllUserFilteredProjects = 0;
-    let sizeOfNonUserFilteredProjects = 0;
-    if (this.projectSearchQuery == '') {
-      this.filteredProjects = [];
-      this.allUserFilteredProjects = [];
-      this.nonUserFilteredProjects = [];
-    }
-    else {
-      sizeOfFilteredProjects = this.filteredProjects.length;
-      this.filteredProjects.splice(0, sizeOfFilteredProjects);
-      sizeOfAllUserFilteredProjects = this.allUserFilteredProjects.length;
-      this.allUserFilteredProjects.splice(0, sizeOfAllUserFilteredProjects);
-      sizeOfNonUserFilteredProjects = this.nonUserFilteredProjects.length;
-      this.nonUserFilteredProjects.splice(0, sizeOfNonUserFilteredProjects);
+    const projectName = this.projectSearchQuery.toLowerCase();
 
-      for (let p of this.projects) {
-        if (p.projectName.toLowerCase().search(this.projectSearchQuery.toLowerCase()) != -1) {
-          this.filteredProjects.push(p);
-        }
-        else {
-          sizeOfFilteredProjects = this.filteredProjects.length;
-          this.filteredProjects.splice(0, sizeOfFilteredProjects);
-        }
-      }
+    this.filtering = !projectName ? false : true;  // if the field is not supplied, then we are not filtering the data, we will return all the projects
 
-      for (let p of this.allUserGroups) {
-        if (p.projectName.toLowerCase().search(this.projectSearchQuery.toLowerCase()) != -1) {
-          this.allUserFilteredProjects.push(p);
-        }
-        else {
-          sizeOfAllUserFilteredProjects = this.allUserFilteredProjects.length;
-          this.allUserFilteredProjects.splice(0, sizeOfAllUserFilteredProjects);
-          sizeOfNonUserFilteredProjects = this.nonUserFilteredProjects.length;
-          this.nonUserFilteredProjects.splice(0, sizeOfNonUserFilteredProjects);
-        }
-      }
+    this.allUserFilteredProjects = this.allUserGroups.filter((project: any) => {
+        // The below Match condition is read as follows, if the field is not supplied OR the field's data matches the current project, then it is considered a match.
+        const nameMatch = !projectName || project.projectName.toLowerCase().includes(projectName);
 
-      for (let p of this.nonUserGroups) {
-        if (p.projectName.toLowerCase().search(this.projectSearchQuery.toLowerCase()) != -1) {
-          this.nonUserFilteredProjects.push(p);
-        }
-        else {
-          sizeOfNonUserFilteredProjects = this.nonUserFilteredProjects.length;
-          this.nonUserFilteredProjects.splice(0, sizeOfNonUserFilteredProjects);
-          sizeOfAllUserFilteredProjects = this.allUserFilteredProjects.length;
-          this.allUserFilteredProjects.splice(0, sizeOfAllUserFilteredProjects);
-        }
-      }
-    }
+        return nameMatch;  // If the name matches, then the variable "project" is included inside the array "this.allUserFilteredProjects".
+    });
+
+    this.nonUserFilteredProjects = this.nonUserGroups.filter((project: any) => {
+        // The below Match condition is read as follows, if the field is not supplied OR the field's data matches the current project, then it is considered a match.
+        const nameMatch = !projectName || project.projectName.toLowerCase().includes(projectName);
+
+        return nameMatch;  // If the name matches, then the variable "project" is included inside the array "this.nonUserFilteredProjects".
+    });
   }
 }

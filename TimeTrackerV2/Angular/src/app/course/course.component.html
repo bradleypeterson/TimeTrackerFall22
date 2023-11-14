@@ -24,129 +24,47 @@
     </div>
   </div>
 
-  <div *ngIf="!userInCourse">
-    <div *ngIf="filteredProjects?.length > 0">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th class="table-head">Searched Projects</th>
-            <th class="table-head">Description</th>
-            <th class="table-head"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let p of filteredProjects">
-            <td>{{ p.projectName }}</td>
-            <td class="desc">{{ p.description }}</td>
-            <td>
-              <div class="btn-group float-right">
-                <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div *ngIf="filteredProjects?.length <= 0">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th class="table-head">All Projects</th>
-            <th class="table-head">Description</th>
-            <th class="table-head"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let p of projects">
-            <td>{{ p.projectName }}</td>
-            <td class="desc">{{ p.description }}</td>
-            <td>
-              <div class="btn-group float-right">
-                <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <div>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+        <th class="table-head">{{ !filtering ? "All Projects" : "Searched Projects"}}</th>  <!-- Need some method to determine if the search box has been altered but it only changes when the search button is pressed -->
+        <th class="table-head">Description</th>
+        <th class="table-head"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of allUserFilteredProjects">
+          <td>{{ p.projectName }}</td>
+          <td class="desc">{{ p.description }}</td>
+          <td>
+            <div class="btn-group float-right">
+              <button *ngIf="userInCourse" class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
+              <button *ngIf="userInCourse" class="btn btn-danger" (click)="leave(p.projectID)">Leave</button>
+
+              <button *ngIf="!userInCourse" class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngFor="let p of nonUserFilteredProjects">
+          <td>{{ p.projectName }}</td>
+          <td class="desc">{{ p.description }}</td>
+          <td>
+            <div class="btn-group float-right">
+                <button *ngIf="userInCourse" class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
+                <button *ngIf="userInCourse" class="btn btn-success" (click)="join(p.projectID)">Join</button>
+
+                <button *ngIf="!userInCourse" class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- if no projects were found, show this message saying that no projects were found -->
+    <div *ngIf="allUserFilteredProjects.length == 0 && nonUserFilteredProjects.length == 0" class="alert alert-danger">
+        No projects found
     </div>
   </div>
-
-    <div *ngIf="userInCourse">
-      <!-- Searched projects -->
-      <div *ngIf="allUserFilteredProjects?.length > 0 || nonUserFilteredProjects?.length > 0">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th class="table-head">Searched Projects</th>
-              <th class="table-head">Description</th>
-              <th class="table-head"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let p of allUserFilteredProjects">
-              <td>{{ p.projectName }}</td>
-              <td class="desc">{{ p.description }}</td>
-              <td>
-                <div class="btn-group float-right">
-                  <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
-                  <button class="btn btn-danger" (click)="leave(p.projectID)">Leave</button>
-                </div>
-              </td>
-            </tr>
-  
-            <tr *ngFor="let p of nonUserFilteredProjects">
-              <td>{{ p.projectName }}</td>
-              <td class="desc">{{ p.description }}</td>
-              <td>
-                <div class="btn-group float-right">
-                  <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
-                  <button class="btn btn-success" (click)="join(p.projectID)">Join</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Not searched projects -->
-      <div *ngIf="allUserFilteredProjects?.length <= 0 && nonUserFilteredProjects?.length <= 0">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th class="table-head">All Projects</th>
-              <th class="table-head">Description</th>
-              <th class="table-head"></th>
-            </tr>
-          </thead>
-          <tbody>
-
-            <!-- Projects student is in -->
-            <tr *ngFor="let p of allUserGroups">
-              <td>{{ p.projectName }}</td>
-              <td class="desc">{{ p.description }}</td>
-              <td>
-                <div class="btn-group float-right">
-                  <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
-                  <button class="btn btn-danger" (click)="leave(p.projectID)" *ngIf="p.isActive">Leave</button>
-                </div>
-              </td>
-            </tr>
-  
-            <!-- Projects student is not in -->
-            <tr *ngFor="let p of nonUserGroups">
-              <td>{{ p.projectName }}</td>
-              <td class="desc">{{ p.description }}</td>
-              <td>
-                <div class="btn-group float-right">
-                  <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
-                  <button class="btn btn-success" (click)="join(p.projectID)" *ngIf="p.isActive">Join</button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
   <!-- ng-model="search" ??? -->
   <!-- <form class="form-inline mb-3">
