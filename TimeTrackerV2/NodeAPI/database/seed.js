@@ -49,7 +49,7 @@ db.serialize(() => {
                 localStorage.setItem('defaultAdminCreatedAndNotViewed', false);
             }
             // If the a row was inserted, then "this.lastID" returns the ID of the row it was inserted into.  And because any thing above 0 is considered true, set the variable "global.defaultAdminCreated" to true because the default admin account was inserted.
-            else if(this.lastID) {
+            else if (this.lastID) {
                 console.log(`Default admin account created with an ID of: ${this.lastID}`);
                 localStorage.setItem('defaultAdminCreatedAndNotViewed', true);
             }
@@ -117,5 +117,56 @@ db.run(`CREATE TABLE IF NOT EXISTS Pend_Course_Users(
     FOREIGN KEY (userID) REFERENCES Users (userID) ON DELETE CASCADE,
     FOREIGN KEY (courseID) REFERENCES Courses (courseID) ON DELETE CASCADE
 );`);
+
+// Create Eval Questions table
+db.run(`CREATE TABLE IF NOT EXISTS Question (
+    questionID INTEGER PRIMARY KEY AUTOINCREMENT,
+    questionText TEXT NOT NULL,
+    templateID TEXT NOT NULL,
+    FOREIGN KEY (templateID) REFERENCES Template (templateID) ON DELETE CASCADE
+);`);
+
+// Create the Eval Template table and insert the default entry
+db.run(`CREATE TABLE IF NOT EXISTS Template (
+    templateID INTEGER PRIMARY KEY AUTOINCREMENT,
+    templateName TEXT NOT NULL
+)`, (createErr) => {
+    if (createErr) {
+        console.error(createErr.message);
+    } else {
+        // console.log('Templates table created.');
+
+        // Insert the default entry only if it doesn't exist
+        const insertDefaultTemplate = `
+            INSERT INTO Template (templateName)
+            SELECT 'default'
+            WHERE NOT EXISTS (
+                SELECT 1 FROM Template WHERE templateName = 'default'
+            );
+        `;
+
+        db.run(insertDefaultTemplate, (insertErr) => {
+            if (insertErr) {
+                console.error(insertErr.message);
+            } else {
+                // console.log('Default template inserted or already exists.');
+            }
+        });
+    }
+});
+
+
+// Create Eval Responses table (not yet in use)
+db.run(`CREATE TABLE IF NOT EXISTS Response (
+    responseID INTEGER PRIMARY KEY AUTOINCREMENT,
+    userID INTEGER NOT NULL,
+    evaluatorID INTEGER NOT NULL,
+    questionID INTEGER NOT NULL,
+    rating INTEGER NOT NULL,
+    FOREIGN KEY (userID) REFERENCES Users(userID),
+    FOREIGN KEY (evaluatorID) REFERENCES Users(userID),
+    FOREIGN KEY (questionID) REFERENCES Question(questionID)
+);`);
+
 
 db.close();  // Close the connection because it doesn't need to be persistent for the creation of the DB
