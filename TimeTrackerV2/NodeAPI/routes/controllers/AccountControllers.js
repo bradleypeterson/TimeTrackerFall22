@@ -170,3 +170,38 @@ exports.ChangePassword = (req, res) => {
         }
     });
 }
+
+exports.UpdateUserInfo = (req, res) => {
+    console.log("AccountControllers.js file/UpdateAccountInfo route called");
+
+    //"firstName":"sudo","lastName":"admin","type":"admin","isActive":0
+    let userID = req.body["userID"];
+    let username = req.body["username"];
+    let firstName = req.body["firstName"];
+    let lastName = req.body["lastName"];
+    let type = req.body["type"];
+    let isActive = req.body["isActive"];
+
+    let data = [];
+    data[0] = username;
+    data[1] = firstName;
+    data[2] = lastName;
+    data[3] = type;
+    data[4] = isActive;
+    data[5] = userID;
+
+    let sql = `UPDATE Users
+    SET username = ?, firstName = ?, lastName = ?, type = ?, isActive = ?
+    WHERE userID = ?`;
+
+    db.run(sql, data, (err, value) => {
+		if (err) {
+			console.log(err);
+			return res.status(500).json({ message: 'Something went wrong in saving the changes for the user.\nPlease try again later.' });
+		}
+		else {
+            return res.status(200).json({ message: 'The changes to the user has been saved.' });
+        }
+    });
+
+}

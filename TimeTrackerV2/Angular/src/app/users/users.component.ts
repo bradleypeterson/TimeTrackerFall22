@@ -48,7 +48,7 @@ export class UsersComponent implements OnInit {
 
     loadUsers(users: Array<object>) {
         this.http.get("https://localhost:8080/api/Users").subscribe((data: any) => {
-            for (let i = 0; i < data.length; i++) {
+            /*for (let i = 0; i < data.length; i++) {
                 users.push({
                     userID: data[i].userID,
                     name: data[i].firstName + " " + data[i].lastName,
@@ -56,9 +56,9 @@ export class UsersComponent implements OnInit {
                     isActive: data[i].isActive,
                     type: data[i].type
                 });
-            }
-
-            this.filteredUsers = this.users;
+            }*/
+            this.users = data;
+            this.filteredUsers = data;
         });
     }
 
@@ -66,6 +66,21 @@ export class UsersComponent implements OnInit {
         let state = {userID: userID};
         // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
         this.router.navigate(['/profile'], { state });
+    }
+
+    SaveUserChanges(userData: any)
+    {
+        let payload = userData;
+
+        this.http.post<any>("https://localhost:8080/api/UpdateUserInfo", payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+            next: res => {
+                // Notify the user that the user has been deleted
+                this.ShowMessage(res.message);
+            },
+            error: err => {
+                this.ShowMessage(err.error.message);
+            }
+        });
     }
     
     navToResetPassword(studentID: number, username: string) {

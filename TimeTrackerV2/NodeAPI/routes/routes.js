@@ -10,6 +10,7 @@ const {
     DeleteAccount,
     DefaultAdminAccountCreated,
     ChangePassword,
+    UpdateUserInfo,
 } = require("./controllers/AccountControllers")
 
 const {
@@ -86,6 +87,8 @@ router.delete("/deleteAccount", DeleteAccount);
 router.get("/defaultAdminCreated", DefaultAdminAccountCreated);
 
 router.put("/resetPassword/:userID", ChangePassword);
+
+router.post("/UpdateUserInfo", UpdateUserInfo);
 //#endregion
 
 //#region Course routes
