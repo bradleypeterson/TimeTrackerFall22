@@ -11,6 +11,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class EditCourseComponent implements OnInit {
   public errMsg = '';
   instructorID: string = '';
+  userID: string = '';
   public courseID = '';
   public course: any;
 
@@ -29,7 +30,7 @@ export class EditCourseComponent implements OnInit {
     let currentUser = localStorage.getItem('currentUser');
     var userDate = currentUser ? JSON.parse(currentUser) : null;
     var userType = userDate.type;
-    this.instructorID = userDate.userID;
+    this.userID = userDate.userID;
     if(userType !== 'instructor'){ // redirect to dashboard if the user isn't an instructor
       window.location.replace("/dashboard");
     }
@@ -58,6 +59,8 @@ export class EditCourseComponent implements OnInit {
             this.course = data;
             this.editCourseForm.controls['courseName'].setValue(this.course.courseName);
             this.editCourseForm.controls['description'].setValue(this.course.description);
+            this.editCourseForm.controls['isActive'].setValue(this.course.isActive);
+            this.instructorID = this.course.instructorID;
         },
         error: error => {
             this.errMsg = error['error']['message'];
@@ -81,7 +84,7 @@ export class EditCourseComponent implements OnInit {
     let payload = {
       courseName: this.editCourseForm.value['courseName'],
       description: this.editCourseForm.value['description'],
-      isActive: true,
+      isActive: this.editCourseForm.value['isActive'],
       instructorID: this.instructorID,
       courseID: this.courseID,
     }

@@ -67,6 +67,14 @@ const {
     EditUserProfile,
     GetUsersInfo,
 } = require("./controllers/UsersControllers")
+
+const {
+    AddQuestion,
+    AddTemplate,
+    Questions,
+    Templates,
+    UpdateQuestion
+} = require("./controllers/EvalControllers")
 //#endregion
 
 
@@ -185,6 +193,19 @@ router.get('/UserProfile/:userID', GetUserProfile);
 router.post('/EditProfile', EditUserProfile);
 
 router.get('/Users', GetUsersInfo);
+
+//#endregion
+
+//#region Eval routes
+router.post('/addQuestion', AddQuestion);
+
+router.post('/addTemplate', AddTemplate);
+
+router.get('/questions', Questions);
+
+router.get('/templates', Templates);
+
+router.post('/updateQuestion', UpdateQuestion);
 
 //#endregion
 
