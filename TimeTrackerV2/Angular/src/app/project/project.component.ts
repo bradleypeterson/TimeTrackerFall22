@@ -24,7 +24,12 @@ export class ProjectComponent implements OnInit {
     public projectID;
 
     public pieChartOptions: ChartOptions<'pie'> = {
-        responsive: false,
+        // responsive: false,
+        plugins: {
+            legend: {
+                position: 'left'
+            }
+        }
     };
     public pieChartLabels: any = [];
     public pieChartDatasets: any = [{ data: [] }];
@@ -150,8 +155,10 @@ export class ProjectComponent implements OnInit {
             next: data => {
                 this.errMsg = "";
                 console.log(`Data returned from API call for the function getActivites()\n` + JSON.stringify(data));
-                this.activities = data;
-                /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+                function lastFive(el: any, index: any, data: any) {
+                    return index >= data.length - 5;
+                }
+                this.activities = data.filter(lastFive).slice().reverse();
             },
             error: error => {
                 this.errMsg = error['error']['message'];
