@@ -69,6 +69,11 @@ export class EditProjectComponent implements OnInit {
   });
 
   onSubmit(): void {
+    // An extra check condition to prevent submission of the data unless the form is valid 
+    if(!this.editProjectForm.valid) {
+        return;
+    }
+    
     let payload = {
       projectName: this.editProjectForm.value['projectName'],
       description: this.editProjectForm.value['description'],

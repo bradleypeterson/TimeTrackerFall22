@@ -34,7 +34,7 @@ export class CreateProjectComponent implements OnInit {
   });
 
   onSubmit(): void {
-    // An extra check condition to prevent submission of the data unless for form is valid 
+    // An extra check condition to prevent submission of the data unless the form is valid 
     if (!this.createProjectForm.valid) {
         return;
     }

@@ -38,6 +38,7 @@ export class CourseReportsComponent implements OnInit {
 
     public filteredStudents: any = [];
     public studentSearchQuery: any = '';
+    public filtering: boolean = false;
 
     constructor(
         private http: HttpClient,
@@ -54,6 +55,7 @@ export class CourseReportsComponent implements OnInit {
 
     ngOnInit(): void {
         this.studentReports = this.getStudentReports(this.courseID);
+        this.filteredStudents = this.studentReports;
     }
 
     // Method to toggle expanded state of student card
@@ -114,24 +116,15 @@ export class CourseReportsComponent implements OnInit {
     }
 
     searchStudents(): void {
-        let sizeOfFilteredStudents = 0;
-        if (this.studentSearchQuery == '') {
-            this.filteredStudents = [];
-        }
-        else {
-            sizeOfFilteredStudents = this.filteredStudents.length;
-            this.filteredStudents.splice(0, sizeOfFilteredStudents-1);
-            this.filteredStudents.splice(0, sizeOfFilteredStudents);
-            for (let s of this.studentReports) {
-                if (s.studentName.toLowerCase().search(this.studentSearchQuery.toLowerCase()) != -1) {
-                    this.filteredStudents.push(s);
-                }
-                else {
-                    sizeOfFilteredStudents = this.filteredStudents.length;
-                    this.filteredStudents.splice(0, sizeOfFilteredStudents-1);
-                }
-            }
-        }
-        
+        const studentName = this.studentSearchQuery.toLowerCase();
+
+        this.filtering = !studentName ? false : true;  // if the field is not supplied, then we are not filtering the data, we will return all the students
+
+        this.filteredStudents = this.studentReports.filter((report) => {
+            // The below Match condition is read as follows, if the field is not supplied OR the field's data matches the current report, then it is considered a match.
+            const nameMatch = !studentName || report.studentName.toLowerCase().includes(studentName);
+
+            return nameMatch;  // If the name matches, then the variable "report" is included inside the array "this.filteredStudents".
+        });        
     }
 }
