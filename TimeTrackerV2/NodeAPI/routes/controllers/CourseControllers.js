@@ -42,7 +42,7 @@ exports.GetCourseInfo = (req, res) => {
 
     let courseID = req.params["id"];
 
-    let sql = `SELECT courseName, isActive, courseID, description
+    let sql = `SELECT courseName, isActive, courseID, description, instructorID
     FROM Courses
     WHERE courseID = ?`;
 
