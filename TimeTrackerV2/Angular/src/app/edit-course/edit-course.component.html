@@ -6,14 +6,14 @@
         <p class="errorText">{{ errMsg }}</p>
 
         <div class="form-group">
-            <input id="courseName" formControlName="courseName" type="text" class="form-control" name="courseName" placeholder="Course Name" ng-model="course.courseName">
+            <input id="courseName" formControlName="courseName" type="text" class="form-control" name="courseName" placeholder="Course Name" ng-model="course.courseName" required>
         </div>
         <div class="form-group">
-            <input id="description" formControlName="description" type="text" class="form-control" name="description" placeholder="Course Description" ng-model="course.description">
+            <input id="description" formControlName="description" type="text" class="form-control" name="description" placeholder="Course Description" ng-model="course.description" required>
         </div>
 
         <div class="btn-group">
-            <button type="submit" class="btn btn-success">Done</button>
+            <button type="submit" class="btn btn-success" [disabled]="!(editCourseForm.controls.courseName.valid && editCourseForm.controls.description.valid)">Save Changes</button>
             <button class="btn btn-danger" (click)="GoBackToCourse()">Cancel</button>
         </div>
     </form>
