@@ -30,7 +30,7 @@ exports.GetUsersInfo = (req, res) => {
 
     db.all(sql, [], (err, rows) => {
         if (err) {
-            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+            return res.status(500).json({ message: 'Something went wrong in grabbing the users. Please try again later.' });
         }
         if (rows) {
             return res.send(rows);

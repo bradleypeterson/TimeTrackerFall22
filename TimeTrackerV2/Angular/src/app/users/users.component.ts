@@ -10,13 +10,15 @@ import { FormGroup, UntypedFormControl } from '@angular/forms';
 })
 
 export class UsersComponent implements OnInit {
-    users: Array<any> = [];
-    filteredUsers: Array<any> = [];
+    users: any = [];
+    filteredUsers: any = [];
     searchForm = new FormGroup({
         name: new UntypedFormControl(''),
         active: new UntypedFormControl(''),
         type: new UntypedFormControl('')
     });
+    currentUserID!: number;
+    errMsg: string = "";
 
     constructor(
         private http: HttpClient,
@@ -24,10 +26,34 @@ export class UsersComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.loadUsers(this.users);
+        this.loadUsers();
+        let currentUser = localStorage.getItem('currentUser');
+        var userData = currentUser ? JSON.parse(currentUser) : null;
+        this.currentUserID = userData.userID;
     }
 
     public pageTitle = 'TimeTrackerV2 | Users'
+
+    loadUsers() {
+        this.http.get<any>("https://localhost:8080/api/Users", { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+            next: data => {
+                // The "data.map((d: any) => {return {...this.ProcessedUser(d)}})" makes a deep copy of the data so we can determine if something has changed for the user and display the "Save Changes" button.  You could also use "JSON.parse(JSON.stringify(data))" but it is less performant as these two things are talked about here https://stackoverflow.com/a/23481096
+                this.users = data.map((d: any) => {return {...this.ProcessedUser(d)}});
+                this.filteredUsers = data.map((d: any) => {return {...this.ProcessedUser(d)}});
+                // The reason why we have the above code this way is because if there is no filter is supplied that limits the number of users, the variables "users" and "filteredUsers" contain references to each other.  I.E. you delete an item from "users" and it is also deleted from "filteredUsers".
+                // However, if a filter is applied that limits the number of users, the variables "users" and "filteredUsers" contain their own copy of the data for some reason.  So we have to have it this way to have unique lists.
+                // Source that says objects and arrays are passed by reference, in Javascript but it still applies to TypeScript.  https://stackoverflow.com/questions/35473404/pass-by-value-and-pass-by-reference-in-javascript
+            },
+            error: err => {
+                this.errMsg = err.error.message;
+            }
+        });
+    }
+
+    ProcessedUser(user: any) {
+        user.isActive = user.isActive == 1 ? true : false;  // Converts the boolean of 1/0 the DB uses to true/false that the client uses
+        return user
+    }
 
     filterUsers() {
         // Grab the inputs from the form so they are in an easy to access variable
@@ -36,30 +62,21 @@ export class UsersComponent implements OnInit {
         const type = this.searchForm.controls.type.value;
 
         // This function will filter all every user in the variable "this.users" for any combination of the three input fields.  Source for this code with some modifications https://www.geeksforgeeks.org/how-to-filter-multiple-values-in-angularjs/#:~:text=Filter%20multiple%20values%20using%20a%20Custom%20Filter%20Function
-        this.filteredUsers = this.users.filter((user) => {
+        this.filteredUsers = this.users.filter((user: any) => {
             // The below Match conditions are read as follows, if the field is not supplied OR the field's data matches the current user, then it is considered a match.  This is filtered this way so that if they don't supply the field, it will exclude it from the filtering
-            const nameMatch = !name || user.name.toLowerCase().includes(name.toLowerCase());
+            const nameMatch = !name || `${user.firstName} ${user.lastName}`.toLowerCase().includes(name.toLowerCase());
             const activeMatch = !active || user.isActive == (active === 'true' ? 1 : 0);  // This filter condition is formatted this way because the UI and the logic uses true/false for boolean while the DB uses 1/0 for booleans.
             const typeMatch = !type || user.type === type;
 
             return nameMatch && activeMatch && typeMatch;  // If all three of these conditions are true, then the variable "user" is included inside the array "this.filteredUsers".
-        });
-    }
+        }).map((d: any) => {return {...d}});
 
-    loadUsers(users: Array<object>) {
-        this.http.get("https://localhost:8080/api/Users").subscribe((data: any) => {
-            /*for (let i = 0; i < data.length; i++) {
-                users.push({
-                    userID: data[i].userID,
-                    name: data[i].firstName + " " + data[i].lastName,
-                    username: data[i].username,
-                    isActive: data[i].isActive,
-                    type: data[i].type
-                });
-            }*/
-            this.users = data;
-            this.filteredUsers = data;
-        });
+        if(this.filteredUsers.length <= 0) {
+            this.errMsg = "No users found"
+        }
+        else {
+            this.errMsg = "";
+        }
     }
 
     ViewProfile(userID: number) {
@@ -68,14 +85,36 @@ export class UsersComponent implements OnInit {
         this.router.navigate(['/profile'], { state });
     }
 
+    UserModified(userInfo: any) {
+        let index: number = this.FindIndexOfUserWithID(this.users, userInfo.userID); // Grab the index of the user from the master list
+        let user: any = this.users[index];  // Grab the info for said user
+
+        // Stringify the two objects so we can compare them
+        const backendUser = JSON.stringify(user);
+        const frontendUser = JSON.stringify(userInfo);
+
+        // console.log(`Different:\n${backendUser}\n${frontendUser}\n${backendUser != frontendUser}`);  // For debugging only
+
+        // returns true if they are different and false if they are the same
+        return JSON.stringify(user) != JSON.stringify(userInfo)
+    }
+
     SaveUserChanges(userData: any)
     {
+        // An extra check statement to prevent altering of the current user's information
+        if(userData.userID === this.currentUserID) {
+            return;
+        }
+
         let payload = userData;
 
         this.http.post<any>("https://localhost:8080/api/UpdateUserInfo", payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: res => {
-                // Notify the user that the user has been deleted
-                this.ShowMessage(res.message);
+                // How update the master list so that it mirrors the UI's user
+                let index = this.FindIndexOfUserWithID(this.users, userData.userID);
+                this.users[index] = {...userData};
+                // Notify the user's information has been updated (no longer needed because the Save button is hidden when the user is saved because the master list and the UI match)
+                // this.ShowMessage(res.message);
             },
             error: err => {
                 this.ShowMessage(err.error.message);
@@ -104,9 +143,14 @@ export class UsersComponent implements OnInit {
             // This http delete request will delete the account attached to the user with the userID as specified in the body of the request, it will then remove the user from the local list of users so that the UI and the DB match.
             // This code is also formatted so that it will handle any 500 status codes the server sends here and it will display the message to the user.  Source for this code format with some alterations https://stackoverflow.com/a/52610468
             this.http.delete("https://localhost:8080/api/deleteAccount", { body: requestBody }).subscribe((res: any) => {
-                // This set of code will have the UI automatically updated because the content's of the variable "users" has been changed https://www.tutorialspoint.com/how-to-delete-a-row-from-table-using-angularjs
-                let index: number = this.users.indexOf(userInfo);
+                // The below code is formatted this way because the contents of "users" is not updated with the UI, so to find the specific user to remove them locally, we have to iterate through all of them, grab their ID's, and then find the index of the ID that matches the user just deleted.
+                let index: number = this.FindIndexOfUserWithID(this.users, userInfo.userID);
                 this.users.splice(index, 1);
+                
+                // This set of code will have the UI automatically updated, we don't have to use the function used above because the argument userInfo for this function is connected to an instance of a user inside "this.filteredUsers" https://www.tutorialspoint.com/how-to-delete-a-row-from-table-using-angularjs
+                index = this.filteredUsers.indexOf(userInfo);
+                this.filteredUsers.splice(index, 1);
+
                 // Now it will notify the user that the user has been deleted
                 this.ShowMessage(res.message);
             },
@@ -120,8 +164,15 @@ export class UsersComponent implements OnInit {
         }*/
     }
 
+    //#region Helper functions
     // Open an alert window with the supplied message
     ShowMessage(message: string) {
         alert(message);
     }
+
+    // This function will find the index of a user in the list supplied that has the ID that is supplied
+    FindIndexOfUserWithID(users: any, ID: number) {
+        return users.map((currentUser: any) => currentUser.userID).indexOf(ID);  // Return the index of the user inside of "users", it will return -1 if it can't find any user with the ID supplied
+    }
+    //#endregion
 }

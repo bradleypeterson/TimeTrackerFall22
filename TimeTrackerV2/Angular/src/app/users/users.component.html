@@ -55,7 +55,7 @@
 
                 <!--<tr *ngFor="let u of users" class="position-relative">-->
 
-                <td><button class="btn-link" (click)="ViewProfile(u.userID)">{{ u.firstName }} {{u.lastName}}</button></td>  <!-- User's first and last name, the user will click this to go to the user's profile page where they can delete and reset the password for the user (Need to see with the group if this is desired) -->
+                <td><button class="btn-link" (click)="ViewProfile(u.userID)">{{ u.firstName }} {{u.lastName}}</button></td>  <!-- User's first and last name, we as a group are thinking about either moving or implementing the reset password and delete user logic as shown below to the profile page for the user. -->
                 <td>
                     <div class="full-width">{{ u.username }}</div> <!-- Username -->
                     <!--<div class="full-width">{{u}}</div> A copy of the username for some reason?-->
@@ -72,7 +72,7 @@
                     <div class="pretty p-curve p-svg mr-0">
                         <!-- ng-model="u.isActive" ng-change="saveUser(u)" -->
                         <!-- If the user's account is active, check the checkbox https://codippa.com/check-uncheck-checkbox-conditionally-angular/ -->
-                        <input type="checkbox" [checked]="u.isActive" [(ngModel)]="u.isActive"/>
+                        <input type="checkbox" [checked]="u.isActive" [(ngModel)]="u.isActive" [disabled]="currentUserID === u.userID"/>
                         <div class="state p-primary">
                             <!-- Define a custom checkbox for the above input -->
                             <svg class="svg svg-icon" viewBox="0 0 20 20">
@@ -89,7 +89,7 @@
                 <td class="text-center d-none d-sm-table-cell">
                     <!--  Jason Steadman     Notes: Removed the ability for a user to change their own type.-->
                     <!-- ng-model="u.type" ng-change="saveUser(u)" ng-disabled="$parent.user.userID === u.userID" -->
-                    <select>
+                    <select [(ngModel)]="u.type" [disabled]="currentUserID === u.userID">
                         <option value="student" [selected]="u.type == 'student'">Student</option>
                         <option value="instructor" [selected]="u.type == 'instructor'">Instructor</option>
                         <option value="admin" [selected]="u.type == 'admin'">Admin</option>
@@ -98,7 +98,8 @@
 
                 <td class="text-center d-none d-sm-table-cell">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-primary" (click)="SaveUserChanges(u)">Save Changes</button>
+                        <button *ngIf="UserModified(u)" type="button" class="btn btn-primary" (click)="SaveUserChanges(u)">Save Changes</button>
+                        <!-- The above button will only be rendered to the user if the user's information has been modified -->
                         <button type="button" class="btn btn-purple" (click)="navToResetPassword(u.userID, u.username)">Reset Password</button>
                         <button type="button" class="btn btn-danger" (click)="DeleteUser(u)">Delete User</button>
                     </div>      
@@ -107,4 +108,7 @@
             <!-- To be moved to the profile page for the selected user -->
         </tbody>
     </table>
+    <div *ngIf="errMsg != ''" class="alert alert-danger">
+        {{ errMsg }}
+    </div>
 </div>
