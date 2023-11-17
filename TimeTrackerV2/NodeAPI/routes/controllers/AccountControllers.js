@@ -85,6 +85,7 @@ exports.Login = async (req, res, next) => {
 
 	let username = req.body["username"];
 	let password = req.body["password"];
+    console.log(`username: ${username} password: ${password}`);
 
 	let sql = `SELECT *
 		FROM Users
@@ -96,12 +97,20 @@ exports.Login = async (req, res, next) => {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
 		if (rows) {
-			if (rows['password'] === password) {
+            // If the passwords match and the user is active
+			if (rows['password'] === password && rows['isActive'] === 1) {  // we use 1 as true because the DB uses 1 as true and 0 as false
+                console.log("User authenticated");
 				return res.status(200).json({ user: rows });
-			} else {
+			}
+            // If the passwords do not match
+            else if (rows['password'] !== password) {
 				console.log("Wrong Password");
 				return res.status(401).json({ message: 'Username or password is incorrect.' });
 			}
+            else {
+                console.log("User not active");
+                return res.status(401).json({ message: 'Account has been disabled.'});
+            }
 		}
 		else {
 			console.log("No user with that username");
