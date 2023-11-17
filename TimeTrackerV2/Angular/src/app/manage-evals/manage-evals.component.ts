@@ -24,6 +24,10 @@ export class ManageEvalsComponent implements OnInit {
   selectedTemplateQuestions: Question[] = [];
   selectedTemplateId: string | null = null;
   newTemplateName: string = '';
+  showQuestionModal = false;
+  newQuestionText = '';
+  newQuestionType = '';
+
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
@@ -34,7 +38,7 @@ export class ManageEvalsComponent implements OnInit {
     this.http.get<EvalTemplate[]>('https://localhost:8080/api/templates').subscribe(
       data => {
         this.templates = data;
-        console.log('Fetched Templates:', data); // Log the response here
+        console.log('Fetched Templates:', data);
       },
       error => console.error('Error fetching templates:', error)
     );
@@ -49,7 +53,7 @@ export class ManageEvalsComponent implements OnInit {
     this.http.get<Question[]>(`https://localhost:8080/api/questions/${templateId}`).subscribe(
       data => {
         this.selectedTemplateQuestions = data;
-        console.log('Fetched Questions:', data); // Log the questions here
+        console.log('Fetched Questions:', data);
       },
       error => console.error('Error fetching questions:', error)
     );
@@ -68,10 +72,11 @@ export class ManageEvalsComponent implements OnInit {
       responses: this.selectedTemplateQuestions
     };
 
-    this.http.post('https://localhost:8080/api/UpdateQuestion/${templateId}', payload).subscribe(
+    this.http.post(`https://localhost:8080/api/UpdateQuestion/${this.selectedTemplateId}`, payload).subscribe(
       () => alert('Responses submitted successfully!'),
       error => console.error('Error submitting responses:', error)
     );
+
   }
 
   createTemplate() {
@@ -81,12 +86,41 @@ export class ManageEvalsComponent implements OnInit {
     }
 
     const newTemplate = { templateName: this.newTemplateName };
-    this.http.post('https://localhost:8080/api/addTemplate', newTemplate).subscribe(
+    this.http.post(`https://localhost:8080/api/addTemplate`, newTemplate).subscribe(
       () => {
         alert('Template created successfully!');
         this.loadTemplates(); // Reload templates to include the new one
       },
       error => console.error('Error creating template:', error)
+    );
+  }
+
+
+  addQuestion() {
+    if (!this.selectedTemplateId) {
+      alert('Please select a template first.');
+      return;
+    }
+
+    if (!this.newQuestionText || !this.newQuestionType) {
+      alert('Both question text and type are required');
+      return;
+    }
+
+    const payload = {
+      questionText: this.newQuestionText,
+      questionType: this.newQuestionType,
+      templateID: this.selectedTemplateId
+    };
+
+    this.http.post('https://localhost:8080/api/AddQuestion', payload).subscribe(
+      () => {
+        alert('Question added successfully!');
+        this.showQuestionModal = false;
+        this.newQuestionText = '';
+        this.newQuestionType = '';
+      },
+      error => console.error('Error adding question:', error)
     );
   }
 
