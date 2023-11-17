@@ -13,18 +13,33 @@ export class EditProjectComponent implements OnInit {
   public projectID: any;
   public project: any;
 
+  public currentUser: any;
+
   constructor(
     private formBuilder: UntypedFormBuilder,
     private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
+      const tempUser = localStorage.getItem('currentUser');
+      if (!tempUser) {
+        this.router.navigate(["/Login"]);
+        return;
+      }
+      this.currentUser = JSON.parse(tempUser);
+
       // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
       console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only    
       this.projectID = this.router.getCurrentNavigation()?.extras.state?.projectID;
     }
 
   ngOnInit(): void {
+    // get user type
+    var userType = this.currentUser.type;
+    if (userType === 'student') {
+      window.location.replace("/dashboard");
+    }
+
 
     // let tempProjects = localStorage.getItem('projects');
     //   if (tempProjects) {

@@ -14,12 +14,21 @@ export class EditProfileComponent implements OnInit {
   public userProfile: any;
   public profileData: any;
 
+  public currentUser: any;
+
   constructor(
     private formBuilder: UntypedFormBuilder,
     private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-  ) { }
+  ) {
+    const tempUser = localStorage.getItem('currentUser');
+    if (!tempUser) {
+      this.router.navigate(["/Login"]);
+      return;
+    }
+    this.currentUser = JSON.parse(tempUser);
+  }
 
   ngOnInit(): void {
     let currentUser = localStorage.getItem('currentUser');

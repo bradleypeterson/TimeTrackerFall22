@@ -12,18 +12,25 @@ export class CreateCourseComponent implements OnInit {
   public errMsg = '';
   instructorID: string = '';
 
+  public currentUser: any;
+
   constructor(
     private formBuilder: UntypedFormBuilder,
     private http: HttpClient,
     private router: Router,
-  ) { }
+  ) {
+    const tempUser = localStorage.getItem('currentUser');
+    if (!tempUser) {
+      this.router.navigate(["/Login"]);
+      return;
+    }
+    this.currentUser = JSON.parse(tempUser);
+  }
 
   ngOnInit(): void {
-    let currentUser = localStorage.getItem('currentUser');
-    var userDate = currentUser ? JSON.parse(currentUser) : null;
-    var userType = userDate.type;
-    this.instructorID = userDate.userID;
-    if (userType !== 'instructor') { // redirect to dashboard if the user isn't an instructor
+    // get user type
+    var userType = this.currentUser.type;
+    if (userType === 'student') {
       window.location.replace("/dashboard");
     }
   }

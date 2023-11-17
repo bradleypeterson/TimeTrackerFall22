@@ -12,11 +12,20 @@ export class AddCoursesComponent implements OnInit {
   public courses = [];
   public RegisteredCourses = [];
 
+  public currentUser: any;
+
 
   constructor(
     private http: HttpClient,
     private router: Router,
-  ) { }
+  ) {
+    const tempUser = localStorage.getItem('currentUser');
+      if (!tempUser) {
+        this.router.navigate(["/Login"]);
+        return;
+      }
+      this.currentUser = JSON.parse(tempUser);
+  }
 
   ngOnInit(): void {
   }

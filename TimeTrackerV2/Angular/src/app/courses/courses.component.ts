@@ -39,7 +39,11 @@ export class CoursesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    // get user type
+    var userType = this.currentUser.type;
+    if (userType === 'instructor') {
+      window.location.replace("/dashboard");
+    }
 
     this.loadCourses();
     // this.loadAllCourses();
