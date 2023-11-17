@@ -47,10 +47,8 @@ export class CourseComponent implements OnInit {
 
   ngOnInit(): void {
     // get user type
-    let currentUser = localStorage.getItem('currentUser');
-    var userData = currentUser ? JSON.parse(currentUser) : null;
-    var userType = userData.type;
-    this.userID = userData.userID;
+    var userType = this.currentUser.type;
+    this.userID = this.currentUser.userID;
     if (userType === 'instructor') {
       this.instructor = true;
     } else if (userType === 'student') {

@@ -36,10 +36,8 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
 
     // get user type
-    let currentUser = localStorage.getItem('currentUser');
-    var userDate = currentUser ? JSON.parse(currentUser) : null;
-    var userType = userDate.type;
-    this.userID = userDate.userID;
+    var userType = this.currentUser.type;
+    this.userID = this.currentUser.userID;
     if (userType === 'instructor') {
       this.instructor = true;
     }

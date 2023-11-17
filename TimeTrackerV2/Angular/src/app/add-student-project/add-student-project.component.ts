@@ -35,22 +35,43 @@ export class AddStudentProjectComponent implements OnInit {
     }
 
   ngOnInit(): void {
-    // set to project from local storage
-    if (this.projectID) {
-      let tempProjects = localStorage.getItem('projects');
-
-      if (tempProjects) {
-        const projects = JSON.parse(tempProjects);
-
-        for (let project of projects) {
-          if (Number(project.projectID) === Number(this.projectID)) {
-            this.project = project;
-          }
-        }
-      }
+    // get user type
+    var userType = this.currentUser.type;
+    if (userType === 'student') {
+      window.location.replace("/dashboard");
     }
 
-    this.loadPage();
+    this.getProjectInfo();
+
+    // set to project from local storage
+    // if (this.projectID) {
+    //   let tempProjects = localStorage.getItem('projects');
+
+    //   if (tempProjects) {
+    //     const projects = JSON.parse(tempProjects);
+
+    //     for (let project of projects) {
+    //       if (Number(project.projectID) === Number(this.projectID)) {
+    //         this.project = project;
+    //       }
+    //     }
+    //   }
+    // }
+  }
+
+  getProjectInfo(): void {
+    this.http.get<any>(`https://localhost:8080/api/ProjectInfo/${this.projectID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+        next: data => {
+            this.errMsg = "";
+            this.project = data;
+            if (this.project) {
+              this.loadPage();
+            }
+        },
+        error: error => {
+            this.errMsg = error['error']['message'];
+        }
+    });
   }
 
   loadPage(): void {

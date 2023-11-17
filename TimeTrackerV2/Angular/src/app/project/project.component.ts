@@ -121,10 +121,8 @@ export class ProjectComponent implements OnInit {
         console.log("The current project is: " + this.projectID);
         if (this.projectID) {
             // get user type
-            let currentUser = localStorage.getItem('currentUser');
-            var userDate = currentUser ? JSON.parse(currentUser) : null;
-            var userType = userDate.type;
-            this.userID = userDate.userID;
+            var userType = this.currentUser.type;
+            this.userID = this.currentUser.userID;
             if (userType === 'instructor') {
                 this.instructor = true;
             } else if (userType === 'student') {
