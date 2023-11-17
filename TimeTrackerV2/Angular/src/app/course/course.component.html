@@ -28,7 +28,7 @@
     <table class="table table-hover">
       <thead>
         <tr>
-        <th class="table-head">{{ !filtering ? "All Projects" : "Searched Projects"}}</th>  <!-- Need some method to determine if the search box has been altered but it only changes when the search button is pressed -->
+        <th class="table-head">{{ !filtering ? "All Projects" : "Searched Projects"}}</th>
         <th class="table-head">Description</th>
         <th class="table-head"></th>
         </tr>
@@ -39,10 +39,8 @@
           <td class="desc">{{ p.description }}</td>
           <td>
             <div class="btn-group float-right">
-              <button *ngIf="userInCourse" class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
+              <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
               <button *ngIf="userInCourse" class="btn btn-danger" (click)="leave(p.projectID)">Leave</button>
-
-              <button *ngIf="!userInCourse" class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
             </div>
           </td>
         </tr>
@@ -51,10 +49,8 @@
           <td class="desc">{{ p.description }}</td>
           <td>
             <div class="btn-group float-right">
-                <button *ngIf="userInCourse" class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
+                <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
                 <button *ngIf="userInCourse" class="btn btn-success" (click)="join(p.projectID)">Join</button>
-
-                <button *ngIf="!userInCourse" class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
             </div>
           </td>
         </tr>
