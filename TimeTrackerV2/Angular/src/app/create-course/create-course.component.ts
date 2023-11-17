@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 })
 export class CreateCourseComponent implements OnInit {
   public errMsg = '';
-  instructorID: string = '';
 
   public currentUser: any;
 
@@ -38,8 +37,6 @@ export class CreateCourseComponent implements OnInit {
   createCourseForm = this.formBuilder.group({
     courseName: '',
     description: '',
-    isActive: '',
-    instructorID: '',
   });
 
   onSubmit(): void {
@@ -52,7 +49,7 @@ export class CreateCourseComponent implements OnInit {
       courseName: this.createCourseForm.value['courseName'],
       description: this.createCourseForm.value['description'],
       isActive: true,
-      instructorID: this.instructorID,
+      instructorID: this.currentUser.userID,
     }
 
     this.http.post<any>('https://localhost:8080/api/createCourse', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({

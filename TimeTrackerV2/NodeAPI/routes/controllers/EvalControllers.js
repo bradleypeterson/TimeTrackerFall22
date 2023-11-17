@@ -3,7 +3,7 @@ const ConnectToDB = require('../../database/DBConnection');
 let db = ConnectToDB();
 
 exports.AddQuestion = async (req, res, next) => {
-    console.log("QuestionController.js file/AddQuestion route called");
+    console.log("EvalController.js file/AddQuestion route called");
 
     console.log("Request Body:", req.body);
 

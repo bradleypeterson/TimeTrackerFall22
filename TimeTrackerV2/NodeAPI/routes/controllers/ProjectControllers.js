@@ -239,7 +239,7 @@ exports.GetAllStudentsNotInProject = (req, res) => {
 }
 
 exports.CreateProject = async (req, res, next) => {
-    console.log("UsersControllers.js file/CreateProject route called");
+    console.log("ProjectControllers.js file/CreateProject route called");
 
     let data = [];
     data[0] = req.body["projectName"];
@@ -258,7 +258,7 @@ exports.CreateProject = async (req, res, next) => {
 }
 
 exports.EditProject = async (req, res, next) => {
-    console.log("UsersControllers.js file/EditProject route called");
+    console.log("ProjectControllers.js file/EditProject route called");
 
     let data = [];
     data[0] = req.body["projectName"];
@@ -280,7 +280,7 @@ exports.EditProject = async (req, res, next) => {
 }
 
 exports.DeleteProject = async (req, res, next) => {
-    console.log("UsersControllers.js file/DeleteProject route called");
+    console.log("ProjectControllers.js file/DeleteProject route called");
 
     let projectID = req.body["projectID"];
 

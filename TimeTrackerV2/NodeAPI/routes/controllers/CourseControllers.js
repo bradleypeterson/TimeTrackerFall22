@@ -81,7 +81,7 @@ exports.GetAllCoursesForInstructorID = (req, res) => { // dynamic courses based 
 }
 
 exports.CreateCourse = async (req, res, next) => {
-    console.log("UsersControllers.js file/CreateCourse route called");
+    console.log("CourseControllers.js file/CreateCourse route called");
 
     let data = [];
     data[0] = req.body["courseName"];
@@ -92,6 +92,7 @@ exports.CreateCourse = async (req, res, next) => {
     db.run(`INSERT INTO Courses(courseName, isActive, instructorID, description)
         VALUES(?, ?, ?, ?)`, data, function (err, rows) {
         if (err) {
+            console.log(err);
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         } else {
             return res.status(200).json({ course: data });
@@ -100,7 +101,7 @@ exports.CreateCourse = async (req, res, next) => {
 }
 
 exports.EditCourse = async (req, res, next) => {
-    console.log("UsersControllers.js file/EditCourse route called");
+    console.log("CourseControllers.js file/EditCourse route called");
 
     let data = [];
     data[0] = req.body["courseName"];
@@ -123,7 +124,7 @@ exports.EditCourse = async (req, res, next) => {
 }
 
 exports.DeleteCourse = async (req, res, next) => {
-    console.log("UsersControllers.js file/DeleteCourse route called");
+    console.log("CourseControllers.js file/DeleteCourse route called");
 
     let courseID = req.body["courseID"];
 
@@ -142,7 +143,7 @@ exports.DeleteCourse = async (req, res, next) => {
 }
 
 exports.GetPendInstrCourses = (req, res) => {
-    console.log("UsersControllers.js file/getPendInstrCourses route called");
+    console.log("CourseControllers.js file/getPendInstrCourses route called");
 
     let userID = req.params["userId"];
     console.log("userID: " + userID)
@@ -170,7 +171,7 @@ exports.GetPendInstrCourses = (req, res) => {
 
 // exports.GetPendInstrCourses = (req, res) => {
 //     // Log a message to the console indicating that this particular route handler (controller action) has been called.
-//     console.log("UsersControllers.js file/getPendInstrCourses route called");
+//     console.log("CourseControllers.js file/getPendInstrCourses route called");
 
 //     var rowData = [];
 //     let userID = req.params["userId"];
@@ -217,7 +218,7 @@ exports.GetPendInstrCourses = (req, res) => {
 //#region Student specific controllers
 // Description of the SQL statement, this will select all courses that a STUDENT IS registered for.  If you supply a id of a instructor, the very last condition "AND cu.userID = $(userID}" will make it return nothing.
 exports.GetCoursesRegisteredFor = (req, res) => {
-    console.log("UsersControllers.js file/GetCoursesRegisteredFor route called");
+    console.log("CourseControllers.js file/GetCoursesRegisteredFor route called");
 
     var rowData = [];
     let userID = req.params["userId"];
@@ -251,7 +252,7 @@ exports.GetCoursesRegisteredFor = (req, res) => {
 // Description of the SQL statement, this will select all courses that a STUDENT IS NOT registered for.
 exports.GetCoursesNotRegisteredFor = (req, res) => {
     // Log a message to the console indicating that this particular route handler (controller action) has been called.
-    console.log("UsersControllers.js file/GetCoursesNotRegisteredFor route called");
+    console.log("CourseControllers.js file/GetCoursesNotRegisteredFor route called");
 
     var rowData = [];
 
@@ -294,7 +295,7 @@ exports.GetCoursesNotRegisteredFor = (req, res) => {
 
 exports.GetCoursesPendCourses = (req, res) => {
     // Log a message to the console indicating that this particular route handler (controller action) has been called.
-    console.log("UsersControllers.js file/GetCoursesPendCourses route called");
+    console.log("CourseControllers.js file/GetCoursesPendCourses route called");
 
     var rowData = [];
     let userID = req.params["userId"];
@@ -326,7 +327,7 @@ exports.GetCoursesPendCourses = (req, res) => {
 }
 
 exports.PutUserInPending = async (req, res, next) => {
-    console.log("UsersControllers.js file/PutUserInPending route called");
+    console.log("CourseControllers.js file/PutUserInPending route called");
 
     let data = [];
     data[0] = req.body["userID"];
@@ -345,7 +346,7 @@ exports.PutUserInPending = async (req, res, next) => {
 }
 
 exports.RegisterForCourse = async (req, res, next) => {
-    console.log("UsersControllers.js file/RegisterForCourse route called");
+    console.log("CourseControllers.js file/RegisterForCourse route called");
 
     let data = [];
     data[0] = req.body["userID"];
@@ -364,7 +365,7 @@ exports.RegisterForCourse = async (req, res, next) => {
 }
 
 exports.DropCourse = async (req, res, next) => {
-    console.log("UsersControllers.js file/DropCourse route called");
+    console.log("CourseControllers.js file/DropCourse route called");
 
     let data = [];
     data[0] = req.body["courseID"];
@@ -385,7 +386,7 @@ exports.DropCourse = async (req, res, next) => {
 }
 
 exports.RemovePendUser = async (req, res, next) => {
-    console.log("UsersControllers.js file/removePendUser route called");
+    console.log("CourseControllers.js file/removePendUser route called");
 
     let data = [];
     data[0] = req.body["courseID"];
