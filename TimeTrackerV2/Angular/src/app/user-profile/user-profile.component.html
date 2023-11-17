@@ -1,10 +1,33 @@
 <div id="profile">
     <div *ngFor="let u of userProfile">
-        <h2>{{u.firstName}} {{u.lastName}}</h2>
-        <hr>
-        <h3>Pronouns: {{u.pronouns}}</h3>
-        <h3>Contact: {{u.contact}}</h3>
-        <p>{{u.bio}}</p>
+        <div class="row">
+            <div class="col-10">
+                <h3 class="h3-inline">{{u.firstName}} {{u.lastName}}</h3>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        <h4>User Info</h4>
+                        <b>Pronouns:</b> {{u.pronouns}}<br>
+                        <b>Contact:</b> {{u.contact}}<br>
+                    </div>
+                    <div class="col">
+                        <h4>Bio</h4>
+                        <p>{{u.bio}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2" *ngIf="sameUser || admin">
+                <div class="card">
+                    <div class="card-header">
+                        Options
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><a class="btn btn-purple btn-sm" href="/edit-profile">Edit Profile</a></li>
+                        <li class="list-group-item">Change password button goes here</li>
+                        <li class="list-group-item">Delete account button goes here</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
-    <a class="btn btn-purple btn-elevated" href="/edit-profile" *ngIf="sameUser">Edit Profile</a>
 </div>

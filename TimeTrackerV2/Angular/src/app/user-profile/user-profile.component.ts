@@ -14,6 +14,7 @@ export class UserProfileComponent {
 
   public instructor: boolean = false;
   public student: boolean = false;
+  public admin: boolean = false;
   public userID: string = '';
   public sameUser: boolean = false;
 
@@ -45,6 +46,8 @@ export class UserProfileComponent {
       this.instructor = true;
     } else if (userType === 'student') {
       this.student = true;
+    } else if (userType === 'admin'){
+      this.admin = true;
     }
 
     if(this.profileID == this.userID){
