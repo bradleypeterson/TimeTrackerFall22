@@ -58,15 +58,53 @@ exports.AddTemplate = async (req, res, next) => {
 exports.Questions = async (req, res, next) => {
     console.log("EvalControllers.js file/Questions route called");
 
-}
+    let templateID = req.params.templateID; // Assuming you're passing the template ID as a URL parameter
+
+    if (!templateID) {
+        return res.status(400).json({ message: 'Template ID is required' });
+    }
+
+    db.all("SELECT * FROM Question WHERE templateID = ?", [templateID], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ message: 'Error retrieving questions.' });
+        }
+        res.status(200).json(rows);
+    });
+};
 
 exports.Templates = async (req, res, next) => {
     console.log("EvalControllers.js file/Templates route called");
 
-}
+    db.all("SELECT * FROM Template", [], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ message: 'Error retrieving templates.' });
+        }
+        res.status(200).json(rows);
+    });
+};
 
 exports.UpdateQuestion = async (req, res, next) => {
     console.log("EvalControllers.js file/UpdateQuestion route called");
 
-}
+    let questionID = req.body.questionID;
+    let questionText = req.body.questionText;
+
+    if (!questionID || !questionText) {
+        return res.status(400).json({ message: 'Both question ID and text are required' });
+    }
+
+    db.run(`UPDATE Question SET questionText = ? WHERE id = ?`, [questionText, questionID], function (err) {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ message: 'Something went wrong when updating the question.' });
+        } else if (this.changes === 0) {
+            return res.status(404).json({ message: 'Question not found.' });
+        } else {
+            console.log(`Question with ID ${questionID} has been updated.`);
+            return res.status(200).json({ message: 'Question updated successfully.' });
+        }
+    });
+};
 

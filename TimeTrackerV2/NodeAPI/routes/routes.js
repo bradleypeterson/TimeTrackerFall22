@@ -201,7 +201,7 @@ router.post('/addQuestion', AddQuestion);
 
 router.post('/addTemplate', AddTemplate);
 
-router.get('/questions', Questions);
+router.get('/questions/:templateID', Questions);
 
 router.get('/templates', Templates);
 
