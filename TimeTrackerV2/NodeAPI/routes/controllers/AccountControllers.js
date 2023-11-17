@@ -40,7 +40,7 @@ exports.Register = async (req, res, next) => {
         data[2] = firstName;
         data[3] = lastName;
         data[4] = type;
-        data[5] = false;  // Don't know why this is false, I (Braxton) would think this would be true because I think these refers to if the account is active or disabled and if you are registering, you would be making an active account.
+        data[5] = true;
         data[6] = salt;
     
         db.run(sql, data, function (err, rows) {
@@ -135,13 +135,13 @@ exports.DefaultAdminAccountCreated = async (req, res, next) => {
     console.log("AccountControllers.js file/DefaultAdminAccountCreated route called");
 
     // The below variable is set in the seed.js file and if it is true, then the default admin account has been generated.
-    let defaultAdminCreatedAndNotViewed = JSON.parse(localStorage.getItem('defaultAdminCreatedAndNotViewed')) === true;
+    let CreatedOrEnabled = JSON.parse(localStorage.getItem('defaultAdminCreatedOrEnabledAndNotViewed')) === true;
 
-    console.log(`defaultAdminCreatedAndNotViewed: ${defaultAdminCreatedAndNotViewed}`)
+    console.log(`defaultAdminCreatedOrEnabledAndNotViewed: ${CreatedOrEnabled}`)
 
-    if(defaultAdminCreatedAndNotViewed) {
+    if(CreatedOrEnabled) {
         res.send(true);
-        localStorage.setItem('defaultAdminCreatedAndNotViewed', false);  //this will make it so that only the first person that uses this API call will see the message.
+        localStorage.setItem('defaultAdminCreatedOrEnabledAndNotViewed', false);  //this will make it so that only the first person that uses this API call will see the message.
     }
     else {
         res.send(false);

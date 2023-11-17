@@ -79,8 +79,8 @@ export class LoginComponent implements OnInit {
             next: defaultAdminCreated => {
                 this.errMsg = "";
                 if (defaultAdminCreated) {
-                    console.log("Displaying default admin account created message")
-                    alert("The default admin account has been created because there are no registered admins");
+                    console.log("Displaying default admin account created message");
+                    alert("The default admin account has been created or enabled because there are no registered or enabled admins.");
                 }
             },
             error: error => {
