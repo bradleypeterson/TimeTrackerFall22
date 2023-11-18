@@ -420,7 +420,7 @@ a:hover {
   &.disabled {
     color: white;
     background-color: #6e4097;
-    border: 2px solid #634097;
+    border: 1px solid #634097;
   }
 
   /* On active (click), push the button down a bit and adjust shadow */

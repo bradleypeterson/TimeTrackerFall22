@@ -127,4 +127,10 @@ export class CourseReportsComponent implements OnInit {
             return nameMatch;  // If the name matches, then the variable "report" is included inside the array "this.filteredStudents".
         });        
     }
+
+    ViewStudentProfile(userID: number) {
+        let state = {userID: userID};
+        // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+        this.router.navigate(['/profile'], { state });
+    }
 }

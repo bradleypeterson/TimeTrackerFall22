@@ -23,6 +23,7 @@
                     {{ studentReport.studentName }}
                 </div>
                 <div class="card-body" *ngIf="expandedCards[studentReport.id]">
+                    <button class="btn btn-purple btn-sm" (click)="ViewStudentProfile(studentReport.id)">View Student Profile</button><br><br>
                     <table class="table table-hover">
                         <thead>
                             <tr>
