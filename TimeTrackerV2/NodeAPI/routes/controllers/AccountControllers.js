@@ -107,9 +107,10 @@ exports.Login = async (req, res, next) => {
 				console.log("Wrong Password");
 				return res.status(401).json({ message: 'Username or password is incorrect.' });
 			}
+            // The account has been disabled
             else {
                 console.log("User not active");
-                return res.status(401).json({ message: 'Account has been disabled.'});
+                return res.status(403).json({ message: 'Account has been disabled.'});
             }
 		}
 		else {
