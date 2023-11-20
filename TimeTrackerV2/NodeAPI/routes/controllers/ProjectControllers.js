@@ -65,9 +65,8 @@ exports.GetUserTimesForProject = (req, res) => {
     -- Joins to get the students
     FROM Users u
     -- Joins to grab the timecards for the students
-    LEFT OUTER JOIN Project_Users pu ON pu.userID = u.userID  -- Grab the connections to the projects the user is assigned to, but if they are not connected to any projects, return null.  A possible issue occurs here because this logic is copied from the "GetReportsData" route, read the issue there for the problem.
-    LEFT OUTER JOIN Projects p ON p.projectID = pu.projectID  -- Grab all the projects the user has worked on, but if they have not part of the project, return null.
-    LEFT OUTER JOIN TimeCard tc ON tc.userID = u.userID AND tc.projectID = p.projectID  -- Grab all the time cards that the user has made for the project, but if the user has not made any time cards, return null.
+    LEFT OUTER JOIN TimeCard tc ON tc.userID = u.userID  -- Grab all the time cards that the user has made for the project, but if the user has not made any time cards, return null.
+    LEFT OUTER JOIN Projects p ON p.projectID = tc.projectID  -- Grab all the projects the user has worked on, but if they have not created any timecards, return null.
     -- Sort/Organize the data
     WHERE p.projectID = ?`;
 
