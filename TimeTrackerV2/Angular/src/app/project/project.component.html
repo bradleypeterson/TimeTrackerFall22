@@ -190,6 +190,7 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <!-- currently there is a bug here with the logic.  The API call that assigns to "projectUserTimes" will return all active and any users that has worked on a project.  Meaning if a user just joins a project, they have no timecards, so the above variable will contain a entry with no start/end time, so it will be displayed in the history.  So I (Braxton) am currently trying to work this out by using the code described here https://stackoverflow.com/a/38379389 -->
                         <ng-container *ngFor="let user of projectUserTimes" >
                             <tr *ngIf="user.timecardID">
                                 <td >{{user.firstName}} {{user.lastName}}</td>
