@@ -190,12 +190,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let user of projectUserTimes">
-                            <td>{{user.firstName}} {{user.lastName}}</td>
-                            <td>{{user.timeIn | date:'medium'}}</td>
-                            <td>{{user.timeOut | date:'medium'}}</td>
-                            <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
-                        </tr>
+                        <ng-container *ngFor="let user of projectUserTimes" >
+                            <tr *ngIf="user.timecardID">
+                                <td >{{user.firstName}} {{user.lastName}}</td>
+                                <td>{{user.timeIn | date:'medium'}}</td>
+                                <td>{{user.timeOut | date:'medium'}}</td>
+                                <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
+                            </tr>
+                        </ng-container>
                     </tbody>
                 </table>
             </div>
