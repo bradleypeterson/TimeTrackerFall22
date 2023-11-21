@@ -190,9 +190,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- currently there is a bug here with the logic.  The API call that assigns to "projectUserTimes" will return all active and any users that has worked on a project.  Meaning if a user just joins a project, they have no timecards, so the above variable will contain a entry with no start/end time, so it will be displayed in the history.  So I (Braxton) am currently trying to work this out by using the code described here https://stackoverflow.com/a/38379389 -->
+                        <!-- This section code will only allow timecards that the timeslotID variable is not null, this is because the API call that stores to projectUserTimes will return all users in the project, even those that have no timecard.  So this will make sure that the user has a timecard so it knows if it should be rendered or not https://stackoverflow.com/a/38379389 -->
                         <ng-container *ngFor="let user of projectUserTimes" >
-                            <tr *ngIf="user.timecardID">
+                            <tr *ngIf="user.timeslotID">
                                 <td >{{user.firstName}} {{user.lastName}}</td>
                                 <td>{{user.timeIn | date:'medium'}}</td>
                                 <td>{{user.timeOut | date:'medium'}}</td>
@@ -206,7 +206,7 @@
     </div>
 </div>
 
-<!-- Not project user or instructor version -->
+<!-- Not project user and not instructor version -->
 <div class="container" *ngIf="!isProjectUser && !instructor">
     <div class="row">
         <div class="col-6">
@@ -264,12 +264,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let user of projectUserTimes">
-                            <td>{{user.firstName}} {{user.lastName}}</td>
-                            <td>{{user.timeIn | date:'medium'}}</td>
-                            <td>{{user.timeOut | date:'medium'}}</td>
-                            <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
-                        </tr>
+                        <ng-container *ngFor="let user of projectUserTimes" >
+                            <tr *ngIf="user.timeslotID">
+                                <td>{{user.firstName}} {{user.lastName}}</td>
+                                <td>{{user.timeIn | date:'medium'}}</td>
+                                <td>{{user.timeOut | date:'medium'}}</td>
+                                <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
+                            </tr>
+                        </ng-container>
                     </tbody>
                 </table>
             </div>
@@ -277,7 +279,7 @@
     </div>
 </div>
 
-<!-- Not project user or instructor version -->
+<!-- Instructor version -->
 <div class="container" *ngIf="instructor">
     <div class="row">
         <div class="col-6">
@@ -336,21 +338,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let user of projectUserTimes">
-                            <td>{{user.firstName}} {{user.lastName}}</td>
-                            <td>{{user.timeIn | date:'medium'}}</td>
-                            <td>{{user.timeOut | date:'medium'}}</td>
-                            <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
-                            <td>
-                                <div class="btn-group float-right">
-                                    <button class="btn btn-secondary"
-                                        (click)="editTimeCard(projectID, user.timeslotID, user.firstName, user.lastName)">Edit</button>
-                                    <button class="btn btn-danger" (click)="deleteTimecard(user.timeslotID)">
-                                        Delete
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                        <ng-container *ngFor="let user of projectUserTimes" >
+                            <tr *ngIf="user.timeslotID">
+                                <td>{{user.firstName}} {{user.lastName}}</td>
+                                <td>{{user.timeIn | date:'medium'}}</td>
+                                <td>{{user.timeOut | date:'medium'}}</td>
+                                <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
+                                <td>
+                                    <div class="btn-group float-right">
+                                        <button class="btn btn-secondary"
+                                            (click)="editTimeCard(projectID, user.timeslotID, user.firstName, user.lastName)">Edit</button>
+                                        <button class="btn btn-danger" (click)="deleteTimecard(user.timeslotID)">
+                                            Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-container>
                     </tbody>
                 </table>
             </div>

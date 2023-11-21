@@ -216,17 +216,24 @@ export class ProjectComponent implements OnInit {
     populateGraph(): void {
         this.pieChartDatasets = [{ data: [] }];
         this.pieChartLabels = [];
-        if (this.totalTimeMap.size == 0) {
+
+        // You can use either of the below lines of code, they will achieve the same thing.  However, the second is easier to read.  Source https://stackoverflow.com/a/67288242
+        // let filtered = new Map([...this.totalTimeMap.entries()].filter((item: any) => item[1] > 0 ));
+        let filtered = new Map([...this.totalTimeMap.entries()].filter(([key, value]) => value > 0 ));
+
+        if (filtered.size == 0) {
             this.pieChartLabels.push("No time cards created");
             this.pieChartDatasets[0]["data"].push(1);
         }
-        this.totalTimeMap.forEach((value: number, key: string) => {
-            this.pieChartLabels.push(key);
-            this.pieChartDatasets[0]["data"].push(this.calculateGraphTime(value));
-            if (this.chart && this.chart.chart) {
-                this.chart.chart.update();
-            }
-        });
+        else {
+            filtered.forEach((value: number, key: string) => {
+                this.pieChartLabels.push(key);
+                this.pieChartDatasets[0]["data"].push(this.calculateGraphTime(value));
+                if (this.chart && this.chart.chart) {
+                    this.chart.chart.update();
+                }
+            });
+        }
     }
 
     calculateGraphTime(value: number): number {
