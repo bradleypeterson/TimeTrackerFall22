@@ -15,7 +15,7 @@ export class UserProfileComponent {
   public instructor: boolean = false;
   public student: boolean = false;
   public admin: boolean = false;
-  public userID: string = '';
+  public userID: any;
   public sameUser: boolean = false;
 
   public currentUser: any;
@@ -73,4 +73,18 @@ export class UserProfileComponent {
       }
     });
   }
+
+    navToResetPassword(userID: number, username: string) {
+        let state = {userID: userID, username: username};
+        console.log(`Navigate to the \"resetpassword\" component with the the following states ${JSON.stringify(state)}`);
+        //let user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        this.router.navigate(['/resetpassword'], { state });
+    }
+
+    //#region Helper functions
+    // Open an alert window with the supplied message
+    ShowMessage(message: string) {
+        alert(message);
+    }
+    //#endregion
 }

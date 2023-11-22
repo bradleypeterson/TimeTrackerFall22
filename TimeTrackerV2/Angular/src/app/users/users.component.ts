@@ -122,8 +122,8 @@ export class UsersComponent implements OnInit {
         });
     }
     
-    navToResetPassword(studentID: number, username: string) {
-        let state = {studentID: studentID, username: username};
+    navToResetPassword(userID: number, username: string) {
+        let state = {userID: userID, username: username};
         console.log(`Navigate to the \"resetpassword\" component with the the following states ${JSON.stringify(state)}`);
         //let user = JSON.parse(localStorage.getItem('currentUser') || '{}');
         this.router.navigate(['/resetpassword'], { state });
