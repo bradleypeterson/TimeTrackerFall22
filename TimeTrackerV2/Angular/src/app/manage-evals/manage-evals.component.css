@@ -23,12 +23,12 @@
     width: 80%;
 }
 
-.btn-close {
+/* .btn-close {
     color: #aaa;
     float: right;
     font-size: 28px;
     font-weight: bold;
-}
+} */
 
 .btn-close:hover,
 .btn-close:focus {
@@ -69,5 +69,3 @@
     max-width: auto;
     margin: 0 auto;
 }
-
-.btn-trigger {}

@@ -25,8 +25,12 @@
           <td>{{ c.description }}</td>
           <td>
             <div class="btn-group float-right">
-              <button class="btn btn-purple" (click)="GoToCourse(c.courseID)">View</button>
-              <button class="btn btn-danger" (click)="cancel(c.courseID)">Cancel</button>
+              <button class="btn btn-purple" (click)="GoToCourse(c.courseID)">
+                View
+              </button>
+              <button class="btn btn-danger" (click)="cancel(c.courseID)">
+                Cancel
+              </button>
             </div>
           </td>
         </tr>
@@ -38,7 +42,12 @@
           <h5 class="card-header">{{ c.courseName }}</h5>
           <div class="card-body">
             <p class="card-text">{{ c.description }}</p>
-            <button class="btn btn-purple btn-sm" (click)="GoToCourse(c.courseID)">View Course</button>
+            <button
+              class="btn btn-purple btn-sm"
+              (click)="GoToCourse(c.courseID)"
+            >
+              View Course
+            </button>
           </div>
         </div>
       </div>
@@ -56,7 +65,9 @@
           <div class="card-body">
             <h5 class="card-title">{{ p.courseName }}</h5>
             <p class="card-text">{{ p.description }}</p>
-            <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View Project</button>
+            <button class="btn btn-purple" (click)="GoToProject(p.projectID)">
+              View Project
+            </button>
           </div>
         </div>
       </div>
@@ -70,8 +81,15 @@
     <div>
       <h3 class="box-head">Courses</h3>
       <!-- This class will make the below button come next to it so they are on one line -->
-      <a href="/create-course" class="btn btn-success btn-courses">Create New Course</a>
-      <a href="/past-courses" class="btn btn-purple btn-courses">View Past Courses</a>
+      <a href="/create-course" class="btn btn-success btn-courses"
+        >Create New Course</a
+      >
+      <a href="/past-courses" class="btn btn-purple btn-courses"
+        >View Past Courses</a
+      >
+      <a href="/manage-evals" class="btn btn-purple btn-courses"
+        >Manage Evaluations</a
+      >
     </div>
     <hr />
     <div class="alert alert-danger" *ngIf="courses?.length <= 0">
@@ -83,13 +101,20 @@
           <h5 class="card-header">{{ c.courseName }}</h5>
           <div class="card-body">
             <p class="card-text">{{ c.description }}</p>
-            <button class="btn btn-purple btn-sm" (click)="GoToCourse(c.courseID)">View Course</button>
+            <button
+              class="btn btn-purple btn-sm"
+              (click)="GoToCourse(c.courseID)"
+            >
+              View Course
+            </button>
           </div>
         </div>
       </div>
     </div>
     <!--  -->
-    <h3 *ngIf="courses.length > 0" class="box-head">Pending Requests to Courses</h3>
+    <h3 *ngIf="courses.length > 0" class="box-head">
+      Pending Requests to Courses
+    </h3>
     <hr />
     <div class="alert alert-danger" *ngIf="PendInstrCourses?.length <= 0">
       No Pending Requests
