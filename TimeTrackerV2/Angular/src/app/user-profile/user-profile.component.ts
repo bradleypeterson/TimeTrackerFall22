@@ -74,12 +74,48 @@ export class UserProfileComponent {
     });
   }
 
-    navToResetPassword() {
+    NavToResetPassword() {
         let state = {userID: this.viewingUserID};
         console.log(`Navigate to the \"resetpassword\" component with the the following states ${JSON.stringify(state)}`);
         //let user = JSON.parse(localStorage.getItem('currentUser') || '{}');
         this.router.navigate(['/resetpassword'], { state });
     }
+
+        // Normally, we would want to have the argument be of type 'object' instead of 'any'. However if the type is 'object', we get an error saying "Property 'propertyName' doesn't exist on type 'object'"
+        DeleteAccount() {
+            // Syntax for the below code was found here https://stackoverflow.com/questions/9334636/how-to-create-a-dialog-with-ok-and-cancel-options
+            const response = confirm(`WARNING:  Deleting an account is irreversible.\n\nIf you continue with this process, the account will be deleted.\nDo you wish to continue?`);
+            // The user wants to delete the user
+            if (response) {
+                // Make a body variable for the http.delete request so we can safely delete user instead of passing the variable in the URL.  https://stackoverflow.com/a/40857437
+                let requestBody = {
+                    userID: this.viewingUserID
+                };
+    
+                // This http delete request will delete the account attached to the user with the userID as specified in the body of the request, it will then remove the user from the local list of users so that the UI and the DB match.
+                // This code is also formatted so that it will handle any 500 status codes the server sends here and it will display the message to the user.  Source for this code format with some alterations https://stackoverflow.com/a/52610468
+                this.http.delete("https://localhost:8080/api/deleteAccount", { body: requestBody }).subscribe((res: any) => {    
+                    // Notify the user that the user has been deleted
+                    this.ShowMessage(res.message);
+
+                    // If the user owns the account, then redirect them back to the login page
+                    if(this.sameUser) {
+                        this.router.navigate(['']);  // We don't flush the current user from local storage here, because this is done inside the login component 
+                    }
+                    else {
+                        this.router.navigate(['/users']);
+                    }
+                },
+                err => {
+                    this.ShowMessage(err.error.message);
+                });
+            }
+            // The user doesn't want to delete the user (for debugging only)
+            /*else {
+                console.log("User not deleted");
+            }*/
+        }
+    
 
     //#region Helper functions
     // Open an alert window with the supplied message

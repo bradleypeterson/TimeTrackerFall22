@@ -122,41 +122,6 @@ export class UsersComponent implements OnInit {
         });
     }
 
-    // Normally, we would want to have the argument be of type 'object' instead of 'any'. However if the type is 'object', we get an error saying "Property 'propertyName' doesn't exist on type 'object'"
-    DeleteUser(userInfo: any) {
-        // Syntax for the below code was found here https://stackoverflow.com/questions/9334636/how-to-create-a-dialog-with-ok-and-cancel-options
-        const response = confirm(`WARNING:  Deleting the user "${userInfo.name}" is irreversible.\n\nIf you continue with this process, the user will be deleted.\nDo you wish to continue?`);
-        // The user wants to delete the user
-        if (response) {
-            // Make a body variable for the http.delete request so we can safely delete user instead of passing the variable in the URL.  https://stackoverflow.com/a/40857437
-            let requestBody = {
-                userID: userInfo.userID
-            };
-
-            // This http delete request will delete the account attached to the user with the userID as specified in the body of the request, it will then remove the user from the local list of users so that the UI and the DB match.
-            // This code is also formatted so that it will handle any 500 status codes the server sends here and it will display the message to the user.  Source for this code format with some alterations https://stackoverflow.com/a/52610468
-            this.http.delete("https://localhost:8080/api/deleteAccount", { body: requestBody }).subscribe((res: any) => {
-                // The below code is formatted this way because the contents of "users" is not updated with the UI, so to find the specific user to remove them locally, we have to iterate through all of them, grab their ID's, and then find the index of the ID that matches the user just deleted.
-                let index: number = this.FindIndexOfUserWithID(this.users, userInfo.userID);
-                this.users.splice(index, 1);
-                
-                // This set of code will have the UI automatically updated, we don't have to use the function used above because the argument userInfo for this function is connected to an instance of a user inside "this.filteredUsers" https://www.tutorialspoint.com/how-to-delete-a-row-from-table-using-angularjs
-                index = this.filteredUsers.indexOf(userInfo);
-                this.filteredUsers.splice(index, 1);
-
-                // Now it will notify the user that the user has been deleted
-                this.ShowMessage(res.message);
-            },
-            err => {
-                this.ShowMessage(err.error.message);
-            });
-        }
-        // The user doesn't want to delete the user (for debugging only)
-        /*else {
-            console.log("User not deleted");
-        }*/
-    }
-
     //#region Helper functions
     // Open an alert window with the supplied message
     ShowMessage(message: string) {

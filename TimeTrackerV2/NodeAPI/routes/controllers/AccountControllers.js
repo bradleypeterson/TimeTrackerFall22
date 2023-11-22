@@ -136,7 +136,7 @@ exports.DeleteAccount = async (req, res, next) => {
 			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
 		}
 		else {
-            return res.status(200).json({ message: 'The user has been deleted.' });
+            return res.status(200).json({ message: 'The account has been deleted.' });
         }
 	});
 }
