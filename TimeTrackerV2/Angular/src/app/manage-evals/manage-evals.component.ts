@@ -13,6 +13,7 @@ interface Question {
   questionID: string;
   response: string | number;
 }
+
 interface UpdateQuestionPayload {
   questionText?: string;
   questionType?: string;
@@ -33,6 +34,8 @@ export class ManageEvalsComponent implements OnInit {
   newQuestionText = '';
   newQuestionType = '';
 
+  initialQuestionsState: Record<string, Question> = {};
+
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
@@ -49,7 +52,6 @@ export class ManageEvalsComponent implements OnInit {
     );
   }
 
-
   onTemplateSelect(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const templateId = selectElement.value;
@@ -58,46 +60,20 @@ export class ManageEvalsComponent implements OnInit {
     this.http.get<Question[]>(`https://localhost:8080/api/questions/${templateId}`).subscribe(
       data => {
         this.selectedTemplateQuestions = data;
+        // Store initial state
+        this.storeInitialState(data);
         console.log('Fetched Questions:', data);
       },
       error => console.error('Error fetching questions:', error)
     );
   }
 
-  submitUpdates(questionID: string, questionText: string, questionType: string) {
-    if (!this.selectedTemplateId) {
-      alert('No template selected!');
-      return;
-    }
-
-    let payload: UpdateQuestionPayload = {};
-    const question = this.selectedTemplateQuestions.find(q => q.questionID === questionID);
-
-    if (question) {
-      if (question.questionText !== questionText) {
-        payload.questionText = questionText;
-      }
-      if (question.questionType !== questionType) {
-        payload.questionType = questionType;
-      }
-    }
-
-    if (Object.keys(payload).length === 0) {
-      alert('No changes detected!');
-      return;
-    }
-
-    this.http.post(`https://localhost:8080/api/UpdateQuestion/${questionID}`, payload).subscribe(
-      () => {
-        alert('Responses submitted successfully!');
-        this.reloadQuestions();
-      },
-      error => console.error('Error submitting responses:', error)
-    );
+  storeInitialState(questions: Question[]) {
+    this.initialQuestionsState = {};
+    questions.forEach(question => {
+      this.initialQuestionsState[question.questionID] = { ...question };
+    });
   }
-
-
-
   reloadQuestions() {
     if (this.selectedTemplateId) {
       this.http.get<Question[]>(`https://localhost:8080/api/questions/${this.selectedTemplateId}`).subscribe(
@@ -167,4 +143,50 @@ export class ManageEvalsComponent implements OnInit {
       error => console.error('Error deleting question:', error)
     );
   }
+
+  submitUpdates(questionID: string, updatedText: string, updatedType: string) {
+    const payload: UpdateQuestionPayload = {};
+    const originalQuestion = this.initialQuestionsState[questionID]; // Use initial state for comparison
+
+    if (!originalQuestion) {
+      console.error('Question not found');
+      return;
+    }
+
+    console.log('Original Question (immediately after retrieval):', originalQuestion);
+
+    // Log updated values
+    console.log('Updated Text:', updatedText);
+    console.log('Updated Type:', updatedType);
+
+    // Check if the text or type has been changed
+    if (originalQuestion.questionText !== updatedText) {
+      console.log('Text has changed');
+      payload.questionText = updatedText;
+    }
+
+    if (originalQuestion.questionType !== updatedType) {
+      console.log('Type has changed');
+      payload.questionType = updatedType;
+    }
+
+    // Log payload before checking if it's empty
+    console.log('Payload before submission:', payload);
+
+    if (Object.keys(payload).length === 0) {
+      console.log('No changes to submit');
+      return;
+    }
+
+    // Send the update request
+    this.http.put(`https://localhost:8080/api/updateQuestion/${questionID}`, payload).subscribe(
+      () => {
+        alert('Question updated successfully!');
+        this.reloadQuestions();
+      },
+      error => console.error('Error updating question:', error)
+    );
+  }
+
+
 }

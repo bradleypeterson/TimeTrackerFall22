@@ -108,41 +108,60 @@ exports.Templates = async (req, res, next) => {
 };
 
 exports.UpdateQuestion = async (req, res, next) => {
-  console.log("EvalControllers.js file/UpdateQuestionDetails route called");
+  console.log("EvalControllers.js file/UpdateQuestion route called");
 
-  let questionID = req.body.questionID;
+  let questionID = req.params.questionID;
   let questionText = req.body.questionText;
   let questionType = req.body.questionType;
 
-  // Validate the input
+  console.log(
+    `Updating Question - ID: ${questionID}, Text: ${questionText}, Type: ${questionType}`
+  );
+
   if (!questionID) {
     return res.status(400).json({ message: "Question ID is required" });
   }
-  if (!questionText || !questionType) {
+
+  if (!questionText && !questionType) {
     return res
       .status(400)
-      .json({ message: "Question text and type are required" });
+      .json({ message: "Either question text or type is required to update" });
   }
 
-  db.run(
-    `UPDATE Question SET questionText = ?, questionType = ? WHERE questionID = ?`,
-    [questionText, questionType, questionID],
-    function (err) {
-      if (err) {
-        console.error(err.message);
-        return res.status(500).json({
-          message: "Something went wrong when updating the question.",
-        });
-      } else if (this.changes === 0) {
-        return res.status(404).json({ message: "Question not found." });
-      } else {
-        console.log(`Question with ID ${questionID} has been updated.`);
-        return res
-          .status(200)
-          .json({ message: "Question updated successfully." });
-      }
+  let sql = `UPDATE Question SET `;
+  let data = [];
+
+  if (questionText) {
+    sql += `questionText = ? `;
+    data.push(questionText);
+  }
+
+  if (questionType) {
+    if (questionText) {
+      sql += `, `;
     }
-  );
+    sql += `questionType = ? `;
+    data.push(questionType);
+  }
+
+  sql += `WHERE questionID = ?`;
+  data.push(questionID);
+
+  db.run(sql, data, function (err) {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).json({
+        message: "Something went wrong when updating the question.",
+      });
+    } else if (this.changes === 0) {
+      return res.status(404).json({ message: "Question not found." });
+    } else {
+      console.log(`Question with ID ${questionID} has been updated.`);
+      return res
+        .status(200)
+        .json({ message: "Question updated successfully." });
+    }
+  });
 };
 
 exports.DeleteQuestion = async (req, res, next) => {

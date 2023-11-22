@@ -1,88 +1,85 @@
-const express = require("express");  //includes the "express" module so we can use it inside this file.  Module documentation https://www.w3schools.com/nodejs/nodejs_modules.asp
+const express = require("express"); //includes the "express" module so we can use it inside this file.  Module documentation https://www.w3schools.com/nodejs/nodejs_modules.asp
 
 const router = express.Router();
 
 //#region Controller imports (imports everything inside the {} to this file)
 const {
-    Register,
-    GrabSaltForUser,
-    Login,
-    DeleteAccount,
-    DefaultAdminAccountCreated,
-    ChangePassword,
-    UpdateUserInfo,
-} = require("./controllers/AccountControllers")
+  Register,
+  GrabSaltForUser,
+  Login,
+  DeleteAccount,
+  DefaultAdminAccountCreated,
+  ChangePassword,
+  UpdateUserInfo,
+} = require("./controllers/AccountControllers");
 
 const {
-    GetAllCoursesNamesDescriptionIDs,
-    GetAllCoursesForInstructorID,
-    GetInactiveCoursesForInstructorID,
-    GetCourseInfo,
-    CheckUserInCourse,
-    CreateCourse,
-    EditCourse,
-    DeleteCourse,
-    GetPendInstrCourses,
-    GetCoursesRegisteredFor,
-    GetCoursesNotRegisteredFor,
-    GetCoursesPendCourses,
-    PutUserInPending,
-    RegisterForCourse,
-    DropCourse,
-    RemovePendUser,
-} = require("./controllers/CourseControllers")
+  GetAllCoursesNamesDescriptionIDs,
+  GetAllCoursesForInstructorID,
+  GetInactiveCoursesForInstructorID,
+  GetCourseInfo,
+  CheckUserInCourse,
+  CreateCourse,
+  EditCourse,
+  DeleteCourse,
+  GetPendInstrCourses,
+  GetCoursesRegisteredFor,
+  GetCoursesNotRegisteredFor,
+  GetCoursesPendCourses,
+  PutUserInPending,
+  RegisterForCourse,
+  DropCourse,
+  RemovePendUser,
+} = require("./controllers/CourseControllers");
+
+const { CreateNewGroup } = require("./controllers/MiscellaneousControllers");
 
 const {
-    CreateNewGroup,
-} = require("./controllers/MiscellaneousControllers")
+  GetProjectInfo,
+  GetActiveProjectsForUser,
+  GetUserTimesForProject,
+  GetAllProjectsForCourse,
+  GetUserProjectsForCourse,
+  GetNonUserProjectsForCourse,
+  JoinGroup,
+  LeaveGroup,
+  GetAllStudentsInProject,
+  GetAllStudentsNotInProject,
+  CreateProject,
+  EditProject,
+  DeleteProject,
+} = require("./controllers/ProjectControllers");
 
 const {
-    GetProjectInfo,
-    GetActiveProjectsForUser,
-    GetUserTimesForProject,
-    GetAllProjectsForCourse,
-    GetUserProjectsForCourse,
-    GetNonUserProjectsForCourse,
-    JoinGroup,
-    LeaveGroup,
-    GetAllStudentsInProject,
-    GetAllStudentsNotInProject,
-    CreateProject,
-    EditProject,
-    DeleteProject,
-} = require("./controllers/ProjectControllers")
+  GetReportsData,
+  GetAllTimeCardsForUserInProject,
+  GetAllTimeCardsForUser,
+  SaveTimeCard,
+  DeleteTimeCard,
+  EditTimeCard,
+  GetTimeCardInfo,
+} = require("./controllers/TimeCardControllers");
 
 const {
-    GetReportsData,
-    GetAllTimeCardsForUserInProject,
-    GetAllTimeCardsForUser,
-    SaveTimeCard,
-    DeleteTimeCard,
-    EditTimeCard,
-    GetTimeCardInfo,
-} = require("./controllers/TimeCardControllers")
+  GetUserInfo,
+  GetUserProfile,
+  EditUserProfile,
+  GetUsersInfo,
+} = require("./controllers/UsersControllers");
 
 const {
-    GetUserInfo,
-    GetUserProfile,
-    EditUserProfile,
-    GetUsersInfo,
-} = require("./controllers/UsersControllers")
-
-const {
-    AddQuestion,
-    AddTemplate,
-    Questions,
-    Templates,
-    UpdateQuestion,
-    DeleteQuestion
-} = require("./controllers/EvalControllers")
+  AddQuestion,
+  AddTemplate,
+  Questions,
+  Templates,
+  UpdateQuestion,
+  DeleteQuestion,
+} = require("./controllers/EvalControllers");
 //#endregion
-
 
 //This is used to validate that the api route is working, it has no functional purposes other then that
 router.get("/", (req, res) => {
-    res.send("api route working");
+  res.send("api route working");
 });
 
 //#region Account routes
@@ -102,117 +99,129 @@ router.post("/UpdateUserInfo", UpdateUserInfo);
 //#endregion
 
 //#region Course routes
-router.get('/Courses', GetAllCoursesNamesDescriptionIDs);
+router.get("/Courses", GetAllCoursesNamesDescriptionIDs);
 
-router.get('/Courses/:id', GetAllCoursesForInstructorID);
+router.get("/Courses/:id", GetAllCoursesForInstructorID);
 
-router.get('/Courses/:id/getInactiveCourses', GetInactiveCoursesForInstructorID);
+router.get(
+  "/Courses/:id/getInactiveCourses",
+  GetInactiveCoursesForInstructorID
+);
 
-router.get('/CourseInfo/:id', GetCourseInfo);
+router.get("/CourseInfo/:id", GetCourseInfo);
 
-router.get('/Courses/UserInCourse/:courseID/:userID', CheckUserInCourse);
+router.get("/Courses/UserInCourse/:courseID/:userID", CheckUserInCourse);
 
 //#region Instructor specific controllers
-router.post('/createCourse', CreateCourse);
+router.post("/createCourse", CreateCourse);
 
-router.post('/editCourse', EditCourse);
+router.post("/editCourse", EditCourse);
 
-router.post('/deleteCourse', DeleteCourse);
+router.post("/deleteCourse", DeleteCourse);
 
-router.get('/Users/:userId/getPendInstrCourses', GetPendInstrCourses);
+router.get("/Users/:userId/getPendInstrCourses", GetPendInstrCourses);
 //#endregion
 
 //#region Student specific controllers
-router.get('/Users/:userId/getUserCourses', GetCoursesRegisteredFor);
+router.get("/Users/:userId/getUserCourses", GetCoursesRegisteredFor);
 
-router.get('/Users/:userId/getNonUserCourses', GetCoursesNotRegisteredFor);
+router.get("/Users/:userId/getNonUserCourses", GetCoursesNotRegisteredFor);
 
-router.get('/Users/:userId/getCoursesPendCourses', GetCoursesPendCourses);
+router.get("/Users/:userId/getCoursesPendCourses", GetCoursesPendCourses);
 
-router.post('/putUserInPending', PutUserInPending);
+router.post("/putUserInPending", PutUserInPending);
 
-router.post('/addUserCourse', RegisterForCourse);
+router.post("/addUserCourse", RegisterForCourse);
 
-router.post('/deleteUserCourse', DropCourse);
+router.post("/deleteUserCourse", DropCourse);
 
-router.post('/removePendUser', RemovePendUser);
+router.post("/removePendUser", RemovePendUser);
 
 //#endregion
 
 //#endregion
 
 //#region Miscellaneous routes
-router.post('/createGroup', CreateNewGroup);
+router.post("/createGroup", CreateNewGroup);
 //#endregion
 
 //#region Project routes
-router.get('/ProjectInfo/:id', GetProjectInfo);
+router.get("/ProjectInfo/:id", GetProjectInfo);
 
-router.get('/ProjectsForUser/:userID', GetActiveProjectsForUser);
+router.get("/ProjectsForUser/:userID", GetActiveProjectsForUser);
 
-router.get('/Projects/:id/Users', GetUserTimesForProject);
+router.get("/Projects/:id/Users", GetUserTimesForProject);
 
-router.get('/Projects/:id', GetAllProjectsForCourse);
+router.get("/Projects/:id", GetAllProjectsForCourse);
 
-router.get('/ProjectsForUser/:courseID/:userID/userGroups', GetUserProjectsForCourse);
+router.get(
+  "/ProjectsForUser/:courseID/:userID/userGroups",
+  GetUserProjectsForCourse
+);
 
-router.get('/ProjectsForUser/:courseID/:userID/nonUserGroups', GetNonUserProjectsForCourse);
+router.get(
+  "/ProjectsForUser/:courseID/:userID/nonUserGroups",
+  GetNonUserProjectsForCourse
+);
 
-router.post('/joinGroup', JoinGroup);
+router.post("/joinGroup", JoinGroup);
 
-router.post('/leaveGroup', LeaveGroup);
+router.post("/leaveGroup", LeaveGroup);
 
-router.post('/createProject', CreateProject);
+router.post("/createProject", CreateProject);
 
-router.post('/editProject', EditProject);
+router.post("/editProject", EditProject);
 
-router.post('/deleteProject', DeleteProject);
+router.post("/deleteProject", DeleteProject);
 
-router.get('/AddToProject/:projectID/InProject', GetAllStudentsInProject);
+router.get("/AddToProject/:projectID/InProject", GetAllStudentsInProject);
 
-router.get('/AddToProject/:projectID/NotInProject', GetAllStudentsNotInProject);
+router.get("/AddToProject/:projectID/NotInProject", GetAllStudentsNotInProject);
 //#endregion
 
 //#region Time card routes
-router.get('/Course/:courseID/GetReportsData', GetReportsData);
+router.get("/Course/:courseID/GetReportsData", GetReportsData);
 
-router.get('/Users/:userID/:projectID/activities', GetAllTimeCardsForUserInProject);
+router.get(
+  "/Users/:userID/:projectID/activities",
+  GetAllTimeCardsForUserInProject
+);
 
-router.get('/Users/:userID/activities', GetAllTimeCardsForUser);
+router.get("/Users/:userID/activities", GetAllTimeCardsForUser);
 
-router.post('/clock', SaveTimeCard);
+router.post("/clock", SaveTimeCard);
 
-router.post('/deleteTimeCard', DeleteTimeCard);
+router.post("/deleteTimeCard", DeleteTimeCard);
 
-router.post('/editTimeCard', EditTimeCard);
+router.post("/editTimeCard", EditTimeCard);
 
-router.get('/TimeCardInfo/:id', GetTimeCardInfo);
+router.get("/TimeCardInfo/:id", GetTimeCardInfo);
 //#endregion
 
 //#region User routes
-router.get('/GetUserInfo/:id', GetUserInfo);
+router.get("/GetUserInfo/:id", GetUserInfo);
 
-router.get('/UserProfile/:userID', GetUserProfile);
+router.get("/UserProfile/:userID", GetUserProfile);
 
-router.post('/EditProfile', EditUserProfile);
+router.post("/EditProfile", EditUserProfile);
 
-router.get('/Users', GetUsersInfo);
+router.get("/Users", GetUsersInfo);
 
 //#endregion
 
 //#region Eval routes
-router.post('/addQuestion', AddQuestion);
+router.post("/addQuestion", AddQuestion);
 
-router.post('/addTemplate', AddTemplate);
+router.post("/addTemplate", AddTemplate);
 
-router.get('/questions/:templateID', Questions);
+router.get("/questions/:templateID", Questions);
 
-router.get('/templates', Templates);
+router.get("/templates", Templates);
 
-router.post('/updateQuestion/:questionID', UpdateQuestion);
+router.put("/updateQuestion/:questionID", UpdateQuestion);
 
-router.delete('/deleteQuestion/:questionID', DeleteQuestion);
+router.delete("/deleteQuestion/:questionID", DeleteQuestion);
 
 //#endregion
 
-module.exports = router;  //export the constant "router" (which contains the get, post, put, and delete http responses) so that we can make use of it outside this file.  This is the middleware that Router.use() requires to run.  https://stackoverflow.com/questions/27465850/typeerror-router-use-requires-middleware-function-but-got-a-object
+module.exports = router; //export the constant "router" (which contains the get, post, put, and delete http responses) so that we can make use of it outside this file.  This is the middleware that Router.use() requires to run.  https://stackoverflow.com/questions/27465850/typeerror-router-use-requires-middleware-function-but-got-a-object
