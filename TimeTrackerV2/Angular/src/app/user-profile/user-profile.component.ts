@@ -9,13 +9,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class UserProfileComponent {
   public userProfile: any;
-  public profileID: any;
+  public viewingUserID: any;  // The userID of the profile we want to view
   public errMsg = '';
 
   public instructor: boolean = false;
   public student: boolean = false;
   public admin: boolean = false;
-  public userID: any;
+  public currentUserID: any;  // The userID of the current user
   public sameUser: boolean = false;
 
   public currentUser: any;
@@ -34,14 +34,14 @@ export class UserProfileComponent {
 
     // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
     console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
-    this.profileID = this.router.getCurrentNavigation()?.extras.state?.userID;
+    this.viewingUserID = this.router.getCurrentNavigation()?.extras.state?.userID;
   }
 
   ngOnInit(): void {
 
     // get user type
     var userType = this.currentUser.type;
-    this.userID = this.currentUser.userID;
+    this.currentUserID = this.currentUser.userID;
     if (userType === 'instructor') {
       this.instructor = true;
     } else if (userType === 'student') {
@@ -50,7 +50,7 @@ export class UserProfileComponent {
       this.admin = true;
     }
 
-    if(this.profileID == this.userID){
+    if(this.viewingUserID == this.currentUserID){
       this.sameUser = true;
     }
 
@@ -59,7 +59,7 @@ export class UserProfileComponent {
   }
 
   loadProfile(): void {
-    this.http.get<any>(`https://localhost:8080/api/UserProfile/${this.profileID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.get<any>(`https://localhost:8080/api/UserProfile/${this.viewingUserID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         this.userProfile = data;
@@ -74,8 +74,8 @@ export class UserProfileComponent {
     });
   }
 
-    navToResetPassword(userID: number, username: string) {
-        let state = {userID: userID, username: username};
+    navToResetPassword() {
+        let state = {userID: this.viewingUserID};
         console.log(`Navigate to the \"resetpassword\" component with the the following states ${JSON.stringify(state)}`);
         //let user = JSON.parse(localStorage.getItem('currentUser') || '{}');
         this.router.navigate(['/resetpassword'], { state });

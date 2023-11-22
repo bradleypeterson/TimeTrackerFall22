@@ -121,13 +121,6 @@ export class UsersComponent implements OnInit {
             }
         });
     }
-    
-    navToResetPassword(userID: number, username: string) {
-        let state = {userID: userID, username: username};
-        console.log(`Navigate to the \"resetpassword\" component with the the following states ${JSON.stringify(state)}`);
-        //let user = JSON.parse(localStorage.getItem('currentUser') || '{}');
-        this.router.navigate(['/resetpassword'], { state });
-    }
 
     // Normally, we would want to have the argument be of type 'object' instead of 'any'. However if the type is 'object', we get an error saying "Property 'propertyName' doesn't exist on type 'object'"
     DeleteUser(userInfo: any) {
