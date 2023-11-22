@@ -26,6 +26,7 @@ import { CreateProjectComponent } from './create-project/create-project.componen
 import { EditProjectComponent } from './edit-project/edit-project.component';
 import { AddStudentProjectComponent } from './add-student-project/add-student-project.component';
 import { EditTimecardComponent } from './edit-timecard/edit-timecard.component';
+import { InactiveCoursesComponent } from './inactive-courses/inactive-courses.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -54,6 +55,7 @@ const routes: Routes = [
   { path: 'edit-project', component: EditProjectComponent },  // Previously edit-project/:id
   { path: 'add-students-project', component: AddStudentProjectComponent },  // Previously add-students-project/:id
   { path: 'edit-timecard', component: EditTimecardComponent },  // Previously edit-timecard/:id
+  { path: 'past-courses', component: InactiveCoursesComponent },
 ];
 
 @NgModule({

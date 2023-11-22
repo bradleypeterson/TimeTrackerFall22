@@ -17,6 +17,7 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { CourseReportsComponent } from './course-reports/course-reports.component';
 import { EditTimecardComponent } from './edit-timecard/edit-timecard.component';
+import { InactiveCoursesComponent } from './inactive-courses/inactive-courses.component';
 
 
 
@@ -35,6 +36,7 @@ import { EditTimecardComponent } from './edit-timecard/edit-timecard.component';
     EditProfileComponent,
     CourseReportsComponent,
     EditTimecardComponent,
+    InactiveCoursesComponent,
   ],
   imports: [
     BrowserModule,

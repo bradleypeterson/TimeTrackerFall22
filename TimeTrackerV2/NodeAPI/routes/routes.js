@@ -16,6 +16,7 @@ const {
 const {
     GetAllCoursesNamesDescriptionIDs,
     GetAllCoursesForInstructorID,
+    GetInactiveCoursesForInstructorID,
     GetCourseInfo,
     CheckUserInCourse,
     CreateCourse,
@@ -103,6 +104,8 @@ router.post("/UpdateUserInfo", UpdateUserInfo);
 router.get('/Courses', GetAllCoursesNamesDescriptionIDs);
 
 router.get('/Courses/:id', GetAllCoursesForInstructorID);
+
+router.get('/Courses/:id/getInactiveCourses', GetInactiveCoursesForInstructorID);
 
 router.get('/CourseInfo/:id', GetCourseInfo);
 

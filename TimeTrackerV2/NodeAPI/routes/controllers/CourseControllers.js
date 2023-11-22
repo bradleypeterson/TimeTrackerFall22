@@ -67,8 +67,26 @@ exports.GetAllCoursesForInstructorID = (req, res) => { // dynamic courses based 
 	let instructorID = req.params["id"];
 	let sql = `SELECT courseName, courseID, description
 		FROM Courses
-        WHERE instructorID = ?`;
+        WHERE instructorID = ? AND isActive`;
 	console.log("instructorID: " + instructorID);
+
+	db.all(sql, [instructorID], (err, rows) => {
+		if (err) {
+			return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+		}
+		if (rows) {
+			return res.send(rows);
+		}
+	});
+}
+
+exports.GetInactiveCoursesForInstructorID = (req, res) => { // dynamic courses based on instructor id
+	console.log("CourseControllers.js file/GetInactiveCoursesForInstructorID route called");
+
+	let instructorID = req.params["id"];
+	let sql = `SELECT courseName, courseID, description
+		FROM Courses
+        WHERE instructorID = ? AND isActive IS FALSE`;
 
 	db.all(sql, [instructorID], (err, rows) => {
 		if (err) {
@@ -159,7 +177,7 @@ exports.GetPendInstrCourses = (req, res) => {
         JOIN Pend_Course_Users pcu ON pcu.courseID = c.courseID
         JOIN Users instr ON instr.userID = c.instructorID
         JOIN Users user ON user.userID = pcu.userID
-        WHERE instr.userID = ?`;
+        WHERE instr.userID = ? AND c.isActive`;
 
     db.all(sql, [userID], (err, rows) => {
         if (err) {
@@ -227,7 +245,8 @@ exports.GetCoursesRegisteredFor = (req, res) => {
     let sql = `SELECT c.courseID, c.courseName, c.description, u.firstname, u.lastName
         from Courses c
         JOIN Course_Users cu ON cu.courseID = c.courseID
-        JOIN Users u on u.userID = c.instructorID AND cu.userID = ?`;
+        JOIN Users u on u.userID = c.instructorID AND cu.userID = ?
+        WHERE c.isActive`;
 
     db.all(sql, [userID], (err, rows) => {
         if (err) {
@@ -262,7 +281,7 @@ exports.GetCoursesNotRegisteredFor = (req, res) => {
     let sql = `SELECT c.courseID, c.courseName, c.description, u.firstName, u.lastName
         FROM Courses c
         JOIN Users u ON u.userID = c.instructorID 
-        WHERE c.courseID NOT IN (
+        WHERE c.isActive AND c.courseID NOT IN (
             -- Subquery to get courses the user is already registered for
             SELECT c.courseID
             FROM Courses c
@@ -304,7 +323,8 @@ exports.GetCoursesPendCourses = (req, res) => {
     let sql = `SELECT c.courseID, c.courseName, c.description, u.firstname, u.lastName
         from Courses c
         JOIN Pend_Course_Users pcu ON pcu.courseID = c.courseID
-        JOIN Users u on u.userID = c.instructorID AND pcu.userID = ?`;
+        JOIN Users u on u.userID = c.instructorID AND pcu.userID = ?
+        WHERE c.isActive`;
 
     db.all(sql, [userID], (err, rows) => {
         if (err) {
