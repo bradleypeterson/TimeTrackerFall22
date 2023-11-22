@@ -74,6 +74,13 @@ export class UserProfileComponent {
     });
   }
 
+    NavToEditProfile() {
+        let state = {userID: this.viewingUserID};
+        console.log(`Navigate to the \"resetpassword\" component with the the following states ${JSON.stringify(state)}`);
+        //let user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        this.router.navigate(['/edit-profile'], { state });
+    }
+
     NavToResetPassword() {
         let state = {userID: this.viewingUserID};
         console.log(`Navigate to the \"resetpassword\" component with the the following states ${JSON.stringify(state)}`);

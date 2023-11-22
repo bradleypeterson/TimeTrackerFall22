@@ -14,7 +14,12 @@ export class EditProfileComponent implements OnInit {
   public userProfile: any;
   public profileData: any;
 
-  public currentUser: any;
+  editProfileForm = this.formBuilder.group({
+    pronouns: '',
+    bio: '',
+    contact: '',
+    userID: '',
+  });
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -27,46 +32,15 @@ export class EditProfileComponent implements OnInit {
       this.router.navigate(["/Login"]);
       return;
     }
-    this.currentUser = JSON.parse(tempUser);
+
+    // This will grab values from the state variable of the navigate function we defined inside the users.ts component in the function NavToResetPassword().  This solution was found here https://stackoverflow.com/a/54365098
+    console.log(JSON.stringify(this.router.getCurrentNavigation()?.extras.state));
+    this.userID = this.router.getCurrentNavigation()?.extras.state?.userID;
   }
 
   ngOnInit(): void {
-    let currentUser = localStorage.getItem('currentUser');
-    var userData = currentUser ? JSON.parse(currentUser) : null;
-    var userType = userData.type;
-    this.userID = userData.userID;
-
     // set the edit page to the one for the current user
     this.loadProfile();
-  }
-
-  editProfileForm = this.formBuilder.group({
-    pronouns: '',
-    bio: '',
-    contact: '',
-    userID: '',
-  });
-
-  onSubmit(): void {
-    let payload = {
-      pronouns: this.editProfileForm.value['pronouns'],
-      bio: this.editProfileForm.value['bio'],
-      contact: this.editProfileForm.value['contact'],
-      userID: this.userID,
-    }
-
-    console.log("onSubmit reached");
-
-    this.http.post<any>('https://localhost:8080/api/EditProfile', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
-      next: data => {
-        this.errMsg = "";
-        console.log("data posted");
-        this.router.navigate(['/dashboard/']);
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
   }
 
   loadProfile(): void {
@@ -96,4 +70,25 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
+  onSubmit(): void {
+    let payload = {
+      pronouns: this.editProfileForm.value['pronouns'],
+      bio: this.editProfileForm.value['bio'],
+      contact: this.editProfileForm.value['contact'],
+      userID: this.userID,
+    }
+
+    console.log("onSubmit reached");
+
+    this.http.post<any>('https://localhost:8080/api/EditProfile', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+      next: data => {
+        this.errMsg = "";
+        console.log("data posted");
+        this.router.navigate(['/dashboard/']);
+      },
+      error: error => {
+        this.errMsg = error['error']['message'];
+      }
+    });
+  }
 }

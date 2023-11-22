@@ -22,7 +22,7 @@ export class ResetpasswordComponent implements OnInit {
         private http: HttpClient,
         private router: Router,
     ) {
-        // This will grab values from the state variable of the navigate function we defined inside the users.ts component in the function navToResetPassword().  This solution was found here https://stackoverflow.com/a/54365098
+        // This will grab values from the state variable of the navigate function we defined inside the users.ts component in the function NavToResetPassword().  This solution was found here https://stackoverflow.com/a/54365098
         console.log(JSON.stringify(this.router.getCurrentNavigation()?.extras.state));
         this.userID = this.router.getCurrentNavigation()?.extras.state?.userID;
     }
