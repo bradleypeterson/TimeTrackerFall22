@@ -74,7 +74,8 @@ const {
     AddTemplate,
     Questions,
     Templates,
-    UpdateQuestion
+    UpdateQuestion,
+    DeleteQuestion
 } = require("./controllers/EvalControllers")
 //#endregion
 
@@ -208,7 +209,9 @@ router.get('/questions/:templateID', Questions);
 
 router.get('/templates', Templates);
 
-router.post('/updateQuestion', UpdateQuestion);
+router.post('/updateQuestion/:questionID', UpdateQuestion);
+
+router.delete('/deleteQuestion/:questionID', DeleteQuestion);
 
 //#endregion
 

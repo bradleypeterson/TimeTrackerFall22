@@ -12,11 +12,11 @@ exports.AddQuestion = async (req, res, next) => {
   let templateID = req.body.templateID;
   console.log(
     "Question Text: " +
-      questionText +
-      ", Question Type: " +
-      questionType +
-      ", Template ID: " +
-      templateID
+    questionText +
+    ", Question Type: " +
+    questionType +
+    ", Template ID: " +
+    templateID
   );
 
   if (!questionText || !questionType || !templateID) {
@@ -107,17 +107,21 @@ exports.Templates = async (req, res, next) => {
   });
 };
 
-exports.UpdateQuestion = async (req, res, next) => {
-  console.log("EvalControllers.js file/UpdateQuestion route called");
+exports.UpdateQuestionDetails = async (req, res, next) => {
+  console.log("EvalControllers.js file/UpdateQuestionDetails route called");
 
   let questionID = req.body.questionID;
   let questionText = req.body.questionText;
   let questionType = req.body.questionType;
 
-  if (!questionID || !questionText || questionType == null) {
+  // Validate the input
+  if (!questionID) {
+    return res.status(400).json({ message: "Question ID is required" });
+  }
+  if (!questionText || !questionType) {
     return res
       .status(400)
-      .json({ message: "Question ID, text, and type are required" });
+      .json({ message: "Question text and type are required" });
   }
 
   db.run(
@@ -127,7 +131,7 @@ exports.UpdateQuestion = async (req, res, next) => {
       if (err) {
         console.error(err.message);
         return res.status(500).json({
-          message: "Something went wrong when updating the question.",
+          message: "Something went wrong when updating the question."
         });
       } else if (this.changes === 0) {
         return res.status(404).json({ message: "Question not found." });
@@ -136,6 +140,35 @@ exports.UpdateQuestion = async (req, res, next) => {
         return res
           .status(200)
           .json({ message: "Question updated successfully." });
+      }
+    }
+  );
+};
+
+
+exports.DeleteQuestion = async (req, res, next) => {
+  console.log("EvalControllers.js file/DeleteQuestion route called");
+
+  let questionID = req.params.questionID;
+
+  if (!questionID) {
+    return res.status(400).json({ message: "Question ID is required" });
+  }
+
+  db.run(
+    "DELETE FROM Question WHERE questionID = ?",
+    [questionID],
+    function (err) {
+      if (err) {
+        console.error(err.message);
+        return res.status(500).json({
+          message: "Something went wrong when deleting the question."
+        });
+      } else if (this.changes === 0) {
+        return res.status(404).json({ message: "Question not found." });
+      } else {
+        console.log(`Question with ID ${questionID} has been deleted.`);
+        return res.status(200).json({ message: "Question deleted successfully." });
       }
     }
   );

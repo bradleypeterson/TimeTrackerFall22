@@ -9,8 +9,13 @@ interface EvalTemplate {
 
 interface Question {
   questionText: string;
-  responseType: string;
+  questionType: string;
+  questionID: string;
   response: string | number;
+}
+interface UpdateQuestionPayload {
+  questionText?: string;
+  questionType?: string;
 }
 
 @Component({
@@ -59,24 +64,50 @@ export class ManageEvalsComponent implements OnInit {
     );
   }
 
-
-
-  submitResponses() {
+  submitUpdates(questionID: string, questionText: string, questionType: string) {
     if (!this.selectedTemplateId) {
       alert('No template selected!');
       return;
     }
 
-    const payload = {
-      templateId: this.selectedTemplateId,
-      responses: this.selectedTemplateQuestions
-    };
+    let payload: UpdateQuestionPayload = {};
+    const question = this.selectedTemplateQuestions.find(q => q.questionID === questionID);
 
-    this.http.post(`https://localhost:8080/api/UpdateQuestion/${this.selectedTemplateId}`, payload).subscribe(
-      () => alert('Responses submitted successfully!'),
+    if (question) {
+      if (question.questionText !== questionText) {
+        payload.questionText = questionText;
+      }
+      if (question.questionType !== questionType) {
+        payload.questionType = questionType;
+      }
+    }
+
+    if (Object.keys(payload).length === 0) {
+      alert('No changes detected!');
+      return;
+    }
+
+    this.http.post(`https://localhost:8080/api/UpdateQuestion/${questionID}`, payload).subscribe(
+      () => {
+        alert('Responses submitted successfully!');
+        this.reloadQuestions();
+      },
       error => console.error('Error submitting responses:', error)
     );
+  }
 
+
+
+  reloadQuestions() {
+    if (this.selectedTemplateId) {
+      this.http.get<Question[]>(`https://localhost:8080/api/questions/${this.selectedTemplateId}`).subscribe(
+        data => {
+          this.selectedTemplateQuestions = data;
+          console.log('Fetched Questions:', data);
+        },
+        error => console.error('Error fetching questions:', error)
+      );
+    }
   }
 
   createTemplate() {
@@ -116,6 +147,7 @@ export class ManageEvalsComponent implements OnInit {
     this.http.post('https://localhost:8080/api/AddQuestion', payload).subscribe(
       () => {
         alert('Question added successfully!');
+        this.reloadQuestions();
         this.showQuestionModal = false;
         this.newQuestionText = '';
         this.newQuestionType = '';
@@ -124,4 +156,15 @@ export class ManageEvalsComponent implements OnInit {
     );
   }
 
+  deleteQuestion(questionID: string) {
+    console.log("questionID", questionID);
+
+    this.http.delete(`https://localhost:8080/api/deleteQuestion/${questionID}`).subscribe(
+      () => {
+        alert('Question deleted successfully!');
+        this.reloadQuestions();
+      },
+      error => console.error('Error deleting question:', error)
+    );
+  }
 }
