@@ -12,8 +12,7 @@ import CryptoES from 'crypto-es';
     styleUrls: ['./resetpassword.component.css']
 })
 export class ResetpasswordComponent implements OnInit {
-    sID!: number;
-    sUsername!: string;
+    userID!: number;
     resetForm!: UntypedFormGroup;
     errorMessage: string = "";
 
@@ -23,15 +22,13 @@ export class ResetpasswordComponent implements OnInit {
         private http: HttpClient,
         private router: Router,
     ) {
-        // This will grab values from the state variable of the navigate function we defined inside the users.ts component in the function navToResetPassword().  This solution was found here https://stackoverflow.com/a/54365098
+        // This will grab values from the state variable of the navigate function we defined inside the users.ts component in the function NavToResetPassword().  This solution was found here https://stackoverflow.com/a/54365098
         console.log(JSON.stringify(this.router.getCurrentNavigation()?.extras.state));
-        this.sID = this.router.getCurrentNavigation()?.extras.state?.studentID;
-        this.sUsername = this.router.getCurrentNavigation()?.extras.state?.username;
+        this.userID = this.router.getCurrentNavigation()?.extras.state?.userID;
     }
 
     ngOnInit(): void {
         this.resetForm = new UntypedFormGroup({
-            username: new UntypedFormControl(this.sUsername),
             newPswd: new UntypedFormControl(null),
             confirm: new UntypedFormControl(null)
         });
@@ -65,22 +62,23 @@ export class ResetpasswordComponent implements OnInit {
             salt: salt
         };
 
-        this.http.put(`https://localhost:8080/api/resetPassword/${this.sID}`, requestBody).subscribe((res: any) => {
+        this.http.put(`https://localhost:8080/api/resetPassword/${this.userID}`, requestBody).subscribe((res: any) => {
             this.ShowMessage(res.message);
-            this.router.navigate(['/users']);
+            this.NavigateBackToProfile();
         },
         err => {
             this.ShowMessage(err.error.message);
         });
     }
 
-    onCancel() {
-        this.router.navigate(['/users']);
+    NavigateBackToProfile() {
+        let state = {userID: this.userID};
+        // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+        this.router.navigate(['/profile'], { state });
     }
 
     // Open an alert window with the supplied message
     ShowMessage(message: string) {
         alert(message);
     }
-    
 }

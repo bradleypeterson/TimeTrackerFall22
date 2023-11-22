@@ -1,5 +1,5 @@
 <button class="btn btn-purple btn-sm" (click)="GoBackToCourse()">Back to Course</button>
-<h2 *ngIf="project">{{project.projectName}}</h2>
+<h2>{{project?.projectName}}</h2>
 
 <!-- Instructor Add Students, Edit, and Delete buttons -->
 <div [ngSwitch]="true">

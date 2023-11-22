@@ -97,12 +97,7 @@
                 </td>
 
                 <td class="text-center d-none d-sm-table-cell">
-                    <div class="btn-group">
-                        <button *ngIf="UserModified(u)" type="button" class="btn btn-primary" (click)="SaveUserChanges(u)">Save Changes</button>
-                        <!-- The above button will only be rendered to the user if the user's information has been modified -->
-                        <button type="button" class="btn btn-purple" (click)="navToResetPassword(u.userID, u.username)">Reset Password</button>
-                        <button type="button" class="btn btn-danger" (click)="DeleteUser(u)">Delete User</button>
-                    </div>      
+                    <button *ngIf="UserModified(u)" type="button" class="btn btn-primary btn-sm" (click)="SaveUserChanges(u)">Save Changes</button>
                 </td>
             </tr>
             <!-- To be moved to the profile page for the selected user -->

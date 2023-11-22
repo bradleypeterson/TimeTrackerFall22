@@ -23,8 +23,8 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     let currentUser = localStorage.getItem('currentUser');
     var userDate = currentUser ? JSON.parse(currentUser) : null;
-    this.userType = userDate.type;
-    this.userID = userDate.userID;
+    this.userType = userDate?.type;
+    this.userID = userDate?.userID;
     if (this.userType === 'admin') {
       this.admin = true;
       this.name = userDate.firstName + ' ' + userDate.lastName;
