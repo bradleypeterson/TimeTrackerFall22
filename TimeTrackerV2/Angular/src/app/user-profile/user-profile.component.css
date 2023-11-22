@@ -9,3 +9,12 @@
     box-shadow: -10px 10px 0 #492365;
     background-color: #6e4097;
   }
+
+  .box-head {
+    color: white;
+    letter-spacing: 3px;
+    /* box behind text */
+    display: inline-block;
+    box-shadow: -8px 8px 2px #492365;
+    background-color: #6e4097;
+  }

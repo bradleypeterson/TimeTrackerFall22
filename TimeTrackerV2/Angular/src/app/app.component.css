@@ -2,6 +2,11 @@
 @media (max-width: 992px) {
     .dark-nav-link {
         color: #333 !important;
+        text-shadow: 0 1px 1px #492365 !important;
+    }
+
+    .dark-nav-link:hover {
+        color: #6e4097 !important;
     }
 
     .navbar-nav {
