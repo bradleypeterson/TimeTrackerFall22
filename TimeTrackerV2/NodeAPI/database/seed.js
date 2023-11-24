@@ -144,46 +144,46 @@ db.run(`CREATE TABLE IF NOT EXISTS Pend_Course_Users(
     FOREIGN KEY (courseID) REFERENCES Courses (courseID) ON DELETE CASCADE
 );`);
 
+// Create the Eval Template table and insert the default entry
+db.run(
+    `CREATE TABLE IF NOT EXISTS Template (
+      templateID INTEGER PRIMARY KEY AUTOINCREMENT,
+      templateName TEXT NOT NULL
+  )`,
+    (createErr) => {
+      if (createErr) {
+        console.error(createErr.message);
+      } else {
+        // console.log('Templates table created.');
+  
+        // Insert the default entry only if it doesn't exist
+        const insertDefaultTemplate = `
+              INSERT INTO Template (templateName)
+              SELECT 'default'
+              WHERE NOT EXISTS (
+                  SELECT 1 FROM Template WHERE templateName = 'default'
+              );
+          `;
+  
+        db.run(insertDefaultTemplate, (insertErr) => {
+          if (insertErr) {
+            console.error(insertErr.message);
+          } else {
+            // console.log('Default template inserted or already exists.');
+          }
+        });
+      }
+    }
+  );  
+
 // Create Eval Questions table
 db.run(`CREATE TABLE IF NOT EXISTS Question (
     questionID INTEGER PRIMARY KEY AUTOINCREMENT,
     questionText TEXT NOT NULL,
-    questionType INTEGER NOT NULL,
-    templateID TEXT NOT NULL,
+    questionType INTEGER NOT NULL,  -- Why is this an integer, this does not make it very easy to understand the type of the question.  In addition, when you run the API call to add a question, it is stored as text.
+    templateID INTEGER NOT NULL,
     FOREIGN KEY (templateID) REFERENCES Template (templateID) ON DELETE CASCADE
 );`);
-
-// Create the Eval Template table and insert the default entry
-db.run(
-  `CREATE TABLE IF NOT EXISTS Template (
-    templateID INTEGER PRIMARY KEY AUTOINCREMENT,
-    templateName TEXT NOT NULL
-)`,
-  (createErr) => {
-    if (createErr) {
-      console.error(createErr.message);
-    } else {
-      // console.log('Templates table created.');
-
-      // Insert the default entry only if it doesn't exist
-      const insertDefaultTemplate = `
-            INSERT INTO Template (templateName)
-            SELECT 'default'
-            WHERE NOT EXISTS (
-                SELECT 1 FROM Template WHERE templateName = 'default'
-            );
-        `;
-
-      db.run(insertDefaultTemplate, (insertErr) => {
-        if (insertErr) {
-          console.error(insertErr.message);
-        } else {
-          // console.log('Default template inserted or already exists.');
-        }
-      });
-    }
-  }
-);
 
 // Create Eval Responses table (not yet in use)
 db.run(`CREATE TABLE IF NOT EXISTS Response (

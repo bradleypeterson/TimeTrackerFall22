@@ -65,9 +65,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5>New Evaluation Template</h5>
-          <button type="button" class="btn-close" (click)="showModal = false">
-            &times;
-          </button>
+          <button type="button" class="btn-close" (click)="showModal = false"></button>
         </div>
         <div class="modal-body">
           <label for="template-name">Template Name</label>
@@ -174,14 +172,6 @@
         Add New Question
       </button>
 
-      <button
-        type="button"
-        class="btn btn-purple btn-courses"
-        (click)="showQuestionModal = true"
-      >
-        Add New Question
-      </button>
-
       <!-- Modal for Adding a Question -->
       <div class="modal" *ngIf="showQuestionModal">
         <div class="modal-content">
@@ -191,9 +181,7 @@
               type="button"
               class="btn-close"
               (click)="showQuestionModal = false"
-            >
-              &times;
-            </button>
+            ></button>
           </div>
           <div class="modal-body">
             <label for="question-text">Question Text</label>
