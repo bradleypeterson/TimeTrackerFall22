@@ -17,7 +17,7 @@
 <div class="container" *ngIf="isProjectUser">
     <div class="row">
         <div class="col-6">
-            <div *ngIf="pieChartLabels.length != 0">
+            <div *ngIf="pieChartLabels.length != 0" class="chart-container">
                 <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
                     [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
                 </canvas>
@@ -116,7 +116,7 @@
         <div class="col-6 border-right">
             <div class="row">
                 <div class="col-9">
-                    <h3>My Activity</h3>
+                    <h3>Your Recent Activity</h3>
                 </div>
                 <div class="col-3">
                     <!--<button type="button" class="btn btn-purple">All Activity</button>-->
@@ -191,7 +191,7 @@
                     </thead>
                     <tbody>
                         <!-- This section code will only allow timecards that the timeslotID variable is not null, this is because the API call that stores to projectUserTimes will return all users in the project, even those that have no timecard.  So this will make sure that the user has a timecard so it knows if it should be rendered or not https://stackoverflow.com/a/38379389 -->
-                        <ng-container *ngFor="let user of projectUserTimes" >
+                        <ng-container *ngFor="let user of projectUserTimes | paginate: { itemsPerPage: 10, currentPage: p }" >
                             <tr *ngIf="user.timeslotID">
                                 <td >{{user.firstName}} {{user.lastName}}</td>
                                 <td>{{user.timeIn | date:'medium'}}</td>
@@ -201,6 +201,7 @@
                         </ng-container>
                     </tbody>
                 </table>
+                <pagination-controls (pageChange)="p = $event"></pagination-controls>
             </div>
         </div>
     </div>
@@ -210,7 +211,7 @@
 <div class="container" *ngIf="!isProjectUser && !instructor">
     <div class="row">
         <div class="col-6">
-            <div *ngIf="pieChartLabels.length != 0">
+            <div *ngIf="pieChartLabels.length != 0" class="chart-container">
                 <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
                     [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
                 </canvas>
@@ -264,7 +265,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *ngFor="let user of projectUserTimes" >
+                        <ng-container *ngFor="let user of projectUserTimes | paginate: { itemsPerPage: 10, currentPage: p }" >
                             <tr *ngIf="user.timeslotID">
                                 <td>{{user.firstName}} {{user.lastName}}</td>
                                 <td>{{user.timeIn | date:'medium'}}</td>
@@ -274,6 +275,7 @@
                         </ng-container>
                     </tbody>
                 </table>
+                <pagination-controls (pageChange)="p = $event"></pagination-controls>
             </div>
         </div>
     </div>
@@ -283,7 +285,7 @@
 <div class="container" *ngIf="instructor">
     <div class="row">
         <div class="col-6">
-            <div *ngIf="pieChartLabels.length != 0">
+            <div *ngIf="pieChartLabels.length != 0" class="chart-container">
                 <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
                     [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
                 </canvas>
@@ -338,7 +340,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *ngFor="let user of projectUserTimes" >
+                        <ng-container *ngFor="let user of projectUserTimes | paginate: { itemsPerPage: 10, currentPage: p }" >
                             <tr *ngIf="user.timeslotID">
                                 <td>{{user.firstName}} {{user.lastName}}</td>
                                 <td>{{user.timeIn | date:'medium'}}</td>
@@ -357,6 +359,7 @@
                         </ng-container>
                     </tbody>
                 </table>
+                <pagination-controls (pageChange)="p = $event"></pagination-controls>
             </div>
         </div>
     </div>

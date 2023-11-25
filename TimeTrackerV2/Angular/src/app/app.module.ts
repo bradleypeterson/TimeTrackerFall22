@@ -18,6 +18,7 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { CourseReportsComponent } from './course-reports/course-reports.component';
 import { EditTimecardComponent } from './edit-timecard/edit-timecard.component';
 import { InactiveCoursesComponent } from './inactive-courses/inactive-courses.component';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 
 
@@ -46,6 +47,7 @@ import { InactiveCoursesComponent } from './inactive-courses/inactive-courses.co
     HttpClientModule,
     NgChartsModule,
     MatCardModule,
+    NgxPaginationModule,
   ],
   providers: [UntypedFormBuilder],
   bootstrap: [AppComponent]

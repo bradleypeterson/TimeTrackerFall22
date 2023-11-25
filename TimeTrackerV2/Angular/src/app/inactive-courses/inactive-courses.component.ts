@@ -14,6 +14,8 @@ export class InactiveCoursesComponent implements OnInit {
 
   public errMsg: any;
 
+  public p: number = 1;
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -40,7 +42,7 @@ export class InactiveCoursesComponent implements OnInit {
       next: data => {
         this.errMsg = "";
         console.log(data);
-        this.inactiveCourses = data;
+        this.inactiveCourses = data.reverse();
       },
       error: error => {
         this.errMsg = error['error']['message'];

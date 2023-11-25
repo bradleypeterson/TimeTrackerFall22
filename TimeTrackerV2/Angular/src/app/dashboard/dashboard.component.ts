@@ -15,6 +15,7 @@ export class DashboardComponent implements OnInit {
   public PendUserCourses: any = [];
   public PendInstrCourses: any = [];
   public errMsg = '';
+  public p: number = 1;
 
   instructor: boolean = false;
   student: boolean = false;

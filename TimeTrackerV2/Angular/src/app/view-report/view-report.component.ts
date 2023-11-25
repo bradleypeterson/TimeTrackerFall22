@@ -15,6 +15,7 @@ export class ViewReportComponent implements OnInit {
     public studentName: string = ""
     public projectName: string = ""
     public currentUser: any;
+    public p: number = 1;
 
     sID: string = "";
     pID: string = "";
@@ -77,7 +78,7 @@ export class ViewReportComponent implements OnInit {
         this.http.get<any>(`https://localhost:8080/api/Users/${this.sID}/${this.pID}/activities/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 this.errMsg = "";
-                this.timeTables = data;
+                this.timeTables = data.reverse();
             },
             error: error => {
                 this.errMsg = error['error']['message'];

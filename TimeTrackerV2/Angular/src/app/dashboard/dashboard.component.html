@@ -119,39 +119,42 @@
     <div class="alert alert-danger" *ngIf="PendInstrCourses?.length <= 0">
       No Pending Requests
     </div>
-    <table class="table table-hover" *ngIf="PendInstrCourses.length > 0">
-      <thead>
-        <tr>
-          <th class="table-head">Course Name</th>
-          <th class="table-head">Student</th>
-          <th class="table-head">Description</th>
-          <th class="table-head"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let c of PendInstrCourses">
-          <td>{{ c.courseName }}</td>
-          <td>{{ c.studentFirstName }} {{ c.studentLastName }}</td>
-          <td>{{ c.description }}</td>
-          <td>
-            <div class="btn-group float-right">
-              <button
-                class="btn btn-purple"
-                (click)="register(c.courseID, c.studentID)"
-              >
-                Approve
-              </button>
-              <button
-                class="btn btn-danger"
-                (click)="cancelIns(c.courseID, c.studentID)"
-              >
-                Deny
-              </button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div  *ngIf="PendInstrCourses.length > 0">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th class="table-head">Course Name</th>
+            <th class="table-head">Student</th>
+            <th class="table-head">Description</th>
+            <th class="table-head"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of PendInstrCourses | paginate: { itemsPerPage: 10, currentPage: p }">
+            <td>{{ c.courseName }}</td>
+            <td>{{ c.studentFirstName }} {{ c.studentLastName }}</td>
+            <td>{{ c.description }}</td>
+            <td>
+              <div class="btn-group float-right">
+                <button
+                  class="btn btn-purple"
+                  (click)="register(c.courseID, c.studentID)"
+                >
+                  Approve
+                </button>
+                <button
+                  class="btn btn-danger"
+                  (click)="cancelIns(c.courseID, c.studentID)"
+                >
+                  Deny
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <pagination-controls (pageChange)="p = $event"></pagination-controls>
+    </div>
     <!--  -->
   </div>
 

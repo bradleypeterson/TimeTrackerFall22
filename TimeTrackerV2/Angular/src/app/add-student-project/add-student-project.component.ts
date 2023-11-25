@@ -17,6 +17,8 @@ export class AddStudentProjectComponent implements OnInit {
 
   public currentUser: any;
 
+  public p: number = 1;
+
   constructor(
     private http: HttpClient,
     private router: Router,

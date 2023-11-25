@@ -31,11 +31,12 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let u of studentsNotInProject">
+      <tr *ngFor="let u of studentsNotInProject | paginate: { itemsPerPage: 10, currentPage: p }">
         <td>{{u.firstName}}</td>
         <td>{{u.lastName}}</td>
         <td><button class="btn btn-success float-right" (click)="add(u.userID)">Add</button></td>
       </tr>
     </tbody>
   </table>
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
 </div>

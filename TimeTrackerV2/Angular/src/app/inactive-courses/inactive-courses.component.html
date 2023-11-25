@@ -10,7 +10,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let c of inactiveCourses">
+            <tr *ngFor="let c of inactiveCourses | paginate: { itemsPerPage: 20, currentPage: p }">
                 <td>{{ c.courseName }}</td>
                 <td class="desc">{{ c.description }}</td>
                 <td>
@@ -21,4 +21,5 @@
             </tr>
         </tbody>
     </table>
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
 </div>

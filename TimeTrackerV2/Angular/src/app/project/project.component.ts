@@ -22,6 +22,7 @@ export class ProjectComponent implements OnInit {
     public projectUserTimes: any;
     public totalTimeMap: Map<string, number> = new Map<string, number>();
     public projectID;
+    public p: number = 1;
 
     public pieChartOptions: ChartOptions<'pie'> = {
         // responsive: false,
@@ -246,7 +247,7 @@ export class ProjectComponent implements OnInit {
             next: data => {
                 this.errMsg = "";
                 console.log(`Data returned from API call for the function loadProjectUserTimes()\n` + JSON.stringify(data));
-                this.projectUserTimes = data;
+                this.projectUserTimes = data.reverse();
                 this.calculateTotalTime();
                 this.populateGraph();
             },

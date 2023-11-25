@@ -10,11 +10,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let entry of timeTables">
+            <tr *ngFor="let entry of timeTables | paginate: { itemsPerPage: 20, currentPage: p }">
                 <td>{{entry.timeIn | date:'medium'}}</td>
                 <td>{{entry.timeOut | date:'medium'}}</td>
                 <td>{{entry.description}}</td>
             </tr>
         </tbody>
     </table>
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>
 </div>
