@@ -202,7 +202,8 @@
             >
               <option value="" disabled selected>Select Type</option>
               <!-- Replace with your actual question type -->
-              <option *ngFor="let questionType of questionTypes" value="{{questionType.questionTypeID}}">{{questionType.questionTypeText}}</option>
+              <option value="rating">Rating</option>
+              <option value="text">Text</option>
             </select>
           </div>
           <div class="modal-footer">

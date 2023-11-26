@@ -68,7 +68,6 @@ const {
 } = require("./controllers/UsersControllers");
 
 const {
-  GetQuestionTypes,
   AddQuestion,
   AddTemplate,
   Questions,
@@ -211,8 +210,6 @@ router.get("/Users", GetUsersInfo);
 //#endregion
 
 //#region Eval routes
-router.get("/questionTypes", GetQuestionTypes);
-
 router.post("/addQuestion", AddQuestion);
 
 router.post("/addTemplate", AddTemplate);
