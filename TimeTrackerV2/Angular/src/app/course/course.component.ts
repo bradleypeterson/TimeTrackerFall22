@@ -172,6 +172,12 @@ export class CourseComponent implements OnInit {
     this.router.navigate([`/create-project`], { state });
   }
 
+  NavigateToAssignEvals() {
+    let state = {courseID: this.courseID};
+    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    this.router.navigate([`/assign-evals`], { state });
+}
+
   GoToProject(projectID: number) {
     let state = {projectID: projectID};
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098

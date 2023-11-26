@@ -20,6 +20,7 @@
     <div [ngSwitch]="true">
       <div *ngSwitchCase="instructor">
         <button class="btn btn-success" (click)="NavigateToAddProject()" *ngIf="course.isActive">Create New Project</button>
+        <button class="btn btn-purple" (click)="NavigateToAssignEvals()" *ngIf="course.isActive">Assign Evals</button>
         <i *ngIf="!course.isActive">Course is inactive. Reactivate course in edit page to create projects.</i>
       </div>
     </div>
