@@ -2,6 +2,12 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+//#region Interfaces
+interface QuestionType {
+    questionTypeID: number;
+    questionTypeText: string;
+}
+
 interface EvalTemplate {
   templateID: string;
   templateName: string;
@@ -9,7 +15,7 @@ interface EvalTemplate {
 
 interface Question {
   questionText: string;
-  questionType: string;
+  questionType: number;
   questionID: string;
   response: string | number;
 }
@@ -18,6 +24,7 @@ interface UpdateQuestionPayload {
   questionText?: string;
   questionType?: string;
 }
+//#endregion
 
 @Component({
   selector: 'app-manage-evals',
@@ -26,6 +33,7 @@ interface UpdateQuestionPayload {
 })
 export class ManageEvalsComponent implements OnInit {
   showModal: boolean = false;
+  questionTypes: QuestionType[] = [];
   templates: EvalTemplate[] = [];
   selectedTemplateQuestions: Question[] = [];
   selectedTemplateId: string | null = null;
@@ -40,6 +48,7 @@ export class ManageEvalsComponent implements OnInit {
 
   ngOnInit() {
     this.loadTemplates();
+    this.LoadQuestionTypes();
   }
 
   loadTemplates() {
@@ -50,6 +59,16 @@ export class ManageEvalsComponent implements OnInit {
       },
       error => console.error('Error fetching templates:', error)
     );
+  }
+
+  LoadQuestionTypes() {
+    this.http.get<QuestionType[]>('https://localhost:8080/api/questionTypes').subscribe(
+        data => {
+          this.questionTypes = data;
+          console.log('Fetched question types:', data);
+        },
+        error => console.error('Error fetching question types:', error)
+      );  
   }
 
   onTemplateSelect(event: Event) {
