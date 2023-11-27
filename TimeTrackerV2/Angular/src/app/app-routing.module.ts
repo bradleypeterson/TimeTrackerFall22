@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { loginGuard, adminGuard, instructGuard, studentGuard } from './auth-guard.guard';
 import { AdminEvalsComponent } from './admin-evals/admin-evals.component';
 import { AssignEvalsComponent } from './assign-evals/assign-evals.component';
 import { CourseComponent } from './course/course.component';
@@ -31,31 +32,31 @@ import { InactiveCoursesComponent } from './inactive-courses/inactive-courses.co
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'admin-evals', component: AdminEvalsComponent },
-  { path: 'assign-evals', component: AssignEvalsComponent },
-  { path: 'course', component: CourseComponent },  // Previously course/:id
-  { path: 'courses', component: CoursesComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  { path: 'assign-evals', component: AssignEvalsComponent, canActivate: [instructGuard]},
+  { path: 'course', component: CourseComponent, canActivate: [loginGuard] },  // Previously course/:id
+  { path: 'courses', component: CoursesComponent, canActivate: [studentGuard] },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [loginGuard] },
   { path: 'eval', component: EvalComponent },
   { path: 'group', component: GroupComponent },
-  { path: 'manage-evals', component: ManageEvalsComponent },
-  { path: 'project', component: ProjectComponent },  // Previously project/:id
+  { path: 'manage-evals', component: ManageEvalsComponent, canActivate: [instructGuard]},
+  { path: 'project', component: ProjectComponent, canActivate: [loginGuard]},  // Previously project/:id
   { path: 'register', component: RegisterComponent },
-  { path: 'profile', component: UserProfileComponent},  // Previously profile/:id
-  { path: 'edit-profile', component: EditProfileComponent},
+  { path: 'profile', component: UserProfileComponent, canActivate: [loginGuard]},  // Previously profile/:id
+  { path: 'edit-profile', component: EditProfileComponent, canActivate: [loginGuard]},
   { path: 'user', component: UserComponent },
-  { path: 'users', component: UsersComponent },
+  { path: 'users', component: UsersComponent, canActivate: [adminGuard] },
   { path: 'view-eval', component: ViewEvalComponent },
   { path: 'view-evals', component: ViewEvalsComponent },
-  { path: 'report', component: ViewReportComponent },
-  { path: 'resetpassword', component: ResetpasswordComponent },
-  { path: 'add-courses', component: AddCoursesComponent },
-  { path: 'create-course', component: CreateCourseComponent },
-  { path: 'edit-course', component: EditCourseComponent },  // Previously edit-course/:id
-  { path: 'create-project', component: CreateProjectComponent },  // Previously create-project/:id
-  { path: 'edit-project', component: EditProjectComponent },  // Previously edit-project/:id
-  { path: 'add-students-project', component: AddStudentProjectComponent },  // Previously add-students-project/:id
-  { path: 'edit-timecard', component: EditTimecardComponent },  // Previously edit-timecard/:id
-  { path: 'past-courses', component: InactiveCoursesComponent },
+  { path: 'report', component: ViewReportComponent, canActivate: [loginGuard] },
+  { path: 'resetpassword', component: ResetpasswordComponent, canActivate: [loginGuard] },
+  { path: 'add-courses', component: AddCoursesComponent, canActivate: [instructGuard] },
+  { path: 'create-course', component: CreateCourseComponent, canActivate: [instructGuard] },
+  { path: 'edit-course', component: EditCourseComponent, canActivate: [instructGuard] },  // Previously edit-course/:id
+  { path: 'create-project', component: CreateProjectComponent, canActivate: [instructGuard] },  // Previously create-project/:id
+  { path: 'edit-project', component: EditProjectComponent, canActivate: [instructGuard] },  // Previously edit-project/:id
+  { path: 'add-students-project', component: AddStudentProjectComponent, canActivate: [instructGuard] },  // Previously add-students-project/:id
+  { path: 'edit-timecard', component: EditTimecardComponent, canActivate: [instructGuard] },  // Previously edit-timecard/:id
+  { path: 'past-courses', component: InactiveCoursesComponent, canActivate: [instructGuard] },
 ];
 
 @NgModule({
