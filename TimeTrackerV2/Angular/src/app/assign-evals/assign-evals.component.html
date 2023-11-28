@@ -9,10 +9,10 @@
 
       <div class="card">
         <ul class="list-group list-group-flush">
-          <li class="list-group-item" style="height: 40px">
+          <li class="list-group-item" style="height: 40px" *ngIf="courseProjects.length > 1">
             <div class="pretty p-svg p-curve float-left w-100">
-              <!--  ng-model="config.selectAll", ng-change="toggleSelectAll()" -->
-              <input type="checkbox" title="Select all projets." />
+              <!-- The below (change) event listener will be fired once the checkbox has been changed and it will run the function named "ToggleSelectAll" and pass the target of the event as talked about here https://stackoverflow.com/questions/57738565/angular-8-checkbox-change-event-checked-undefined -->
+              <input type="checkbox" title="Select all projects." [(ngModel)]="selectAllProjects" (change)="ToggleSelectAll($event.target)"/>
               <div class="state p-primary">
                 <svg class="svg svg-icon" viewBox="0 0 20 20">
                   <path
@@ -26,15 +26,15 @@
           <!-- foreach project in course.projects, ORDER BY projectName -->
           <li *ngFor="let project of courseProjects" class="list-group-item" style="height: 40px">
             <div class="pretty p-svg p-curve float-left w-100">
-              <!-- ng-model="p.isSelected", ng-change="uncheckSelectAll(p.isSelected)" -->
-              <input type="checkbox" title="Select this project." />
+              <!-- The [(ngModel)] will link the checkbox state to the boolean stored inside of isSelected for the project as explained here https://www.digitalocean.com/community/tutorials/how-to-deal-with-different-form-controls-in-angular-2#7-checkbox-boolean and see above comment for the (change) event listener -->
+              <input type="checkbox" title="Select this project." [(ngModel)]="project.isSelected" (change)="OptionClicked()"/>
               <div class="state p-primary">
                 <svg class="svg svg-icon" viewBox="0 0 20 20">
                   <path
                     d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
                     style="stroke: white;fill:white;"></path>
                 </svg>
-                <label class="check-label">{{ project.projectName }}</label>
+                <label class="check-label">{{ project.name }}</label>
               </div>
             </div>
           </li>
@@ -68,7 +68,7 @@
       </div>
       <div class="w-100">
         <!-- ng-click="assignEvaluation()" -->
-        <button class="btn btn-purple mt-2 mb-3 float-right">Assign Evaluation</button>
+        <button class="btn btn-purple mt-2 mb-3 float-right" (click)="AssignEvals()">Assign Evaluation</button>
       </div>
     </div>
   </div>
