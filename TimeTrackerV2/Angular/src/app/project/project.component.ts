@@ -54,6 +54,15 @@ export class ProjectComponent implements OnInit {
     }, {
         validators: [this.CreateDateRangeValidator()]
     });
+    // Instructor Manual time card form
+    instructorManualForm = new FormGroup({
+        studentID: new UntypedFormControl(''),
+        timecardStart: new UntypedFormControl(''),
+        timecardEnd: new UntypedFormControl(''),
+        description: this.description
+    }, {
+        validators: [this.CreateDateRangeValidator()]
+    });
 
     // This function is used to make sure that the starting date is always before the ending date.  Source https://blog.angular-university.io/angular-custom-validators/#:~:text=our%20previous%20article.-,Form%2Dlevel%20(multi%2Dfield)%20Validators,-Besides%20being%20able
     CreateDateRangeValidator(): ValidatorFn {
@@ -478,5 +487,49 @@ export class ProjectComponent implements OnInit {
         let state = {projectID: projectID, timeslotID: timeslotID, firstName: firstName, lastName: lastName};
         // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
         this.router.navigate([`/edit-timecard`], { state });
+    }
+
+    instructorManualSubmit() : void {
+        // An extra check condition to prevent submission of the data unless for form is valid 
+        if (!this.instructorManualForm.valid) {
+            return;
+        }
+
+        let req = {
+            isManualEntry: true,
+            // We format the timeIn and timeOut like this so that it will return the number of milliseconds since midnight, January 1, 1970 UTC.  https://stackoverflow.com/questions/9756120/how-do-i-get-a-utc-timestamp-in-javascript#:~:text=new%20Date().getTime()%20is%20always%20UTC
+            timeIn: new Date(this.instructorManualForm.controls.timecardStart.value).getTime(),
+            timeOut: new Date(this.instructorManualForm.controls.timecardEnd.value).getTime(),
+            isEdited: false,
+
+            userID: this.instructorManualForm.controls.studentID.value, // pull userID from the form
+            projectID: this.projectID,
+            description: this.instructorManualForm.controls.description.value // pull the description field from the form
+        };
+
+        //console.log(JSON.stringify(req));  // For debugging
+
+        this.http.post<any>('https://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+            next: data => {
+                this.errMsg = "";
+                console.log(`contents of \"req.isEdited\":` + req.isEdited);
+
+                // Clear the inputs inside the form
+                this.instructorManualForm.controls.studentID.setValue("");
+                this.instructorManualForm.controls.timecardStart.setValue("");
+                this.instructorManualForm.controls.timecardEnd.setValue("");
+                this.instructorManualForm.controls.description.setValue("");  // You can also us the code "this.description.setValue("");" because the code currently being used references this variable.
+
+                this.getActivities();
+                this.loadProjectUserTimes();
+                this.populateGraph();
+
+                /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+            },
+            error: error => {
+                this.errMsg = error['error']['message'];
+                alert(error.error.message);  // Alert the user to the message that the server sent back so they know they have reached their limit
+            }
+        });
     }
 }

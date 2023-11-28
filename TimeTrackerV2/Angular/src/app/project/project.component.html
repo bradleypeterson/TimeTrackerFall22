@@ -284,11 +284,62 @@
 <!-- Instructor version -->
 <div class="container" *ngIf="instructor">
     <div class="row">
-        <div class="col-6">
-            <div *ngIf="pieChartLabels.length != 0" class="chart-container">
-                <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
-                    [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
-                </canvas>
+        <div class="row">
+            <div class="col-6">
+                <div *ngIf="pieChartLabels.length != 0" class="chart-container">
+                    <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
+                        [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
+                    </canvas>
+                </div>
+            </div>
+    
+            <!-- Time Card Creation -->
+            <div class="col-6" *ngIf="project.isActive">
+    
+                <!-- Instructor Manual time card -->
+                <div class="col">
+                    <div class="row">
+                        <h3>Student Time Entry</h3>
+                    </div>
+                    <div class="gap-4 d-md-flex justify-content-md-center">
+                        <form [formGroup]="instructorManualForm" (ngSubmit)="instructorManualSubmit()">
+                            <!-- Student names drop down row -->
+                            <div class="row mt-2">
+                                <ng-container *ngFor="let user of projectUsers" >
+                                    <label for="studentID">Select student</label>
+                                    <select formControlName="studentID" id="studentID" class="form-control" required>
+                                        <option value="">None</option>
+                                        <option value="{{user.userID}}" required>{{user.firstName}} {{user.lastName}}</option>
+                                    </select>
+                                </ng-container>
+                            </div>
+                            <!-- Start time row -->
+                            <div class="row mt-2">
+                                <label for="Start">Start Time</label>
+                                <input formControlName="timecardStart" type="datetime-local" id="Start" class="form-control"
+                                    required>
+                            </div>
+                            <!-- End time row -->
+                            <div class="row mt-2">
+                                <label for="End">End Time</label>
+                                <input formControlName="timecardEnd" type="datetime-local" id="End" class="form-control"
+                                    required>
+                            </div>
+                            <div *ngIf="instructorManualForm.errors?.dateRange" class="row mt-2 errorText">
+                                Your "Start Time" has to be before your "End Time"
+                            </div>
+                            <!-- Description row -->
+                            <div class="row mt-2">
+                                <input formControlName="description" type="text" placeholder="Work Description"
+                                    class="form-control" required>
+                            </div>
+                            <div class="d-grid d-md-flex justify-content-md-center">
+                                <button type="submit" class="btn btn-purple mt-2"
+                                    [disabled]="!(!instructorManualForm.errors?.dateRange && instructorManualForm.controls.description.valid && instructorManualForm.controls.studentID.valid)">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 
