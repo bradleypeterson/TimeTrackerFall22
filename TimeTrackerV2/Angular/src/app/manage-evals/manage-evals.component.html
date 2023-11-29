@@ -3,40 +3,29 @@
   <!-- Dropdown for Eval Templates -->
   <div class="template-selector mb-3">
     <label for="template-select">Select Evaluation Template:</label>
-    <select
-      id="template-select"
-      class="form-select"
-      (change)="onTemplateSelect($event)"
-      name="templateSelect"
-    >
-      <option value="" disabled selected>Choose a template</option>
-      <option *ngFor="let template of templates" [value]="template.templateID">
+    <select id="template-select" class="form-select" (change)="onTemplateSelect($event)" name="templateSelect">
+      <option value="" disabled></option>
+      <option *ngFor="let template of templates; let isFirst = first" [value]="template.templateID"
+        [selected]="isFirst">
         {{ template.templateName }}
       </option>
     </select>
   </div>
+
   <hr />
   <div class="form-container">
     <!-- Preview Section for Evaluation Form -->
     <div class="eval-preview" *ngIf="selectedTemplateQuestions.length > 0">
       <h3>Preview of Evaluation Form</h3>
       <div class="questions-grid">
-        <div
-          class="question-item"
-          *ngFor="let question of selectedTemplateQuestions; let i = index"
-        >
+        <div class="question-item" *ngFor="let question of selectedTemplateQuestions; let i = index">
           <!-- Container for each question -->
           <div class="question-container">
             <label>{{ question.questionText }}</label>
             <div *ngIf="question.questionType === 'rating'">
               <!-- Radio Buttons for Rating -->
               <div *ngFor="let rating of [1, 2, 3, 4, 5]; let j = index">
-                <input
-                  type="radio"
-                  [id]="'rating-' + i + '-' + j"
-                  name="rating-{{ i }}"
-                  [value]="rating"
-                />
+                <input type="radio" [id]="'rating-' + i + '-' + j" name="rating-{{ i }}" [value]="rating" />
                 <label [for]="'rating-' + i + '-' + j">{{ rating }}</label>
               </div>
             </div>
@@ -49,14 +38,10 @@
       </div>
     </div>
   </div>
-  <!-- manage-evals.component.html -->
+
   <div class="manage-evals">
     <!-- Button to Trigger Modal -->
-    <button
-      type="button"
-      class="btn btn-purple btn-courses"
-      (click)="showModal = true"
-    >
+    <button type="button" class="btn btn-purple btn-courses" (click)="showModal = true">
       Create New Template
     </button>
 
@@ -69,26 +54,13 @@
         </div>
         <div class="modal-body">
           <label for="template-name">Template Name</label>
-          <input
-            type="text"
-            id="template-name"
-            [(ngModel)]="newTemplateName"
-            name="newTemplateName"
-          />
+          <input type="text" id="template-name" [(ngModel)]="newTemplateName" name="newTemplateName" />
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-purple btn-courses"
-            (click)="createTemplate()"
-          >
+          <button type="button" class="btn btn-purple btn-courses" (click)="createTemplate()">
             Create Template
           </button>
-          <button
-            type="button"
-            class="btn btn-purple btn-courses"
-            (click)="showModal = false"
-          >
+          <button type="button" class="btn btn-purple btn-courses" (click)="showModal = false">
             Close
           </button>
         </div>
@@ -99,76 +71,47 @@
     <div class="form-container">
       <h3>Edit Questions</h3>
       <div class="questions-form" *ngIf="selectedTemplateQuestions.length > 0">
-        <div
-          *ngFor="let question of selectedTemplateQuestions; let i = index"
-          class="mb-3"
-        >
+        <div *ngFor="let question of selectedTemplateQuestions; let i = index" class="mb-3">
           <div class="question-container">
-            <!-- Textarea for Question Text, only show if question type is not '1-5' -->
-            <div *ngIf="question.questionType !== '1-5'">
+            <!-- Textarea for Question Text, only show if question type is not 'rating' -->
+            <div *ngIf="question.questionType !== 'rating'">
               <label for="question-text-{{ i }}">Edit Question Text:</label>
-              <textarea
-                id="question-text-{{ i }}"
-                class="form-control"
-                [(ngModel)]="question.questionText"
-                name="questionText-{{ i }}"
-              ></textarea>
+              <textarea id="question-text-{{ i }}" class="form-control" [(ngModel)]="question.questionText"
+                name="questionText-{{ i }}"></textarea>
             </div>
 
             <!-- Dropdown for Changing Response Type -->
             <div class="response-type mt-2">
               <label for="responseType-{{ i }}">Change Response Type:</label>
-              <select
-                id="responseType-{{ i }}"
-                class="form-select"
-                [(ngModel)]="question.questionType"
-                name="responseType-{{ i }}"
-              >
-                <option
-                  [value]="'1-5'"
-                  [selected]="question.questionType === '1-5'"
-                >
+              <select id="responseType-{{ i }}" class="form-select" [(ngModel)]="question.questionType"
+                name="responseType-{{ i }}">
+                <option [value]="'rating'" [selected]="question.questionType === 'rating'">
                   1-5 Rating
                 </option>
-                <option
-                  [value]="'text'"
-                  [selected]="question.questionType === 'text'"
-                >
-                  Short Text Response
+                <option [value]="'text'" [selected]="question.questionType === 'text'">
+                  Text Response
                 </option>
               </select>
             </div>
 
             <!-- Delete Button -->
-            <button
-              type="button"
-              class="btn-question btn btn-danger"
-              (click)="deleteQuestion(question.questionID)"
-            >
+            <button type="button" class="btn-question btn btn-danger" (click)="deleteQuestion(question.questionID)">
               Delete Question
             </button>
             <!-- Submit Button -->
-            <button
-              type="submit"
-              class="btn-question btn btn-purple"
-              (click)="
+            <button type="submit" class="btn-question btn btn-purple" (click)="
                 submitUpdates(
                   question.questionID,
                   question.questionText,
                   question.questionType
                 )
-              "
-            >
+              ">
               Submit Update
             </button>
           </div>
         </div>
       </div>
-      <button
-        type="button"
-        class="btn btn-purple btn-courses"
-        (click)="showQuestionModal = true"
-      >
+      <button type="button" class="btn btn-purple btn-courses" (click)="showQuestionModal = true">
         Add New Question
       </button>
 
@@ -177,29 +120,15 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5>Add New Question</h5>
-            <button
-              type="button"
-              class="btn-close"
-              (click)="showQuestionModal = false"
-            ></button>
+            <button type="button" class="btn-close" (click)="showQuestionModal = false"></button>
           </div>
           <div class="modal-body">
             <label for="question-text">Question Text</label>
-            <input
-              type="text"
-              id="question-text"
-              class="form-control"
-              [(ngModel)]="newQuestionText"
-              name="newQuestionText"
-            />
+            <input type="text" id="question-text" class="form-control" [(ngModel)]="newQuestionText"
+              name="newQuestionText" />
 
             <label for="question-type" class="mt-2">Question Type</label>
-            <select
-              id="question-type"
-              class="form-select"
-              [(ngModel)]="newQuestionType"
-              name="newQuestionType"
-            >
+            <select id="question-type" class="form-select" [(ngModel)]="newQuestionType" name="newQuestionType">
               <option value="" disabled selected>Select Type</option>
               <!-- Replace with your actual question type -->
               <option value="rating">Rating</option>
@@ -207,18 +136,10 @@
             </select>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-purple btn-courses"
-              (click)="addQuestion()"
-            >
+            <button type="button" class="btn btn-purple btn-courses" (click)="addQuestion()">
               Add Question
             </button>
-            <button
-              type="button"
-              class="btn btn-purple btn-courses"
-              (click)="showQuestionModal = false"
-            >
+            <button type="button" class="btn btn-purple btn-courses" (click)="showQuestionModal = false">
               Close
             </button>
           </div>

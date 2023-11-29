@@ -40,6 +40,19 @@ export class ManageEvalsComponent implements OnInit {
 
   ngOnInit() {
     this.loadTemplates();
+    this.loadQuestionsForTemplate("1");
+  }
+
+  loadQuestionsForTemplate(templateId: string) {
+    this.http.get<Question[]>(`https://localhost:8080/api/questions/${templateId}`).subscribe(
+      data => {
+        this.selectedTemplateQuestions = data;
+        // Store initial state
+        this.storeInitialState(data);
+        console.log('Fetched Questions:', data);
+      },
+      error => console.error('Error fetching questions:', error)
+    );
   }
 
   loadTemplates() {
@@ -95,10 +108,14 @@ export class ManageEvalsComponent implements OnInit {
     const newTemplate = { templateName: this.newTemplateName };
     this.http.post(`https://localhost:8080/api/addTemplate`, newTemplate).subscribe(
       () => {
-        alert('Template created successfully!');
+        // alert('Template created successfully!');
         this.loadTemplates(); // Reload templates to include the new one
+        this.showModal = false;
       },
-      error => console.error('Error creating template:', error)
+      error => {
+        alert('Error creating template. Please try again.');
+        console.error('Error creating template:', error);
+      }
     );
   }
 
@@ -122,13 +139,16 @@ export class ManageEvalsComponent implements OnInit {
 
     this.http.post('https://localhost:8080/api/AddQuestion', payload).subscribe(
       () => {
-        alert('Question added successfully!');
+        // alert('Question added successfully!');
         this.reloadQuestions();
         this.showQuestionModal = false;
         this.newQuestionText = '';
         this.newQuestionType = '';
       },
-      error => console.error('Error adding question:', error)
+      error => {
+        alert('Error updating question!');
+        console.error('Error adding question:', error)
+      }
     );
   }
 
@@ -137,10 +157,13 @@ export class ManageEvalsComponent implements OnInit {
 
     this.http.delete(`https://localhost:8080/api/deleteQuestion/${questionID}`).subscribe(
       () => {
-        alert('Question deleted successfully!');
+        // alert('Question deleted successfully!');
         this.reloadQuestions();
       },
-      error => console.error('Error deleting question:', error)
+      error => {
+        alert('Error creating deleting question. Please try again.');
+        console.error('Error deleting question:', error);
+      }
     );
   }
 
@@ -181,10 +204,13 @@ export class ManageEvalsComponent implements OnInit {
     // Send the update request
     this.http.put(`https://localhost:8080/api/updateQuestion/${questionID}`, payload).subscribe(
       () => {
-        alert('Question updated successfully!');
+        // alert('Question updated successfully!');
         this.reloadQuestions();
       },
-      error => console.error('Error updating question:', error)
+      error => {
+        alert('Error updating question. Please try again.');
+        console.error('Error updating question:', error);
+      }
     );
   }
 
