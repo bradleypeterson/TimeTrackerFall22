@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common'
 
 interface ProjectSelection {
   id: number;
@@ -26,7 +27,8 @@ export class AssignEvalsComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) {
     const tempUser = localStorage.getItem('currentUser');
     if (!tempUser) {
@@ -95,5 +97,9 @@ export class AssignEvalsComponent implements OnInit {
 
   AssignEvals() {
     console.log("API route to assign eval to the selected projects\n\"Select All\" Selected:", this.selectAllProjects, "\ncourseProjects state:", this.courseProjects);  // For debugging to make sure that the ngModel is working
+  }
+
+  goBackToCoursePage(): void {
+    this.location.back();
   }
 }
