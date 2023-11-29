@@ -54,7 +54,7 @@
           <li *ngFor="let evalTemplate of evalTemplates" class="list-group-item" style="height: 40px">
             <div class="pretty p-svg p-curve float-left w-100">
               <!-- ng-value="true" ng-model="e.isSelected" -->
-              <input type="radio" name="evaluation" title="Select this evaluation." />
+              <input type="radio" name="evaluation" [(ngModel)]="evalSelected" [value]="evalTemplate" title="Select this evaluation." />
               <div class="state p-primary">
                 <svg class="svg svg-icon" viewBox="0 0 20 20">
                   <path
@@ -69,7 +69,7 @@
       </div>
       <div class="w-100">
         <!-- ng-click="assignEvaluation()" -->
-        <button class="btn btn-purple mt-2 mb-3 float-right" (click)="AssignEvals()">Assign Evaluation</button>
+        <button class="btn btn-purple mt-2 mb-3 float-right" [disabled]="!evalSelected || !aProjectIsSelected" (click)="AssignEvals()">Assign Evaluation</button>
       </div>
     </div>
   </div>
