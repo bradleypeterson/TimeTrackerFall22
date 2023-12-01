@@ -33,14 +33,15 @@ export class ManageEvalsComponent implements OnInit {
   showQuestionModal = false;
   newQuestionText = '';
   newQuestionType = '';
-
+  defaultTemplateId = '1';
   initialQuestionsState: Record<string, Question> = {};
 
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
     this.loadTemplates();
-    this.loadQuestionsForTemplate("1");
+    this.loadDefaultTemplate();
+
   }
 
   loadQuestionsForTemplate(templateId: string) {
@@ -53,6 +54,11 @@ export class ManageEvalsComponent implements OnInit {
       },
       error => console.error('Error fetching questions:', error)
     );
+  }
+
+  loadDefaultTemplate() {
+    this.selectedTemplateId = this.defaultTemplateId;
+    this.loadQuestionsForTemplate(this.defaultTemplateId);
   }
 
   loadTemplates() {
