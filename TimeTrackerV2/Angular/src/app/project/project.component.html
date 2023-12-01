@@ -305,13 +305,13 @@
                         <form [formGroup]="instructorManualForm" (ngSubmit)="instructorManualSubmit()">
                             <!-- Student names drop down row -->
                             <div class="row mt-2">
-                                <ng-container *ngFor="let user of projectUsers" >
                                     <label for="studentID">Select student</label>
                                     <select formControlName="studentID" id="studentID" class="form-control" required>
                                         <option value="">None</option>
-                                        <option value="{{user.userID}}" required>{{user.firstName}} {{user.lastName}}</option>
+                                        <ng-container *ngFor="let user of projectUsers" >
+                                            <option value="{{user.userID}}">{{user.firstName}} {{user.lastName}}</option>
+                                        </ng-container>
                                     </select>
-                                </ng-container>
                             </div>
                             <!-- Start time row -->
                             <div class="row mt-2">
