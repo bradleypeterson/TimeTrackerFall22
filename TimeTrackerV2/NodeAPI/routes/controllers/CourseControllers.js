@@ -426,3 +426,21 @@ exports.RemovePendUser = async (req, res, next) => {
     });
 }
 //#endregion
+
+exports.GetRecentCourses = (req, res) => {
+    console.log("CourseControllers.js file/GetRecentCourses route called");
+
+    sql = `SELECT u.firstName, u.lastName, c.courseID, c.description, c.courseName
+    FROM Users u
+    JOIN Courses c ON u.userID = c.instructorID
+    ORDER BY c.courseID DESC LIMIT 8`;
+
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows) {
+            return res.send(rows);
+        }
+    });
+}

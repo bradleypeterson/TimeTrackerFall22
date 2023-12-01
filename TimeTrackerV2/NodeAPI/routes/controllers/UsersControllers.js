@@ -79,3 +79,19 @@ exports.EditUserProfile = (req, res) => {
         }
     });
 }
+
+exports.GetRecentUsers = (req, res) => {
+    console.log("UsersControllers.js file/GetRecentUsers route called");
+
+    sql = `SELECT firstName, lastName, userID
+    FROM Users ORDER BY userID DESC LIMIT 8`;
+
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows) {
+            return res.send(rows);
+        }
+    });
+}
