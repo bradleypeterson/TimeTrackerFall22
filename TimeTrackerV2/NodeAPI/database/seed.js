@@ -176,13 +176,51 @@ db.run(
     }
   );  
 
+// Create the Question Type lookup table and insert the default items
+db.run(`CREATE TABLE IF NOT EXISTS Question_Type (
+    questionTypeID INTEGER PRIMARY KEY AUTOINCREMENT,
+    questionTypeText TEXT NOT NULL UNIQUE
+    );`,
+    (err) => {
+        if (err) {
+            console.error(err.message);
+        }
+        else {
+            // console.log('Question_Type table created.');
+
+            // Insert the default entry only if it doesn't exist
+            const insertDefaultQuestionTypes = `
+                INSERT INTO Question_Type (questionTypeText)
+                SELECT 'Rating'
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM Question_Type WHERE questionTypeText = 'Rating'
+                )
+                UNION ALL
+                SELECT 'Text'
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM Question_Type WHERE questionTypeText = 'Text'
+                );`;
+            db.run(insertDefaultQuestionTypes,
+                (err) => {
+                    if (err) {
+                        console.error(err.message);
+                    }
+                    else {
+                        console.log('Default question types inserted or already exists.');
+                    }
+                }
+            );
+        }
+    }
+);
 // Create Eval Questions table
 db.run(`CREATE TABLE IF NOT EXISTS Question (
     questionID INTEGER PRIMARY KEY AUTOINCREMENT,
     questionText TEXT NOT NULL,
-    questionType INTEGER NOT NULL,  -- Why is this an integer, this does not make it very easy to understand the type of the question.  In addition, when you run the API call to add a question, it is stored as text.
+    questionType INTEGER NOT NULL,
     templateID INTEGER NOT NULL,
-    FOREIGN KEY (templateID) REFERENCES Template (templateID) ON DELETE CASCADE
+    FOREIGN KEY (templateID) REFERENCES Template (templateID) ON DELETE CASCADE,
+    FOREIGN KEY (questionType) REFERENCES Question_Type (questionTypeID) ON DELETE CASCADE
 );`);
 
 // Create Eval Responses table (not yet in use)

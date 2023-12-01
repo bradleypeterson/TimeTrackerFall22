@@ -168,36 +168,18 @@ export class ManageEvalsComponent implements OnInit {
   }
 
   submitUpdates(questionID: string, updatedText: string, updatedType: string) {
-    const payload: UpdateQuestionPayload = {};
-    const originalQuestion = this.initialQuestionsState[questionID]; // Use initial state for comparison
-
-    if (!originalQuestion) {
-      console.error('Question not found');
-      return;
-    }
-
-    console.log('Original Question (immediately after retrieval):', originalQuestion);
-
-    // Log updated values
+    // Log the values
     console.log('Updated Text:', updatedText);
     console.log('Updated Type:', updatedType);
+    
+    const originalQuestion = this.initialQuestionsState[questionID]; // Use initial state for comparison
+    const payload: UpdateQuestionPayload = {
+        questionText: updatedText,
+        questionType: updatedType
+    };
 
-    // Check if the text or type has been changed
-    if (originalQuestion.questionText !== updatedText) {
-      console.log('Text has changed');
-      payload.questionText = updatedText;
-    }
-
-    if (originalQuestion.questionType !== updatedType) {
-      console.log('Type has changed');
-      payload.questionType = updatedType;
-    }
-
-    // Log payload before checking if it's empty
-    console.log('Payload before submission:', payload);
-
-    if (Object.keys(payload).length === 0) {
-      console.log('No changes to submit');
+    if (originalQuestion.questionText == payload.questionText && originalQuestion.questionType == payload.questionType) {
+      console.error('No changes to submit');
       return;
     }
 
@@ -213,6 +195,4 @@ export class ManageEvalsComponent implements OnInit {
       }
     );
   }
-
-
 }
