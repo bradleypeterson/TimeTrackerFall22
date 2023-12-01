@@ -2,6 +2,32 @@ const ConnectToDB = require("../../database/DBConnection");
 
 let db = ConnectToDB();
 
+exports.GetQuestionTypes = async (req, res, next) => {
+    console.log("EvalController.js file/GetQuestionTypes route called");
+    let sql = `SELECT questionTypeText AS questionType
+    FROM Question_Type`
+    db.all(sql, (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong in grabbing the question types. Please try again later.' });
+        }
+        if (rows) {
+            console.log(`Rows retrieved:  ${JSON.stringify(rows)}`);
+            
+            let returnData = [];
+            rows.forEach((row) => {
+                returnData.push(row.questionType);
+            });
+
+            console.log(`Returning data: ${returnData}`);
+
+            return res.send(returnData);
+        }
+        else {
+            return res.send("No errors occurred, however no rows were found either.");
+        }
+    });
+};
+
 exports.AddQuestion = async (req, res, next) => {
     console.log("EvalController.js file/AddQuestion route called");
 

@@ -26,6 +26,7 @@ interface UpdateQuestionPayload {
 })
 export class ManageEvalsComponent implements OnInit {
   showModal: boolean = false;
+  questionTypes: string[] = [];
   templates: EvalTemplate[] = [];
   selectedTemplateQuestions: Question[] = [];
   selectedTemplateId: string | null = null;
@@ -46,8 +47,7 @@ export class ManageEvalsComponent implements OnInit {
     this.getCurrentUser();
     this.loadTemplates();
     // this.loadDefaultTemplate();
-
-
+    this.LoadQuestionTypes();
   }
 
   private getCurrentUser() {
@@ -88,6 +88,16 @@ export class ManageEvalsComponent implements OnInit {
       },
       error => console.error('Error fetching templates:', error)
     );
+  }
+
+  LoadQuestionTypes() {
+    this.http.get<string[]>('https://localhost:8080/api/questionTypes').subscribe(
+        data => {
+          this.questionTypes = data;
+          console.log('Fetched question types:', data);
+        },
+        error => console.error('Error fetching question types:', error)
+      );  
   }
 
   onTemplateSelect(event: Event) {

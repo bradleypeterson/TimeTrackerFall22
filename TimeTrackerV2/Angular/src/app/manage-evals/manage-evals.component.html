@@ -22,14 +22,14 @@
           <!-- Container for each question -->
           <div class="question-container">
             <label>{{ question.questionText }}</label>
-            <div *ngIf="question.questionType === 'Rating'">
+            <div *ngIf="question.questionType === '1-5 Rating'">
               <!-- Radio Buttons for Rating -->
               <div *ngFor="let rating of [1, 2, 3, 4, 5]; let j = index">
                 <input type="radio" [id]="'rating-' + i + '-' + j" name="rating-{{ i }}" [value]="rating" />
                 <label [for]="'rating-' + i + '-' + j">{{ rating }}</label>
               </div>
             </div>
-            <div *ngIf="question.questionType === 'Text'">
+            <div *ngIf="question.questionType === 'Text Response'">
               <!-- Textarea for Text Response -->
               <textarea class="form-control" id="textarea-{{ i }}"></textarea>
             </div>
@@ -74,7 +74,7 @@
         <div *ngFor="let question of selectedTemplateQuestions; let i = index" class="mb-3">
           <div class="question-container">
             <!-- Textarea for Question Text, only show if question type is not 'rating' -->
-            <div *ngIf="question.questionType !== 'Rating'">
+            <div *ngIf="question.questionType !== '1-5 Rating'">
               <label for="question-text-{{ i }}">Edit Question Text:</label>
               <textarea id="question-text-{{ i }}" class="form-control" [(ngModel)]="question.questionText"
                 name="questionText-{{ i }}"></textarea>
@@ -85,12 +85,7 @@
               <label for="responseType-{{ i }}">Change Response Type:</label>
               <select id="responseType-{{ i }}" class="form-select" [(ngModel)]="question.questionType"
                 name="responseType-{{ i }}">
-                <option [value]="'Rating'" [selected]="question.questionType === 'Rating'">
-                  1-5 Rating
-                </option>
-                <option [value]="'Text'" [selected]="question.questionType === 'Text'">
-                  Text Response
-                </option>
+                <option *ngFor="let questionType of questionTypes" value="{{questionType}}" [selected]="question.questionType === questionType">{{questionType}}</option>
               </select>
             </div>
 
@@ -131,8 +126,7 @@
             <select id="question-type" class="form-select" [(ngModel)]="newQuestionType" name="newQuestionType">
               <option value="" disabled selected>Select Type</option>
               <!-- Replace with your actual question type -->
-              <option value="Rating">Rating</option>
-              <option value="Text">Text</option>
+              <option *ngFor="let questionType of questionTypes" value="{{questionType}}">{{questionType}}</option>
             </select>
           </div>
           <div class="modal-footer">

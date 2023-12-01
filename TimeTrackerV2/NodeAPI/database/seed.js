@@ -168,14 +168,14 @@ db.run(`CREATE TABLE IF NOT EXISTS Question_Type (
             // Insert the default entry only if it doesn't exist
             const insertDefaultQuestionTypes = `
                 INSERT INTO Question_Type (questionTypeText)
-                SELECT 'Rating'
+                SELECT '1-5 Rating'
                 WHERE NOT EXISTS (
-                    SELECT 1 FROM Question_Type WHERE questionTypeText = 'Rating'
+                    SELECT 1 FROM Question_Type WHERE questionTypeText = '1-5 Rating'
                 )
                 UNION ALL
-                SELECT 'Text'
+                SELECT 'Text Response'
                 WHERE NOT EXISTS (
-                    SELECT 1 FROM Question_Type WHERE questionTypeText = 'Text'
+                    SELECT 1 FROM Question_Type WHERE questionTypeText = 'Text Response'
                 );`;
             db.run(insertDefaultQuestionTypes,
                 (err) => {
