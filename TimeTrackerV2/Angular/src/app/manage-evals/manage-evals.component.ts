@@ -35,34 +35,53 @@ export class ManageEvalsComponent implements OnInit {
   newQuestionType = '';
   defaultTemplateId = '1';
   initialQuestionsState: Record<string, Question> = {};
+  currentUser: any;
+  evaluatorID: string = '';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
+
+  }
 
   ngOnInit() {
+    this.getCurrentUser();
     this.loadTemplates();
-    this.loadDefaultTemplate();
+    // this.loadDefaultTemplate();
+
 
   }
 
-  loadQuestionsForTemplate(templateId: string) {
-    this.http.get<Question[]>(`https://localhost:8080/api/questions/${templateId}`).subscribe(
-      data => {
-        this.selectedTemplateQuestions = data;
-        // Store initial state
-        this.storeInitialState(data);
-        console.log('Fetched Questions:', data);
-      },
-      error => console.error('Error fetching questions:', error)
-    );
+  private getCurrentUser() {
+    const currentUserData = localStorage.getItem('currentUser');
+    if (currentUserData) {
+      this.currentUser = JSON.parse(currentUserData);
+      this.evaluatorID = this.currentUser.userID;
+      console.log('Current UserID:', this.evaluatorID);
+    } else {
+      console.log('No current user found in local storage.');
+    }
   }
 
-  loadDefaultTemplate() {
-    this.selectedTemplateId = this.defaultTemplateId;
-    this.loadQuestionsForTemplate(this.defaultTemplateId);
-  }
+
+  // loadQuestionsForTemplate(templateId: string) {
+  //   this.http.get<Question[]>(`https://localhost:8080/api/questions/${templateId}`).subscribe(
+  //     data => {
+  //       this.selectedTemplateQuestions = data;
+  //       // Store initial state
+  //       this.storeInitialState(data);
+  //       console.log('Fetched Questions:', data);
+  //     },
+  //     error => console.error('Error fetching questions:', error)
+  //   );
+  // }
+
+  // loadDefaultTemplate() {
+  //   this.selectedTemplateId = this.defaultTemplateId;
+  //   this.loadQuestionsForTemplate(this.defaultTemplateId);
+  // }
 
   loadTemplates() {
-    this.http.get<EvalTemplate[]>('https://localhost:8080/api/templates').subscribe(
+
+    this.http.get<EvalTemplate[]>(`https://localhost:8080/api/templates/${this.evaluatorID}`).subscribe(
       data => {
         this.templates = data;
         console.log('Fetched Templates:', data);
@@ -112,7 +131,8 @@ export class ManageEvalsComponent implements OnInit {
     }
 
     const newTemplate = { templateName: this.newTemplateName };
-    this.http.post(`https://localhost:8080/api/addTemplate`, newTemplate).subscribe(
+    console.error('evaluatorID:', this.evaluatorID);
+    this.http.post(`https://localhost:8080/api/addTemplate/${this.evaluatorID}`, newTemplate).subscribe(
       () => {
         // alert('Template created successfully!');
         this.loadTemplates(); // Reload templates to include the new one

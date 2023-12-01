@@ -212,11 +212,11 @@ router.get("/Users", GetUsersInfo);
 //#region Eval routes
 router.post("/addQuestion", AddQuestion);
 
-router.post("/addTemplate", AddTemplate);
+router.post("/addTemplate/:evaluatorID", AddTemplate);
 
 router.get("/questions/:templateID", Questions);
 
-router.get("/templates", Templates);
+router.get("/templates/:evaluatorID", Templates);
 
 router.put("/updateQuestion/:questionID", UpdateQuestion);
 

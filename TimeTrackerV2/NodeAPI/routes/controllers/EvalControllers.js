@@ -50,28 +50,41 @@ exports.AddQuestion = async (req, res, next) => {
 exports.AddTemplate = async (req, res, next) => {
   console.log("EvalControllers.js file/AddTemplate route called");
 
+
+  let evaluatorID = req.params["evaluatorID"];
   let templateName = req.body.templateName;
+
   console.log("Template name: " + templateName);
+  console.log("evaluatorID: " + evaluatorID);
 
   if (!templateName) {
     return res.status(400).json({ message: "Template name is required" });
   }
 
-  let sql = `INSERT INTO Template (templateName) VALUES (?)`;
+  if (!evaluatorID) {
+    return res.status(400).json({ message: "evaluatorID is required" });
+  }
 
-  db.run(sql, [templateName], function (err) {
-    if (err) {
-      console.error(err);
-      return res
-        .status(500)
-        .json({ message: "Something went wrong when adding the template." });
-    } else {
-      console.log(`A new template has been added with ID ${this.lastID}`);
-      return res
-        .status(201)
-        .json({ message: "New template added.", templateId: this.lastID });
-    }
-  });
+  let data = [templateName, evaluatorID];
+  // let sql = `INSERT INTO Template () VALUES (?, ?)`;
+
+  db.run(
+    `INSERT INTO Template(templateName, evaluatorID)
+            VALUES(?, ?)`,
+    data,
+    function (err) {
+      if (err) {
+        console.error(err);
+        return res
+          .status(500)
+          .json({ message: "Something went wrong when adding the template." });
+      } else {
+        console.log(`A new template has been added with ID ${this.lastID}`);
+        return res
+          .status(201)
+          .json({ message: "New template added.", templateId: this.lastID });
+      }
+    });
 };
 
 exports.Questions = async (req, res, next) => {
@@ -98,13 +111,21 @@ exports.Questions = async (req, res, next) => {
 exports.Templates = async (req, res, next) => {
   console.log("EvalControllers.js file/Templates route called");
 
-  db.all("SELECT * FROM Template", [], (err, rows) => {
-    if (err) {
-      console.error(err.message);
-      return res.status(500).json({ message: "Error retrieving templates." });
-    }
-    res.status(200).json(rows);
-  });
+  let evaluatorID = req.params["evaluatorID"];
+  console.log("evaluatorID", evaluatorID);
+  if (!evaluatorID) {
+    return res.status(400).json({ message: "evaluatorID is required" });
+  }
+
+  db.all("SELECT * FROM Template WHERE evaluatorID = ?",
+    [evaluatorID],
+    (err, rows) => {
+      if (err) {
+        console.error(err.message);
+        return res.status(500).json({ message: "Error retrieving templates." });
+      }
+      res.status(200).json(rows);
+    });
 };
 
 exports.UpdateQuestion = async (req, res, next) => {
