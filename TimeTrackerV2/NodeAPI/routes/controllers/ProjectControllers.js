@@ -299,3 +299,22 @@ exports.DeleteProject = async (req, res, next) => {
         }
     });
 }
+
+exports.GetRecentProjects = (req, res) => {
+    console.log("ProjectControllers.js file/GetRecentProjects route called");
+
+    sql = `SELECT u.firstName, u.lastName, c.courseName, c.courseID, p.projectID, p.description, p.projectName
+    FROM Projects p
+    JOIN Courses c ON p.courseID = c.courseID
+    JOIN Users u ON c.instructorID = u.userID
+    ORDER BY p.projectID DESC LIMIT 8`;
+
+    db.all(sql, [], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows) {
+            return res.send(rows);
+        }
+    });
+}

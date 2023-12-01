@@ -30,6 +30,7 @@ const {
   RegisterForCourse,
   DropCourse,
   RemovePendUser,
+  GetRecentCourses,
 } = require("./controllers/CourseControllers");
 
 const { CreateNewGroup } = require("./controllers/MiscellaneousControllers");
@@ -48,6 +49,7 @@ const {
   CreateProject,
   EditProject,
   DeleteProject,
+  GetRecentProjects,
 } = require("./controllers/ProjectControllers");
 
 const {
@@ -65,6 +67,7 @@ const {
   GetUserProfile,
   EditUserProfile,
   GetUsersInfo,
+  GetRecentUsers,
 } = require("./controllers/UsersControllers");
 
 const {
@@ -111,6 +114,8 @@ router.get(
 router.get("/CourseInfo/:id", GetCourseInfo);
 
 router.get("/Courses/UserInCourse/:courseID/:userID", CheckUserInCourse);
+
+router.get("/GetRecentCourses/", GetRecentCourses);
 
 //#region Instructor specific controllers
 router.post("/createCourse", CreateCourse);
@@ -177,6 +182,8 @@ router.post("/deleteProject", DeleteProject);
 router.get("/AddToProject/:projectID/InProject", GetAllStudentsInProject);
 
 router.get("/AddToProject/:projectID/NotInProject", GetAllStudentsNotInProject);
+
+router.get("/GetRecentProjects/", GetRecentProjects);
 //#endregion
 
 //#region Time card routes
@@ -207,6 +214,7 @@ router.post("/EditProfile", EditUserProfile);
 
 router.get("/Users", GetUsersInfo);
 
+router.get("/GetRecentUsers", GetRecentUsers);
 //#endregion
 
 //#region Eval routes

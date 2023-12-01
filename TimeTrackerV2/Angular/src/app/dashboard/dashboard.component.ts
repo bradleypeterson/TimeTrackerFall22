@@ -17,6 +17,10 @@ export class DashboardComponent implements OnInit {
   public errMsg = '';
   public p: number = 1;
 
+  public recentUsers: any = [];
+  public recentCourses: any = [];
+  public recentProjects: any = [];
+
   instructor: boolean = false;
   student: boolean = false;
   admin: boolean = false;
@@ -41,19 +45,22 @@ export class DashboardComponent implements OnInit {
     this.userID = this.currentUser.userID;
     if (userType === 'instructor') {
       this.instructor = true;
+      this.loadInstrPenUserCourses();
     }
     else if (userType === 'student') {
       this.student = true;
+      this.loadProjects();
+      this.loadPenUserCourses();
     }
     else if (userType === 'admin') {
         this.admin = true;
+        this.loadRecentUsers();
+        this.loadRecentCourses();
+        this.loadRecentProjects();
     }
 
     // get projects and courses
-    this.loadProjects();
     this.loadCourses();
-    this.loadPenUserCourses();
-    this.loadInstrPenUserCourses()
 
     if (!localStorage.getItem('foo')) {
       localStorage.setItem('foo', 'no reload')
@@ -113,6 +120,25 @@ export class DashboardComponent implements OnInit {
       error: error => {
         this.errMsg = error['error']['message'];
       }
+    });
+  }
+
+  loadRecentUsers(): void {
+    this.http.get(`https://localhost:8080/api/GetRecentUsers/`).subscribe((data: any) => {
+      //console.log(data);
+      this.recentUsers = data;
+    });
+  }
+
+  loadRecentCourses(): void {
+    this.http.get(`https://localhost:8080/api/GetRecentCourses/`).subscribe((data: any) => {
+      this.recentCourses = data;
+    });
+  }
+
+  loadRecentProjects(): void {
+    this.http.get(`https://localhost:8080/api/GetRecentProjects/`).subscribe((data: any) => {
+      this.recentProjects = data;
     });
   }
 
@@ -207,6 +233,12 @@ export class DashboardComponent implements OnInit {
       }
     });
 
+  }
+
+  ViewProfile(userID: number) {
+    let state = {userID: userID};
+    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    this.router.navigate(['/profile'], { state });
   }
 
 
