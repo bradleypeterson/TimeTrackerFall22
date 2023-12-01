@@ -5,3 +5,7 @@
 .desc {
     font-style: italic;
 }
+
+.btn-spacer {
+    margin-left: 20px;
+}
