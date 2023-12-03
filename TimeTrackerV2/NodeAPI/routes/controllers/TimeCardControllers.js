@@ -8,16 +8,20 @@ exports.GetReportsData = (req, res) => {
     let courseID = req.params["courseID"];
     console.log("courseID: " + courseID);
 
-    // This sql statement is intended to select all students that are part of a course and will at the same time, grabs all the projects they are a part of, even if they are not have any time cards for them.  Such as when they have just joined the course, they would not be assigned to a project yet to make a time card.
+    // This sql statement will select all students that are part of a course and will at the same time, grabs all the projects they are been a part of, even if they are not have any time cards for them.  Such as when they have just joined the course, they would not be assigned to a project yet to make a time card.  This SQL statement will also grab all the projects they have been a part of, I.E. they have made at least one time card for the project.
     let sql = `SELECT u.userID, u.firstName || " " || u.lastName AS studentName, p.projectID, p.projectName, SUM(tc.timeOut - tc.timeIn) AS totalTime
-    -- Joins to get the students and courses for the students
+    -- Joins to get the students and projects info for the desired course
     FROM Users u
     INNER JOIN Course_Users cu ON cu.userID = u.userID
     INNER JOIN Courses c ON c.courseID = cu.courseID
-    -- Joins to grab the time cards and projects for the students
-    LEFT OUTER JOIN Project_Users pu ON pu.userID = u.userID  -- Grab the connections to the projects the user is assigned to, but if they are not connected to any projects, return null.  An issue occurs here, what if the user is part of a group and has made some timecards, but then they are voted out or they leave, this would make it so that the name of the project would be null, thus not display the project to the user.  Need to find some solution to fix this or leave it so it only displays all the projects that the user is currently in.
-    LEFT OUTER JOIN Projects p ON p.projectID = pu.projectID  -- Grab all the projects the user has worked on, but if they have not part of the project, return null.
-    LEFT OUTER JOIN TimeCard tc ON tc.userID = u.userID AND tc.projectID = p.projectID  -- Grab all the time cards that the user has made for the project, but if the user has not made any time cards, return null.
+    -- Joins to grab the timecards for the projects they have been a part of
+    LEFT OUTER JOIN TimeCard tc ON tc.userID = u.userID  -- Grab all the time cards that the user has made for the project, but if the user has not made any time cards, return null.
+    LEFT OUTER JOIN Project_Users pu ON pu.userID = u.userID  -- Grab all users for the project, but if the user is not part of the project, return null.
+    LEFT OUTER JOIN Projects p ON p.projectID = pu.projectID OR p.projectID = tc.projectID  -- Now we join to the Projects table and we check to see if the Project_Users OR TimeCard projectID field match the project's ID, this will do one of three things.  Get all active users, users that have made timecards, or users that are not part of a project or have made a timecard for a project.  This is because of three reasons:
+    -- 1. When a user first joins a project, they have no timecards.  So the join to TimeCard would return null.
+    -- 2. When a user leaves the project, the join to Project_Users would return null.
+    -- 3. If a user is not part of a project or have not made any time cards, the join to Projects would return null.
+    -- So if we combine these three, we will always get every user that is active in the project, but has made no time cards.  Every user that is inactive in the project, but has made at least one timecard.  And every user that is registered for the course.
     -- Sort/Organize the data
     WHERE c.courseID = ?
     GROUP BY u.userID, studentName, p.projectName

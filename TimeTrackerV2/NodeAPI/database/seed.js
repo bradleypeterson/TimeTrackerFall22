@@ -20,7 +20,7 @@ db.serialize(() => {
         isActive BOOL NOT NULL,
         salt TEXT NOT NULL
         );`
-  )
+    )
     // Create the Profiles table
     .run(
       `CREATE TABLE IF NOT EXISTS Profiles(
@@ -75,7 +75,8 @@ db.serialize(() => {
             "defaultAdminCreatedOrEnabledAndNotViewed",
             true
           );
-        } else {
+        }
+        else {
           localStorage.setItem(
             "defaultAdminCreatedOrEnabledAndNotViewed",
             false

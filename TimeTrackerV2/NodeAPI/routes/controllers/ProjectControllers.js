@@ -68,7 +68,7 @@ exports.GetUserTimesForProject = (req, res) => {
     LEFT OUTER JOIN TimeCard tc ON tc.userID = u.userID  -- Grab all the time cards that the user has made for the project, but if the user has not made any time cards, return null.
     LEFT OUTER JOIN Project_Users pu ON pu.userID = u.userID  -- Grab all users for the project, but if the user is not part of the project, return null.
     INNER JOIN Projects p ON p.projectID = pu.projectID OR p.projectID = tc.projectID  -- Now we join to the Projects table and we check to see if the Project_Users OR TimeCard projectID field match the project's ID, this will get all active users and users that have made timecards.  This is because of two reasons:
-    -- 1. When a user first joins, a project they have no timecards, so the join to TimeCard would return null.
+    -- 1. When a user first joins a project, they have no timecards.  So the join to TimeCard would return null.
     -- 2. When a user leaves the project, the join to Project_Users would return null.
     -- So if we combine these two, we will always get every user that is active in the project, but has made no time cards, and every user that is inactive in the project, but has made at least one timecard.
     WHERE p.projectID = ?`;
