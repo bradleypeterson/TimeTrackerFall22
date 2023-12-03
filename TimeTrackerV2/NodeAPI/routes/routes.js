@@ -74,8 +74,8 @@ const {
     GetQuestionTypes,
     AddQuestion,
     AddTemplate,
-    Questions,
-    Templates,
+    GetQuestions,
+    GetTemplates,
     UpdateQuestion,
     DeleteQuestion,
 } = require("./controllers/EvalControllers");
@@ -225,9 +225,9 @@ router.post("/addQuestion", AddQuestion);
 
 router.post("/addTemplate/:evaluatorID", AddTemplate);
 
-router.get("/questions/:templateID", Questions);
+router.get("/questions/:templateID", GetQuestions);
 
-router.get("/templates/:evaluatorID", Templates);
+router.get("/templates/:evaluatorID", GetTemplates);
 
 router.put("/updateQuestion/:questionID", UpdateQuestion);
 

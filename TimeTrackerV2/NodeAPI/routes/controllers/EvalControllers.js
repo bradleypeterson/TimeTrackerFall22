@@ -124,7 +124,7 @@ exports.AddTemplate = async (req, res, next) => {
     });
 };
 
-exports.Questions = async (req, res, next) => {
+exports.GetQuestions = async (req, res, next) => {
     console.log("EvalControllers.js file/Questions route called");
 
     let templateID = req.params.templateID;
@@ -148,7 +148,7 @@ exports.Questions = async (req, res, next) => {
     );
 };
 
-exports.Templates = async (req, res, next) => {
+exports.GetTemplates = async (req, res, next) => {
     console.log("EvalControllers.js file/Templates route called");
 
   let evaluatorID = req.params["evaluatorID"];

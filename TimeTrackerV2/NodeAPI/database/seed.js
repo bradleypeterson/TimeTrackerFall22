@@ -191,6 +191,7 @@ db.run(`CREATE TABLE IF NOT EXISTS Question_Type (
         }
     }
 );
+
 // Create Eval Questions table
 db.run(`CREATE TABLE IF NOT EXISTS Question (
     questionID INTEGER PRIMARY KEY AUTOINCREMENT,

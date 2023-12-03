@@ -70,7 +70,7 @@ export class AssignEvalsComponent implements OnInit {
   }
 
   LoadEvalTemplates() {
-    this.http.get(`https://localhost:8080/api/templates`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+    this.http.get(`https://localhost:8080/api/templates/${this.currentUser.userID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.evalTemplates = data;
       },
