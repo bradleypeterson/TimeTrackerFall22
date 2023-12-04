@@ -21,22 +21,16 @@ export class CreateProjectComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
   ) {
     const tempUser = localStorage.getItem('currentUser');
-      if (!tempUser) {
-        this.router.navigate(["/Login"]);
-        return;
+      if (tempUser) {
+        this.currentUser = JSON.parse(tempUser);
       }
-      this.currentUser = JSON.parse(tempUser);
 
     console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
     this.courseID = this.router.getCurrentNavigation()?.extras.state?.courseID;
   }
 
   ngOnInit(): void {
-    // get user type
-    var userType = this.currentUser.type;
-    if (userType === 'student') {
-      window.location.replace("/dashboard");
-    }
+    
   }
 
   createProjectForm = this.formBuilder.group({

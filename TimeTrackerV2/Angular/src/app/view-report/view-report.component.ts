@@ -25,11 +25,9 @@ export class ViewReportComponent implements OnInit {
         private router: Router,
     ) {
         const tempUser = localStorage.getItem('currentUser');
-        if (!tempUser) {
-            this.router.navigate(["/Login"]);
-            return;
+        if (tempUser) {
+            this.currentUser = JSON.parse(tempUser);
         }
-        this.currentUser = JSON.parse(tempUser);
 
         // This will grab values from the state variable of the navigate function we defined inside the instructor-reports.ts component in the function SeeTimeLogs().  This solution was found here https://stackoverflow.com/a/54365098
         console.log(JSON.stringify(this.router.getCurrentNavigation()?.extras.state));

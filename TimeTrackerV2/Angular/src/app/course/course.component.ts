@@ -35,11 +35,9 @@ export class CourseComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
   ) {
     const tempUser = localStorage.getItem('currentUser');
-    if (!tempUser) {
-      this.router.navigate(["/Login"]);
-      return;
+    if (tempUser) {
+      this.currentUser = JSON.parse(tempUser);
     }
-    this.currentUser = JSON.parse(tempUser);
     // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
     console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
     this.courseID = this.router.getCurrentNavigation()?.extras.state?.courseID;

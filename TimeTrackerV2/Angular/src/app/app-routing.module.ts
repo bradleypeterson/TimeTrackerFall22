@@ -31,22 +31,22 @@ import { InactiveCoursesComponent } from './inactive-courses/inactive-courses.co
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
-  { path: 'admin-evals', component: AdminEvalsComponent },
+  { path: 'admin-evals', component: AdminEvalsComponent, canActivate: [loginGuard] },
   { path: 'assign-evals', component: AssignEvalsComponent, canActivate: [instructGuard]},
   { path: 'course', component: CourseComponent, canActivate: [loginGuard] },  // Previously course/:id
   { path: 'courses', component: CoursesComponent, canActivate: [studentGuard] },
   { path: 'dashboard', component: DashboardComponent, canActivate: [loginGuard] },
-  { path: 'eval', component: EvalComponent },
-  { path: 'group', component: GroupComponent },
+  { path: 'eval', component: EvalComponent, canActivate: [loginGuard] },
+  { path: 'group', component: GroupComponent, canActivate: [loginGuard] },
   { path: 'manage-evals', component: ManageEvalsComponent, canActivate: [instructGuard]},
   { path: 'project', component: ProjectComponent, canActivate: [loginGuard]},  // Previously project/:id
   { path: 'register', component: RegisterComponent },
   { path: 'profile', component: UserProfileComponent, canActivate: [loginGuard]},  // Previously profile/:id
   { path: 'edit-profile', component: EditProfileComponent, canActivate: [loginGuard]},
-  { path: 'user', component: UserComponent },
+  { path: 'user', component: UserComponent, canActivate: [loginGuard] },
   { path: 'users', component: UsersComponent, canActivate: [adminGuard] },
-  { path: 'view-eval', component: ViewEvalComponent },
-  { path: 'view-evals', component: ViewEvalsComponent },
+  { path: 'view-eval', component: ViewEvalComponent, canActivate: [loginGuard] },
+  { path: 'view-evals', component: ViewEvalsComponent, canActivate: [loginGuard] },
   { path: 'report', component: ViewReportComponent, canActivate: [loginGuard] },
   { path: 'resetpassword', component: ResetpasswordComponent, canActivate: [loginGuard] },
   { path: 'add-courses', component: AddCoursesComponent, canActivate: [instructGuard] },

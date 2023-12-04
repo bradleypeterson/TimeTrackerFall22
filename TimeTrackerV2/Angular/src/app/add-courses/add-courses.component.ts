@@ -20,11 +20,9 @@ export class AddCoursesComponent implements OnInit {
     private router: Router,
   ) {
     const tempUser = localStorage.getItem('currentUser');
-      if (!tempUser) {
-        this.router.navigate(["/Login"]);
-        return;
+      if (tempUser) {
+        this.currentUser = JSON.parse(tempUser);
       }
-      this.currentUser = JSON.parse(tempUser);
   }
 
   ngOnInit(): void {

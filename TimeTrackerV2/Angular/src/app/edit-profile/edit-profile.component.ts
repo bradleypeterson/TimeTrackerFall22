@@ -27,12 +27,6 @@ export class EditProfileComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
   ) {
-    const tempUser = localStorage.getItem('currentUser');
-    if (!tempUser) {
-      this.router.navigate(["/Login"]);
-      return;
-    }
-
     // This will grab values from the state variable of the navigate function we defined inside the users.ts component in the function NavToResetPassword().  This solution was found here https://stackoverflow.com/a/54365098
     console.log(JSON.stringify(this.router.getCurrentNavigation()?.extras.state));
     this.userID = this.router.getCurrentNavigation()?.extras.state?.userID;

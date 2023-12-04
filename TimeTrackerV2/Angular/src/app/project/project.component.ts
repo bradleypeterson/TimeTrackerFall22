@@ -115,8 +115,6 @@ export class ProjectComponent implements OnInit {
         const tempUser = localStorage.getItem('currentUser');
         if (tempUser) {
             this.currentUser = JSON.parse(tempUser);
-            console.log(`The current user is:`);
-            console.log(this.currentUser);
         }
 
         this.manualTimeCardEntry = JSON.parse(localStorage.getItem('manualTimeCardEntry') || 'false');  // Determine if the local storage has the value manualTimeCardEntry inside it so we know what state the form should be in.  If however the local storage doesn't have the value, it will return what is after the || for the default.

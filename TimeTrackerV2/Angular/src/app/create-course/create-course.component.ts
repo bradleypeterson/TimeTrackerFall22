@@ -19,19 +19,13 @@ export class CreateCourseComponent implements OnInit {
     private router: Router,
   ) {
     const tempUser = localStorage.getItem('currentUser');
-    if (!tempUser) {
-      this.router.navigate(["/Login"]);
-      return;
+    if (tempUser) {
+      this.currentUser = JSON.parse(tempUser);
     }
-    this.currentUser = JSON.parse(tempUser);
   }
 
   ngOnInit(): void {
-    // get user type
-    var userType = this.currentUser.type;
-    if (userType === 'student') {
-      window.location.replace("/dashboard");
-    }
+    
   }
 
   createCourseForm = this.formBuilder.group({
