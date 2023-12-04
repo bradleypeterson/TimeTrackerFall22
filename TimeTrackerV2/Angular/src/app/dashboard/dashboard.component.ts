@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
   public PendInstrCourses: any = [];
   public errMsg = '';
   public p: number = 1;
+  public hasPendingEvals: boolean = false;
 
   public recentUsers: any = [];
   public recentCourses: any = [];
@@ -51,12 +52,13 @@ export class DashboardComponent implements OnInit {
       this.student = true;
       this.loadProjects();
       this.loadPenUserCourses();
+      this.checkForPendingEvals();
     }
     else if (userType === 'admin') {
-        this.admin = true;
-        this.loadRecentUsers();
-        this.loadRecentCourses();
-        this.loadRecentProjects();
+      this.admin = true;
+      this.loadRecentUsers();
+      this.loadRecentCourses();
+      this.loadRecentProjects();
     }
 
     // get projects and courses
@@ -143,16 +145,16 @@ export class DashboardComponent implements OnInit {
   }
 
   GoToCourse(courseID: number) {
-        let state = {courseID: courseID};
-        // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
-        this.router.navigate(['/course'], { state });
-    }
+    let state = { courseID: courseID };
+    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    this.router.navigate(['/course'], { state });
+  }
 
-    GoToProject(projectID: number) {
-        let state = {projectID: projectID};
-        // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
-        this.router.navigate(['/project'], { state });
-    }
+  GoToProject(projectID: number) {
+    let state = { projectID: projectID };
+    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    this.router.navigate(['/project'], { state });
+  }
 
   cancel(CourseId: any) {
     let req = {
@@ -194,10 +196,6 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-
-
-
-
   loadInstrPenUserCourses(): void {
     this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/getPendInstrCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
@@ -236,10 +234,15 @@ export class DashboardComponent implements OnInit {
   }
 
   ViewProfile(userID: number) {
-    let state = {userID: userID};
+    let state = { userID: userID };
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate(['/profile'], { state });
   }
 
+  checkForPendingEvals(): void {
+    // Since there is no actual API, we simulate the API call here.
+    // In real scenario, this should be an HTTP GET request to check pending evaluations.
+    this.hasPendingEvals = true; // Assuming there are pending evaluations.
+  }
 
 }
