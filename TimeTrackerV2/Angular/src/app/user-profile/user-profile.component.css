@@ -18,3 +18,7 @@
     box-shadow: -8px 8px 2px #492365;
     background-color: #6e4097;
   }
+
+  .bio {
+    white-space: pre-line;
+  }
