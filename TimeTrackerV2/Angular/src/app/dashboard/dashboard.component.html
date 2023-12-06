@@ -143,8 +143,10 @@
 
   <div *ngSwitchCase="admin" id="dashboard">
     <h2 class="dashboard-head">Dashboard</h2>
-
-    <h3 class="box-head">Recent Users</h3>
+    <div>
+      <h3 class="box-head">Recent Users</h3>
+      <a href="/users" class="btn btn-purple btn-courses">Manage Users</a>
+    </div>
     <hr>
     <div class="alert alert-danger" *ngIf="recentUsers?.length <= 0">
       No users have been created.

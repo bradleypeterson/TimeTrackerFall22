@@ -61,7 +61,7 @@ exports.GetUserTimesForProject = (req, res) => {
     let projectID = req.params["id"];
     console.log("projectID: " + projectID);
 
-    let sql = `SELECT u.userID, u.firstName, u.lastName, tc.timeIn, tc.timeOut, tc.timeslotID
+    let sql = `SELECT DISTINCT u.userID, u.firstName, u.lastName, tc.timeIn, tc.timeOut, tc.timeslotID
     -- Joins to get the students
     FROM Users u
     -- Joins to grab the timecards or students for the a project
