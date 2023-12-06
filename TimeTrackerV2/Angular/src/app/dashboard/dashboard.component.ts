@@ -38,7 +38,6 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     // get user type
     var userType = this.currentUser.type;
     this.userID = this.currentUser.userID;
@@ -59,9 +58,10 @@ export class DashboardComponent implements OnInit {
       this.loadRecentProjects();
     }
 
-    // get projects and courses
+    // get courses
     this.loadCourses();
 
+    // makes the page properly update on changes
     if (!localStorage.getItem('foo')) {
       localStorage.setItem('foo', 'no reload')
       location.reload()
@@ -73,9 +73,9 @@ export class DashboardComponent implements OnInit {
 
   public pageTitle = 'TimeTrackerV2 | Dashboard';
 
+  // get projects student is in
   loadProjects(): void {
     this.http.get(`https://localhost:8080/api/ProjectsForUser/${this.userID}`).subscribe((data: any) => {
-      //console.log(data);
       this.projects = data;
       if (this.projects) {
         localStorage.setItem("projects", JSON.stringify(this.projects));
@@ -109,13 +109,13 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  // get courses student has applied for
   loadPenUserCourses(): void {
     this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/getCoursesPendCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
         this.PendUserCourses = data;
-        /// populate a label to inform the user that they successfully clocked out, maybe with the time.
       },
       error: error => {
         this.errMsg = error['error']['message'];
@@ -123,37 +123,42 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // for admins, load 8 most recent users
   loadRecentUsers(): void {
     this.http.get(`https://localhost:8080/api/GetRecentUsers/`).subscribe((data: any) => {
-      //console.log(data);
       this.recentUsers = data;
     });
   }
 
+  // for admins, load 8 most recent courses
   loadRecentCourses(): void {
     this.http.get(`https://localhost:8080/api/GetRecentCourses/`).subscribe((data: any) => {
       this.recentCourses = data;
     });
   }
 
+  // for admins, load 8 most recent projects
   loadRecentProjects(): void {
     this.http.get(`https://localhost:8080/api/GetRecentProjects/`).subscribe((data: any) => {
       this.recentProjects = data;
     });
   }
 
+  // navigate to course page
   GoToCourse(courseID: number) {
     let state = { courseID: courseID };
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate(['/course'], { state });
   }
 
+  // navigate to project page
   GoToProject(projectID: number) {
     let state = { projectID: projectID };
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate(['/project'], { state });
   }
 
+  // student chooses to cancel a pending course
   cancel(CourseId: any) {
     let req = {
       userID: this.currentUser.userID,
@@ -174,6 +179,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // instructor denies a student for a course
   cancelIns(CourseId: any, UserID: any) {
     let req = {
       userID: UserID,
@@ -194,13 +200,13 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // get students who have applied to courses for the instructor
   loadInstrPenUserCourses(): void {
     this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/getPendInstrCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
         console.log(data);
         this.PendInstrCourses = data;
-        /// populate a label to inform the user that they successfully clocked out, maybe with the time.
       },
       error: error => {
         this.errMsg = error['error']['message'];
@@ -208,6 +214,7 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  // instructor approves student application to course
   register(CourseId: any, UserID: any) {
     console.log("Register function called");
     console.log("the course ", CourseId);
@@ -231,6 +238,7 @@ export class DashboardComponent implements OnInit {
 
   }
 
+  // navigate to a user's profile
   ViewProfile(userID: number) {
     let state = { userID: userID };
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
