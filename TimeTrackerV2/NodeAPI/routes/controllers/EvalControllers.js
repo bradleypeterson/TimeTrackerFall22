@@ -339,14 +339,15 @@ exports.AssignEvalToProjects = async (req, res, next) => {
                     data[0] = pRow.userIDs[evaluatorIndex];
 
                     for (let evaluateeIndex = 0; evaluateeIndex < pRow.userIDs.length; evaluateeIndex++) {
-                        // If the current index of the evaluator is not the same as the evaluatee index, then add the eval to the DB.  I.E. don't assign an eval to 
+                        // If the current index of the evaluator is not the same as the evaluatee index, then add the eval to the DB.  I.E. don't assign an eval to the same person making the evals
                         if (evaluatorIndex != evaluateeIndex) {
                             // Grab the evaluateeID for the targeted user and assign it to the evaluateeID position of the data
                             data[1] = pRow.userIDs[evaluateeIndex];
                             console.log(`Data being inserted: ${JSON.stringify(data)}`);
                             
+                            // This will insert multiple table entries into the DB so that we can simplify the SQL statment and simply change the information stored inside of "data".  The original idea for this changes was found here https://stackoverflow.com/questions/38387373/how-can-i-perform-a-bulk-insert-using-sqlite3-in-node-js
                             db.run(insertAssignedEvalSQL, data, (err, value) => {
-                                // There is an error here because it will never get into this section before it checks the below if condition that is outside of this top most for loop about 17 lines above here.  So even if an error was detected, it will have already gone past the conditions to revert or commit the changes
+                                // There is an error here because it will never get into this section before it checks the below if condition that is outside of this top most for loop about 17 lines above here.  So even if an error was detected, it will have already gone past the conditions to revert or commit the changes.  Might have to resort using a try/catch block here and remove the below if/else statement and catching the any errors generated and copying the code inside the if statement into the catch block
                                 if (err) {
                                     console.log(`The following error occurred: ${err}`);
                                     errorsGenerated = true;
