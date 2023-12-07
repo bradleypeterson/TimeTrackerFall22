@@ -119,7 +119,7 @@ export class AssignEvalsComponent implements OnInit {
         //console.log("\"Select All\" Selected:", this.selectAllProjects, "\ncourseProjects state:", this.courseProjects, "\nEval Template Selected:", this.evalSelected);  // For debugging purposes
 
         this.http.post(`https://localhost:8080/api/assignEvalToProjects`, requestBody).subscribe((res: any) => {
-            //this.ShowMessage(res.message);
+            this.ShowMessage(res.message);
         },
         err => {
             this.ShowMessage(err.error.message);
