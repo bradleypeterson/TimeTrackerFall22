@@ -417,7 +417,7 @@ exports.GetAssignedEvals = async (req, res, next) => {
     INNER JOIN Assigned_Eval as a ON a.templateID = q.templateID
     INNER JOIN Question_Type as qt ON qt.questionTypeID = q.questionType
     WHERE evaluateeID = ?`;
-    
+
 
     db.all(sql, [evaluateeID],
         (err, rows) => {
@@ -428,18 +428,6 @@ exports.GetAssignedEvals = async (req, res, next) => {
             res.status(200).json(rows);
         }
     );
-
-    db.all(sql, [evaluateeID],
-        (err, rows) => {
-            if (err) {
-                console.error(err.message);
-                return res.status(500).json({ message: "Error retrieving questions." });
-            }
-            res.status(200).json(rows);
-        }
-    );
-
-
 
     // db.all("SELECT * FROM Assigned_Eval WHERE evaluateeID = ?",
     //     [evaluateeID],
