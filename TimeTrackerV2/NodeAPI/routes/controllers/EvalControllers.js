@@ -404,7 +404,7 @@ exports.AssignEvalToProjects = async (req, res, next) => {
 };
 
 exports.GetAssignedEvals = async (req, res, next) => {
-    console.log("EvalControllers.js file/GetAssignEvals route called");
+    console.log("EvalControllers.js file/GetAssignedEvals route called");
 
     let evaluateeID = req.params["evaluateeID"];
 
@@ -412,32 +412,37 @@ exports.GetAssignedEvals = async (req, res, next) => {
         return res.status(400).json({ message: "evaluatee ID is required" });
     }
 
-    let sql = `SELECT q.questionID, q.questionText, qt.questionTypeText AS questionType, q.templateID
+    let sql = `SELECT q.questionID, q.questionText, qt.questionTypeText AS questionType, q.templateID, p.projectName AS projectName
     FROM Question as q
     INNER JOIN Assigned_Eval as a ON a.templateID = q.templateID
     INNER JOIN Question_Type as qt ON qt.questionTypeID = q.questionType
+    INNER JOIN Projects as p ON a.projectID = p.projectID
     WHERE evaluateeID = ?`;
 
-
-    db.all(sql, [evaluateeID],
-        (err, rows) => {
-            if (err) {
-                console.error(err.message);
-                return res.status(500).json({ message: "Error retrieving questions." });
-            }
-            res.status(200).json(rows);
+    db.all(sql, [evaluateeID], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ message: "Error retrieving questions." });
         }
-    );
 
-    // db.all("SELECT * FROM Assigned_Eval WHERE evaluateeID = ?",
-    //     [evaluateeID],
-    //     (err, rows) => {
-    //         if (err) {
-    //             console.error(err.message);
-    //             return res.status(500).json({ message: "Error retrieving Assigned_Eval." });
-    //         }
-    //         res.status(200).json(rows);
-    // });
+        // Check if there's more than one templateID
+        const templateIDs = new Set(rows.map(row => row.templateID));
+        if (templateIDs.size === 1) {
+            // Only one templateID, return a 1-D array
+            res.status(200).json(rows);
+        } else {
+            // Multiple templateIDs, return a 2-D array indexed by templateID
+            let questionsByTemplateID = {};
+            rows.forEach(row => {
+                if (!questionsByTemplateID[row.templateID]) {
+                    questionsByTemplateID[row.templateID] = [];
+                }
+                questionsByTemplateID[row.templateID].push(row);
+            });
 
-
-}
+            // Convert to an array of arrays
+            let result = Object.values(questionsByTemplateID);
+            res.status(200).json(result);
+        }
+    });
+};

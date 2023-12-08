@@ -7,10 +7,11 @@ interface Question {
   questionType: string;
   questionID: string;
   response: string | number;
+  projectName: string;
 }
 
 interface QuestionGroup {
-  courseName: string;
+  // courseName: string;
   projectName: string;
   questions: Question[];
 }
@@ -28,7 +29,6 @@ export class EvalComponent implements OnInit {
   evaluateeID: any;
   forms: FormGroup[] = [];
   userName: string | undefined;
-  courseName = "place holder"; // assign actual course name
   // courseName: string | undefined;
   projectName = "place holder"; // assign actual project name
   // projectName: string | undefined;
@@ -59,35 +59,30 @@ export class EvalComponent implements OnInit {
     }
   }
 
-  // fetchEval() {
-  //   this.currentUser = 1; // Delete this line
-  //   this.http.get<Question[]>(`https://localhost:8080/api/questions/${this.currentUser}`).subscribe(
-  //     data => {
-  //       this.selectedTemplateQuestions = data;
-  //       this.setupForm();
-  //     },
-  //     error => console.error('Error fetching questions:', error)
-  //   );
-  // }
 
   fetchEval() {
-    this.currentUser = 1; // Delete this line
-    this.http.get<Question[] | QuestionGroup[]>(`https://localhost:8080/api/getAssignedEvals/${this.evaluateeID}`).subscribe(
+    this.http.get<any[]>(`https://localhost:8080/api/getAssignedEvals/${this.evaluateeID}`).subscribe(
       response => {
         console.log("Response received:", response);
 
-
-        if (response.length > 0 && 'questions' in response[0]) {
-          // Response is an array of QuestionGroup
-          this.questionGroups = response as QuestionGroup[];
+        if (response.length > 0) {
+          if (response[0] instanceof Array) {
+            // Response is a 2-D array of QuestionGroup
+            this.questionGroups = response.map((group: Question[]) => ({
+              projectName: group[0]?.projectName || 'Default Project',
+              questions: group
+            }));
+          } else {
+            // Response is a 1-D array of Question, wrap it in a single QuestionGroup
+            this.questionGroups = [{
+              projectName: response[0]?.projectName || 'Default Project',
+              questions: response
+            }];
+          }
         } else {
-          // Response is an array of Question, wrap it in a single QuestionGroup
-          this.questionGroups = [{
-            courseName: this.courseName,
-            projectName: this.projectName,
-            questions: response as Question[]
-          }];
+          this.questionGroups = [];
         }
+
         this.forms = this.questionGroups.map(group => this.createFormGroupForGroup(group.questions));
       },
       error => console.error('Error fetching questions:', error)

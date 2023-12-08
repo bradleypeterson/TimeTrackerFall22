@@ -2,8 +2,7 @@
   <form [formGroup]="forms[groupIndex]" (ngSubmit)="onSubmit(forms[groupIndex])">
     <div class="eval-preview">
       <h3>Evaluation for {{ userName }}</h3>
-      <h4>{{ group.courseName || 'Placeholder Course Name' }} - {{ group.projectName || 'Placeholder Project Name' }}
-      </h4>
+      <h4> {{ group.questions[0].projectName || 'Placeholder Project Name' }} </h4>
       <div class="questions-grid">
         <div class="question-item" *ngFor="let question of group.questions; let i = index">
           <div class="question-container">
