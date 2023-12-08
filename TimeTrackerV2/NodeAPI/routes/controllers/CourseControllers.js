@@ -170,6 +170,7 @@ exports.GetPendInstrCourses = (req, res) => {
         SELECT 
             c.courseID,
             c.courseName,
+            c.description,
             pcu.userID AS studentID,
             user.firstName AS studentFirstName,
             user.lastName AS studentLastName

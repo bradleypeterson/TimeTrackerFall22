@@ -41,6 +41,7 @@ export class ProjectComponent implements OnInit {
     @ViewChild(BaseChartDirective) chart: BaseChartDirective;
     // Shared fields, this is because this will allow this field's value to be shared in both forms, so if you typed the description but you are in the wrong mode, you don't have to copy the description from the other form to another
     description = new UntypedFormControl('');
+    descriptionINS = new UntypedFormControl('');
     // Forms
     // Auto time card form
     autoForm = new FormGroup({
@@ -59,7 +60,7 @@ export class ProjectComponent implements OnInit {
         studentID: new UntypedFormControl(''),
         timecardStart: new UntypedFormControl(''),
         timecardEnd: new UntypedFormControl(''),
-        description: this.description
+        description: this.descriptionINS
     }, {
         validators: [this.CreateDateRangeValidator()]
     });

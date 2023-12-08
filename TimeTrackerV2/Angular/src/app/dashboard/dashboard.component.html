@@ -122,7 +122,7 @@
           <tr *ngFor="let c of PendInstrCourses | paginate: { itemsPerPage: 10, currentPage: p }">
             <td>{{ c.courseName }}</td>
             <td>{{ c.studentFirstName }} {{ c.studentLastName }}</td>
-            <td>{{ c.description }}</td>
+            <td><i>{{ c.description }}</i></td>
             <td>
               <div class="btn-group float-right">
                 <button class="btn btn-purple" (click)="register(c.courseID, c.studentID)">
