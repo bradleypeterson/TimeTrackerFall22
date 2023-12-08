@@ -51,14 +51,17 @@ export class AssignEvalsComponent implements OnInit {
         this.http.get<any>(`https://localhost:8080/api/Projects/${this.courseID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
             next: data => {
                 data.forEach((project: any) => {
-                    // console.log("Processing the data:\n" + JSON.stringify(entry));
-                    let toBeAdded: ProjectSelection = {
-                        id: project.projectID,
-                        name: project.projectName,
-                        isSelected: false
-                    };
+                    // Only grab the projects that are active in the course
+                    if(project.isActive) {
+                        // console.log("Processing the data:\n" + JSON.stringify(entry));
+                        let toBeAdded: ProjectSelection = {
+                            id: project.projectID,
+                            name: project.projectName,
+                            isSelected: false
+                        };
 
-                    this.courseProjects.push(toBeAdded);
+                        this.courseProjects.push(toBeAdded);
+                    }
                 });
             },
             error: err => {

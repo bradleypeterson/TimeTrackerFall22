@@ -304,6 +304,7 @@ exports.AssignEvalToProjects = async (req, res, next) => {
         });
     }
 
+    // Grab all the members for the projects supplied by the instructor
     // We do this because the number of projects can change depending on what the user selects in the project.  However, there might be an issue with this method of doing this.  When we execute the SQL statement, we might get the following error returned to us "SQLITE_ERROR: too many SQL variables" as shown where I got this solution https://github.com/TryGhost/node-sqlite3/issues/762
     const questionMarkPlaceHolders = projectIDs.map(() => "?").join(",");
     let projectMembersSQL = `SELECT p.projectID, pu.userID
