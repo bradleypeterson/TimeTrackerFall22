@@ -16,6 +16,12 @@
       <div *ngSwitchCase="instructor">
         <div class="navbar-nav mx-auto">
           <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./dashboard">Dashboard</a>
+          <select name="courseOptions" class="nav-item nav-link active dark-nav-link centered-on-small" onchange="window.location = this.value;">
+            <option value="" disabled selected>Course Options</option>
+            <option class="navOption" value="/create-course">Create New Course</option>
+            <option class="navOption" value="/past-courses">Past Courses</option>
+            <option class="navOption" value="/manage-evals">Manage Evaluations</option>
+          </select>
           <button class="nav-item nav-link active dark-nav-link centered-on-small" (click)="ViewProfile()">Profile</button>
           <a class="nav-item nav-link ml-auto active dark-nav-link centered-on-small" href="#">Logout</a>
         </div>
