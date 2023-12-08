@@ -25,6 +25,7 @@ export class EvalComponent implements OnInit {
   selectedTemplateQuestions: Question[] = [];
   evalForm: FormGroup;
   currentUser: any;
+  evaluateeID: any;
   forms: FormGroup[] = [];
   userName: string | undefined;
   courseName = "place holder"; // assign actual course name
@@ -50,9 +51,9 @@ export class EvalComponent implements OnInit {
     if (currentUserData) {
       this.currentUser = JSON.parse(currentUserData);
       this.userName = this.currentUser.firstName + " " + this.currentUser.lastName;
-      this.currentUser = this.currentUser.userID;
+      this.evaluateeID = this.currentUser.userID;
 
-      console.log('Current UserID:', this.currentUser);
+      console.log('Current UserID:', this.evaluateeID);
     } else {
       console.log('No current user found in local storage.');
     }
@@ -71,7 +72,7 @@ export class EvalComponent implements OnInit {
 
   fetchEval() {
     this.currentUser = 1; // Delete this line
-    this.http.get<Question[] | QuestionGroup[]>(`https://localhost:8080/api/questions/${this.currentUser}`).subscribe(
+    this.http.get<Question[] | QuestionGroup[]>(`https://localhost:8080/api/getAssignedEvals/${this.evaluateeID}`).subscribe(
       response => {
         if (response.length > 0 && 'questions' in response[0]) {
           // Response is an array of QuestionGroup

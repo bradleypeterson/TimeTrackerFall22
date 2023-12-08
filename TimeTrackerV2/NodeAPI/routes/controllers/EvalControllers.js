@@ -290,7 +290,7 @@ exports.AssignEvalToProjects = async (req, res, next) => {
     function newRun(query, params) {
         return new Promise(function (resolve, reject) {
             if (params == undefined) params = []
-            
+
             db.run(query, params, (err) => {
                 if (err) {
                     console.log(err);
@@ -315,7 +315,7 @@ exports.AssignEvalToProjects = async (req, res, next) => {
     var rows = await newAll(projectMembersSQL, projectIDs);
 
     // If something happened to prevent the Node server for accessing the DB
-    if(!rows) {
+    if (!rows) {
         return res.status(500).json({ message: 'Something went wrong in grabbing the users for the projects.\nPlease try again later.' });
     }
 
@@ -326,7 +326,7 @@ exports.AssignEvalToProjects = async (req, res, next) => {
     // Go through every row returned and process it before inserting the entries into the DB
     rows.forEach((row, index) => {
         // The below if statement is only used for debugging
-        if (row.projectID != currentProjectID){
+        if (row.projectID != currentProjectID) {
             console.log(`\nNew project detected with an ID of ${row.projectID}`)
         }
         console.log("Processing the row: " + JSON.stringify(row));
@@ -357,7 +357,7 @@ exports.AssignEvalToProjects = async (req, res, next) => {
 
     let insertAssignedEvalSQL = `INSERT INTO Assigned_Eval (evaluatorID, evaluateeID, templateID, projectID, evalCompleted)
     VALUES(?, ?, ?, ?, ?)`;
-    
+
     console.log("Beginning transaction");
     let errorsGenerated = false;
     db.run("BEGIN TRANSACTION");
@@ -379,10 +379,10 @@ exports.AssignEvalToProjects = async (req, res, next) => {
                     // Grab the evaluateeID for the targeted user and assign it to the evaluateeID position of the data
                     data[1] = pRow.userIDs[evaluateeIndex];
                     console.log(`Data being inserted: ${JSON.stringify(data)}`);
-                    
+
                     // This will insert multiple table entries into the DB so that we can simplify the SQL statement and simply change the information stored inside of "data".  The original idea for this changes was found here before we implemented the newRun function https://stackoverflow.com/questions/38387373/how-can-i-perform-a-bulk-insert-using-sqlite3-in-node-js
                     const runCommandSuccessful = await newRun(insertAssignedEvalSQL, data);
-                    if(!runCommandSuccessful) {
+                    if (!runCommandSuccessful) {
                         errorsGenerated = true;
                     }
                 }
@@ -391,7 +391,7 @@ exports.AssignEvalToProjects = async (req, res, next) => {
     }
 
     // If any errors occurred in inserting the data, rollback the changes to the DB, otherwise commit them to the DB.
-    if(errorsGenerated) {
+    if (errorsGenerated) {
         console.log("Errors generated, rolling back changes");
         db.run("ROLLBACK");
         return res.status(500).json({ message: 'Something went wrong in assigning the evals to the users of the projects.  Please try again later.' });
@@ -402,3 +402,34 @@ exports.AssignEvalToProjects = async (req, res, next) => {
         return res.status(200).json({ message: 'The project users have been assigned the selected eval.' });
     }
 };
+
+exports.GetAssignedEvals = async (req, res, next) => {
+    console.log("EvalControllers.js file/GetAssignEvals route called");
+
+    let evaluateeID = req.params["evaluateeID"];
+
+    if (!evaluateeID) {
+        return res.status(400).json({ message: "evaluatee ID is required" });
+    }
+
+    let sql = `SELECT a.Assigned_Eval, q.questionText, qt.questionTypeText AS questionType, q.templateID
+    FROM Question as q
+    INNER JOIN Question_Type as qt ON qt.questionTypeID = q.questionType
+    WHERE templateID = ?`;
+
+
+
+
+
+    db.all("SELECT * FROM Assigned_Eval WHERE evaluateeID = ?",
+        [evaluateeID],
+        (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ message: "Error retrieving Assigned_Eval." });
+            }
+            res.status(200).json(rows);
+        });
+
+
+}

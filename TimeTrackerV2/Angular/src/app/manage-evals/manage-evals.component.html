@@ -4,9 +4,12 @@
   <div class="template-selector mb-3">
     <label for="template-select">Select Evaluation Template:</label>
     <select id="template-select" class="form-select" (change)="onTemplateSelect($event)" name="templateSelect">
+      <option value="" disabled selected>Choose a template</option>
+      <option *ngFor="let template of templates" [value]="template.templateID">
+        <!-- <select id="template-select" class="form-select" (change)="onTemplateSelect($event)" name="templateSelect">
       <option value="" disabled></option>
       <option *ngFor="let template of templates; let isFirst = first" [value]="template.templateID"
-        [selected]="isFirst">
+        [selected]="isFirst"> -->
         {{ template.templateName }}
       </option>
     </select>
@@ -85,7 +88,8 @@
               <label for="responseType-{{ i }}">Change Response Type:</label>
               <select id="responseType-{{ i }}" class="form-select" [(ngModel)]="question.questionType"
                 name="responseType-{{ i }}">
-                <option *ngFor="let questionType of questionTypes" value="{{questionType}}" [selected]="question.questionType === questionType">{{questionType}}</option>
+                <option *ngFor="let questionType of questionTypes" value="{{questionType}}"
+                  [selected]="question.questionType === questionType">{{questionType}}</option>
               </select>
             </div>
 
