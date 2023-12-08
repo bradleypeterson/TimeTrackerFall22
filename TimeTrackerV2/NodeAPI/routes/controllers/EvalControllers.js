@@ -412,24 +412,44 @@ exports.GetAssignedEvals = async (req, res, next) => {
         return res.status(400).json({ message: "evaluatee ID is required" });
     }
 
-    let sql = `SELECT a.Assigned_Eval, q.questionText, qt.questionTypeText AS questionType, q.templateID
+    let sql = `SELECT q.questionID, q.questionText, qt.questionTypeText AS questionType, q.templateID
     FROM Question as q
+    INNER JOIN Assigned_Eval as a ON a.templateID = q.templateID
     INNER JOIN Question_Type as qt ON qt.questionTypeID = q.questionType
-    WHERE templateID = ?`;
+    WHERE evaluateeID = ?`;
+    
 
-
-
-
-
-    db.all("SELECT * FROM Assigned_Eval WHERE evaluateeID = ?",
-        [evaluateeID],
+    db.all(sql, [evaluateeID],
         (err, rows) => {
             if (err) {
                 console.error(err.message);
-                return res.status(500).json({ message: "Error retrieving Assigned_Eval." });
+                return res.status(500).json({ message: "Error retrieving questions." });
             }
             res.status(200).json(rows);
-        });
+        }
+    );
+
+    db.all(sql, [evaluateeID],
+        (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ message: "Error retrieving questions." });
+            }
+            res.status(200).json(rows);
+        }
+    );
+
+
+
+    // db.all("SELECT * FROM Assigned_Eval WHERE evaluateeID = ?",
+    //     [evaluateeID],
+    //     (err, rows) => {
+    //         if (err) {
+    //             console.error(err.message);
+    //             return res.status(500).json({ message: "Error retrieving Assigned_Eval." });
+    //         }
+    //         res.status(200).json(rows);
+    // });
 
 
 }

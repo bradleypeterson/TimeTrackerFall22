@@ -74,6 +74,9 @@ export class EvalComponent implements OnInit {
     this.currentUser = 1; // Delete this line
     this.http.get<Question[] | QuestionGroup[]>(`https://localhost:8080/api/getAssignedEvals/${this.evaluateeID}`).subscribe(
       response => {
+        console.log("Response received:", response);
+
+
         if (response.length > 0 && 'questions' in response[0]) {
           // Response is an array of QuestionGroup
           this.questionGroups = response as QuestionGroup[];
