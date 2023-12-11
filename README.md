@@ -12,8 +12,6 @@ docker-compose up -d
 ```
 The -d parameter will remove trailing logs, so omit it if you'd like logs to appear in the console. Only run with --build if you make changes to the package.json or config files on either project.
 
-# Time Tracker 23 Hand-Off Document
-
 ## Application Stack and Development Tools
 
 ### Application Stack
