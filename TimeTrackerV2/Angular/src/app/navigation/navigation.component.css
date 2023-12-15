@@ -1,0 +1,6 @@
+/* You can style the navigation links here */
+.nav-links a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: blue;
+}

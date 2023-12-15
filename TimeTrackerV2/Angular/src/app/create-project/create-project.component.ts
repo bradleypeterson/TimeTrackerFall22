@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-project',
@@ -12,17 +12,26 @@ export class CreateProjectComponent implements OnInit {
   public errMsg = '';
   public courseID: any;
 
+  public currentUser: any;
+
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private http: HttpClient,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-  ) { }
+  ) {
+    const tempUser = localStorage.getItem('currentUser');
+    if (tempUser) {
+        this.currentUser = JSON.parse(tempUser);
+    }
+
+    // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
+    console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
+    this.courseID = this.router.getCurrentNavigation()?.extras.state?.courseID;
+  }
 
   ngOnInit(): void {
-
-    this.courseID = this.activatedRoute.snapshot.params['id']; // get course id from URL
-
+    
   }
 
   createProjectForm = this.formBuilder.group({
@@ -33,6 +42,11 @@ export class CreateProjectComponent implements OnInit {
   });
 
   onSubmit(): void {
+    // An extra check condition to prevent submission of the data unless the form is valid 
+    if (!this.createProjectForm.valid) {
+        return;
+    }
+
     let payload = {
       projectName: this.createProjectForm.value['projectName'],
       description: this.createProjectForm.value['description'],
@@ -40,10 +54,10 @@ export class CreateProjectComponent implements OnInit {
       courseID: this.courseID,
     }
 
-    this.http.post<any>('http://localhost:8080/createProject', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+    this.http.post<any>('https://localhost:8080/api/createProject', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
-        this.router.navigate(['/course/' + this.courseID]);
+        this.GoBackToCourse();
       },
       error: error => {
         this.errMsg = error['error']['message'];
@@ -51,4 +65,9 @@ export class CreateProjectComponent implements OnInit {
     });
   }
 
+  GoBackToCourse() {
+    let state = {courseID: this.courseID};
+    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    this.router.navigate(['/course'], { state });
+  }
 }

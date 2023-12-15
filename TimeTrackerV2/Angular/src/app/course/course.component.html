@@ -1,76 +1,80 @@
 <div id="course">
-  <h2>{{course.courseName}}</h2>
-  <div class="btn-group">
-    <a href="" class="btn btn-secondary">Edit</a>
-    <a href="" class="btn btn-danger">Delete</a>
-  </div>
+  <h2 class="course-head">{{course?.courseName}}
+    <div [ngSwitch]="true">
+      <div *ngSwitchCase="instructor">
+        <div class="btn-group">
+          <button class="btn btn-secondary" (click)="NavigateToEditCourse()">Edit</button>
+          <button class="btn btn-danger" (click)="delete()">Delete</button>
+        </div>
+      </div>
+    </div>
+  </h2>
   <hr>
-
-
-  
 
   <!-- ng-model="search" ??? -->
   <div class="form-inline mb-3">
-    <form class="mr-3">
-      <input class="form-control mr-3" type="search" placeholder="Search Projects" aria-label="Search">
-      <button class="btn btn-primary" type="submit">Search</button>
+    <form class="mr-3" (ngSubmit)="searchProjects()">
+      <input class="form-control mr-3" [(ngModel)]="projectSearchQuery" name="projectSearchQuery" type="text" placeholder="Search Projects" aria-label="Search">
+      <button class="btn btn-purple btn-elevated" type="submit">Search</button>
     </form>
-  
-    <a href="/create-project/{{course.courseID}}" class="btn btn-success">Create New Project</a>
+    <div [ngSwitch]="true">
+      <div *ngSwitchCase="instructor">
+        <button class="btn btn-success btn-spacer" (click)="NavigateToAddProject()" *ngIf="course.isActive">Create New Project</button>
+        <button class="btn btn-purple btn-spacer" (click)="NavigateToAssignEvals()" *ngIf="course.isActive">Assign Evals</button>
+        <i *ngIf="!course.isActive">Course is inactive. Reactivate course in edit page to create projects.</i>
+      </div>
+    </div>
   </div>
-  
 
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Projects</th>
-        <th>Description</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-
-      
-      <tr *ngFor="let p of projects">
-        <td>{{ p.projectName }}</td>
-        <td>{{ p.description }}</td>
-        <td><a href="/project/{{p.projectID}}" class="btn btn-primary float-right">View Project</a></td>
-      </tr>
-    
-
-
-    </tbody>
-  </table>
-
-
-
-
-
+  <div>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+        <th class="table-head">{{ !filtering ? "All Projects" : "Searched Projects"}}</th>
+        <th class="table-head">Description</th>
+        <th class="table-head"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of allUserFilteredProjects">
+          <td>{{ p.projectName }}</td>
+          <td class="desc">{{ p.description }}</td>
+          <td>
+            <div class="btn-group float-right">
+              <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
+              <button *ngIf="userInCourse" class="btn btn-danger" (click)="leave(p.projectID)">Leave</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngFor="let p of nonUserFilteredProjects">
+          <td>{{ p.projectName }}</td>
+          <td class="desc">{{ p.description }}</td>
+          <td>
+            <div class="btn-group float-right">
+                <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
+                <button *ngIf="userInCourse" class="btn btn-success" (click)="join(p.projectID)">Join</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- if no projects were found, show this message saying that no projects were found -->
+    <div *ngIf="allUserFilteredProjects.length == 0 && nonUserFilteredProjects.length == 0" class="alert alert-danger">
+        No projects found
+    </div>
+  </div>
 
   <!-- ng-model="search" ??? -->
-  <form class="form-inline mb-3">
+  <!-- <form class="form-inline mb-3">
     <input class="form-control mr-3" type="search" placeholder="Search Students" aria-label="Search">
-    <button class="btn btn-primary" type="submit">Search</button>
-  </form>
-  
+    <button class="btn btn-purple" type="submit">Search</button>
+  </form> -->
 
-  <table class="table table-hover">
-    <thead>
-      <tr>
-        <th>Students</th>
-      </tr>
-    </thead>
-    <tbody>
-
+  <app-course-reports/>
       <!--
       <tr *ngFor="let s of students">
         <td>{{ s }}</td>
       </tr>
     -->
-
-
-    </tbody>
-  </table>
-
 
 </div>

@@ -1,7 +1,46 @@
 /* give the card a hover effect */
 .card {
   transition: all 0.1s ease-in-out;
+  background-color: #f2f2f2;
 }
+
+.table-head {
+  background-color: #F5EEF9;
+}
+
+.card-body {
+  font-style: italic;
+}
+
 .card:hover {
   transform: scale(105%);
+}
+
+.h3-inline {
+  vertical-align: middle;  /* To center the text inside the parent <></> https://stackoverflow.com/questions/31702017/moving-html-text-next-to-a-button */
+  display: inline;  /* Makes the button after it move next to the text */
+  letter-spacing: 3px;
+  color: white;
+  /* text-shadow: 2px 2px #6e4097, 2px 2px #6e4097, 3px 3px #6e4097; */
+  /* box behind text */
+  display: inline-block;
+  box-shadow: -10px 10px 0 #492365;
+  background-color: #6e4097;
+}
+
+.box-head {
+  color: white;
+  letter-spacing: 3px;
+  /* box behind text */
+  display: inline-block;
+  box-shadow: -8px 8px 2px #492365;
+  background-color: #6e4097;
+}
+
+.btn-courses {
+  margin-left: 20px;
+}
+
+.btn-spacing {
+  margin-left: 10px;
 }

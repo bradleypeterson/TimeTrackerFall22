@@ -1,7 +1,12 @@
-button{
+/* Target any button with the class btn-link, this will make the button look and act if it was inside a set of <a></a> tags */
+button.btn-link {
+    background: 0 0;
+    border: 0;
+    text-decoration: none;
+    color: #0B6552;
     
-    margin-top: 100px;
-    margin-left: 190%;
-    width: 200px;
-
+    /* when the user hovers over the button */
+    &:hover {
+        color: rgb(110, 64, 151);
+    }
 }

@@ -1,43 +1,56 @@
-  <!-- Toolbar -->
-  <div class="navbar navbar-expand-lg fixed-top">
-    <a class="navbar-left" >
-      <img height="40" alt="Time Tracker Logo" src="../assets/Images/TimeTrackerLogo.png"/>
-    </a>
-    <button class="navbar-toggler custom-toggler" type="button" data-toggle="collapse" data-target="navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div [ngSwitch]="true">
+<!-- Toolbar -->
+<div class="navbar navbar-expand-lg sticky-top">
+  <a class="navbar-left">
+    <img height="40" alt="Time Tracker Logo" src="../assets/Images/TimeTrackerLogo.png" />
+  </a>
+  <button class="navbar-toggler custom-toggler" type="button" (click)="isNavbarExpanded = !isNavbarExpanded"
+    data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+    aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div [ngSwitch]="true">
       <div *ngSwitchCase="instructor">
-      <div class="navbar-nav W-100">
-          <a class="nav-item nav-link active" routerLink="./dashboard">Dashboard</a>
-          <a class="nav-item nav-link ml-auto active" href="#">Logout</a>
-      </div>
+        <div class="navbar-nav mx-auto">
+          <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./dashboard">Dashboard</a>
+          <select name="courseOptions" class="nav-item nav-link active dark-nav-link centered-on-small" onchange="window.location = this.value;">
+            <option value="" disabled selected>Course Options</option>
+            <option class="navOption" value="/create-course">Create New Course</option>
+            <option class="navOption" value="/past-courses">Past Courses</option>
+            <option class="navOption" value="/manage-evals">Manage Evaluations</option>
+          </select>
+          <button class="nav-item nav-link active dark-nav-link centered-on-small" (click)="ViewProfile()">Profile</button>
+          <a class="nav-item nav-link ml-auto active dark-nav-link centered-on-small" href="#">Logout</a>
+        </div>
       </div>
       <div *ngSwitchCase="student">
+        <div class="navbar-nav mx-auto">
+          <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./dashboard">Dashboard</a>
+          <button class="nav-item nav-link active dark-nav-link centered-on-small" (click)="ViewProfile()">Profile</button>
+          <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./courses">Courses</a>
+          <a class="nav-item nav-link ml-auto active dark-nav-link centered-on-small" href="#">Logout</a>
+        </div>
+      </div>
+      <div *ngSwitchCase="admin">
+        <div class="navbar-nav mx-auto">
+          <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./dashboard">Dashboard</a>
+          <button class="nav-item nav-link active dark-nav-link centered-on-small" (click)="ViewProfile()">Profile</button>
+          <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./users">Users</a>
+          <a class="nav-item nav-link ml-auto active dark-nav-link centered-on-small" href="#">Logout</a>
+        </div>
+      </div>
+      <div *ngSwitchDefault>
         <div class="navbar-nav">
-            <a class="nav-item nav-link active" routerLink="./dashboard">Dashboard</a>
-            <a class="nav-item nav-link active" routerLink="./courses">Add Courses</a>
-            <a class="nav-item nav-link ml-auto active" href="#">Logout</a>
         </div>
-        </div>
-        <div *ngSwitchCase="admin">
-          <div class="navbar-nav W-100">
-              <a class="nav-item nav-link active" routerLink="./dashboard">Dashboard</a>
-              <a class="nav-item nav-link active" routerLink="./users">Users</a>
-              <a class="nav-item nav-link ml-auto active" href="#">Logout</a>
-          </div>
-          </div>
-          <div *ngSwitchDefault>
-            <div class="navbar-nav">
-            </div>
-            </div>
-          </div>
+      </div>
     </div>
-
   </div>
 
-<div class="container mt-6">
+</div>
+
+<div class="container mt-2" [ngStyle]="{ 'padding-top': isNavbarExpanded ? '250px' : '60px' }">
   <router-outlet></router-outlet>
 </div>

@@ -12,7 +12,8 @@ a {
   text-decoration: underline;
 }
 
-.pretty input:checked ~ .state.p-primary label:after, .pretty.p-toggle .state.p-primary label:after {
+.pretty input:checked~.state.p-primary label:after,
+.pretty.p-toggle .state.p-primary label:after {
   background-color: #2c3e50 !important;
 }
 
@@ -32,9 +33,9 @@ nav a {
   display: block;
 }
 
-  .card-list-link:hover {
-    background-color: whitesmoke;
-  }
+.card-list-link:hover {
+  background-color: whitesmoke;
+}
 
 /*User/Student Dashboard titles and course join requests*/
 .dashboard-titles {
@@ -49,20 +50,20 @@ nav a {
   /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
 }
 
-  .box-part:hover {
-    background: #2D3E50
-  }
+.box-part:hover {
+  background: #2D3E50
+}
 
-    .box-part:hover .fa,
-    .box-part:hover .title,
-    .box-part:hover .text,
-    .box-part:hover a {
-      color: #FFF;
-      -webkit-transition: all 1s ease-out;
-      -moz-transition: all 1s ease-out;
-      -o-transition: all 1s ease-out;
-      transition: all 1s ease-out
-    }
+.box-part:hover .fa,
+.box-part:hover .title,
+.box-part:hover .text,
+.box-part:hover a {
+  color: #FFF;
+  -webkit-transition: all 1s ease-out;
+  -moz-transition: all 1s ease-out;
+  -o-transition: all 1s ease-out;
+  transition: all 1s ease-out
+}
 
 /* Carousel */
 .carousel-caption p {
@@ -114,6 +115,7 @@ nav a {
 
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
+
   /* Hide captions */
   .carousel-caption {
     display: none;
@@ -274,7 +276,8 @@ nav a {
   padding: 0px 3px;
 }
 
-.form-control:disabled, .form-control[readonly] {
+.form-control:disabled,
+.form-control[readonly] {
   background-color: #e8e8e8;
   opacity: 1;
 }
@@ -323,7 +326,8 @@ nav a {
   color: whitesmoke;
 }
 
-pretty .state .check-label label:after, .pretty .state .check-label label:before {
+.pretty .state .check-label label:after,
+.pretty .state .check-label label:before {
   top: 0px !important;
 }
 
@@ -341,7 +345,7 @@ pretty .state .check-label label:after, .pretty .state .check-label label:before
 }
 
 .mt-6 {
-    margin-top: 6% !important;
+  margin-top: 6% !important;
 }
 
 .mt-7 {
@@ -359,11 +363,12 @@ pretty .state .check-label label:after, .pretty .state .check-label label:before
 }
 
 .custom-toggler .navbar-toggler-icon {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(0,123,255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
 }
 
 .custom-toggler.navbar-toggler {
-  border-color: #007bff;
+  color: #ffffff;
+  border-color: #ffffff;
 }
 
 .navbar {
@@ -374,18 +379,20 @@ pretty .state .check-label label:after, .pretty .state .check-label label:before
   height: 60px;
   display: flex;
   align-items: center;
-  background-color: #492365;
-  color: #007bff;
+  background-color: #6e4097;
   font-weight: 600;
+  box-shadow: 0 3px 10px #492365;
 }
 
-  .navbar img {
-    margin: 0 16px;
-  }
+.navbar img {
+  margin: 0 16px;
+  box-shadow: 0 3px 3px #492365;
+  border-radius: 50%;
+}
 
-  .navbar #usernamelbl {
-    margin: 0 16px;
-  }
+.navbar #usernamelbl {
+  margin: 0 16px;
+}
 
 a,
 a:visited,
@@ -393,6 +400,79 @@ a:hover {
   text-decoration: none;
 }
 
-  a:hover {
-    color: #125699;
+a:hover {
+  color: #6e4097;
+}
+
+.navbar-nav .nav-link.active {
+  color: white;
+  text-shadow: 0 3px 3px #492365;
+}
+
+.navOption {
+  text-shadow: none;
+}
+
+.btn-purple {
+  background-color: #492365;
+  font-style: normal;
+  color: white;
+  border: 1px solid #492365;
+  transition: all 0.3s ease;
+
+  &:hover,
+  &:disabled,
+  &.disabled {
+    color: white;
+    background-color: #6e4097;
+    border: 1px solid #634097;
   }
+
+  /* On active (click), push the button down a bit and adjust shadow */
+  &:active,
+  &.active,
+  &:active:focus,
+  &:focus,
+  &.focus {
+    color: white;
+    transform: translateY(1px);
+    background-color: #492365;
+    box-shadow: 0 3px 6px #492365;
+    border: 2px solid #492365;
+  }
+}
+
+/* Elevated Button Styles */
+.btn-elevated {
+  font-style: normal;
+  border: 2px solid currentColor;
+  /* An outline using the text color */
+  box-shadow: 0 2px 8px #492365;
+  /* Initial shadow */
+  transition: all 0.3s ease;
+  /* For a smooth transition effect */
+
+  /* On hover, make the button lift slightly and change shadow */
+  &:hover {
+    transform: translateY(-2px);
+    /* Lift button slightly */
+    box-shadow: 0 3px 6px #492365;
+    background-color: #6e4097;
+    /* Increased shadow */
+  }
+
+  /* On active (click), push the button down a bit and adjust shadow */
+  &:active {
+    transform: translateY(1px);
+    box-shadow: 0 3px 6px #492365;
+  }
+}
+
+/* Error text for forms/page errors */
+.errorText {
+    color: red;
+}
+
+/* * {
+  font-family:  Century Schoolbook, TeX Gyre Schola, serif;
+} */

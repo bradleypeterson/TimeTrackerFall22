@@ -1,0 +1,33 @@
+<div id="profile">
+    <div *ngFor="let u of userProfile">
+        <div class="row">
+            <div class="col-10">
+                <h3 class="box-head">{{u.firstName}} {{u.lastName}}</h3>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        <h4>User Info</h4>
+                        <b>Pronouns:</b> {{u.pronouns}}<br>
+                        <b>Contact:</b> {{u.contact}}<br>
+                    </div>
+                    <div class="col">
+                        <h4>Bio</h4>
+                        <p class="bio">{{u.bio}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2" *ngIf="sameUser || admin">
+                <div class="card">
+                    <div class="card-header">
+                        Options
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><button type="button" class="btn btn-purple btn-sm" (click)="NavToEditProfile()">Edit Profile</button></li>
+                        <li class="list-group-item"><button type="button" class="btn btn-purple btn-sm" (click)="NavToResetPassword()">Reset Password</button></li>
+                        <li class="list-group-item"><button type="button" class="btn btn-danger btn-sm" (click)="DeleteAccount()">Delete Account</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+<div id="edit-project">
+    <h2>Edit Project</h2>
+    <hr>
+
+    <form [formGroup]="editProjectForm" (ngSubmit)="onSubmit()">
+        <p class="errorText">{{ errMsg }}</p>
+
+        <div class="form-group">
+            <input id="projectName" formControlName="projectName" type="text" class="form-control" name="projectName" placeholder="Project Name" ng-model="project.projectName" required>
+        </div>
+        <div class="form-group">
+            <input id="description" formControlName="description" type="text" class="form-control" name="description" placeholder="Project Description" ng-model="project.description" required>
+        </div>
+        <div class="form-group">
+                <input id="isActive" formControlName="isActive" type="checkbox" class="form-check-input" name="isActive" ng-model="project.isActive">
+                <label class="form-check-label" for="isActive">Active Project</label>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-success" [disabled]="!(editProjectForm.controls.projectName.valid && editProjectForm.controls.description.valid)">Save Changes</button>
+            <button class="btn btn-danger" (click)="NavigateBackToProject()">Cancel</button>
+        </div>
+    </form>
+</div>

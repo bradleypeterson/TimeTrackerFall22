@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 import { User } from '../user.model';
 
 @Component({
@@ -20,7 +20,7 @@ export class GroupComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-  ) { 
+  ) {
     this.item = localStorage.getItem('currentGroup');
     console.log("The current group is: " + this.item);
     if (this.item) {
@@ -57,7 +57,7 @@ export class GroupComponent implements OnInit {
         
       if (req !== null)
       {
-        this.http.post<any>('http://localhost:8080/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+        this.http.post<any>('https://localhost:8080/api/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
           next: data => {
             this.errMsg = "";
             console.log("user clocked in: " + this.user.username);
@@ -94,7 +94,7 @@ export class GroupComponent implements OnInit {
 
       if (req !== null)
       {
-        this.http.post<any>('http://localhost:8080/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
+        this.http.post<any>('https://localhost:8080/api/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
           next: data => {
             this.errMsg = "";
             console.log(req.timeIn);
@@ -110,11 +110,11 @@ export class GroupComponent implements OnInit {
   }*/
 
   loadStudents(students: Array<string>): void {
-    this.http.get("http://localhost:8080/Users").subscribe((data: any) =>{ 
-    for(let i = 0; i < data.length; i++) {
-      students.push(data[i].firstName);
-    }
-  });
+    this.http.get("https://localhost:8080/api/Users").subscribe((data: any) => {
+      for (let i = 0; i < data.length; i++) {
+        students.push(data[i].firstName);
+      }
+    });
   }
- 
+
 }

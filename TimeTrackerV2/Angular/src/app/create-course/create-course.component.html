@@ -3,17 +3,20 @@
     <hr>
 
     <form [formGroup]="createCourseForm" (ngSubmit)="onSubmit()">
-        <p style="color: red;">{{ errMsg }}</p>
+        <p class="errorText">{{ errMsg }}</p>
 
         <div class="form-group">
-            <input id="courseName" formControlName="courseName" type="text" class="form-control" name="courseName" placeholder="Course Name" ng-model="course.courseName">
+            <input id="courseName" formControlName="courseName" type="text" class="form-control" name="courseName"
+                placeholder="Course Name" ng-model="course.courseName" required>
         </div>
         <div class="form-group">
-            <input id="description" formControlName="description" type="text" class="form-control" name="description" placeholder="Course Description" ng-model="course.description">
+            <input id="description" formControlName="description" type="text" class="form-control" name="description"
+                placeholder="Course Description" ng-model="course.description" required>
         </div>
 
         <div class="btn-group">
-            <button type="submit" class="btn btn-success">Create course</button>
+            <!-- The reason why we are checking every individual field instead of the form to see if it is valid is because the form is only validated when you submit it -->
+            <button type="submit" class="btn btn-success" [disabled]="!(createCourseForm.controls.courseName.valid && createCourseForm.controls.description.valid)">Create course</button>
             <a href="/dashboard" class="btn btn-danger">Cancel</a>
         </div>
     </form>

@@ -1,20 +1,24 @@
+<button class="btn btn-purple btn-sm" (click)="GoBackToCourse();">Back to Course</button>
 <div id="create-project">
     <h2>Create a new project</h2>
     <hr>
 
     <form [formGroup]="createProjectForm" (ngSubmit)="onSubmit()">
-        <p style="color: red;">{{ errMsg }}</p>
+        <p class="errorText">{{ errMsg }}</p>
 
         <div class="form-group">
-            <input id="projectName" formControlName="projectName" type="text" class="form-control" name="projectName" placeholder="Project Name" ng-model="project.projectName">
+            <input id="projectName" formControlName="projectName" type="text" class="form-control" name="projectName"
+                placeholder="Project Name" ng-model="project.projectName" required>
         </div>
         <div class="form-group">
-            <input id="description" formControlName="description" type="text" class="form-control" name="description" placeholder="Project Description" ng-model="project.description">
+            <input id="description" formControlName="description" type="text" class="form-control" name="description"
+                placeholder="Project Description" ng-model="project.description" required>
         </div>
 
         <div class="btn-group">
-            <button type="submit" class="btn btn-success">Create project</button>
-            <a href="/course/{{courseID}}" class="btn btn-danger">Cancel</a>
+            <!-- The reason why we are checking every individual field instead of the form to see if it is valid is because the form is only validated when you submit it -->
+            <button type="submit" class="btn btn-success" [disabled]="!(createProjectForm.controls.projectName.valid && createProjectForm.controls.description.valid)">Create project</button>
+            <button class="btn btn-danger" (click)="GoBackToCourse()">Cancel</button>
         </div>
     </form>
 </div>

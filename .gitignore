@@ -1,7 +1,6 @@
-TimeTrackerV2/Angular/node_modules/
-TimeTrackerV2/node_modules/
-.DS_Store
+node_modules/
 package-lock.json
+scratch/
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
@@ -38,6 +37,7 @@ chrome-profiler-events*.json
 
 # misc
 /.sass-cache
+/TimeTrackerV2/Angular/.angular/cache
 /connect.lock
 /coverage
 /libpeerconnection.log
