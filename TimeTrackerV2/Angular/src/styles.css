@@ -409,6 +409,10 @@ a:hover {
   text-shadow: 0 3px 3px #492365;
 }
 
+.navOption {
+  text-shadow: none;
+}
+
 .btn-purple {
   background-color: #492365;
   font-style: normal;
