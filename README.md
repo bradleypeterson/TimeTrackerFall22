@@ -1,4 +1,6 @@
 # TimeTrackerV2
+More documentation is found in the docs folder, 
+##Time Tracker 23 Hand-Off Document
 This is a pure Angular version of Weber State's TimeTracker App. Currently supports user registration and basic clock-in/clock-out.
 
 ## Startup Instructions
@@ -11,6 +13,7 @@ For any subsequent startups, run
 docker-compose up -d
 ```
 The -d parameter will remove trailing logs, so omit it if you'd like logs to appear in the console. Only run with --build if you make changes to the package.json or config files on either project.
+#Note: The database will self build when the project is first created using the seed.js
 
 ## Application Stack and Development Tools
 
@@ -19,7 +22,7 @@ The -d parameter will remove trailing logs, so omit it if you'd like logs to app
 - Front End: Angular 16
 - Back End: NodeJS with Express 
 - Database: SQLite3
--   The database will self build when the project is first created using the seed.js
+
 
 ### Development Tools
 - **VSCode**: [Download](https://code.visualstudio.com/download)
