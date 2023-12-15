@@ -1,6 +1,6 @@
 # TimeTrackerV2
 More documentation is found in the docs folder, 
-##Time Tracker 23 Hand-Off Document
+## Time Tracker 23 Hand-Off Document
 This is a pure Angular version of Weber State's TimeTracker App. Currently supports user registration and basic clock-in/clock-out.
 
 ## Startup Instructions
