@@ -17,8 +17,9 @@ The -d parameter will remove trailing logs, so omit it if you'd like logs to app
 ### Application Stack
 - **SEAN (SQL, Express, Angular, Node)**
 - Front End: Angular 16
-- Back End: NodeJS with Express
+- Back End: NodeJS with Express 
 - Database: SQLite3
+-   The database will self build when the project is first created using the seed.js
 
 ### Development Tools
 - **VSCode**: [Download](https://code.visualstudio.com/download)
