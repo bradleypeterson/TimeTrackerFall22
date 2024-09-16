@@ -6,5 +6,6 @@ export class User {
     lastName?: string;
     type?: string;
     isActive?: boolean;
+    isApproved?: boolean; // Instructor Approval 
     salt?: string;
 }
