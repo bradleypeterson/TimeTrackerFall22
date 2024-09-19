@@ -13,7 +13,6 @@ exports.Register = async (req, res, next) => {
 	let lastName = req.body["lastName"];
 	let type = req.body["type"];
 	let password = req.body["password"];
-    let isApproved = req.body["isApproved"];
 	let salt = req.body["salt"];
 
 	// Validate user doesn't already exist (can be handled by the unique constraint, but this is left in so we have more control without having to determine what cause the error)
@@ -31,9 +30,8 @@ exports.Register = async (req, res, next) => {
 			return res.status(400).json({ message: 'A user of this name already exists' });
 		}
         
-        // Added isAproved
-        let sql = `INSERT INTO Users(username, password, firstName, lastName, type, isActive, isApproved, salt) 
-        VALUES(?, ?, ?, ?, ?, ?, ?, ?)`;
+        let sql = `INSERT INTO Users(username, password, firstName, lastName, type, isActive, salt)
+        VALUES(?, ?, ?, ?, ?, ?, ?)`;
     
         // Can't use dictionaries for queries so order matters!
         let data = [];
@@ -43,8 +41,7 @@ exports.Register = async (req, res, next) => {
         data[3] = lastName;
         data[4] = type;
         data[5] = true;
-        data[6] = isApproved;
-        data[7] = salt;
+        data[6] = salt;
     
         db.run(sql, data, function (err, rows) {
             if (err) {
