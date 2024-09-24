@@ -12,6 +12,8 @@ import CryptoES from 'crypto-es'
 export class RegisterComponent implements OnInit {
   public pageTitle = 'TimeTrackerV2 | Register'
   public errMsg = '';
+  // Message to show user who registers as instructor
+  public successMsg = '';
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -61,7 +63,15 @@ export class RegisterComponent implements OnInit {
     this.http.post<any>('https://localhost:8080/api/register/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
       next: data => {
         this.errMsg = "";
-        this.router.navigate(['./']);
+
+        // Check if registered as instructor - if yes, show request sent to admin message and DO NOT reroute to login
+        if (payload.type == "instructor") {
+          this.successMsg = "Request sent. Account pending admin approval."
+        }
+        else {
+          this.router.navigate(['./']);
+        }
+
       },
       error: error => {
         this.errMsg = error['error']['message'];

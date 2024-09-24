@@ -469,7 +469,7 @@ a:hover {
 }
 
 /* Error text for forms/page errors */
-.errorText {
+.errorText, .successText {
     color: red;
 }
 
