@@ -1,0 +1,5 @@
+FROM nginx:alpine
+#Docker takes our nginx.conf and copys it into its own env (hence the linux paths)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+COPY ./Angular/dist /usr/share/nginx/ht
