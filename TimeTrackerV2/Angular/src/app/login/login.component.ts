@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
                     next: data => {
                         this.errMsg = "";
                         localStorage.setItem('currentUser', JSON.stringify(data['user']));
-                        this.router.navigate(['./dashboard']);
+                        this.router.navigate(['./dashboard']); // ROUTED TO DASHBOARD
                     },
                     error: error => {
                         this.errMsg = error['error']['message'];
