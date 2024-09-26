@@ -51,11 +51,18 @@ export class RegisterComponent implements OnInit {
     const salt = CryptoES.lib.WordArray.random(16).toString();  //Creates a salt value that is 16*2 (default encoder for toString() is hexadecimal) values long (this is because hex uses 1/2 of the byte while a character uses the full byte)
     const hashedPassword = CryptoES.PBKDF2(pass1, salt, { keySize: 512/32, iterations: 1000 }).toString();
 
+    // isApproved logic for instructors
+    const isApproved = this.registrationForm.value['type'] === 'instructor' ? false:true;
+    // Debug log
+    console.log(this.registrationForm.value['type'], isApproved);
+
+    // added isApproved
     let payload = {
       username: this.registrationForm.value['username'],
       firstName: this.registrationForm.value['firstName'],
       lastName: this.registrationForm.value['lastName'],
       type: this.registrationForm.value['type'],
+      isApproved: isApproved,
       password: hashedPassword,
       salt: salt,
     }
