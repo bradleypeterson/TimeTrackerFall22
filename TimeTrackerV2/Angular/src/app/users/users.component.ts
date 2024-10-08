@@ -52,6 +52,7 @@ export class UsersComponent implements OnInit {
 
     ProcessedUser(user: any) {
         user.isActive = user.isActive == 1 ? true : false;  // Converts the boolean of 1/0 the DB uses to true/false that the client uses
+        user.isApproved = user.isApproved == 1 ? true : false;  // Converts the boolean of 1/0 the DB uses to true/false that the client uses
         return user
     }
 
