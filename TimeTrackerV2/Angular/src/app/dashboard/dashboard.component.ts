@@ -17,6 +17,7 @@ export class DashboardComponent implements OnInit {
   public errMsg = '';
   public p: number = 1;
   public hasPendingEvals: boolean = false;
+  public awaitingApprovalCount: number = 0; // Will hold count of users awaiting approval
 
   public recentUsers: any = [];
   public recentCourses: any = [];
@@ -56,6 +57,7 @@ export class DashboardComponent implements OnInit {
       this.loadRecentUsers();
       this.loadRecentCourses();
       this.loadRecentProjects();
+      this.checkForPendingApproval(); // Check for users where isApproved = false (awaiting approval)
     }
 
     // get courses
@@ -72,6 +74,19 @@ export class DashboardComponent implements OnInit {
   }
 
   public pageTitle = 'TimeTrackerV2 | Dashboard';
+
+  // Checks if any users are awaiting approval
+  checkForPendingApproval() {
+    this.http.get<any>("https://localhost:8080/api/UsersPendingApproval", { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) })
+        .subscribe({
+            next: data => {
+                this.awaitingApprovalCount = data.count;  // Stores count returned by the API
+            },
+            error: err => {
+                console.error('Error fetching pending approval count', err);
+            }
+        });
+}
 
   // get projects student is in
   loadProjects(): void {

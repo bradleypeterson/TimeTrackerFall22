@@ -98,4 +98,20 @@ exports.GetRecentUsers = (req, res) => {
     });
 }
 
+exports.GetUsersPendingApproval = (req, res) => {
+    console.log("UsersController.js file/GetUsersPendingApproval route called");
+
+    let sql = `SELECT COUNT(*) as count
+               FROM Users
+               WHERE isApproved = 0`;
+
+    db.get(sql, [], (err, row) => {
+        if (err) {
+            console.error("Error fetching users pending approval:", err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        res.json(row);  // Returns count of users waiting for approval
+    });
+}
+
 // added isApproved to all relevant statements
