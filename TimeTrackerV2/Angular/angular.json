@@ -17,9 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": {
-              "base": "dist/TimeTrackerV2"
-            },
+            "outputPath": "dist/TimeTrackerV2",
             "index": "src/index.html",
             "polyfills": [
               "src/polyfills.ts"
@@ -60,8 +58,7 @@
             "development": {
               "optimization": false,
               "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
