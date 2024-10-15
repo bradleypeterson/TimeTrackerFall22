@@ -15,6 +15,7 @@ export class UsersComponent implements OnInit {
     searchForm = new FormGroup({
         name: new UntypedFormControl(''),
         active: new UntypedFormControl(''),
+        approved: new UntypedFormControl(''),
         type: new UntypedFormControl('')
     });
     currentUserID!: number;
@@ -60,16 +61,18 @@ export class UsersComponent implements OnInit {
         // Grab the inputs from the form so they are in an easy to access variable
         const name = this.searchForm.controls.name.value
         const active = this.searchForm.controls.active.value;
+        const approved = this.searchForm.controls.approved.value;
         const type = this.searchForm.controls.type.value;
 
-        // This function will filter all every user in the variable "this.users" for any combination of the three input fields.  Source for this code with some modifications https://www.geeksforgeeks.org/how-to-filter-multiple-values-in-angularjs/#:~:text=Filter%20multiple%20values%20using%20a%20Custom%20Filter%20Function
+        // This function will filter all every user in the variable "this.users" for any combination of the four input fields.  Source for this code with some modifications https://www.geeksforgeeks.org/how-to-filter-multiple-values-in-angularjs/#:~:text=Filter%20multiple%20values%20using%20a%20Custom%20Filter%20Function
         this.filteredUsers = this.users.filter((user: any) => {
             // The below Match conditions are read as follows, if the field is not supplied OR the field's data matches the current user, then it is considered a match.  This is filtered this way so that if they don't supply the field, it will exclude it from the filtering
             const nameMatch = !name || `${user.firstName} ${user.lastName}`.toLowerCase().includes(name.toLowerCase());
             const activeMatch = !active || user.isActive == (active === 'true' ? 1 : 0);  // This filter condition is formatted this way because the UI and the logic uses true/false for boolean while the DB uses 1/0 for booleans.
+            const approvedMatch = !approved || user.isApproved == (approved === 'true' ? 1 : 0);
             const typeMatch = !type || user.type === type;
 
-            return nameMatch && activeMatch && typeMatch;  // If all three of these conditions are true, then the variable "user" is included inside the array "this.filteredUsers".
+            return nameMatch && activeMatch && approvedMatch && typeMatch;  // If all four of these conditions are true, then the variable "user" is included inside the array "this.filteredUsers".
         }).map((d: any) => {return {...d}});
 
         if(this.filteredUsers.length <= 0) {
