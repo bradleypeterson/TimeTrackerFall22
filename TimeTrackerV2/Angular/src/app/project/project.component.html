@@ -387,6 +387,7 @@
                             <th scope="col">Time In</th>
                             <th scope="col">Time Out</th>
                             <th scope="col">Total Time</th>
+                            <th scope="col">Description</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -397,6 +398,8 @@
                                 <td>{{user.timeIn | date:'medium'}}</td>
                                 <td>{{user.timeOut | date:'medium'}}</td>
                                 <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
+                                <td>{{user.description}}</td>
+
                                 <td>
                                     <div class="btn-group float-right">
                                         <button class="btn btn-secondary"
