@@ -148,8 +148,8 @@
       <a href="/users" class="btn btn-purple btn-courses">Manage Users</a>
       <!-- Notification badge if there are users awaiting approval -->
       <span class="badge bg-danger" *ngIf="awaitingApprovalCount > 0">
-        {{ awaitingApprovalCount }} awaiting approval
-    </span>
+        {{ awaitingApprovalCount }} User(s) Awaiting Approval
+      </span>
     </div>
     <hr>
     <div class="alert alert-danger" *ngIf="recentUsers?.length <= 0">
@@ -209,14 +209,3 @@
     </div>
   </div>
 </div>
-
-<!-- 
-.btn-courses .badge {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  padding: 5px 10px;
-  border-radius: 50%;
-  font-size: 0.75rem;
-}
-}); -->
