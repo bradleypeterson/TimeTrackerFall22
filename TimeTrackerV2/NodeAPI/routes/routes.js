@@ -68,6 +68,7 @@ const {
     EditUserProfile,
     GetUsersInfo,
     GetRecentUsers,
+    GetUsersPendingApproval,
 } = require("./controllers/UsersControllers");
 
 const {
@@ -151,6 +152,7 @@ router.post("/removePendUser", RemovePendUser);
 
 //#region Miscellaneous routes
 router.post("/createGroup", CreateNewGroup);
+router.get("/UsersPendingApproval", GetUsersPendingApproval);
 //#endregion
 
 //#region Project routes
