@@ -22,24 +22,44 @@
             <option class="navOption" value="/past-courses">Past Courses</option>
             <option class="navOption" value="/manage-evals">Manage Evaluations</option>
           </select>
-          <button class="nav-item nav-link active dark-nav-link centered-on-small" (click)="ViewProfile()">Profile</button>
-          <a class="nav-item nav-link ml-auto active dark-nav-link centered-on-small" href="#">Logout</a>
+          <button class="nav-item nav-link active dark-nav-link centered-on-small" (click)="ViewProfile()">{{name}}</button>
+          <!-- <a class="nav-item nav-link ml-auto active dark-nav-link centered-on-small" href="#">Logout</a> -->
         </div>
       </div>
       <div *ngSwitchCase="student">
-        <div class="navbar-nav mx-auto">
-          <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./dashboard">Dashboard</a>
-          <button class="nav-item nav-link active dark-nav-link centered-on-small" (click)="ViewProfile()">Profile</button>
-          <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./courses">Courses</a>
-          <a class="nav-item nav-link ml-auto active dark-nav-link centered-on-small" href="#">Logout</a>
-        </div>
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item dropdown">
+            <select name="userOptions" class="nav-item nav-link active dark-nav-link centered-on-small" onchange="window.location = this.value;">
+              <option value="" disabled selected>{{name}}</option>
+              <!-- RESEARCH HOW select > option works, when need ViewProfile() funtion! -->
+              <option class="navOption" value="/create-course">Profile</option>
+              <option class="navOption" value="/logout">Logout</option>
+            </select>
+            <!-- <a class="nav-link dropwdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{name}}</a>
+            <div class="dropdown-menu" aria-labelledbye="navbarDropdown"> -->
+              <!-- <a class="dropdown-item nav-link active dark-nav-link centered-on-small" href="#" (click)="ViewProfile()">Profile</a> USE INSTRUCTOR COURSE DROPDOWN MENU TO FORMAT FOR PROFILE/LOGOUT DROPDOWN -->
+
+              <!-- <button class="nav-item nav-link active dark-nav-link centered-on-small" (click)="ViewProfile()">Profile</button> -->
+
+            </div>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active dark-nav-link centered-on-small" routerLink="./dashboard">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active dark-nav-link centered-on-small" routerLink="./courses">Courses</a>
+          </li>
+
+          <!-- <a class="nav-item nav-link ml-auto active dark-nav-link centered-on-small" href="#">Logout</a> nav-item nav-link active dark-nav-link centered-on-small nav-brand" (click)="ViewProfile()-->
+
+        </ul>
       </div>
       <div *ngSwitchCase="admin">
         <div class="navbar-nav mx-auto">
           <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./dashboard">Dashboard</a>
           <button class="nav-item nav-link active dark-nav-link centered-on-small" (click)="ViewProfile()">Profile</button>
           <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./users">Users</a>
-          <a class="nav-item nav-link ml-auto active dark-nav-link centered-on-small" href="#">Logout</a>
+          <!-- <a class="nav-item nav-link ml-auto active dark-nav-link centered-on-small" href="#">Logout</a> -->
         </div>
       </div>
       <div *ngSwitchDefault>

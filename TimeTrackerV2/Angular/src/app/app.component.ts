@@ -22,19 +22,19 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     let currentUser = localStorage.getItem('currentUser');
-    var userDate = currentUser ? JSON.parse(currentUser) : null;
-    this.userType = userDate?.type;
-    this.userID = userDate?.userID;
+    var userData = currentUser ? JSON.parse(currentUser) : null;
+    this.userType = userData?.type;
+    this.userID = userData?.userID;
     if (this.userType === 'admin') {
       this.admin = true;
-      this.name = userDate.firstName + ' ' + userDate.lastName;
+      this.name = userData.firstName + ' ' + userData.lastName;
     }
     else if (this.userType === 'instructor') {
       this.instructor = true;
-      this.name = userDate.firstName + ' ' + userDate.lastName;
+      this.name = userData.firstName + ' ' + userData.lastName;
     } else if (this.userType === 'student') {
       this.student = true;
-      this.name = userDate.firstName + ' ' + userDate.lastName;
+      this.name = userData.firstName + ' ' + userData.lastName;
     } else {
       this.nullType = true;
     }
