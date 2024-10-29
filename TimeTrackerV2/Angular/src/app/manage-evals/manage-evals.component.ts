@@ -1,6 +1,7 @@
 // manage-evals.compnents.ts
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
 
 interface EvalTemplate {
   templateID: string;
@@ -22,7 +23,7 @@ interface UpdateQuestionPayload {
 @Component({
   selector: 'app-manage-evals',
   templateUrl: './manage-evals.component.html',
-  styleUrls: ['./manage-evals.component.css']
+  styleUrls: ['./manage-evals.component.css'],
 })
 export class ManageEvalsComponent implements OnInit {
   showModal: boolean = false;
@@ -39,9 +40,7 @@ export class ManageEvalsComponent implements OnInit {
   currentUser: any;
   evaluatorID: string = '';
 
-  constructor(private http: HttpClient) {
-
-  }
+  constructor(private http: HttpClient) {}
 
   ngOnInit() {
     this.getCurrentUser();
@@ -61,7 +60,6 @@ export class ManageEvalsComponent implements OnInit {
     }
   }
 
-
   // loadQuestionsForTemplate(templateId: string) {
   //   this.http.get<Question[]>(`https://localhost:8080/api/questions/${templateId}`).subscribe(
   //     data => {
@@ -80,24 +78,29 @@ export class ManageEvalsComponent implements OnInit {
   // }
 
   loadTemplates() {
-
-    this.http.get<EvalTemplate[]>(`https://localhost:8080/api/templates/${this.evaluatorID}`).subscribe(
-      data => {
-        this.templates = data;
-        console.log('Fetched Templates:', data);
-      },
-      error => console.error('Error fetching templates:', error)
-    );
+    this.http
+      .get<EvalTemplate[]>(
+        `https://localhost:8080/api/templates/${this.evaluatorID}`
+      )
+      .subscribe(
+        (data) => {
+          this.templates = data;
+          console.log('Fetched Templates:', data);
+        },
+        (error) => console.error('Error fetching templates:', error)
+      );
   }
 
   LoadQuestionTypes() {
-    this.http.get<string[]>('https://localhost:8080/api/questionTypes').subscribe(
-        data => {
+    this.http
+      .get<string[]>('https://localhost:8080/api/questionTypes')
+      .subscribe(
+        (data) => {
           this.questionTypes = data;
           console.log('Fetched question types:', data);
         },
-        error => console.error('Error fetching question types:', error)
-      );  
+        (error) => console.error('Error fetching question types:', error)
+      );
   }
 
   onTemplateSelect(event: Event) {
@@ -105,32 +108,38 @@ export class ManageEvalsComponent implements OnInit {
     const templateId = selectElement.value;
     this.selectedTemplateId = templateId;
 
-    this.http.get<Question[]>(`https://localhost:8080/api/questions/${templateId}`).subscribe(
-      data => {
-        this.selectedTemplateQuestions = data;
-        // Store initial state
-        this.storeInitialState(data);
-        console.log('Fetched Questions:', data);
-      },
-      error => console.error('Error fetching questions:', error)
-    );
+    this.http
+      .get<Question[]>(`https://localhost:8080/api/questions/${templateId}`)
+      .subscribe(
+        (data) => {
+          this.selectedTemplateQuestions = data;
+          // Store initial state
+          this.storeInitialState(data);
+          console.log('Fetched Questions:', data);
+        },
+        (error) => console.error('Error fetching questions:', error)
+      );
   }
 
   storeInitialState(questions: Question[]) {
     this.initialQuestionsState = {};
-    questions.forEach(question => {
+    questions.forEach((question) => {
       this.initialQuestionsState[question.questionID] = { ...question };
     });
   }
   reloadQuestions() {
     if (this.selectedTemplateId) {
-      this.http.get<Question[]>(`https://localhost:8080/api/questions/${this.selectedTemplateId}`).subscribe(
-        data => {
-          this.selectedTemplateQuestions = data;
-          console.log('Fetched Questions:', data);
-        },
-        error => console.error('Error fetching questions:', error)
-      );
+      this.http
+        .get<Question[]>(
+          `https://localhost:8080/api/questions/${this.selectedTemplateId}`
+        )
+        .subscribe(
+          (data) => {
+            this.selectedTemplateQuestions = data;
+            console.log('Fetched Questions:', data);
+          },
+          (error) => console.error('Error fetching questions:', error)
+        );
     }
   }
 
@@ -142,19 +151,23 @@ export class ManageEvalsComponent implements OnInit {
 
     const newTemplate = { templateName: this.newTemplateName };
     console.error('evaluatorID:', this.evaluatorID);
-    this.http.post(`https://localhost:8080/api/addTemplate/${this.evaluatorID}`, newTemplate).subscribe(
-      () => {
-        // alert('Template created successfully!');
-        this.loadTemplates(); // Reload templates to include the new one
-        this.showModal = false;
-      },
-      error => {
-        alert('Error creating template. Please try again.');
-        console.error('Error creating template:', error);
-      }
-    );
+    this.http
+      .post(
+        `https://localhost:8080/api/addTemplate/${this.evaluatorID}`,
+        newTemplate
+      )
+      .subscribe(
+        () => {
+          // alert('Template created successfully!');
+          this.loadTemplates(); // Reload templates to include the new one
+          this.showModal = false;
+        },
+        (error) => {
+          alert('Error creating template. Please try again.');
+          console.error('Error creating template:', error);
+        }
+      );
   }
-
 
   addQuestion() {
     if (!this.selectedTemplateId) {
@@ -170,7 +183,7 @@ export class ManageEvalsComponent implements OnInit {
     const payload = {
       questionText: this.newQuestionText,
       questionType: this.newQuestionType,
-      templateID: this.selectedTemplateId
+      templateID: this.selectedTemplateId,
     };
 
     this.http.post('https://localhost:8080/api/AddQuestion', payload).subscribe(
@@ -181,53 +194,68 @@ export class ManageEvalsComponent implements OnInit {
         this.newQuestionText = '';
         this.newQuestionType = '';
       },
-      error => {
+      (error) => {
         alert('Error updating question!');
-        console.error('Error adding question:', error)
+        console.error('Error adding question:', error);
       }
     );
   }
 
   deleteQuestion(questionID: string) {
-    console.log("questionID", questionID);
+    console.log('questionID', questionID);
 
-    this.http.delete(`https://localhost:8080/api/deleteQuestion/${questionID}`).subscribe(
-      () => {
-        // alert('Question deleted successfully!');
-        this.reloadQuestions();
-      },
-      error => {
-        alert('Error creating deleting question. Please try again.');
-        console.error('Error deleting question:', error);
-      }
-    );
+    this.http
+      .delete(`https://localhost:8080/api/deleteQuestion/${questionID}`)
+      .subscribe(
+        () => {
+          // alert('Question deleted successfully!');
+          this.reloadQuestions();
+        },
+        (error) => {
+          alert('Error creating deleting question. Please try again.');
+          console.error('Error deleting question:', error);
+        }
+      );
   }
 
-  submitUpdates(questionID: string, updatedText: string, updatedType: string) {
-    // Log the values
-    console.log('Updated Text:', updatedText);
-    console.log('Updated Type:', updatedType);
-    
-    const originalQuestion = this.initialQuestionsState[questionID]; // Use initial state for comparison
-    const payload: UpdateQuestionPayload = {
-        questionText: updatedText,
-        questionType: updatedType
-    };
+  submitAllUpdates() {
+    const updates = this.selectedTemplateQuestions
+      .map((question) => {
+        const originalQuestion =
+          this.initialQuestionsState[question.questionID];
+        const payload: UpdateQuestionPayload = {
+          questionText: question.questionText,
+          questionType: question.questionType,
+        };
 
-    if (originalQuestion.questionText == payload.questionText && originalQuestion.questionType == payload.questionType) {
+  
+        if (
+          originalQuestion.questionText !== payload.questionText ||
+          originalQuestion.questionType !== payload.questionType
+        ) {
+          return { id: question.questionID, payload };
+        }
+        return null; 
+      })
+      .filter(Boolean); 
+
+    if (updates.length === 0) {
       console.error('No changes to submit');
-      return;
+      return; 
     }
-
-    // Send the update request
-    this.http.put(`https://localhost:8080/api/updateQuestion/${questionID}`, payload).subscribe(
+    const updateRequests = updates.map((update) =>
+      this.http.put(
+        `https://localhost:8080/api/updateQuestion/${update?.id}`,
+        update?.payload
+      )
+    );
+    forkJoin(updateRequests).subscribe(
       () => {
-        // alert('Question updated successfully!');
         this.reloadQuestions();
       },
-      error => {
-        alert('Error updating question. Please try again.');
-        console.error('Error updating question:', error);
+      (error) => {
+        alert('Error updating questions. Please try again.');
+        console.error('Error updating questions:', error);
       }
     );
   }
