@@ -26,3 +26,8 @@
 .navOption {
     color: black;
 }
+
+.dropdown {
+    border: #28103a 10px;
+    /* background-color: #28103a; */
+}
