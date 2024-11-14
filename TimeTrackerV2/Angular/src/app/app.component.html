@@ -9,35 +9,39 @@
     <span class="navbar-toggler-icon"></span>
   </button>
 
-
-
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div [ngSwitch]="true">
       <!-- INSTRUCTOR SWITCH CASE -->
       <div *ngSwitchCase="instructor">
         <div class="navbar-nav mx-auto">
-          <select class="nav-item nav-link active dark-nav-link centered-on-small" (change)="onUserOptionChange($event)">
-            <option value="" disabled selected>{{name}}</option>
-            <option class="navOption" value="viewProfile">View Profile</option>
-            <option class="navOption" value="#">Logout</option>
-          </select>
+          <div style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px" class="rounded">
+            <select class="nav-item nav-link active dark-nav-link centered-on-small dropdown" (change)="onUserOptionChange($event)">
+              <option value="" disabled selected>{{name}}</option>
+              <option class="navOption" value="viewProfile">View Profile</option>
+              <option class="navOption" value="#">Logout</option>
+            </select>
+          </div>
+          <div style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px" class="rounded">
+            <select name="courseOptions" class="nav-item nav-link active dark-nav-link centered-on-small" onchange="window.location = this.value;">
+              <option value="" disabled selected>Course Options</option>
+              <option class="navOption" value="/create-course">Create New Course</option>
+              <option class="navOption" value="/past-courses">Past Courses</option>
+              <option class="navOption" value="/manage-evals">Manage Evaluations</option>
+            </select>
+          </div>
           <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./dashboard">Dashboard</a>
-          <select name="courseOptions" class="nav-item nav-link active dark-nav-link centered-on-small" onchange="window.location = this.value;">
-            <option value="" disabled selected>Course Options</option>
-            <option class="navOption" value="/create-course">Create New Course</option>
-            <option class="navOption" value="/past-courses">Past Courses</option>
-            <option class="navOption" value="/manage-evals">Manage Evaluations</option>
-          </select>
         </div>
       </div>
       <!-- STUDENT SWITCH CASE -->
       <div *ngSwitchCase="student">
         <div class="navbar-nav mx-auto">
-          <select class="nav-item nav-link active dark-nav-link centered-on-small" (change)="onUserOptionChange($event)">
-            <option value="" disabled selected>{{name}}</option>
-            <option class="navOption" value="viewProfile">View Profile</option>
-            <option class="navOption" value="#">Logout</option>
-          </select>
+          <div style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px" class="rounded">
+            <select class="nav-item nav-link active dark-nav-link centered-on-small dropdown" (change)="onUserOptionChange($event)">
+              <option value="" disabled selected>{{name}}</option>
+              <option class="navOption" value="viewProfile">View Profile</option>
+              <option class="navOption" value="#">Logout</option>
+            </select>
+          </div>
           <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./dashboard">Dashboard</a>
           <a class="nav-link active dark-nav-link centered-on-small" routerLink="./courses">Courses</a>
         </div>
@@ -45,11 +49,13 @@
       <!-- ADMIN SWITCH CASE -->
       <div *ngSwitchCase="admin">
         <div class="navbar-nav mx-auto">
-          <select class="nav-item nav-link active dark-nav-link centered-on-small" (change)="onUserOptionChange($event)">
-            <option value="" disabled selected>{{name}}</option>
-            <option class="navOption" value="viewProfile">View Profile</option>
-            <option class="navOption" value="#">Logout</option>
-          </select>
+          <div style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px" class="rounded">
+            <select class="nav-item nav-link active dark-nav-link centered-on-small dropdown" (change)="onUserOptionChange($event)">
+              <option value="" disabled selected>{{name}}</option>
+              <option class="navOption" value="viewProfile">View Profile</option>
+              <option class="navOption" value="#">Logout</option>
+            </select>
+          </div>
           <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./dashboard">Dashboard</a>
           <a class="nav-item nav-link active dark-nav-link centered-on-small" routerLink="./users">Users</a>
         </div>

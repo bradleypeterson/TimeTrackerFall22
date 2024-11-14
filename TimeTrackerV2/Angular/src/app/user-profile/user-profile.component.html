@@ -1,8 +1,9 @@
 <div id="profile">
+    <h2 class="dashboard-head">Profile</h2>
     <div *ngFor="let u of userProfile">
         <div class="row">
             <div class="col-10">
-                <h3 class="box-head">{{u.firstName}} {{u.lastName}}</h3>
+                <h3 class="box-head rounded">{{u.firstName}} {{u.lastName}}</h3>
                 <hr>
                 <div class="row">
                     <div class="col">
@@ -22,9 +23,9 @@
                         Options
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><button type="button" class="btn btn-purple btn-sm" (click)="NavToEditProfile()">Edit Profile</button></li>
-                        <li class="list-group-item"><button type="button" class="btn btn-purple btn-sm" (click)="NavToResetPassword()">Reset Password</button></li>
-                        <li class="list-group-item"><button type="button" class="btn btn-danger btn-sm" (click)="DeleteAccount()">Delete Account</button></li>
+                        <li class="list-group-item"><button type="button" class="btn btn-purple btn-sm rounded" (click)="NavToEditProfile()">Edit Profile</button></li>
+                        <li class="list-group-item"><button type="button" class="btn btn-purple btn-sm rounded" (click)="NavToResetPassword()">Reset Password</button></li>
+                        <li class="list-group-item"><button type="button" class="btn btn-danger btn-sm rounded" (click)="DeleteAccount()">Delete Account</button></li>
                     </ul>
                 </div>
             </div>

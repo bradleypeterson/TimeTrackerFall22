@@ -12,11 +12,12 @@
 
   .box-head {
     color: white;
-    letter-spacing: 3px;
-    /* box behind text */
-    display: inline-block;
-    box-shadow: -8px 8px 2px #492365;
-    background-color: #6e4097;
+  letter-spacing: 3px;
+  padding: 5px 10px;
+  /* box behind text */
+  display: inline-block;
+  box-shadow: -4px 4px 3px #492365;
+  background-color: #6e4097;
   }
 
   .bio {
