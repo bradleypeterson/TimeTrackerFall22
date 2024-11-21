@@ -107,6 +107,7 @@
 
    <div class="form-container">
   <h3>Edit Questions</h3>
+  <h5>Reminder: You must hit Sumbit at the bottom of the form to save your changes</h5>
   <div class="questions-form" *ngIf="selectedTemplateQuestions.length > 0">
     <div
       *ngFor="let question of selectedTemplateQuestions; let i = index"
@@ -155,13 +156,16 @@
     </div>
 
     <!-- Single Submit Button for All Updates -->
-    <button
-      type="button"
-      class="btn-question btn btn-purple"
-      (click)="submitAllUpdates()"
-    >
-      Submit All Updates
-    </button>
+     <div>
+        <button
+        type="button"
+        class="btn-question btn btn-purple"
+        (click)="submitAllUpdates()"
+        >
+        Submit All Updates
+        </button>
+        <p *ngIf="saveSuccessful" class="saveNotice">Changes saved!</p>
+     </div>
   </div>
 
   <button

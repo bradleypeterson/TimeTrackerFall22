@@ -39,6 +39,7 @@ export class ManageEvalsComponent implements OnInit {
   initialQuestionsState: Record<string, Question> = {};
   currentUser: any;
   evaluatorID: string = '';
+  saveSuccessful: boolean = false;
 
   constructor(private http: HttpClient) {}
 
@@ -249,6 +250,12 @@ export class ManageEvalsComponent implements OnInit {
         update?.payload
       )
     );
+    
+    // Displays Save Successful -- RIGHT NOW DOESN'T DEFAULT BACK TO NOT SHOING SAVE MESSAGE
+    setTimeout(() => {
+      this.saveSuccessful = true
+    }, 7);
+
     forkJoin(updateRequests).subscribe(
       () => {
         this.reloadQuestions();
