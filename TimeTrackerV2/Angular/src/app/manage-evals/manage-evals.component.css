@@ -35,7 +35,8 @@
 
 .btn-question {
     width: 150px;
-    margin: .25% auto;
+    margin: auto;
+    display: block;
 }
 
 .btn-close:hover,

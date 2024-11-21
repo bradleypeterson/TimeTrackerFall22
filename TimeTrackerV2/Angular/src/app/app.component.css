@@ -26,3 +26,7 @@
 .navOption {
     color: black;
 }
+
+.clickable:hover {
+    background-color: #3f1a5f;
+}
