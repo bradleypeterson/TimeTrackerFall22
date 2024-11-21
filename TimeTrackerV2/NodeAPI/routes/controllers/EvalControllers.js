@@ -413,7 +413,7 @@ exports.GetAssignedEvals = async (req, res, next) => {
         return res.status(400).json({ message: "evaluatee ID is required" });
     }
 
-    let sql = `SELECT q.questionID, q.questionText, qt.questionTypeText AS questionType, q.templateID, p.projectName AS projectName
+    let sql = `SELECT q.questionID, q.questionText, qt.questionTypeText AS questionType, q.templateID, p.projectName AS projectName, a.evaluatorID AS evaluatorID
     FROM Question as q
     INNER JOIN Assigned_Eval as a ON a.templateID = q.templateID
     INNER JOIN Question_Type as qt ON qt.questionTypeID = q.questionType

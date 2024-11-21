@@ -8,6 +8,7 @@ interface Question {
   questionID: string;
   response: string | number;
   projectName: string;
+  evaluatorID: number;
 }
 
 interface QuestionGroup {
