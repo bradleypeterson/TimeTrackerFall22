@@ -9,7 +9,7 @@
           <div class="question-item" *ngFor="let question of group.questions; let i = index">
             <div class="question-container">
               <label>{{ question.evaluatorID }}: {{ question.questionText }}</label>
-              <div *ngIf="question.questionType === '1-5 Rating'">
+              <div *ngIf="question.questionType === '1-5 Rating'">ddd
                 <!-- Radio Buttons for Rating -->
                 <div *ngFor="let rating of [1, 2, 3, 4, 5]; let j = index">
                   <input type="radio" [id]="'rating-' + groupIndex + '-' + i + '-' + j"
