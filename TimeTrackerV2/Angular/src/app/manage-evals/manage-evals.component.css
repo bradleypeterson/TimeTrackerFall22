@@ -2,8 +2,22 @@ h5, p {
     color:red;
 }
 
-.saveNotice {
+.submit-container {
     display: flex;
+    justify-content: center; 
+    align-items: center; 
+    position: relative; /* Positioning context for badge */
+}
+
+.badge {
+    position: absolute; /* Removes badge from normal flow */
+    left: calc(50% + 75px); /* Positions badge to right of button */
+    margin: 0px 10px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    /* Centers vertically */
+    top: 50%; 
+    transform: translateY(-50%);
 }
 
 .form-select {
@@ -43,8 +57,8 @@ h5, p {
 
 .btn-question {
     width: 150px;
-    margin: auto;
-    display: block;
+    /* margin: auto;
+    display: inline; */
 }
 
 .btn-close:hover,
