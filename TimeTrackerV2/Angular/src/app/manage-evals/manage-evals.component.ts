@@ -39,6 +39,7 @@ export class ManageEvalsComponent implements OnInit {
   initialQuestionsState: Record<string, Question> = {};
   currentUser: any;
   evaluatorID: string = '';
+  saveSuccessful: boolean = false;
 
   constructor(private http: HttpClient) {}
 
@@ -249,9 +250,19 @@ export class ManageEvalsComponent implements OnInit {
         update?.payload
       )
     );
+
     forkJoin(updateRequests).subscribe(
       () => {
-        this.reloadQuestions();
+        this.reloadQuestions(); 
+      // WHY DO INSTRUCTORS HAVE DROP DOWN TO MANAGE COURSES ALONG WITH BUTTONS ON DASHBOARD....SEEMS REDUNDANT - Ask group...
+      // PREVIEW OF EVAL FORM - Question text can overrun the box....need to either trim it or have div wrap...
+      // Displays Save Successful -- RIGHT NOW DOESN'T DEFAULT BACK TO NOT SHOwiNG SAVE MESSAGE
+      // SAVE -- Not always popping up, not resetting (See above comment for failure to not disappear)
+      this.saveSuccessful = true; // Show success message
+      setTimeout(() => {
+        this.saveSuccessful = false
+      }, 3000);
+
       },
       (error) => {
         alert('Error updating questions. Please try again.');
