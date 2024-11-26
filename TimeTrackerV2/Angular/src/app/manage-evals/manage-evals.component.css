@@ -1,11 +1,16 @@
 h5, p {
-    color:red;
+    color:rgb(228, 61, 61);
+
+}
+
+h5{
+  font-size: small;
 }
 
 .submit-container {
     display: flex;
-    justify-content: center; 
-    align-items: center; 
+    justify-content: center;
+    align-items: center;
     position: relative; /* Positioning context for badge */
 }
 
@@ -16,7 +21,7 @@ h5, p {
     padding: 5px 10px;
     font-size: 0.75rem;
     /* Centers vertically */
-    top: 50%; 
+    top: 50%;
     transform: translateY(-50%);
 }
 

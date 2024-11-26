@@ -40,6 +40,8 @@ export class ManageEvalsComponent implements OnInit {
   currentUser: any;
   evaluatorID: string = '';
   saveSuccessful: boolean = false;
+  isEvalSelected: boolean = false;
+  isFormChanged: boolean = false;
 
   constructor(private http: HttpClient) {}
 
@@ -49,6 +51,17 @@ export class ManageEvalsComponent implements OnInit {
     // this.loadDefaultTemplate();
     this.LoadQuestionTypes();
   }
+
+  onEvalSelected() {
+    this.isEvalSelected = true;
+  }
+
+  onEvalDeselected() {
+    this.isEvalSelected = false;
+  }
+
+
+
 
   private getCurrentUser() {
     const currentUserData = localStorage.getItem('currentUser');
@@ -229,20 +242,19 @@ export class ManageEvalsComponent implements OnInit {
           questionType: question.questionType,
         };
 
-  
         if (
           originalQuestion.questionText !== payload.questionText ||
           originalQuestion.questionType !== payload.questionType
         ) {
           return { id: question.questionID, payload };
         }
-        return null; 
+        return null;
       })
-      .filter(Boolean); 
+      .filter(Boolean);
 
     if (updates.length === 0) {
       console.error('No changes to submit');
-      return; 
+      return;
     }
     const updateRequests = updates.map((update) =>
       this.http.put(
@@ -253,16 +265,15 @@ export class ManageEvalsComponent implements OnInit {
 
     forkJoin(updateRequests).subscribe(
       () => {
-        this.reloadQuestions(); 
-      // WHY DO INSTRUCTORS HAVE DROP DOWN TO MANAGE COURSES ALONG WITH BUTTONS ON DASHBOARD....SEEMS REDUNDANT - Ask group...
-      // PREVIEW OF EVAL FORM - Question text can overrun the box....need to either trim it or have div wrap...
-      // Displays Save Successful -- RIGHT NOW DOESN'T DEFAULT BACK TO NOT SHOwiNG SAVE MESSAGE
-      // SAVE -- Not always popping up, not resetting (See above comment for failure to not disappear)
-      this.saveSuccessful = true; // Show success message
-      setTimeout(() => {
-        this.saveSuccessful = false
-      }, 3000);
-
+        this.reloadQuestions();
+        // WHY DO INSTRUCTORS HAVE DROP DOWN TO MANAGE COURSES ALONG WITH BUTTONS ON DASHBOARD....SEEMS REDUNDANT - Ask group...
+        // PREVIEW OF EVAL FORM - Question text can overrun the box....need to either trim it or have div wrap...
+        // Displays Save Successful -- RIGHT NOW DOESN'T DEFAULT BACK TO NOT SHOwiNG SAVE MESSAGE
+        // SAVE -- Not always popping up, not resetting (See above comment for failure to not disappear)
+        this.saveSuccessful = true; // Show success message
+        setTimeout(() => {
+          this.saveSuccessful = false;
+        }, 3000);
       },
       (error) => {
         alert('Error updating questions. Please try again.');
