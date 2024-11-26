@@ -66,18 +66,44 @@ export class EvalComponent implements OnInit {
       response => {
         console.log("Response received:", response);
 
+        let evalIDs: any[] = [];
+
         if (response.length > 0) {
+            // for (let i = 0; i < response.length; i++) {
+            //     for (let j = 0; j < evalIDs.length; j++) {
+            //       if (response[i].evaluatorID === evalIDs[j]) {
+            //         console.log("j val: " + j);
+            //         console.log("After the second for, in the if statement: " + evalIDs.length);
+            //         console.log("EvalIDs content: " + evalIDs);
+            //         console.log("Response evaluatorID: " + response[i].evaluatorID);
+            //         push = false;
+            //       }
+            //     }
+            //     if (push === true) evalIDs.push(response[i].evaluatorID);
+            // }
+
+        
+            response.forEach(function (question) {
+                if (!evalIDs.includes(question.evaluatorID)) {
+                    evalIDs.push(question.evaluatorID);
+                }
+                console.log(evalIDs);
+            });
+
+
+
           if (response[0] instanceof Array) {
             // Response is a 2-D array of QuestionGroup
             this.questionGroups = response.map((group: Question[]) => ({
               projectName: group[0]?.projectName || 'Default Project',
-              questions: group
+              questions: group,
+              evalIDs: evalIDs
             }));
           } else {
             // Response is a 1-D array of Question, wrap it in a single QuestionGroup
             this.questionGroups = [{
               projectName: response[0]?.projectName || 'Default Project',
-              questions: response
+              questions: response,
             }];
           }
         } else {

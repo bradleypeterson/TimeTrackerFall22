@@ -3,31 +3,30 @@
     <div class="eval-preview">
       <h3>Evaluation for {{ userName }}</h3>
       <h4> {{ group.questions[0].projectName || 'Placeholder Project Name' }} </h4>
-      <!-- <div *ngFor="let member of group.questions; let h=index"> -->
-        <div class="questions-grid" *ngFor="let member of group.questions; let h = index">
-          <div *ngIf="member.evaluatorID === h"></div><h1>TEST</h1></div>
-          <div class="question-item" *ngFor="let question of group.questions; let i = index">
-            <div class="question-container">
-              <label>{{ question.evaluatorID }}: {{ question.questionText }}</label>
-              <div *ngIf="question.questionType === '1-5 Rating'">
-                <!-- Radio Buttons for Rating -->
-                <div *ngFor="let rating of [1, 2, 3, 4, 5]; let j = index">
-                  <input type="radio" [id]="'rating-' + groupIndex + '-' + i + '-' + j"
-                    [name]="'response-' + question.questionID" [formControlName]="'response-' + question.questionID"
-                    [value]="rating" />
-                  <label [for]="'rating-' + groupIndex + '-' + i + '-' + j">{{ rating }}</label>
-                </div>
-              </div>
-              <div *ngIf="question.questionType === 'Text Response'">
-                <!-- Textarea for Text Response -->
-                <textarea class="form-control" [id]="'textarea-' + groupIndex + '-' + i"
-                  [formControlName]="'response-' + question.questionID"></textarea>
-              </div>
-            </div>
+      <!-- <div *ngFor="let eval of group.evalIDs; let evalIndex = index" class="form-container"> -->
+        <!-- <label>{{ eval.evaluatorID }}: {{ eval.questionText }}</label> -->
+        <!-- <div *ngIf="eval.evaluatorID === evalIndex"> -->
+            <div class="question-item" *ngFor="let question of group.questions; let i = index">
+                <div class="question-container">
+                  <label>{{ question.evaluatorID }}: {{ question.questionText }}</label>
+                  <div *ngIf="question.questionType === '1-5 Rating'">
+                    <!-- Radio Buttons for Rating -->
+                    <div *ngFor="let rating of [1, 2, 3, 4, 5]; let j = index">
+                      <input type="radio" [id]="'rating-' + groupIndex + '-' + i + '-' + j"
+                        [name]="'response-' + question.questionID" [formControlName]="'response-' + question.questionID"
+                        [value]="rating" />
+                      <label [for]="'rating-' + groupIndex + '-' + i + '-' + j">{{ rating }}</label>
+                    </div>
+                  </div>
+                  <div *ngIf="question.questionType === 'Text Response'">
+                    <!-- Textarea for Text Response -->
+                    <textarea class="form-control" [id]="'textarea-' + groupIndex + '-' + i"
+                      [formControlName]="'response-' + question.questionID"></textarea>
+                  </div>
+                <!-- </div> -->
+            <!-- </div> -->
           </div>
         </div>
-      </div>
-      <!-- </div> -->
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
