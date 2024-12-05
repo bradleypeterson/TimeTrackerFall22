@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-add-courses',
@@ -29,11 +30,13 @@ export class AddCoursesComponent implements OnInit {
   }
 
   loadCourses(courses: Array<{}>): void {
-    this.http.get("https://localhost:8080/api/Courses").subscribe((data: any) => {
-      for (let i = 0; i < data.length; i++) {
-        courses.push(data[i]);
-      }
-    });
+    this.http
+      .get(`${environment.apiURL}/api/Courses`)
+      .subscribe((data: any) => {
+        for (let i = 0; i < data.length; i++) {
+          courses.push(data[i]);
+        }
+      });
   }
 
 }

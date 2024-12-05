@@ -31,16 +31,26 @@
 .box-head {
   color: white;
   letter-spacing: 3px;
+  padding: 5px 10px;
   /* box behind text */
   display: inline-block;
-  box-shadow: -8px 8px 2px #492365;
+  box-shadow: -4px 4px 3px #492365;
   background-color: #6e4097;
 }
 
 .btn-courses {
   margin-left: 20px;
+  margin-right: 5px;
 }
 
 .btn-spacing {
   margin-left: 10px;
+}
+
+.btn-courses .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  font-size: 0.75rem;
 }

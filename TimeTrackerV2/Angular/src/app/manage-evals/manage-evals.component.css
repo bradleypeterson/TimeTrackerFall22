@@ -1,3 +1,30 @@
+h5, p {
+    color:rgb(228, 61, 61);
+
+}
+
+h5{
+  font-size: small;
+}
+
+.submit-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* Positioning context for badge */
+}
+
+.badge {
+    position: absolute; /* Removes badge from normal flow */
+    left: calc(50% + 75px); /* Positions badge to right of button */
+    margin: 0px 10px;
+    padding: 5px 10px;
+    font-size: 0.75rem;
+    /* Centers vertically */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .form-select {
     color: #333;
 }
@@ -35,7 +62,8 @@
 
 .btn-question {
     width: 150px;
-    margin: .25% auto;
+    /* margin: auto;
+    display: inline; */
 }
 
 .btn-close:hover,

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-course',
@@ -89,73 +90,114 @@ export class CourseComponent implements OnInit {
   }
 
   getCourseInfo(): void {
-    this.http.get<any>(`https://localhost:8080/api/CourseInfo/${this.courseID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-        next: data => {
-            this.errMsg = "";
-            this.course = data;
+    this.http
+      .get<any>(`${environment.apiURL}/api/CourseInfo/${this.courseID}`, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.course = data;
         },
-        error: error => {
-            this.errMsg = error['error']['message'];
-        }
-    });
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   loadProjects(): void {
-    this.http.get("https://localhost:8080/api/Projects/" + this.courseID).subscribe((data: any) => {
-      this.projects = data;
-      if (this.projects) {
-        localStorage.setItem("projects", JSON.stringify(this.projects));
-      }
-    });
+    this.http
+      .get(`${environment.apiURL}/api/Projects/` + this.courseID)
+      .subscribe((data: any) => {
+        this.projects = data;
+        if (this.projects) {
+          localStorage.setItem('projects', JSON.stringify(this.projects));
+        }
+      });
   }
 
   loadAllUserGroups(): void {
-    this.http.get<any>(`https://localhost:8080/api/ProjectsForUser/${this.courseID}/${this.userID}/userGroups`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        // console.log(data);
-        this.allUserGroups = data;
-        this.allUserFilteredProjects = data;
-        if (this.allUserGroups) {
-          localStorage.setItem("allUserGroups", JSON.stringify(this.allUserGroups));
+    this.http
+      .get<any>(
+        `${environment.apiURL}/api/ProjectsForUser/${this.courseID}/${this.userID}/userGroups`,
+        {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
         }
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+      )
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          // console.log(data);
+          this.allUserGroups = data;
+          this.allUserFilteredProjects = data;
+          if (this.allUserGroups) {
+            localStorage.setItem(
+              'allUserGroups',
+              JSON.stringify(this.allUserGroups)
+            );
+          }
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   loadNonUserGroups(): void {
-    this.http.get<any>(`https://localhost:8080/api/ProjectsForUser/${this.courseID}/${this.userID}/nonUserGroups`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        // console.log(data);
-        this.nonUserGroups = data;
-        this.nonUserFilteredProjects = data;
-        if (this.nonUserGroups) {
-          localStorage.setItem("nonUserGroups", JSON.stringify(this.nonUserGroups));
+    this.http
+      .get<any>(
+        `${environment.apiURL}/api/ProjectsForUser/${this.courseID}/${this.userID}/nonUserGroups`,
+        {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
         }
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+      )
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          // console.log(data);
+          this.nonUserGroups = data;
+          this.nonUserFilteredProjects = data;
+          if (this.nonUserGroups) {
+            localStorage.setItem(
+              'nonUserGroups',
+              JSON.stringify(this.nonUserGroups)
+            );
+          }
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   checkUserInCourse(): void {
-    this.http.get<any>(`https://localhost:8080/api/Courses/UserInCourse/${this.courseID}/${this.userID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        let dataCheck = data;
-        if (Object.keys(dataCheck).length > 0) {
-          this.userInCourse = true;
+    this.http
+      .get<any>(
+        `${environment.apiURL}/api/Courses/UserInCourse/${this.courseID}/${this.userID}`,
+        {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
         }
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+      )
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          let dataCheck = data;
+          if (Object.keys(dataCheck).length > 0) {
+            this.userInCourse = true;
+          }
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   NavigateToEditCourse() {
@@ -188,15 +230,21 @@ export class CourseComponent implements OnInit {
       projectID: ProjectID
     };
 
-    this.http.post<any>('https://localhost:8080/api/joinGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        this.loadPage();
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/joinGroup/`, req, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.loadPage();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   leave(ProjectID: any) {
@@ -205,15 +253,21 @@ export class CourseComponent implements OnInit {
       projectID: ProjectID
     };
 
-    this.http.post<any>('https://localhost:8080/api/leaveGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        this.loadPage();
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/leaveGroup/`, req, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.loadPage();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   delete() {
@@ -221,16 +275,22 @@ export class CourseComponent implements OnInit {
       let req = {
         courseID: this.courseID
       };
-  
-      this.http.post<any>('https://localhost:8080/api/deleteCourse/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-        next: data => {
-          this.errMsg = "";
-          window.location.replace("/dashboard");
-        },
-        error: error => {
-          this.errMsg = error['error']['message'];
-        }
-      });
+
+      this.http
+        .post<any>(`${environment.apiURL}/api/deleteCourse/`, req, {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
+        })
+        .subscribe({
+          next: (data) => {
+            this.errMsg = '';
+            window.location.replace('/dashboard');
+          },
+          error: (error) => {
+            this.errMsg = error['error']['message'];
+          },
+        });
     }
   }
 

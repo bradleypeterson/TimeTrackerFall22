@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { User } from '../user.model';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-group',
@@ -37,12 +38,12 @@ export class GroupComponent implements OnInit {
     localStorage.setItem("timeIn", Date.now().toString());
 
     var item = localStorage.getItem('currentUser');
-    
+
     if (typeof item === 'string')
     {
       this.user = JSON.parse(item) as User
     }
-    
+
     if (this.user !== null)
     {
         let req = {
@@ -52,9 +53,9 @@ export class GroupComponent implements OnInit {
           userID: this.user.userID,
           description: null /// pull description from the HTML
         };
-      
+
         console.log(req);
-        
+
       if (req !== null)
       {
         this.http.post<any>('https://localhost:8080/api/clock/', req, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
@@ -67,15 +68,15 @@ export class GroupComponent implements OnInit {
             this.errMsg = error['error']['message'];
           }
         });
-      } 
+      }
     }
   }
 
   clockOut(): void {
     console.log(localStorage.getItem("timeIn"));
-    
+
     var item = localStorage.getItem('currentUser');
-    
+
     if (typeof item === 'string')
     {
       this.user = JSON.parse(item) as User
@@ -84,13 +85,13 @@ export class GroupComponent implements OnInit {
     if (this.user !== null )
     {
         let req = {
-          timeIn: localStorage.getItem("timeIn"), 
+          timeIn: localStorage.getItem("timeIn"),
           timeOut: Date.now(), /// pull date from the HTML
           createdOn: Date.now(),
           userID: 1,
           description: "This is the Description field" /// pull description from the HTML
         };
-      
+
 
       if (req !== null)
       {
@@ -110,7 +111,7 @@ export class GroupComponent implements OnInit {
   }*/
 
   loadStudents(students: Array<string>): void {
-    this.http.get("https://localhost:8080/api/Users").subscribe((data: any) => {
+    this.http.get(`${environment.apiURL}/api/Users`).subscribe((data: any) => {
       for (let i = 0; i < data.length; i++) {
         students.push(data[i].firstName);
       }

@@ -1,109 +1,193 @@
 <!-- ng-cloak ng-if="loaded" -->
 
 <div id="users">
-    <div class="row g-2">
-        <!-- ng-model="search"  -->
-        <form [formGroup]="searchForm" (ngSubmit)="filterUsers()" class="col-6 mx-auto">
-            <!-- mb/mt stand for margin bottom/top -->
-            <div class="input-group mb-1 mt-2">
-                <span class="input-group-text">Name</span>
-                <input formControlName="name" type="text" id="name" class="form-control"/>
-            </div>
-        
-            <div class="input-group mb-1 mt-2">
-                <span class="input-group-text">Active</span>
-                <select formControlName="active" id="isActive" class="form-select form-control">
-                    <option value="" selected></option>
-                    <option value="true">True</option>
-                    <option value="false">False</option>
-                </select>
-            </div>
+  <div class="row g-2">
+    <!-- ng-model="search"  -->
 
-            <div class="input-group mb-1">
-                <span class="input-group-text">User Type</span>
-                <select formControlName="type" id="type" class="form-select form-control">
-                    <option value="" selected></option>
-                    <option value="student">Student</option>
-                    <option value="instructor">Instructor</option>
-                    <option value="admin">Admin</option>
-                </select>
-            </div>
+    <form
+      [formGroup]="searchForm"
+      (ngSubmit)="filterUsers()"
+      class="col-6 mx-auto"
+    >
+      <div>
+        <h4>Filter By:</h4>
+      </div>
+      <!-- mb/mt stand for margin bottom/top -->
+      <div class="input-group mb-1 mt-2">
+        <br />
+        <span class="input-group-text">Name</span>
+        <input
+          formControlName="name"
+          type="text"
+          id="name"
+          class="form-control"
+        />
+      </div>
 
-            <div class="mb-1 text-center">
-                <button class="btn btn-purple btn-elevated" type="submit">Search</button>
-                <button class="btn btn-purple btn-elevated" type="reset">Clear</button>
-            </div>
-        </form>
-    </div>
+      <div class="input-group mb-1 mt-2">
+        <span class="input-group-text">Active</span>
+        <select
+          formControlName="active"
+          id="isActive"
+          class="form-select form-control"
+        >
+          <option value="" selected></option>
+          <option value="true">True</option>
+          <option value="false">False</option>
+        </select>
+      </div>
 
-    <table class="table table-hover">
-        <caption style="caption-side: top;"><h3>Users</h3></caption>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Username</th>
-                <th class="text-center">Active</th>
-                <th class="text-center d-none d-sm-table-cell">Type</th>
-                <th class="text-center">User Controls</th>
-            </tr>
-        </thead>
+      <div class="input-group mb-1 mt-2">
+        <span class="input-group-text">Approved</span>
+        <select
+          formControlName="approved"
+          id="isApproved"
+          class="form-select form-control"
+        >
+          <option value="" selected></option>
+          <option value="true">True</option>
+          <option value="false">False</option>
+        </select>
+      </div>
 
-        <!-- ng-repeat="u in users | orderObjectBy : 'firstName' | filter : search" -->
-        <tbody>
-            <tr *ngFor="let u of filteredUsers" class="position-relative">
-                <!--<td><a href="#"></a>First Name Last Name</td> User's first and last name -->
+      <div class="input-group mb-1">
+        <span class="input-group-text">User Type</span>
+        <select
+          formControlName="type"
+          id="type"
+          class="form-select form-control"
+        >
+          <option value="" selected></option>
+          <option value="student">Student</option>
+          <option value="instructor">Instructor</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
 
-                <!--<tr *ngFor="let u of users" class="position-relative">-->
+      <div class="mb-1 text-center">
+        <button class="btn btn-purple btn-elevated" type="submit">
+          Search
+        </button>
+        <button class="btn btn-purple btn-elevated" type="reset">Clear</button>
+      </div>
+    </form>
+  </div>
 
-                <td><button class="btn-link" (click)="ViewProfile(u.userID)">{{ u.firstName }} {{u.lastName}}</button></td>  <!-- User's first and last name, we as a group are thinking about either moving or implementing the reset password and delete user logic as shown below to the profile page for the user. -->
-                <td>
-                    <div class="full-width">{{ u.username }}</div> <!-- Username -->
-                    <!--<div class="full-width">{{u}}</div> A copy of the username for some reason?-->
-                    <!-- ng-model="u.type" ng-change="saveUser(u)" -->
+  <div>
+    <h3>Users</h3>
+  </div>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Username</th>
+        <th class="text-center">Active</th>
+        <th class="text-center">Approved</th>
+        <th class="text-center d-none d-sm-table-cell">Type</th>
+        <th class="text-center"></th>
+      </tr>
+    </thead>
 
-                    <!--<select class="text-center d-sm-none mt-2">
+    <!-- ng-repeat="u in users | orderObjectBy : 'firstName' | filter : search" -->
+    <tbody>
+      <tr *ngFor="let u of filteredUsers" class="position-relative">
+        <!--<td><a href="#"></a>First Name Last Name</td> User's first and last name -->
+
+        <!--<tr *ngFor="let u of users" class="position-relative">-->
+
+        <td>
+          <button class="btn-link" (click)="ViewProfile(u.userID)">
+            {{ u.firstName }} {{ u.lastName }}
+          </button>
+        </td>
+        <!-- User's first and last name, we as a group are thinking about either moving or implementing the reset password and delete user logic as shown below to the profile page for the user. -->
+        <td>
+          <div class="full-width">{{ u.username }}</div>
+          <!-- Username -->
+          <!--<div class="full-width">{{u}}</div> A copy of the username for some reason?-->
+          <!-- ng-model="u.type" ng-change="saveUser(u)" -->
+
+          <!--<select class="text-center d-sm-none mt-2">
                         <option value="S">Student</option>
                         <option value="I">Instructor</option>
                         <option value="A">Admin</option>
                     </select>-->
-                </td>
+        </td>
 
-                <td class="text-center">
-                    <div class="pretty p-curve p-svg mr-0">
-                        <!-- ng-model="u.isActive" ng-change="saveUser(u)" -->
-                        <!-- If the user's account is active, check the checkbox https://codippa.com/check-uncheck-checkbox-conditionally-angular/ -->
-                        <input type="checkbox" [checked]="u.isActive" [(ngModel)]="u.isActive" [disabled]="currentUserID === u.userID"/>
-                        <div class="state p-primary">
-                            <!-- Define a custom checkbox for the above input -->
-                            <svg class="svg svg-icon" viewBox="0 0 20 20">
-                                <path
-                                    d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
-                                    style="stroke: white;fill:white;"></path>
-                            </svg>
-                            <!-- Normally, these label tags would be placed around the <input /> tag above.  However because we are creating a custom checkbox, it is here?  Don't know the reason why. -->
-                            <label></label>
-                        </div>
-                    </div>
-                </td>
+        <td class="text-center">
+          <div class="pretty p-curve p-svg mr-0">
+            <!-- ng-model="u.isActive" ng-change="saveUser(u)" -->
+            <!-- If the user's account is active, check the checkbox https://codippa.com/check-uncheck-checkbox-conditionally-angular/ -->
+            <input
+              type="checkbox"
+              [checked]="u.isActive"
+              [(ngModel)]="u.isActive"
+              [disabled]="currentUserID === u.userID"
+            />
+            <div class="state p-primary">
+              <!-- Define a custom checkbox for the above input -->
+              <svg class="svg svg-icon" viewBox="0 0 20 20">
+                <path
+                  d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
+                  style="stroke: white; fill: white"
+                ></path>
+              </svg>
+              <!-- Normally, these label tags would be placed around the <input /> tag above.  However because we are creating a custom checkbox, it is here?  Don't know the reason why. -->
+              <label></label>
+            </div>
+          </div>
+        </td>
 
-                <td class="text-center d-none d-sm-table-cell">
-                    <!--  Jason Steadman     Notes: Removed the ability for a user to change their own type.-->
-                    <!-- ng-model="u.type" ng-change="saveUser(u)" ng-disabled="$parent.user.userID === u.userID" -->
-                    <select [(ngModel)]="u.type" [disabled]="currentUserID === u.userID">
-                        <option value="student" [selected]="u.type == 'student'">Student</option>
-                        <option value="instructor" [selected]="u.type == 'instructor'">Instructor</option>
-                        <option value="admin" [selected]="u.type == 'admin'">Admin</option>
-                    </select>
-                </td>
+        <!-- New column for isApproved -->
+        <td class="text-center">
+          <div class="pretty p-curve p-svg mr-0">
+            <input
+              type="checkbox"
+              [checked]="u.isApproved"
+              [(ngModel)]="u.isApproved"
+              [disabled]="currentUserID === u.userID"
+            />
+            <div class="state p-primary">
+              <svg class="svg svg-icon" viewBox="0 0 20 20">
+                <path
+                  d="M7.629,14.566c0.125,0.125,0.291,0.188,0.456,0.188c0.164,0,0.329-0.062,0.456-0.188l8.219-8.221c0.252-0.252,0.252-0.659,0-0.911c-0.252-0.252-0.659-0.252-0.911,0l-7.764,7.763L4.152,9.267c-0.252-0.251-0.66-0.251-0.911,0c-0.252,0.252-0.252,0.66,0,0.911L7.629,14.566z"
+                  style="stroke: white; fill: white"
+                ></path>
+              </svg>
+              <label></label>
+            </div>
+          </div>
+        </td>
 
-                <td class="text-center d-none d-sm-table-cell">
-                    <button *ngIf="UserModified(u)" type="button" class="btn btn-primary btn-sm" (click)="SaveUserChanges(u)">Save Changes</button>
-                </td>
-            </tr>
-            <!-- To be moved to the profile page for the selected user -->
-        </tbody>
-    </table>
-    <div *ngIf="errMsg != ''" class="alert alert-danger">
-        {{ errMsg }}
-    </div>
+        <td class="text-center d-none d-sm-table-cell">
+          <!--  Jason Steadman     Notes: Removed the ability for a user to change their own type.-->
+          <!-- ng-model="u.type" ng-change="saveUser(u)" ng-disabled="$parent.user.userID === u.userID" -->
+          <select [(ngModel)]="u.type" [disabled]="currentUserID === u.userID">
+            <option value="student" [selected]="u.type == 'student'">
+              Student
+            </option>
+            <option value="instructor" [selected]="u.type == 'instructor'">
+              Instructor
+            </option>
+            <option value="admin" [selected]="u.type == 'admin'">Admin</option>
+          </select>
+        </td>
+
+        <td class="text-center d-none d-sm-table-cell">
+          <button
+            *ngIf="UserModified(u)"
+            type="button"
+            class="btn btn-primary btn-sm"
+            (click)="SaveUserChanges(u)"
+          >
+            Save Changes
+          </button>
+        </td>
+      </tr>
+      <!-- To be moved to the profile page for the selected user -->
+    </tbody>
+  </table>
+  <div *ngIf="errMsg != ''" class="alert alert-danger">
+    {{ errMsg }}
+  </div>
 </div>

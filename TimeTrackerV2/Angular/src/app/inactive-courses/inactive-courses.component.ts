@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-inactive-courses',
@@ -31,16 +32,25 @@ export class InactiveCoursesComponent implements OnInit {
   }
 
   loadInactiveCourses(): void {
-    this.http.get<any>(`https://localhost:8080/api/Courses/${this.currentUser.userID}/getInactiveCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        console.log(data);
-        this.inactiveCourses = data.reverse();
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .get<any>(
+        `${environment.apiURL}/api/Courses/${this.currentUser.userID}/getInactiveCourses/`,
+        {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
+        }
+      )
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          console.log(data);
+          this.inactiveCourses = data.reverse();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   GoToCourse(courseID: number) {

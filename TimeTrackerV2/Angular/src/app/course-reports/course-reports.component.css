@@ -55,7 +55,7 @@
     /* Remove default bullets */
 
     /* List items style */
-    li {
+    :is(li) {
         background-color: #e9ecef;
         /* Even lighter grey background */
         border-radius: 8px;

@@ -6,6 +6,7 @@ import { formatDate } from '@angular/common';
 import { AbstractControl, FormGroup, UntypedFormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { environment } from '../../environments/environment';
 
 
 @Component({
@@ -124,7 +125,7 @@ export class ProjectComponent implements OnInit {
         // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
         console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
         this.projectID = this.router.getCurrentNavigation()?.extras.state?.projectID;
-        
+
         console.log("The current project is: " + this.projectID);
         if (this.projectID) {
             // get user type
@@ -156,19 +157,31 @@ export class ProjectComponent implements OnInit {
     }
 
     getActivities(): void {
-        this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/${this.projectID}/activities/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                this.errMsg = "";
-                console.log(`Data returned from API call for the function getActivites()\n` + JSON.stringify(data));
-                function lastFive(el: any, index: any, data: any) {
-                    return index >= data.length - 5;
-                }
-                this.activities = data.filter(lastFive).slice().reverse();
-            },
-            error: error => {
-                this.errMsg = error['error']['message'];
+        this.http
+          .get<any>(
+            `${environment.apiURL}/api/Users/${this.currentUser.userID}/${this.projectID}/activities/`,
+            {
+              headers: new HttpHeaders({
+                'Access-Control-Allow-Headers': 'Content-Type',
+              }),
             }
-        });
+          )
+          .subscribe({
+            next: (data) => {
+              this.errMsg = '';
+              console.log(
+                `Data returned from API call for the function getActivites()\n` +
+                  JSON.stringify(data)
+              );
+              function lastFive(el: any, index: any, data: any) {
+                return index >= data.length - 5;
+              }
+              this.activities = data.filter(lastFive).slice().reverse();
+            },
+            error: (error) => {
+              this.errMsg = error['error']['message'];
+            },
+          });
     }
 
     ngOnInit(): void {
@@ -183,15 +196,21 @@ export class ProjectComponent implements OnInit {
     }
 
     getProjectInfo(): void {
-        this.http.get<any>(`https://localhost:8080/api/ProjectInfo/${this.projectID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                this.errMsg = "";
-                this.project = data;
+        this.http
+          .get<any>(`${environment.apiURL}/api/ProjectInfo/${this.projectID}`, {
+            headers: new HttpHeaders({
+              'Access-Control-Allow-Headers': 'Content-Type',
+            }),
+          })
+          .subscribe({
+            next: (data) => {
+              this.errMsg = '';
+              this.project = data;
             },
-            error: error => {
-                this.errMsg = error['error']['message'];
-            }
-        });
+            error: (error) => {
+              this.errMsg = error['error']['message'];
+            },
+          });
     }
 
     clockIn(): void {
@@ -249,45 +268,69 @@ export class ProjectComponent implements OnInit {
     }
 
     loadProjectUserTimes(): void {
-        this.http.get<any>(`https://localhost:8080/api/Projects/${this.projectID}/Users/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                this.errMsg = "";
-                console.log(`Data returned from API call for the function loadProjectUserTimes()\n` + JSON.stringify(data));
-                this.projectUserTimes = data.reverse();
-                this.calculateTotalTime();
-                this.populateGraph();
-            },
-            error: error => {
-                this.errMsg = error['error']['message'];
+        this.http
+          .get<any>(
+            `${environment.apiURL}/api/Projects/${this.projectID}/Users/`,
+            {
+              headers: new HttpHeaders({
+                'Access-Control-Allow-Headers': 'Content-Type',
+              }),
             }
-        });
+          )
+          .subscribe({
+            next: (data) => {
+              this.errMsg = '';
+              console.log(
+                `Data returned from API call for the function loadProjectUserTimes()\n` +
+                  JSON.stringify(data)
+              );
+              this.projectUserTimes = data.reverse();
+              this.calculateTotalTime();
+              this.populateGraph();
+            },
+            error: (error) => {
+              this.errMsg = error['error']['message'];
+            },
+          });
     }
 
     loadProjectUsers(): void {
-        this.http.get<any>(`https://localhost:8080/api/AddToProject/${this.projectID}/InProject`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                this.errMsg = "";
-                console.log(`Data returned from API call for the function loadProjectUsers()\n` + JSON.stringify(data));
-                this.projectUsers = data;
-                for (let user of this.projectUsers) {
-                    if (Number(user.userID) === Number(this.userID)) {
-                        this.isProjectUser = true;
-                    }
-                }
-            },
-            error: error => {
-                this.errMsg = error['error']['message'];
+        this.http
+          .get<any>(
+            `${environment.apiURL}/api/AddToProject/${this.projectID}/InProject`,
+            {
+              headers: new HttpHeaders({
+                'Access-Control-Allow-Headers': 'Content-Type',
+              }),
             }
-        });
+          )
+          .subscribe({
+            next: (data) => {
+              this.errMsg = '';
+              console.log(
+                `Data returned from API call for the function loadProjectUsers()\n` +
+                  JSON.stringify(data)
+              );
+              this.projectUsers = data;
+              for (let user of this.projectUsers) {
+                if (Number(user.userID) === Number(this.userID)) {
+                  this.isProjectUser = true;
+                }
+              }
+            },
+            error: (error) => {
+              this.errMsg = error['error']['message'];
+            },
+          });
     }
 
     changeSubmitType(): void {
         this.manualTimeCardEntry = !this.manualTimeCardEntry;
-        localStorage.setItem('manualTimeCardEntry', JSON.stringify(this.manualTimeCardEntry));  // Save the new state for the local storage variable so when the user returns back to a project page, it loads the last used form used to submit a time card. 
+        localStorage.setItem('manualTimeCardEntry', JSON.stringify(this.manualTimeCardEntry));  // Save the new state for the local storage variable so when the user returns back to a project page, it loads the last used form used to submit a time card.
     }
 
     autoSubmit(): void {
-        // An extra check condition to prevent submission of the data unless for form is valid 
+        // An extra check condition to prevent submission of the data unless for form is valid
         if (!this.autoForm.valid) {
             return;
         }
@@ -309,28 +352,34 @@ export class ProjectComponent implements OnInit {
 
         console.log(JSON.stringify(req));  // For debugging
 
-        this.http.post<any>('https://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                this.errMsg = "";
-                console.log(`contents of \"req.isEdited\":` + req.isEdited);
+        this.http
+          .post<any>(`${environment.apiURL}/api/clock/`, req, {
+            headers: new HttpHeaders({
+              'Access-Control-Allow-Headers': 'Content-Type',
+            }),
+          })
+          .subscribe({
+            next: (data) => {
+              this.errMsg = '';
+              console.log(`contents of \"req.isEdited\":` + req.isEdited);
 
-                // Clear the input inside the form
-                this.autoForm.controls.description.setValue("");  // you can also us the code "this.description.setValue("");" because the code currently being used references this variable.
+              // Clear the input inside the form
+              this.autoForm.controls.description.setValue(''); // you can also us the code "this.description.setValue("");" because the code currently being used references this variable.
 
-                this.getActivities();
-                this.loadProjectUserTimes();
-                this.populateGraph();
+              this.getActivities();
+              this.loadProjectUserTimes();
+              this.populateGraph();
 
-                /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+              /// populate a label to inform the user that they successfully clocked out, maybe with the time.
             },
-            error: error => {
-                this.errMsg = error['error']['message'];
-            }
-        });
+            error: (error) => {
+              this.errMsg = error['error']['message'];
+            },
+          });
     }
 
     manualSubmit(): void {
-        // An extra check condition to prevent submission of the data unless for form is valid 
+        // An extra check condition to prevent submission of the data unless for form is valid
         if (!this.manualForm.valid) {
             return;
         }
@@ -349,27 +398,33 @@ export class ProjectComponent implements OnInit {
 
         //console.log(JSON.stringify(req));  // For debugging
 
-        this.http.post<any>('https://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                this.errMsg = "";
-                console.log(`contents of \"req.isEdited\":` + req.isEdited);
+        this.http
+          .post<any>(`${environment.apiURL}/api/clock/`, req, {
+            headers: new HttpHeaders({
+              'Access-Control-Allow-Headers': 'Content-Type',
+            }),
+          })
+          .subscribe({
+            next: (data) => {
+              this.errMsg = '';
+              console.log(`contents of \"req.isEdited\":` + req.isEdited);
 
-                // Clear the inputs inside the form
-                this.manualForm.controls.timecardStart.setValue("");
-                this.manualForm.controls.timecardEnd.setValue("");
-                this.manualForm.controls.description.setValue("");  // You can also us the code "this.description.setValue("");" because the code currently being used references this variable.
+              // Clear the inputs inside the form
+              this.manualForm.controls.timecardStart.setValue('');
+              this.manualForm.controls.timecardEnd.setValue('');
+              this.manualForm.controls.description.setValue(''); // You can also us the code "this.description.setValue("");" because the code currently being used references this variable.
 
-                this.getActivities();
-                this.loadProjectUserTimes();
-                this.populateGraph();
+              this.getActivities();
+              this.loadProjectUserTimes();
+              this.populateGraph();
 
-                /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+              /// populate a label to inform the user that they successfully clocked out, maybe with the time.
             },
-            error: error => {
-                this.errMsg = error['error']['message'];
-                alert(error.error.message);  // Alert the user to the message that the server sent back so they know they have reached their limit
-            }
-        });
+            error: (error) => {
+              this.errMsg = error['error']['message'];
+              alert(error.error.message); // Alert the user to the message that the server sent back so they know they have reached their limit
+            },
+          });
     }
 
     createGroup(): void {
@@ -379,16 +434,25 @@ export class ProjectComponent implements OnInit {
         }
         console.log(`Payload is:` + payload);
 
-        this.http.post<any>('https://localhost:8080/api/createGroup/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                this.errMsg = "";
-                localStorage.setItem('currentGroup', JSON.stringify(data['group']));
-                this.router.navigate(['./group']);
+        this.http
+          .post<any>(`${environment.apiURL}/api/createGroup/`, payload, {
+            headers: new HttpHeaders({
+              'Access-Control-Allow-Headers': 'Content-Type',
+            }),
+          })
+          .subscribe({
+            next: (data) => {
+              this.errMsg = '';
+              localStorage.setItem(
+                'currentGroup',
+                JSON.stringify(data['group'])
+              );
+              this.router.navigate(['./group']);
             },
-            error: error => {
-                this.errMsg = error['error']['message'];
-            }
-        });
+            error: (error) => {
+              this.errMsg = error['error']['message'];
+            },
+          });
     }
 
     startTimer(): void {
@@ -427,13 +491,13 @@ export class ProjectComponent implements OnInit {
     AddStudents() {
         let state = {projectID: this.projectID};
         // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
-        this.router.navigate(['/add-students-project'], { state });    
+        this.router.navigate(['/add-students-project'], { state });
     }
 
     Edit() {
         let state = {projectID: this.projectID};
         // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
-        this.router.navigate(['/edit-project'], { state });    
+        this.router.navigate(['/edit-project'], { state });
     }
 
     delete() {
@@ -441,20 +505,29 @@ export class ProjectComponent implements OnInit {
             let req = {
                 projectID: this.projectID
             };
-            
-            this.http.post<any>('https://localhost:8080/api/deleteProject/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-                next: data => {
-                    this.errMsg = "";
 
-                    let state = {courseID: this.project.courseID};
-                    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
-                    // This method of navigating is special, the "replaceUrl" will make it will prevent the user from going back to this page when they delete the project.  This is documented here https://angular.io/api/router/NavigationBehaviorOptions
-                    this.router.navigate(['/course'], { replaceUrl: true, state });
+            this.http
+              .post<any>(`${environment.apiURL}/api/deleteProject/`, req, {
+                headers: new HttpHeaders({
+                  'Access-Control-Allow-Headers': 'Content-Type',
+                }),
+              })
+              .subscribe({
+                next: (data) => {
+                  this.errMsg = '';
+
+                  let state = { courseID: this.project.courseID };
+                  // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+                  // This method of navigating is special, the "replaceUrl" will make it will prevent the user from going back to this page when they delete the project.  This is documented here https://angular.io/api/router/NavigationBehaviorOptions
+                  this.router.navigate(['/course'], {
+                    replaceUrl: true,
+                    state,
+                  });
                 },
-                error: error => {
-                    this.errMsg = error['error']['message'];
-                }
-            });
+                error: (error) => {
+                  this.errMsg = error['error']['message'];
+                },
+              });
         }
     }
 
@@ -470,7 +543,7 @@ export class ProjectComponent implements OnInit {
                 timeslotID: timeslotID
             };
 
-            this.http.post<any>('https://localhost:8080/api/deleteTimeCard/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
+            this.http.post<any>(`${environment.apiURL}/api/deleteTimeCard/`, req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
                 next: data => {
                     this.errMsg = "";
                     window.location.reload();
@@ -489,7 +562,7 @@ export class ProjectComponent implements OnInit {
     }
 
     instructorManualSubmit() : void {
-        // An extra check condition to prevent submission of the data unless for form is valid 
+        // An extra check condition to prevent submission of the data unless for form is valid
         if (!this.instructorManualForm.valid) {
             return;
         }
@@ -508,27 +581,33 @@ export class ProjectComponent implements OnInit {
 
         //console.log(JSON.stringify(req));  // For debugging
 
-        this.http.post<any>('https://localhost:8080/api/clock/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                this.errMsg = "";
-                console.log(`contents of \"req.isEdited\":` + req.isEdited);
+        this.http
+          .post<any>(`${environment.apiURL}/api/clock/`, req, {
+            headers: new HttpHeaders({
+              'Access-Control-Allow-Headers': 'Content-Type',
+            }),
+          })
+          .subscribe({
+            next: (data) => {
+              this.errMsg = '';
+              console.log(`contents of \"req.isEdited\":` + req.isEdited);
 
-                // Clear the inputs inside the form
-                this.instructorManualForm.controls.studentID.setValue("");
-                this.instructorManualForm.controls.timecardStart.setValue("");
-                this.instructorManualForm.controls.timecardEnd.setValue("");
-                this.instructorManualForm.controls.description.setValue("");  // You can also us the code "this.description.setValue("");" because the code currently being used references this variable.
+              // Clear the inputs inside the form
+              this.instructorManualForm.controls.studentID.setValue('');
+              this.instructorManualForm.controls.timecardStart.setValue('');
+              this.instructorManualForm.controls.timecardEnd.setValue('');
+              this.instructorManualForm.controls.description.setValue(''); // You can also us the code "this.description.setValue("");" because the code currently being used references this variable.
 
-                this.getActivities();
-                this.loadProjectUserTimes();
-                this.populateGraph();
+              this.getActivities();
+              this.loadProjectUserTimes();
+              this.populateGraph();
 
-                /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+              /// populate a label to inform the user that they successfully clocked out, maybe with the time.
             },
-            error: error => {
-                this.errMsg = error['error']['message'];
-                alert(error.error.message);  // Alert the user to the message that the server sent back so they know they have reached their limit
-            }
-        });
+            error: (error) => {
+              this.errMsg = error['error']['message'];
+              alert(error.error.message); // Alert the user to the message that the server sent back so they know they have reached their limit
+            },
+          });
     }
 }

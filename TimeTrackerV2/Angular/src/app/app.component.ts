@@ -22,19 +22,19 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     let currentUser = localStorage.getItem('currentUser');
-    var userDate = currentUser ? JSON.parse(currentUser) : null;
-    this.userType = userDate?.type;
-    this.userID = userDate?.userID;
+    var userData = currentUser ? JSON.parse(currentUser) : null;
+    this.userType = userData?.type;
+    this.userID = userData?.userID;
     if (this.userType === 'admin') {
       this.admin = true;
-      this.name = userDate.firstName + ' ' + userDate.lastName;
+      this.name = userData.firstName + ' ' + userData.lastName;
     }
     else if (this.userType === 'instructor') {
       this.instructor = true;
-      this.name = userDate.firstName + ' ' + userDate.lastName;
+      this.name = userData.firstName + ' ' + userData.lastName;
     } else if (this.userType === 'student') {
       this.student = true;
-      this.name = userDate.firstName + ' ' + userDate.lastName;
+      this.name = userData.firstName + ' ' + userData.lastName;
     } else {
       this.nullType = true;
     }
@@ -42,6 +42,21 @@ export class AppComponent implements OnInit {
   }
   title = 'TimeTrackerV2';
 
+  // Used for dropdown for View Profile and Logout
+  onUserOptionChange(event: Event) {
+    const selectedOption = (event.target as HTMLSelectElement).value;
+  
+    if (selectedOption === 'viewProfile') {
+      this.ViewProfile();
+    } 
+    else if (selectedOption === '#') {
+      window.location.href = selectedOption;  // Directly sets the location for Logout
+    }
+  
+    // Reset dropdown selection after action
+    (event.target as HTMLSelectElement).selectedIndex = 0;
+  }
+  
   ViewProfile() {
     let state = {userID: this.userID};
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-user-profile',
@@ -57,19 +58,28 @@ export class UserProfileComponent {
   }
 
   loadProfile(): void {
-    this.http.get<any>(`https://localhost:8080/api/UserProfile/${this.viewingUserID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        this.userProfile = data;
-        if (this.userProfile) {
-          localStorage.setItem("userProfile", JSON.stringify(this.userProfile));
-        }
-      },
-      error: error => {
-        ("Error reached");
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .get<any>(`${environment.apiURL}/api/UserProfile/${this.viewingUserID}`, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.userProfile = data;
+          if (this.userProfile) {
+            localStorage.setItem(
+              'userProfile',
+              JSON.stringify(this.userProfile)
+            );
+          }
+        },
+        error: (error) => {
+          ('Error reached');
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
     NavToEditProfile() {
@@ -96,31 +106,36 @@ export class UserProfileComponent {
                 let requestBody = {
                     userID: this.viewingUserID
                 };
-    
+
                 // This http delete request will delete the account attached to the user with the userID as specified in the body of the request, it will then remove the user from the local list of users so that the UI and the DB match.
                 // This code is also formatted so that it will handle any 500 status codes the server sends here and it will display the message to the user.  Source for this code format with some alterations https://stackoverflow.com/a/52610468
-                this.http.delete("https://localhost:8080/api/deleteAccount", { body: requestBody }).subscribe((res: any) => {    
-                    // Notify the user that the user has been deleted
-                    this.ShowMessage(res.message);
+                this.http
+                  .delete(`${environment.apiURL}/api/deleteAccount`, {
+                    body: requestBody,
+                  })
+                  .subscribe(
+                    (res: any) => {
+                      // Notify the user that the user has been deleted
+                      this.ShowMessage(res.message);
 
-                    // If the user owns the account, then redirect them back to the login page
-                    if(this.sameUser) {
-                        this.router.navigate(['']);  // We don't flush the current user from local storage here, because this is done inside the login component 
-                    }
-                    else {
+                      // If the user owns the account, then redirect them back to the login page
+                      if (this.sameUser) {
+                        this.router.navigate(['']); // We don't flush the current user from local storage here, because this is done inside the login component
+                      } else {
                         this.router.navigate(['/users']);
+                      }
+                    },
+                    (err) => {
+                      this.ShowMessage(err.error.message);
                     }
-                },
-                err => {
-                    this.ShowMessage(err.error.message);
-                });
+                  );
             }
             // The user doesn't want to delete the user (for debugging only)
             /*else {
                 console.log("User not deleted");
             }*/
         }
-    
+
 
     //#region Helper functions
     // Open an alert window with the supplied message

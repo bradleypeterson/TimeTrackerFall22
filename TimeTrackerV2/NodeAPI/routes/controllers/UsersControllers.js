@@ -8,7 +8,8 @@ exports.GetUserInfo = (req, res) => {
     let userID = req.params["id"];
     console.log("userID: " + userID)
 
-    let sql = `SELECT firstName, lastName, type, isActive
+    // added isApproved
+    let sql = `SELECT firstName, lastName, type, isApproved, isActive
         FROM Users
         WHERE userID = ?`;
 
@@ -25,7 +26,8 @@ exports.GetUserInfo = (req, res) => {
 exports.GetUsersInfo = (req, res) => {
     console.log("UsersControllers.js file/GetUsersInfo route called");
 
-    let sql = `SELECT userID, username, firstName, lastName, type, isActive
+    // added isApproved
+    let sql = `SELECT userID, username, firstName, lastName, type, isApproved, isActive
         FROM Users`;
 
     db.all(sql, [], (err, rows) => {
@@ -95,3 +97,21 @@ exports.GetRecentUsers = (req, res) => {
         }
     });
 }
+
+exports.GetUsersPendingApproval = (req, res) => {
+    console.log("UsersController.js file/GetUsersPendingApproval route called");
+
+    let sql = `SELECT COUNT(*) as count
+               FROM Users
+               WHERE isApproved = 0`;
+
+    db.get(sql, [], (err, row) => {
+        if (err) {
+            console.error("Error fetching users pending approval:", err);
+            return res.status(500).json({ message: 'Database error' });
+        }
+        res.json(row);  // Returns count of users waiting for approval
+    });
+}
+
+// added isApproved to all relevant statements

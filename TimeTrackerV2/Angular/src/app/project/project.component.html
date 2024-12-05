@@ -32,7 +32,8 @@
                     "Switch to Manual Mode"}}</button>
             </div> -->
             <div class="row">
-                <button (click)="changeSubmitType()" class="btn btn-secondary">{{manualTimeCardEntry ? "Switch to AutoMode" : "Switch to Manual Mode"}}</button>
+                <button (click)="changeSubmitType()" class="btn btn-secondary">{{manualTimeCardEntry ? "Switch to
+                    AutoMode" : "Switch to Manual Mode"}}</button>
             </div>
 
             <!-- Auto time card -->
@@ -191,9 +192,10 @@
                     </thead>
                     <tbody>
                         <!-- This section code will only allow timecards that the timeslotID variable is not null, this is because the API call that stores to projectUserTimes will return all users in the project, even those that have no timecard.  So this will make sure that the user has a timecard so it knows if it should be rendered or not https://stackoverflow.com/a/38379389 -->
-                        <ng-container *ngFor="let user of projectUserTimes | paginate: { itemsPerPage: 10, currentPage: p }" >
+                        <ng-container
+                            *ngFor="let user of projectUserTimes | paginate: { itemsPerPage: 10, currentPage: p }">
                             <tr *ngIf="user.timeslotID">
-                                <td >{{user.firstName}} {{user.lastName}}</td>
+                                <td>{{user.firstName}} {{user.lastName}}</td>
                                 <td>{{user.timeIn | date:'medium'}}</td>
                                 <td>{{user.timeOut | date:'medium'}}</td>
                                 <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
@@ -265,7 +267,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *ngFor="let user of projectUserTimes | paginate: { itemsPerPage: 10, currentPage: p }" >
+                        <ng-container
+                            *ngFor="let user of projectUserTimes | paginate: { itemsPerPage: 10, currentPage: p }">
                             <tr *ngIf="user.timeslotID">
                                 <td>{{user.firstName}} {{user.lastName}}</td>
                                 <td>{{user.timeIn | date:'medium'}}</td>
@@ -292,10 +295,10 @@
                     </canvas>
                 </div>
             </div>
-    
+
             <!-- Time Card Creation -->
             <div class="col-6" *ngIf="project.isActive">
-    
+
                 <!-- Instructor Manual time card -->
                 <div class="col">
                     <div class="row">
@@ -305,19 +308,19 @@
                         <form [formGroup]="instructorManualForm" (ngSubmit)="instructorManualSubmit()">
                             <!-- Student names drop down row -->
                             <div class="row mt-2">
-                                    <label for="studentID">Select student</label>
-                                    <select formControlName="studentID" id="studentID" class="form-control" required>
-                                        <option value="">None</option>
-                                        <ng-container *ngFor="let user of projectUsers" >
-                                            <option value="{{user.userID}}">{{user.firstName}} {{user.lastName}}</option>
-                                        </ng-container>
-                                    </select>
+                                <label for="studentID">Select student</label>
+                                <select formControlName="studentID" id="studentID" class="form-control" required>
+                                    <option value="">None</option>
+                                    <ng-container *ngFor="let user of projectUsers">
+                                        <option value="{{user.userID}}">{{user.firstName}} {{user.lastName}}</option>
+                                    </ng-container>
+                                </select>
                             </div>
                             <!-- Start time row -->
                             <div class="row mt-2">
                                 <label for="Start">Start Time</label>
-                                <input formControlName="timecardStart" type="datetime-local" id="Start" class="form-control"
-                                    required>
+                                <input formControlName="timecardStart" type="datetime-local" id="Start"
+                                    class="form-control" required>
                             </div>
                             <!-- End time row -->
                             <div class="row mt-2">
@@ -387,16 +390,20 @@
                             <th scope="col">Time In</th>
                             <th scope="col">Time Out</th>
                             <th scope="col">Total Time</th>
+                            <th scope="col">Description</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <ng-container *ngFor="let user of projectUserTimes | paginate: { itemsPerPage: 10, currentPage: p }" >
+                        <ng-container
+                            *ngFor="let user of projectUserTimes | paginate: { itemsPerPage: 10, currentPage: p }">
                             <tr *ngIf="user.timeslotID">
                                 <td>{{user.firstName}} {{user.lastName}}</td>
                                 <td>{{user.timeIn | date:'medium'}}</td>
                                 <td>{{user.timeOut | date:'medium'}}</td>
                                 <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
+                                <td>{{user.description}}</td>
+
                                 <td>
                                     <div class="btn-group float-right">
                                         <button class="btn btn-secondary"
