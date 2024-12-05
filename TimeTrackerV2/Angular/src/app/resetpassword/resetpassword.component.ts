@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import CryptoES from 'crypto-es';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-resetpassword',
@@ -62,13 +63,20 @@ export class ResetpasswordComponent implements OnInit {
             salt: salt
         };
 
-        this.http.put(`https://localhost:8080/api/resetPassword/${this.userID}`, requestBody).subscribe((res: any) => {
-            this.ShowMessage(res.message);
-            this.NavigateBackToProfile();
-        },
-        err => {
-            this.ShowMessage(err.error.message);
-        });
+        this.http
+          .put(
+            `${environment.apiURL}/api/resetPassword/${this.userID}`,
+            requestBody
+          )
+          .subscribe(
+            (res: any) => {
+              this.ShowMessage(res.message);
+              this.NavigateBackToProfile();
+            },
+            (err) => {
+              this.ShowMessage(err.error.message);
+            }
+          );
     }
 
     NavigateBackToProfile() {

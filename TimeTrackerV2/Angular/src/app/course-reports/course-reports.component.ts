@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-
+import { environment } from '../../environments/environment';
 // Interfaces
 // interface TimeLog {
 //     date: Date;
@@ -48,7 +48,7 @@ export class CourseReportsComponent implements OnInit {
         // The below line of code will grab the section of the URL that is ":id" and store it into the variable courseID.  Where I found this code https://stackoverflow.com/questions/44864303/send-data-through-routing-paths-in-angular
         // The '!' at the end is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be
         // this.courseID = Number(this.route.snapshot.paramMap.get('id')!);
-        
+
         // This will grab values from the state variable of the navigate function we defined while navigating to the page THAT MAKES USE OF THIS COMPONENT I.E. the course component.  This solution was found here https://stackoverflow.com/a/54365098
         this.courseID = this.router.getCurrentNavigation()?.extras.state?.courseID;
      }
@@ -79,31 +79,33 @@ export class CourseReportsComponent implements OnInit {
     getStudentReports(courseID: number): StudentReport[] {
         let returnData: StudentReport[] = []
 
-        this.http.get(`https://localhost:8080/api/Course/${courseID}/GetReportsData`).subscribe((data: any) => {
+        this.http
+          .get(`${environment.apiURL}/api/Course/${courseID}/GetReportsData`)
+          .subscribe((data: any) => {
             // console.log("Data returned\n" + JSON.stringify(data));
 
             // for every entry in data
             data.forEach((entry: any) => {
-                // console.log("Processing the data:\n" + JSON.stringify(entry));
-                var toBeAdded: StudentReport = {
-                    id: entry.userID,
-                    studentName: entry.studentName,
-                    projects: [],  // See about using map here
-                };
+              // console.log("Processing the data:\n" + JSON.stringify(entry));
+              var toBeAdded: StudentReport = {
+                id: entry.userID,
+                studentName: entry.studentName,
+                projects: [], // See about using map here
+              };
 
-                // for every project in entry.projects
-                entry.projects.forEach((project: any, index: number) => {
-                    toBeAdded.projects.push({
-                        id: project.projectID,
-                        name: project.projectName,
-                        totalTime: project.totalTime,
-                    });
+              // for every project in entry.projects
+              entry.projects.forEach((project: any, index: number) => {
+                toBeAdded.projects.push({
+                  id: project.projectID,
+                  name: project.projectName,
+                  totalTime: project.totalTime,
                 });
+              });
 
-                // after processing the data, add it to the array "returnData" and increment the value of cardID
-                returnData.push(toBeAdded);
+              // after processing the data, add it to the array "returnData" and increment the value of cardID
+              returnData.push(toBeAdded);
             });
-        });
+          });
 
         return returnData;
     }
@@ -125,7 +127,7 @@ export class CourseReportsComponent implements OnInit {
             const nameMatch = !studentName || report.studentName.toLowerCase().includes(studentName);
 
             return nameMatch;  // If the name matches, then the variable "report" is included inside the array "this.filteredStudents".
-        });        
+        });
     }
 
     ViewStudentProfile(userID: number) {

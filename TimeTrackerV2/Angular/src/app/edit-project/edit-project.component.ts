@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-edit-project',
@@ -27,7 +28,7 @@ export class EditProjectComponent implements OnInit {
       }
 
       // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
-      console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only    
+      console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
       this.projectID = this.router.getCurrentNavigation()?.extras.state?.projectID;
     }
 
@@ -52,20 +53,32 @@ export class EditProjectComponent implements OnInit {
   }
 
   getProjectInfo(): void {
-    this.http.get<any>(`https://localhost:8080/api/ProjectInfo/${this.projectID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-        next: data => {
-            this.errMsg = "";
-            this.project = data;
-            if (this.project) {
-              this.editProjectForm.controls['projectName'].setValue(this.project.projectName);
-              this.editProjectForm.controls['description'].setValue(this.project.description);
-              this.editProjectForm.controls['isActive'].setValue(this.project.isActive);
-            }
+    this.http
+      .get<any>(`${environment.apiURL}/api/ProjectInfo/${this.projectID}`, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.project = data;
+          if (this.project) {
+            this.editProjectForm.controls['projectName'].setValue(
+              this.project.projectName
+            );
+            this.editProjectForm.controls['description'].setValue(
+              this.project.description
+            );
+            this.editProjectForm.controls['isActive'].setValue(
+              this.project.isActive
+            );
+          }
         },
-        error: error => {
-            this.errMsg = error['error']['message'];
-        }
-    });
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   editProjectForm = this.formBuilder.group({
@@ -76,11 +89,11 @@ export class EditProjectComponent implements OnInit {
   });
 
   onSubmit(): void {
-    // An extra check condition to prevent submission of the data unless the form is valid 
+    // An extra check condition to prevent submission of the data unless the form is valid
     if(!this.editProjectForm.valid) {
         return;
     }
-    
+
     let payload = {
       projectName: this.editProjectForm.value['projectName'],
       description: this.editProjectForm.value['description'],
@@ -88,15 +101,21 @@ export class EditProjectComponent implements OnInit {
       projectID: this.projectID,
     }
 
-    this.http.post<any>(`https://localhost:8080/api/editProject`, payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
-      next: data => {
-        this.errMsg = "";
-        this.NavigateBackToProject();
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/editProject`, payload, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.NavigateBackToProject();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   NavigateBackToProject() {

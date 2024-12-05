@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-edit-profile',
@@ -38,30 +39,45 @@ export class EditProfileComponent implements OnInit {
   }
 
   loadProfile(): void {
-    this.http.get<any>(`https://localhost:8080/api/UserProfile/${this.userID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        this.profileData = data;
-        if (this.profileData) {
-          localStorage.setItem("userProfile", JSON.stringify(this.profileData));
-          let temp = localStorage.getItem('userProfile');
-          if(temp){
-            const prof = JSON.parse(temp);  
-            for(let profile of prof){
-              if(Number(this.userID) === Number(profile.userID)){
-                this.userProfile = profile;
+    this.http
+      .get<any>(`${environment.apiURL}/api/UserProfile/${this.userID}`, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.profileData = data;
+          if (this.profileData) {
+            localStorage.setItem(
+              'userProfile',
+              JSON.stringify(this.profileData)
+            );
+            let temp = localStorage.getItem('userProfile');
+            if (temp) {
+              const prof = JSON.parse(temp);
+              for (let profile of prof) {
+                if (Number(this.userID) === Number(profile.userID)) {
+                  this.userProfile = profile;
+                }
               }
+              this.editProfileForm.controls['pronouns'].setValue(
+                this.userProfile.pronouns
+              );
+              this.editProfileForm.controls['bio'].setValue(
+                this.userProfile.bio
+              );
+              this.editProfileForm.controls['contact'].setValue(
+                this.userProfile.contact
+              );
             }
-            this.editProfileForm.controls['pronouns'].setValue(this.userProfile.pronouns);
-            this.editProfileForm.controls['bio'].setValue(this.userProfile.bio);
-            this.editProfileForm.controls['contact'].setValue(this.userProfile.contact);
           }
-        }
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   onSubmit(): void {
@@ -74,16 +90,22 @@ export class EditProfileComponent implements OnInit {
 
     console.log("onSubmit reached");
 
-    this.http.post<any>('https://localhost:8080/api/EditProfile', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
-      next: data => {
-        this.errMsg = "";
-        console.log("data posted");
-        this.NavigateBackToProfile();
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/EditProfile`, payload, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          console.log('data posted');
+          this.NavigateBackToProfile();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   NavigateBackToProfile() {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-dashboard',
@@ -77,31 +78,38 @@ export class DashboardComponent implements OnInit {
 
   // Checks if any users are awaiting approval
   checkForPendingApproval() {
-    this.http.get<any>("https://localhost:8080/api/UsersPendingApproval", { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) })
-        .subscribe({
-            next: data => {
-                this.awaitingApprovalCount = data.count;  // Stores count returned by the API
-            },
-            error: err => {
-                console.error('Error fetching pending approval count', err);
-            }
-        });
+    this.http
+      .get<any>(`${environment.apiURL}/api/UsersPendingApproval`, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.awaitingApprovalCount = data.count; // Stores count returned by the API
+        },
+        error: (err) => {
+          console.error('Error fetching pending approval count', err);
+        },
+      });
 }
 
   // get projects student is in
   loadProjects(): void {
-    this.http.get(`https://localhost:8080/api/ProjectsForUser/${this.userID}`).subscribe((data: any) => {
-      this.projects = data;
-      if (this.projects) {
-        localStorage.setItem("projects", JSON.stringify(this.projects));
-      }
-    });
+    this.http
+      .get(`${environment.apiURL}/api/ProjectsForUser/${this.userID}`)
+      .subscribe((data: any) => {
+        this.projects = data;
+        if (this.projects) {
+          localStorage.setItem('projects', JSON.stringify(this.projects));
+        }
+      });
   }
 
   loadCourses(): void {
     // attempt to pull only the courses the instructor has created
     if (this.instructor) {
-      var request = `https://localhost:8080/api/Courses/${this.userID}`;
+      var request = `${environment.apiURL}/api/Courses/${this.userID}`;
       this.http.get(request).subscribe((data: any) => {
         console.log(data);
         this.courses = data;
@@ -113,7 +121,7 @@ export class DashboardComponent implements OnInit {
 
     // attempt to pull the courses that the student is registered for
     else if (this.student) {
-      var request = `https://localhost:8080/api/Users/${this.userID}/getUserCourses`
+      var request = `${environment.apiURL}/api/Users/${this.userID}/getUserCourses`;
       this.http.get(request).subscribe((data: any) => {
         console.log(data);
         this.courses = data;
@@ -126,37 +134,52 @@ export class DashboardComponent implements OnInit {
 
   // get courses student has applied for
   loadPenUserCourses(): void {
-    this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/getCoursesPendCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        console.log(data);
-        this.PendUserCourses = data;
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .get<any>(
+        `${environment.apiURL}/api/Users/${this.currentUser.userID}/getCoursesPendCourses/`,
+        {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
+        }
+      )
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          console.log(data);
+          this.PendUserCourses = data;
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   // for admins, load 8 most recent users
   loadRecentUsers(): void {
-    this.http.get(`https://localhost:8080/api/GetRecentUsers/`).subscribe((data: any) => {
-      this.recentUsers = data;
-    });
+    this.http
+      .get(`${environment.apiURL}/api/GetRecentUsers/`)
+      .subscribe((data: any) => {
+        this.recentUsers = data;
+      });
   }
 
   // for admins, load 8 most recent courses
   loadRecentCourses(): void {
-    this.http.get(`https://localhost:8080/api/GetRecentCourses/`).subscribe((data: any) => {
-      this.recentCourses = data;
-    });
+    this.http
+      .get(`${environment.apiURL}/api/GetRecentCourses/`)
+      .subscribe((data: any) => {
+        this.recentCourses = data;
+      });
   }
 
   // for admins, load 8 most recent projects
   loadRecentProjects(): void {
-    this.http.get(`https://localhost:8080/api/GetRecentProjects/`).subscribe((data: any) => {
-      this.recentProjects = data;
-    });
+    this.http
+      .get(`${environment.apiURL}/api/GetRecentProjects/`)
+      .subscribe((data: any) => {
+        this.recentProjects = data;
+      });
   }
 
   // navigate to course page
@@ -180,18 +203,24 @@ export class DashboardComponent implements OnInit {
       courseID: CourseId
     };
 
-    this.http.post<any>('https://localhost:8080/api/removePendUser/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        // Refresh the data on the page
-        this.loadCourses();
-        // The following line will refresh the page
-        location.reload();
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/removePendUser/`, req, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          // Refresh the data on the page
+          this.loadCourses();
+          // The following line will refresh the page
+          location.reload();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   // instructor denies a student for a course
@@ -201,32 +230,47 @@ export class DashboardComponent implements OnInit {
       courseID: CourseId
     };
 
-    this.http.post<any>('https://localhost:8080/api/removePendUser/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        // Refresh the data on the page
-        this.loadCourses();
-        // The following line will refresh the page
-        location.reload();
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/removePendUser/`, req, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          // Refresh the data on the page
+          this.loadCourses();
+          // The following line will refresh the page
+          location.reload();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   // get students who have applied to courses for the instructor
   loadInstrPenUserCourses(): void {
-    this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/getPendInstrCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        console.log(data);
-        this.PendInstrCourses = data;
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .get<any>(
+        `${environment.apiURL}/api/Users/${this.currentUser.userID}/getPendInstrCourses/`,
+        {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
+        }
+      )
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          console.log(data);
+          this.PendInstrCourses = data;
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   // instructor approves student application to course
@@ -240,16 +284,22 @@ export class DashboardComponent implements OnInit {
       courseID: CourseId
     };
 
-    this.http.post<any>('https://localhost:8080/api/addUserCourse/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        this.cancelIns(CourseId, UserID);
-        // this.loadCourses();
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/addUserCourse/`, req, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.cancelIns(CourseId, UserID);
+          // this.loadCourses();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
 
   }
 

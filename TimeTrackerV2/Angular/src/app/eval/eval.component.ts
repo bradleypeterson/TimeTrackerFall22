@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { environment } from '../../environments/environment';
 
 interface Question {
   questionText: string;
@@ -62,13 +63,17 @@ export class EvalComponent implements OnInit {
 
 
   fetchEval() {
-    this.http.get<any[]>(`https://localhost:8080/api/getAssignedEvals/${this.evaluateeID}`).subscribe(
-      response => {
-        console.log("Response received:", response);
+    this.http
+      .get<any[]>(
+        `${environment.apiURL}/api/getAssignedEvals/${this.evaluateeID}`
+      )
+      .subscribe(
+        (response) => {
+          console.log('Response received:', response);
 
-        let evalIDs: any[] = [];
+          let evalIDs: any[] = [];
 
-        if (response.length > 0) {
+          if (response.length > 0) {
             // for (let i = 0; i < response.length; i++) {
             //     for (let j = 0; j < evalIDs.length; j++) {
             //       if (response[i].evaluatorID === evalIDs[j]) {
@@ -82,38 +87,39 @@ export class EvalComponent implements OnInit {
             //     if (push === true) evalIDs.push(response[i].evaluatorID);
             // }
 
-        
             response.forEach(function (question) {
-                if (!evalIDs.includes(question.evaluatorID)) {
-                    evalIDs.push(question.evaluatorID);
-                }
-                console.log(evalIDs);
+              if (!evalIDs.includes(question.evaluatorID)) {
+                evalIDs.push(question.evaluatorID);
+              }
+              console.log(evalIDs);
             });
 
-
-
-          if (response[0] instanceof Array) {
-            // Response is a 2-D array of QuestionGroup
-            this.questionGroups = response.map((group: Question[]) => ({
-              projectName: group[0]?.projectName || 'Default Project',
-              questions: group,
-              evalIDs: evalIDs
-            }));
+            if (response[0] instanceof Array) {
+              // Response is a 2-D array of QuestionGroup
+              this.questionGroups = response.map((group: Question[]) => ({
+                projectName: group[0]?.projectName || 'Default Project',
+                questions: group,
+                evalIDs: evalIDs,
+              }));
+            } else {
+              // Response is a 1-D array of Question, wrap it in a single QuestionGroup
+              this.questionGroups = [
+                {
+                  projectName: response[0]?.projectName || 'Default Project',
+                  questions: response,
+                },
+              ];
+            }
           } else {
-            // Response is a 1-D array of Question, wrap it in a single QuestionGroup
-            this.questionGroups = [{
-              projectName: response[0]?.projectName || 'Default Project',
-              questions: response,
-            }];
+            this.questionGroups = [];
           }
-        } else {
-          this.questionGroups = [];
-        }
 
-        this.forms = this.questionGroups.map(group => this.createFormGroupForGroup(group.questions));
-      },
-      error => console.error('Error fetching questions:', error)
-    );
+          this.forms = this.questionGroups.map((group) =>
+            this.createFormGroupForGroup(group.questions)
+          );
+        },
+        (error) => console.error('Error fetching questions:', error)
+      );
   }
 
   private createFormGroupForGroup(questions: Question[]): FormGroup {
@@ -132,7 +138,7 @@ export class EvalComponent implements OnInit {
 
     const responses = form.value;
     console.log('responses:', responses);
-    const apiUrl = 'https://localhost:8080/api/submitResponses'; // Replace with the actual API endpoint
+    const apiUrl = `${environment.apiURL}/api/submitResponses`; // Replace with the actual API endpoint
 
     this.http.post(apiUrl, responses).subscribe(
       () => {

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-view-report',
@@ -45,43 +46,64 @@ export class ViewReportComponent implements OnInit {
     GetUserInfo(): void {
         console.log(`Grabbing the user's info that has the userID of \"${this.sID}\"`);
 
-        this.http.get<any>(`https://localhost:8080/api/GetUserInfo/${this.sID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                this.errMsg = "";
-                this.studentName = `${data.firstName} ${data.lastName}`;
+        this.http
+          .get<any>(`${environment.apiURL}/api/GetUserInfo/${this.sID}`, {
+            headers: new HttpHeaders({
+              'Access-Control-Allow-Headers': 'Content-Type',
+            }),
+          })
+          .subscribe({
+            next: (data) => {
+              this.errMsg = '';
+              this.studentName = `${data.firstName} ${data.lastName}`;
             },
-            error: error => {
-                this.errMsg = error['error']['message'];
-            }
-        });
+            error: (error) => {
+              this.errMsg = error['error']['message'];
+            },
+          });
     }
 
     GetProjectInfo(): void {
         console.log(`Grabbing the project's info that has the projectID of \"${this.pID}\"`);
 
-        this.http.get<any>(`https://localhost:8080/api/ProjectInfo/${this.pID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                this.errMsg = "";
-                this.projectName = data.projectName;
+        this.http
+          .get<any>(`${environment.apiURL}/api/ProjectInfo/${this.pID}`, {
+            headers: new HttpHeaders({
+              'Access-Control-Allow-Headers': 'Content-Type',
+            }),
+          })
+          .subscribe({
+            next: (data) => {
+              this.errMsg = '';
+              this.projectName = data.projectName;
             },
-            error: error => {
-                this.errMsg = error['error']['message'];
-            }
-        });
+            error: (error) => {
+              this.errMsg = error['error']['message'];
+            },
+          });
     }
 
     GetDetailedReport(): void {
         console.log(`Finding the reports for the user with the id of \"${this.sID}\" for the project with the id of \"${this.pID}\"`);
 
-        this.http.get<any>(`https://localhost:8080/api/Users/${this.sID}/${this.pID}/activities/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                this.errMsg = "";
-                this.timeTables = data.reverse();
-            },
-            error: error => {
-                this.errMsg = error['error']['message'];
+        this.http
+          .get<any>(
+            `${environment.apiURL}/api/Users/${this.sID}/${this.pID}/activities/`,
+            {
+              headers: new HttpHeaders({
+                'Access-Control-Allow-Headers': 'Content-Type',
+              }),
             }
-        });
+          )
+          .subscribe({
+            next: (data) => {
+              this.errMsg = '';
+              this.timeTables = data.reverse();
+            },
+            error: (error) => {
+              this.errMsg = error['error']['message'];
+            },
+          });
     }
 
     GoBackToCourse() {

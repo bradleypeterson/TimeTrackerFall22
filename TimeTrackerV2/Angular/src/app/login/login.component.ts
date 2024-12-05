@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 import CryptoES from 'crypto-es';
 import { environment } from '../../environments/environment';
 
-
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',

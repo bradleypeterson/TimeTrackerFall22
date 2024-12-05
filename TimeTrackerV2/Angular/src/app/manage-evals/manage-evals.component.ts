@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 interface EvalTemplate {
   templateID: string;
@@ -94,7 +95,7 @@ export class ManageEvalsComponent implements OnInit {
   loadTemplates() {
     this.http
       .get<EvalTemplate[]>(
-        `https://localhost:8080/api/templates/${this.evaluatorID}`
+        `${environment.apiURL}/api/templates/${this.evaluatorID}`
       )
       .subscribe(
         (data) => {
@@ -107,7 +108,7 @@ export class ManageEvalsComponent implements OnInit {
 
   LoadQuestionTypes() {
     this.http
-      .get<string[]>('https://localhost:8080/api/questionTypes')
+      .get<string[]>(`${environment.apiURL}/api/questionTypes`)
       .subscribe(
         (data) => {
           this.questionTypes = data;
@@ -123,7 +124,7 @@ export class ManageEvalsComponent implements OnInit {
     this.selectedTemplateId = templateId;
 
     this.http
-      .get<Question[]>(`https://localhost:8080/api/questions/${templateId}`)
+      .get<Question[]>(`${environment.apiURL}/api/questions/${templateId}`)
       .subscribe(
         (data) => {
           this.selectedTemplateQuestions = data;
@@ -145,7 +146,7 @@ export class ManageEvalsComponent implements OnInit {
     if (this.selectedTemplateId) {
       this.http
         .get<Question[]>(
-          `https://localhost:8080/api/questions/${this.selectedTemplateId}`
+          `${environment.apiURL}/api/questions/${this.selectedTemplateId}`
         )
         .subscribe(
           (data) => {
@@ -167,7 +168,7 @@ export class ManageEvalsComponent implements OnInit {
     console.error('evaluatorID:', this.evaluatorID);
     this.http
       .post(
-        `https://localhost:8080/api/addTemplate/${this.evaluatorID}`,
+        `${environment.apiURL}/api/addTemplate/${this.evaluatorID}`,
         newTemplate
       )
       .subscribe(
@@ -200,7 +201,7 @@ export class ManageEvalsComponent implements OnInit {
       templateID: this.selectedTemplateId,
     };
 
-    this.http.post('https://localhost:8080/api/AddQuestion', payload).subscribe(
+    this.http.post(`${environment.apiURL}/api/AddQuestion`, payload).subscribe(
       () => {
         // alert('Question added successfully!');
         this.reloadQuestions();
@@ -219,7 +220,7 @@ export class ManageEvalsComponent implements OnInit {
     console.log('questionID', questionID);
 
     this.http
-      .delete(`https://localhost:8080/api/deleteQuestion/${questionID}`)
+      .delete(`${environment.apiURL}/api/deleteQuestion/${questionID}`)
       .subscribe(
         () => {
           // alert('Question deleted successfully!');
@@ -258,7 +259,7 @@ export class ManageEvalsComponent implements OnInit {
     }
     const updateRequests = updates.map((update) =>
       this.http.put(
-        `https://localhost:8080/api/updateQuestion/${update?.id}`,
+        `${environment.apiURL}/api/updateQuestion/${update?.id}`,
         update?.payload
       )
     );

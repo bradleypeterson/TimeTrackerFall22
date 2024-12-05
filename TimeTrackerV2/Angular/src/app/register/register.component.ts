@@ -2,7 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import CryptoES from 'crypto-es'
+import CryptoES from 'crypto-es';
+import { environment } from '../../environments/environment';
+
 
 @Component({
   selector: 'app-register',
@@ -67,23 +69,27 @@ export class RegisterComponent implements OnInit {
       salt: salt,
     }
 
-    this.http.post<any>('https://localhost:8080/api/register/', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
+    this.http
+      .post<any>(`${environment.apiURL}/api/register/`, payload, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
 
-        // Check if registered as instructor - if yes, show request sent to admin message and DO NOT reroute to login
-        if (payload.type == "instructor") {
-          this.successMsg = "Request sent. Account pending admin approval."
-        }
-        else {
-          this.router.navigate(['./']);
-        }
-
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+          // Check if registered as instructor - if yes, show request sent to admin message and DO NOT reroute to login
+          if (payload.type == 'instructor') {
+            this.successMsg = 'Request sent. Account pending admin approval.';
+          } else {
+            this.router.navigate(['./']);
+          }
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
 }
