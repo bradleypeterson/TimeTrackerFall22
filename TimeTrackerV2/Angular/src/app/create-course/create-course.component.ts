@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-create-course',
@@ -25,7 +26,7 @@ export class CreateCourseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
   }
 
   createCourseForm = this.formBuilder.group({
@@ -34,7 +35,7 @@ export class CreateCourseComponent implements OnInit {
   });
 
   onSubmit(): void {
-    // An extra check condition to prevent submission of the data unless the form is valid 
+    // An extra check condition to prevent submission of the data unless the form is valid
     if (!this.createCourseForm.valid) {
         return;
     }
@@ -46,15 +47,21 @@ export class CreateCourseComponent implements OnInit {
       instructorID: this.currentUser.userID,
     }
 
-    this.http.post<any>('https://localhost:8080/api/createCourse', payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        this.router.navigate(['/dashboard']);
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/createCourse`, payload, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.router.navigate(['/dashboard']);
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
 }

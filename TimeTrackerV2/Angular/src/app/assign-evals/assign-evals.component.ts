@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common'
+import { Location } from '@angular/common';
+import { environment } from '../../environments/environment';
 
 interface ProjectSelection {
     id: number;
@@ -48,37 +49,52 @@ export class AssignEvalsComponent implements OnInit {
     }
 
     LoadCourseProjects() {
-        this.http.get<any>(`https://localhost:8080/api/Projects/${this.courseID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                data.forEach((project: any) => {
-                    // Only grab the projects that are active in the course
-                    if(project.isActive) {
-                        // console.log("Processing the data:\n" + JSON.stringify(entry));
-                        let toBeAdded: ProjectSelection = {
-                            id: project.projectID,
-                            name: project.projectName,
-                            isSelected: false
-                        };
+        this.http
+          .get<any>(`${environment.apiURL}/api/Projects/${this.courseID}`, {
+            headers: new HttpHeaders({
+              'Access-Control-Allow-Headers': 'Content-Type',
+            }),
+          })
+          .subscribe({
+            next: (data) => {
+              data.forEach((project: any) => {
+                // Only grab the projects that are active in the course
+                if (project.isActive) {
+                  // console.log("Processing the data:\n" + JSON.stringify(entry));
+                  let toBeAdded: ProjectSelection = {
+                    id: project.projectID,
+                    name: project.projectName,
+                    isSelected: false,
+                  };
 
-                        this.courseProjects.push(toBeAdded);
-                    }
-                });
+                  this.courseProjects.push(toBeAdded);
+                }
+              });
             },
-            error: err => {
-                this.ShowMessage(err.error.message);
-            }
-        });
+            error: (err) => {
+              this.ShowMessage(err.error.message);
+            },
+          });
     }
 
     LoadEvalTemplates() {
-        this.http.get(`https://localhost:8080/api/templates/${this.currentUser.userID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                this.evalTemplates = data;
-            },
-            error: err => {
-                this.ShowMessage(err.error.message);
+        this.http
+          .get(
+            `${environment.apiURL}/api/templates/${this.currentUser.userID}`,
+            {
+              headers: new HttpHeaders({
+                'Access-Control-Allow-Headers': 'Content-Type',
+              }),
             }
-        });
+          )
+          .subscribe({
+            next: (data) => {
+              this.evalTemplates = data;
+            },
+            error: (err) => {
+              this.ShowMessage(err.error.message);
+            },
+          });
     }
 
     // The original idea for both the ToggleSelectAll() and OptionClicked() functions was found here and they were modified to fit my needs https://stackblitz.com/edit/angular-material-select-all-checkbox?file=src%2Fapp%2Fapp.component.ts,src%2Fapp%2Fapp.component.html
@@ -121,12 +137,16 @@ export class AssignEvalsComponent implements OnInit {
 
         //console.log("\"Select All\" Selected:", this.selectAllProjects, "\ncourseProjects state:", this.courseProjects, "\nEval Template Selected:", this.evalSelected);  // For debugging purposes
 
-        this.http.post(`https://localhost:8080/api/assignEvalToProjects`, requestBody).subscribe((res: any) => {
-            this.ShowMessage(res.message);
-        },
-        err => {
-            this.ShowMessage(err.error.message);
-        });
+        this.http
+          .post(`${environment.apiURL}/api/assignEvalToProjects`, requestBody)
+          .subscribe(
+            (res: any) => {
+              this.ShowMessage(res.message);
+            },
+            (err) => {
+              this.ShowMessage(err.error.message);
+            }
+          );
 
     }
 

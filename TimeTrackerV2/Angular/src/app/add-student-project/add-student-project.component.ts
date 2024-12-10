@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-add-student-project',
@@ -55,18 +56,24 @@ export class AddStudentProjectComponent implements OnInit {
   }
 
   getProjectInfo(): void {
-    this.http.get<any>(`https://localhost:8080/api/ProjectInfo/${this.projectID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-        next: data => {
-            this.errMsg = "";
-            this.project = data;
-            if (this.project) {
-              this.loadPage();
-            }
+    this.http
+      .get<any>(`${environment.apiURL}/api/ProjectInfo/${this.projectID}`, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.project = data;
+          if (this.project) {
+            this.loadPage();
+          }
         },
-        error: error => {
-            this.errMsg = error['error']['message'];
-        }
-    });
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   loadPage(): void {
@@ -83,35 +90,59 @@ export class AddStudentProjectComponent implements OnInit {
   }
 
   loadStudentsInProject(): void {
-    this.http.get<any>(`https://localhost:8080/api/AddToProject/${this.projectID}/InProject`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        console.log(data);
-        this.studentsInProject = data;
-        if (this.studentsInProject) {
-          localStorage.setItem("studentsInProject", JSON.stringify(this.studentsInProject));
+    this.http
+      .get<any>(
+        `${environment.apiURL}/api/AddToProject/${this.projectID}/InProject`,
+        {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
         }
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+      )
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          console.log(data);
+          this.studentsInProject = data;
+          if (this.studentsInProject) {
+            localStorage.setItem(
+              'studentsInProject',
+              JSON.stringify(this.studentsInProject)
+            );
+          }
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   loadStudentsNotInProject(): void {
-    this.http.get<any>(`https://localhost:8080/api/AddToProject/${this.projectID}/NotInProject`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        console.log(data);
-        this.studentsNotInProject = data;
-        if (this.studentsNotInProject) {
-          localStorage.setItem("studentsNotInProject", JSON.stringify(this.studentsNotInProject));
+    this.http
+      .get<any>(
+        `${environment.apiURL}/api/AddToProject/${this.projectID}/NotInProject`,
+        {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
         }
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+      )
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          console.log(data);
+          this.studentsNotInProject = data;
+          if (this.studentsNotInProject) {
+            localStorage.setItem(
+              'studentsNotInProject',
+              JSON.stringify(this.studentsNotInProject)
+            );
+          }
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   add(UserID: any) {
@@ -120,15 +151,21 @@ export class AddStudentProjectComponent implements OnInit {
       projectID: this.projectID
     };
 
-    this.http.post<any>('https://localhost:8080/api/joinGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        this.loadPage();
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/joinGroup/`, req, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.loadPage();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   drop(UserID: any) {
@@ -137,15 +174,21 @@ export class AddStudentProjectComponent implements OnInit {
       projectID: this.projectID
     };
 
-    this.http.post<any>('https://localhost:8080/api/leaveGroup/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        this.loadPage();
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/leaveGroup/`, req, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.loadPage();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   NavigateBackToProject() {

@@ -71,6 +71,13 @@ export class EvalComponent implements OnInit {
       .subscribe(
         (response) => {
           console.log('Response received:', response);
+    this.http
+      .get<any[]>(
+        `${environment.apiURL}/api/getAssignedEvals/${this.evaluateeID}`
+      )
+      .subscribe(
+        (response) => {
+          console.log('Response received:', response);
 
           let evalIDs: any[] = [];
 
@@ -116,6 +123,12 @@ export class EvalComponent implements OnInit {
           this.questionGroups = [];
         }
 
+          this.forms = this.questionGroups.map((group) =>
+            this.createFormGroupForGroup(group.questions)
+          );
+        },
+        (error) => console.error('Error fetching questions:', error)
+      );
           this.forms = this.questionGroups.map((group) =>
             this.createFormGroupForGroup(group.questions)
           );

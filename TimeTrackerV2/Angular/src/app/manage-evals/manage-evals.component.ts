@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 interface EvalTemplate {
   templateID: string;
@@ -40,6 +41,8 @@ export class ManageEvalsComponent implements OnInit {
   currentUser: any;
   evaluatorID: string = '';
   saveSuccessful: boolean = false;
+  isEvalSelected: boolean = false;
+  isFormChanged: boolean = false;
 
   constructor(private http: HttpClient) {}
 
@@ -49,6 +52,17 @@ export class ManageEvalsComponent implements OnInit {
     // this.loadDefaultTemplate();
     this.LoadQuestionTypes();
   }
+
+  onEvalSelected() {
+    this.isEvalSelected = true;
+  }
+
+  onEvalDeselected() {
+    this.isEvalSelected = false;
+  }
+
+
+
 
   private getCurrentUser() {
     const currentUserData = localStorage.getItem('currentUser');
@@ -81,7 +95,7 @@ export class ManageEvalsComponent implements OnInit {
   loadTemplates() {
     this.http
       .get<EvalTemplate[]>(
-        `https://localhost:8080/api/templates/${this.evaluatorID}`
+        `${environment.apiURL}/api/templates/${this.evaluatorID}`
       )
       .subscribe(
         (data) => {
@@ -94,7 +108,7 @@ export class ManageEvalsComponent implements OnInit {
 
   LoadQuestionTypes() {
     this.http
-      .get<string[]>('https://localhost:8080/api/questionTypes')
+      .get<string[]>(`${environment.apiURL}/api/questionTypes`)
       .subscribe(
         (data) => {
           this.questionTypes = data;
@@ -110,7 +124,7 @@ export class ManageEvalsComponent implements OnInit {
     this.selectedTemplateId = templateId;
 
     this.http
-      .get<Question[]>(`https://localhost:8080/api/questions/${templateId}`)
+      .get<Question[]>(`${environment.apiURL}/api/questions/${templateId}`)
       .subscribe(
         (data) => {
           this.selectedTemplateQuestions = data;
@@ -132,7 +146,7 @@ export class ManageEvalsComponent implements OnInit {
     if (this.selectedTemplateId) {
       this.http
         .get<Question[]>(
-          `https://localhost:8080/api/questions/${this.selectedTemplateId}`
+          `${environment.apiURL}/api/questions/${this.selectedTemplateId}`
         )
         .subscribe(
           (data) => {
@@ -154,7 +168,7 @@ export class ManageEvalsComponent implements OnInit {
     console.error('evaluatorID:', this.evaluatorID);
     this.http
       .post(
-        `https://localhost:8080/api/addTemplate/${this.evaluatorID}`,
+        `${environment.apiURL}/api/addTemplate/${this.evaluatorID}`,
         newTemplate
       )
       .subscribe(
@@ -187,7 +201,7 @@ export class ManageEvalsComponent implements OnInit {
       templateID: this.selectedTemplateId,
     };
 
-    this.http.post('https://localhost:8080/api/AddQuestion', payload).subscribe(
+    this.http.post(`${environment.apiURL}/api/AddQuestion`, payload).subscribe(
       () => {
         // alert('Question added successfully!');
         this.reloadQuestions();
@@ -206,7 +220,7 @@ export class ManageEvalsComponent implements OnInit {
     console.log('questionID', questionID);
 
     this.http
-      .delete(`https://localhost:8080/api/deleteQuestion/${questionID}`)
+      .delete(`${environment.apiURL}/api/deleteQuestion/${questionID}`)
       .subscribe(
         () => {
           // alert('Question deleted successfully!');
@@ -229,40 +243,38 @@ export class ManageEvalsComponent implements OnInit {
           questionType: question.questionType,
         };
 
-  
         if (
           originalQuestion.questionText !== payload.questionText ||
           originalQuestion.questionType !== payload.questionType
         ) {
           return { id: question.questionID, payload };
         }
-        return null; 
+        return null;
       })
-      .filter(Boolean); 
+      .filter(Boolean);
 
     if (updates.length === 0) {
       console.error('No changes to submit');
-      return; 
+      return;
     }
     const updateRequests = updates.map((update) =>
       this.http.put(
-        `https://localhost:8080/api/updateQuestion/${update?.id}`,
+        `${environment.apiURL}/api/updateQuestion/${update?.id}`,
         update?.payload
       )
     );
 
     forkJoin(updateRequests).subscribe(
       () => {
-        this.reloadQuestions(); 
-      // WHY DO INSTRUCTORS HAVE DROP DOWN TO MANAGE COURSES ALONG WITH BUTTONS ON DASHBOARD....SEEMS REDUNDANT - Ask group...
-      // PREVIEW OF EVAL FORM - Question text can overrun the box....need to either trim it or have div wrap...
-      // Displays Save Successful -- RIGHT NOW DOESN'T DEFAULT BACK TO NOT SHOwiNG SAVE MESSAGE
-      // SAVE -- Not always popping up, not resetting (See above comment for failure to not disappear)
-      this.saveSuccessful = true; // Show success message
-      setTimeout(() => {
-        this.saveSuccessful = false
-      }, 3000);
-
+        this.reloadQuestions();
+        // WHY DO INSTRUCTORS HAVE DROP DOWN TO MANAGE COURSES ALONG WITH BUTTONS ON DASHBOARD....SEEMS REDUNDANT - Ask group...
+        // PREVIEW OF EVAL FORM - Question text can overrun the box....need to either trim it or have div wrap...
+        // Displays Save Successful -- RIGHT NOW DOESN'T DEFAULT BACK TO NOT SHOwiNG SAVE MESSAGE
+        // SAVE -- Not always popping up, not resetting (See above comment for failure to not disappear)
+        this.saveSuccessful = true; // Show success message
+        setTimeout(() => {
+          this.saveSuccessful = false;
+        }, 3000);
       },
       (error) => {
         alert('Error updating questions. Please try again.');

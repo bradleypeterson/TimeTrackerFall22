@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-courses',
@@ -64,7 +65,7 @@ export class CoursesComponent implements OnInit {
   }*/
 
   // loadCourses(courses: Array<string>): void {
-  //   this.http.get("https://localhost:8080/api/Courses").subscribe((data: any) =>{ 
+  //   this.http.get("https://localhost:8080/api/Courses").subscribe((data: any) =>{
   //   for(let i = 0; i < data.length; i++) {
   //     courses.push(data[i].courseName);
   //   }
@@ -98,45 +99,72 @@ export class CoursesComponent implements OnInit {
 
 
   loadAllUserCourses(): void {
-    this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/getUserCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        console.log(data);
-        this.allUserCourses = data;
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .get<any>(
+        `${environment.apiURL}/api/Users/${this.currentUser.userID}/getUserCourses/`,
+        {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
+        }
+      )
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          console.log(data);
+          this.allUserCourses = data;
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   loadNonUserCourses(): void {
-    this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/getNonUserCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        console.log(data);
-        this.nonUserCourses = data;
-        /// populate a label to inform the user that they successfully clocked out, maybe with the time.
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .get<any>(
+        `${environment.apiURL}/api/Users/${this.currentUser.userID}/getNonUserCourses/`,
+        {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
+        }
+      )
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          console.log(data);
+          this.nonUserCourses = data;
+          /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
 
   loadPenUserCourses(): void {
-    this.http.get<any>(`https://localhost:8080/api/Users/${this.currentUser.userID}/getCoursesPendCourses/`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        console.log(data);
-        this.PendUserCourses = data;
-        /// populate a label to inform the user that they successfully clocked out, maybe with the time.
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .get<any>(
+        `${environment.apiURL}/api/Users/${this.currentUser.userID}/getCoursesPendCourses/`,
+        {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
+        }
+      )
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          console.log(data);
+          this.PendUserCourses = data;
+          /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   register(CourseId: any) {
@@ -148,15 +176,21 @@ export class CoursesComponent implements OnInit {
       courseID: CourseId
     };
 
-    this.http.post<any>('https://localhost:8080/api/putUserInPending/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        this.loadCourses();
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/putUserInPending/`, req, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.loadCourses();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   drop(CourseId: any) {
@@ -165,15 +199,21 @@ export class CoursesComponent implements OnInit {
       courseID: CourseId
     };
 
-    this.http.post<any>('https://localhost:8080/api/deleteUserCourse/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        this.loadCourses();
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/deleteUserCourse/`, req, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.loadCourses();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   GoToCourse(courseID: number) {
@@ -188,15 +228,21 @@ export class CoursesComponent implements OnInit {
       courseID: CourseId
     };
 
-    this.http.post<any>('https://localhost:8080/api/removePendUser/', req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-      next: data => {
-        this.errMsg = "";
-        this.loadCourses();
-      },
-      error: error => {
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/removePendUser/`, req, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.loadCourses();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-edit-course',
@@ -53,19 +54,31 @@ export class EditCourseComponent implements OnInit {
   }
 
   getCourseInfo(): void {
-    this.http.get<any>(`https://localhost:8080/api/CourseInfo/${this.courseID}`, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-        next: data => {
-            this.errMsg = "";
-            this.course = data;
-            this.editCourseForm.controls['courseName'].setValue(this.course.courseName);
-            this.editCourseForm.controls['description'].setValue(this.course.description);
-            this.editCourseForm.controls['isActive'].setValue(this.course.isActive);
-            this.instructorID = this.course.instructorID;
+    this.http
+      .get<any>(`${environment.apiURL}/api/CourseInfo/${this.courseID}`, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          this.course = data;
+          this.editCourseForm.controls['courseName'].setValue(
+            this.course.courseName
+          );
+          this.editCourseForm.controls['description'].setValue(
+            this.course.description
+          );
+          this.editCourseForm.controls['isActive'].setValue(
+            this.course.isActive
+          );
+          this.instructorID = this.course.instructorID;
         },
-        error: error => {
-            this.errMsg = error['error']['message'];
-        }
-    });
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   editCourseForm = this.formBuilder.group({
@@ -76,7 +89,7 @@ export class EditCourseComponent implements OnInit {
   });
 
   onSubmit(): void {
-    // An extra check condition to prevent submission of the data unless the form is valid 
+    // An extra check condition to prevent submission of the data unless the form is valid
     if(!this.editCourseForm.valid) {
         return;
     }
@@ -89,17 +102,23 @@ export class EditCourseComponent implements OnInit {
       courseID: this.courseID,
     }
 
-    this.http.post<any>('https://localhost:8080/api/editCourse/', payload, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
-      next: data => {
-        console.log("data reached");
-        this.errMsg = "";
-        this.GoBackToCourse();
-      },
-      error: error => {
-        console.log("Error reached");
-        this.errMsg = error['error']['message'];
-      }
-    });
+    this.http
+      .post<any>(`${environment.apiURL}/api/editCourse/`, payload, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          console.log('data reached');
+          this.errMsg = '';
+          this.GoBackToCourse();
+        },
+        error: (error) => {
+          console.log('Error reached');
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   GoBackToCourse() {
