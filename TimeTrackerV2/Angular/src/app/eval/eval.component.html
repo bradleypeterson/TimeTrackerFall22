@@ -1,12 +1,13 @@
 <div *ngFor="let group of questionGroups; let groupIndex = index" class="form-container">
+  <!-- Move form tag into the for loop so every one is unique -->
   <form [formGroup]="forms[groupIndex]" (ngSubmit)="onSubmit(forms[groupIndex])">
     <div class="eval-preview">
       <h3>Evaluation for {{ userName }}</h3>
       <h4> {{ group.questions[0].projectName || 'Placeholder Project Name' }} </h4>
-      <!-- <div *ngFor="let eval of group.evalIDs; let evalIndex = index" class="form-container"> -->
-        <!-- <label>{{ eval.evaluatorID }}: {{ eval.questionText }}</label> -->
-        <!-- <div *ngIf="eval.evaluatorID === evalIndex"> -->
+      <div *ngFor="let eval of group.evalIDs; let evalIndex = index" class="form-container">
+        <label>{{ eval }}:</label>
             <div class="question-item" *ngFor="let question of group.questions; let i = index">
+              <div *ngIf="question.evaluatorID === eval">
                 <div class="question-container">
                   <label>{{ question.evaluatorID }}: {{ question.questionText }}</label>
                   <div *ngIf="question.questionType === '1-5 Rating'">
@@ -23,11 +24,11 @@
                     <textarea class="form-control" [id]="'textarea-' + groupIndex + '-' + i"
                       [formControlName]="'response-' + question.questionID"></textarea>
                   </div>
-                <!-- </div> -->
-            <!-- </div> -->
+                  <button type="submit"></button>
+                </div>
+            </div>
           </div>
       </div>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>

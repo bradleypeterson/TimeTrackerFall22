@@ -16,6 +16,7 @@ interface QuestionGroup {
   // courseName: string;
   projectName: string;
   questions: Question[];
+  evalIDs: any[];
 }
 
 @Component({
@@ -70,6 +71,13 @@ export class EvalComponent implements OnInit {
       .subscribe(
         (response) => {
           console.log('Response received:', response);
+    this.http
+      .get<any[]>(
+        `${environment.apiURL}/api/getAssignedEvals/${this.evaluateeID}`
+      )
+      .subscribe(
+        (response) => {
+          console.log('Response received:', response);
 
           let evalIDs: any[] = [];
 
@@ -94,26 +102,33 @@ export class EvalComponent implements OnInit {
               console.log(evalIDs);
             });
 
-            if (response[0] instanceof Array) {
-              // Response is a 2-D array of QuestionGroup
-              this.questionGroups = response.map((group: Question[]) => ({
-                projectName: group[0]?.projectName || 'Default Project',
-                questions: group,
-                evalIDs: evalIDs,
-              }));
-            } else {
-              // Response is a 1-D array of Question, wrap it in a single QuestionGroup
-              this.questionGroups = [
-                {
-                  projectName: response[0]?.projectName || 'Default Project',
-                  questions: response,
-                },
-              ];
-            }
-          } else {
-            this.questionGroups = [];
-          }
 
+
+          if (response[0] instanceof Array) {
+            // Response is a 2-D array of QuestionGroup
+            this.questionGroups = response.map((group: Question[]) => ({
+              projectName: group[0]?.projectName || 'Default Project',
+              questions: group,
+              evalIDs: evalIDs
+            }));
+          } else {
+            // Response is a 1-D array of Question, wrap it in a single QuestionGroup
+            this.questionGroups = [{
+              projectName: response[0]?.projectName || 'Default Project',
+              questions: response,
+              evalIDs: evalIDs
+            }];
+          }
+        } else {
+          this.questionGroups = [];
+        }
+
+          this.forms = this.questionGroups.map((group) =>
+            this.createFormGroupForGroup(group.questions)
+          );
+        },
+        (error) => console.error('Error fetching questions:', error)
+      );
           this.forms = this.questionGroups.map((group) =>
             this.createFormGroupForGroup(group.questions)
           );
