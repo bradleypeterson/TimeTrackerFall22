@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { FormGroup, UntypedFormControl } from '@angular/forms';
+import { environment } from '../../environments/environment';
 
 @Component({
     selector: 'app-users',
@@ -36,19 +37,29 @@ export class UsersComponent implements OnInit {
     public pageTitle = 'TimeTrackerV2 | Users'
 
     loadUsers() {
-        this.http.get<any>("https://localhost:8080/api/Users", { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: data => {
-                // The "data.map((d: any) => {return {...this.ProcessedUser(d)}})" makes a deep copy of the data so we can determine if something has changed for the user and display the "Save Changes" button.  You could also use "JSON.parse(JSON.stringify(data))" but it is less performant as these two things are talked about here https://stackoverflow.com/a/23481096
-                this.users = data.map((d: any) => {return {...this.ProcessedUser(d)}});
-                this.filteredUsers = data.map((d: any) => {return {...this.ProcessedUser(d)}});
-                // The reason why we have the above code this way is because if there is no filter is supplied that limits the number of users, the variables "users" and "filteredUsers" contain references to each other.  I.E. you delete an item from "users" and it is also deleted from "filteredUsers".
-                // However, if a filter is applied that limits the number of users, the variables "users" and "filteredUsers" contain their own copy of the data for some reason.  So we have to have it this way to have unique lists.
-                // Source that says objects and arrays are passed by reference, in Javascript but it still applies to TypeScript.  https://stackoverflow.com/questions/35473404/pass-by-value-and-pass-by-reference-in-javascript
+        this.http
+          .get<any>(`${environment.apiURL}/api/Users`, {
+            headers: new HttpHeaders({
+              'Access-Control-Allow-Headers': 'Content-Type',
+            }),
+          })
+          .subscribe({
+            next: (data) => {
+              // The "data.map((d: any) => {return {...this.ProcessedUser(d)}})" makes a deep copy of the data so we can determine if something has changed for the user and display the "Save Changes" button.  You could also use "JSON.parse(JSON.stringify(data))" but it is less performant as these two things are talked about here https://stackoverflow.com/a/23481096
+              this.users = data.map((d: any) => {
+                return { ...this.ProcessedUser(d) };
+              });
+              this.filteredUsers = data.map((d: any) => {
+                return { ...this.ProcessedUser(d) };
+              });
+              // The reason why we have the above code this way is because if there is no filter is supplied that limits the number of users, the variables "users" and "filteredUsers" contain references to each other.  I.E. you delete an item from "users" and it is also deleted from "filteredUsers".
+              // However, if a filter is applied that limits the number of users, the variables "users" and "filteredUsers" contain their own copy of the data for some reason.  So we have to have it this way to have unique lists.
+              // Source that says objects and arrays are passed by reference, in Javascript but it still applies to TypeScript.  https://stackoverflow.com/questions/35473404/pass-by-value-and-pass-by-reference-in-javascript
             },
-            error: err => {
-                this.errMsg = err.error.message;
-            }
-        });
+            error: (err) => {
+              this.errMsg = err.error.message;
+            },
+          });
     }
 
     ProcessedUser(user: any) {
@@ -112,18 +123,27 @@ export class UsersComponent implements OnInit {
 
         let payload = userData;
 
-        this.http.post<any>("https://localhost:8080/api/UpdateUserInfo", payload, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
-            next: res => {
-                // How update the master list so that it mirrors the UI's user
-                let index = this.FindIndexOfUserWithID(this.users, userData.userID);
-                this.users[index] = {...userData};
-                // Notify the user's information has been updated (no longer needed because the Save button is hidden when the user is saved because the master list and the UI match)
-                // this.ShowMessage(res.message);
+        this.http
+          .post<any>(`${environment.apiURL}/api/UpdateUserInfo`, payload, {
+            headers: new HttpHeaders({
+              'Access-Control-Allow-Headers': 'Content-Type',
+            }),
+          })
+          .subscribe({
+            next: (res) => {
+              // How update the master list so that it mirrors the UI's user
+              let index = this.FindIndexOfUserWithID(
+                this.users,
+                userData.userID
+              );
+              this.users[index] = { ...userData };
+              // Notify the user's information has been updated (no longer needed because the Save button is hidden when the user is saved because the master list and the UI match)
+              // this.ShowMessage(res.message);
             },
-            error: err => {
-                this.ShowMessage(err.error.message);
-            }
-        });
+            error: (err) => {
+              this.ShowMessage(err.error.message);
+            },
+          });
     }
 
     //#region Helper functions
