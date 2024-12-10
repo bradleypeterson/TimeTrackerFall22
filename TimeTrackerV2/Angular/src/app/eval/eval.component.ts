@@ -15,6 +15,7 @@ interface QuestionGroup {
   // courseName: string;
   projectName: string;
   questions: Question[];
+  evalIDs: any[];
 }
 
 @Component({
@@ -82,12 +83,17 @@ export class EvalComponent implements OnInit {
             //     if (push === true) evalIDs.push(response[i].evaluatorID);
             // }
 
+            console.log(response);
         
-            response.forEach(function (question) {
+            response.forEach(function (questionGroup) {
+              questionGroup.forEach( function (question: any) {
                 if (!evalIDs.includes(question.evaluatorID)) {
+                  console.log("Add evaluatorID!");
                     evalIDs.push(question.evaluatorID);
                 }
                 console.log(evalIDs);
+              });
+  
             });
 
 
@@ -104,6 +110,7 @@ export class EvalComponent implements OnInit {
             this.questionGroups = [{
               projectName: response[0]?.projectName || 'Default Project',
               questions: response,
+              evalIDs: evalIDs
             }];
           }
         } else {
