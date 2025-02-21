@@ -19,7 +19,7 @@ let db = ConnectToDB();
 const app = express();
 app.use(
   cors({
-    origin: "https://137.190.19.220:4200", // allows the supplied url to talk to the server
+    origin: "https://localhost:4200", // allows the supplied url to talk to the server https://137.190.19.220:4200
     credentials: true, // Allows credentials from the origin
   })
 );
