@@ -1,32 +1,32 @@
 /* Only apply styles on screens with max width of 992px (Bootstrap's lg breakpoint) */
 @media (max-width: 992px) {
-    .dark-nav-link {
-        color: #333 !important;
-        text-shadow: 0 1px 1px #492365 !important;
-    }
+  .dark-nav-link {
+    color: #333 !important;
+    text-shadow: 0 1px 1px #492365 !important;
+  }
 
-    .dark-nav-link:hover {
-        color: #6e4097 !important;
-    }
+  .dark-nav-link:hover {
+    color: #6e4097 !important;
+  }
 
-    .navbar-nav {
-        justify-content: center;
-    }
+  .navbar-nav {
+    justify-content: center;
+  }
 
-    .navbar-nav .nav-item {
-        flex: 1;
-        text-align: center;
-    }
+  .navbar-nav .nav-item {
+    flex: 1;
+    text-align: center;
+  }
 
-    .navbar-nav .nav-item.ml-auto {
-        margin-left: 0 !important;
-    }
+  .navbar-nav .nav-item.ml-auto {
+    margin-left: 0 !important;
+  }
 }
 
 .navOption {
-    color: black;
+  color: black;
 }
 
 .clickable:hover {
-    background-color: #3f1a5f;
+  background-color: #3f1a5f;
 }
