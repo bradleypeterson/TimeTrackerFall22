@@ -16,6 +16,7 @@ export class UserProfileComponent {
   public instructor: boolean = false;
   public student: boolean = false;
   public admin: boolean = false;
+  public dummyGen: boolean = false;
   public currentUserID: any;  // The userID of the current user
   public sameUser: boolean = false;
 
@@ -48,7 +49,6 @@ export class UserProfileComponent {
     } else if (userType === 'admin'){
       this.admin = true;
     }
-
     if(this.viewingUserID == this.currentUserID){
       this.sameUser = true;
     }
@@ -58,6 +58,7 @@ export class UserProfileComponent {
   }
 
   loadProfile(): void {
+    
     this.http
       .get<any>(`${environment.apiURL}/api/UserProfile/${this.viewingUserID}`, {
         headers: new HttpHeaders({
@@ -80,6 +81,26 @@ export class UserProfileComponent {
           this.errMsg = error['error']['message'];
         },
       });
+  }
+
+  GenerateDummyData(): void{
+    if(this.dummyGen==false){
+      console.log("profile.component.ts: Generating Dummy Data...")
+      this.http
+      .post<any>(`${environment.apiURL}/api/bulk_register/`, null, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      }).subscribe({
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
+      this.dummyGen=true;
+    }else{
+      console.log("profile.component.ts: Dummy Data has already been generated.")
+    }
+    
   }
 
     NavToEditProfile() {

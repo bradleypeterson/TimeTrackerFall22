@@ -53,7 +53,7 @@ db.serialize(() => {
         WHERE NOT EXISTS (
             SELECT userID
             FROM Users
-            WHERE type = 'admin' AND isActive = true
+            WHERE username = 'admin' AND type = 'admin' AND isActive = true
             LIMIT 1
         );`,
             [],
@@ -231,6 +231,7 @@ db.run(`CREATE TABLE IF NOT EXISTS Response (
     FOREIGN KEY (evaluatorID) REFERENCES Users(userID),
     FOREIGN KEY (questionID) REFERENCES Question(questionID)
 );`);
+
 
 db.close(); // Close the connection because it doesn't need to be persistent for the creation of the DB
 
