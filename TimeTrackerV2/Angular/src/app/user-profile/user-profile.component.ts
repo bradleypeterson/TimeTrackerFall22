@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
+import CryptoES from 'crypto-es'; //used for dummy data insertion line 88
 import { environment } from '../../environments/environment';
+
 
 @Component({
   selector: 'app-user-profile',
@@ -85,13 +87,24 @@ export class UserProfileComponent {
 
   GenerateDummyData(): void{
     if(this.dummyGen==false){
+
+      //fill an array with crypto-es passwords and salts. 
+      let data: string[][] = new Array(32).fill(null).map(() => []);
+      const adminsalt = CryptoES.lib.WordArray.random(16).toString(); 
+      const adminPassword = CryptoES.PBKDF2('admin2', adminsalt, { keySize: 512/32, iterations: 1000 }).toString();
+      data[0][0]=adminPassword;
+      data[0][1]=adminsalt;
+
+      for(let i = 1; i< data.length; i++){
+        const salt = CryptoES.lib.WordArray.random(16).toString(); 
+        const hashedPassword = CryptoES.PBKDF2('ChangeMe123', salt, { keySize: 512/32, iterations: 1000 }).toString();
+        data[i][0]=hashedPassword;
+        data[i][1]=salt;
+      }
+
       console.log("profile.component.ts: Generating Dummy Data...")
       this.http
-      .post<any>(`${environment.apiURL}/api/bulk_register/`, null, {
-        headers: new HttpHeaders({
-          'Access-Control-Allow-Headers': 'Content-Type',
-        }),
-      }).subscribe({
+      .post<any>(`${environment.apiURL}/api/bulk_register/`, data).subscribe({
         error: (error) => {
           this.errMsg = error['error']['message'];
         },
