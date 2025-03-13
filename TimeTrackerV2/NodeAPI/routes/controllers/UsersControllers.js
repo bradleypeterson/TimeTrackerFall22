@@ -58,6 +58,7 @@ exports.GetUserProfile = (req, res) => {
             return res.send(rows);
         }
     });
+    
 }
 
 exports.EditUserProfile = (req, res) => {

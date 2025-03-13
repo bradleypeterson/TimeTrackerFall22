@@ -4,6 +4,7 @@ const ConnectToDB = require('../../database/DBConnection');
 
 let db = ConnectToDB();
 localStorage = new localStorage('./scratch');
+const DummyData = require('../../database/DummyData');
 
 exports.Register = async (req, res, next) => {
     console.log("AccountControllers.js file/Register route called");
@@ -45,7 +46,7 @@ exports.Register = async (req, res, next) => {
         data[3] = lastName;
         data[4] = type;
         data[5] = isApproved;
-        data[6] = true;
+        data[6] = true; //isActive
         data[7] = salt;
 
         db.run(sql, data, function (err, rows) {
@@ -57,6 +58,80 @@ exports.Register = async (req, res, next) => {
             }
         });
     });
+}
+
+//Function for registering many accounts at once (used for generating dummy data into DB)
+exports.BulkRegister = async (req, res, next) => {
+    
+    console.log("AccountControllers.js file/BulkRegister route called");
+
+    var DummyInserts = Object.values(DummyData);
+
+    db.serialize(() => {
+        db.run(`BEGIN TRANSACTION`);
+
+        // SQL queries
+        const SqlUserExists = `SELECT COUNT(*) as count FROM Users WHERE username=?`;
+
+        const SqlInsertUser = `INSERT INTO Users(username, password, firstName, lastName, type, isApproved, isActive, salt)
+        VALUES(?, ?, ?, ?, ?, ?, ?, ?)`;
+
+        // Loop through dummy data
+        for (let i = 0; i < DummyInserts[0].length; i++) {
+            let username = DummyInserts[0][i][0];
+            let data = [];
+            data[0] = DummyInserts[0][i][0];                //username
+            data[1] = DummyInserts[0][i][1];                //password
+            data[2] = DummyInserts[0][i][2];                //firstname
+            data[3] = DummyInserts[0][i][3];                //lastname
+            data[4] = DummyInserts[0][i][4];                //type
+            data[5] = true;                                 //isApproved
+            data[6] = true;                                 //isActive
+            data[7] = DummyInserts[0][i][5];                //Salt
+
+            // let user = DummyInserts[0][i];
+            // const username = user[0];
+            // const password = user[1];
+            // const firstName = user[2];
+            // const lastName = user[3];
+            // const type = user[4];
+            // const isApproved = user[5] === 'true';
+            // const isActive = user[6] === 'true';
+            // const salt = user[7];
+            // Check if the user already exists
+            db.get(SqlUserExists, [username] , (err, row) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+                }
+
+                // If the user does not exist, insert the user
+                if (row.count>0) {
+                    return res.status(400).json({ message: 'A user of this name already exists' });
+                } else {
+                    db.run(SqlInsertUser, data, function(err) {
+                        if (err) {
+                            console.log(err);
+                            return res.status(500).json({ message: 'Something went wrong in creating the account. Please try again later.' });
+                        }
+                        return res.status(200).json({ message: 'User registered' });
+                        
+                    });
+                }
+            });//end db.get()
+        }
+    
+        // Commit
+        db.run(`COMMIT`, (err) => {
+            if (err) {
+                console.error("Error committing transaction:", err);
+                db.run(`ROLLBACK`);
+            } else {
+                console.log('Dummy Data inserted successfully.');
+            }
+        });
+    });
+    
 }
 
 exports.GrabSaltForUser = (req, res) => {
