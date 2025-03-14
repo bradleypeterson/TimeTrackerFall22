@@ -25,6 +25,12 @@ interface StudentReport {
   projects: Project[];
 }
 
+interface StudentNotInCourse {
+  id: number;
+  firstName: string;
+  lastName: string;
+}
+
 @Component({
   selector: 'app-course-reports',
   templateUrl: './course-reports.component.html',
@@ -59,6 +65,7 @@ export class CourseReportsComponent implements OnInit {
   ngOnInit(): void {
     this.studentReports = this.getStudentReports(this.courseID);
     this.filteredStudents = this.studentReports;
+    this.loadStudentsNotInCourse(this.courseID);
   }
 
   // Method to toggle expanded state of student card
@@ -79,10 +86,11 @@ export class CourseReportsComponent implements OnInit {
     }
   }
 
-  loadStudentsNotInCourse(): void {
+  loadStudentsNotInCourse(courseID: number): StudentNotInCourse[] {
+    console.log('TESTING IF THIS WORKS', courseID);
     this.http
-      .get<any>(
-        `${environment.apiURL}/api/GetStudentsNotInCourse/${this.courseID}`,
+      .get<StudentNotInCourse[]>(
+        `${environment.apiURL}/api/GetStudentsNotInCourse/${courseID}`,
         {
           headers: new HttpHeaders({
             'Access-Control-Allow-Headers': 'Content-Type',
@@ -101,16 +109,18 @@ export class CourseReportsComponent implements OnInit {
           }
         },
       });
+
+    return this.studentsNotInCourse;
   }
 
-  add(UserID: any) {
+  add(UserID: number) {
     let req = {
       userID: UserID,
       courseID: this.courseID,
     };
 
     this.http
-      .post<any>(`${environment.apiURL}/api/joinGroup/`, req, {
+      .post<any>(`${environment.apiURL}/api/addUserCourse/`, req, {
         headers: new HttpHeaders({
           'Access-Control-Allow-Headers': 'Content-Type',
         }),
@@ -118,7 +128,14 @@ export class CourseReportsComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
+
+          //We re-load these lists after the change is made:
+          this.studentsNotInCourse = this.loadStudentsNotInCourse(
+            this.courseID
+          );
+          this.studentReports = this.getStudentReports(this.courseID);
           // this.loadPage();
+          this.filteredStudents = this.studentReports;
         },
         error: (error) => {
           this.errMsg = error['error']['message'];
@@ -215,6 +232,12 @@ export class CourseReportsComponent implements OnInit {
         })
         .subscribe((data: any) => {
           console.log(data);
+          //Reload lists after the change is made:
+          this.studentsNotInCourse = this.loadStudentsNotInCourse(
+            this.courseID
+          );
+          this.studentReports = this.getStudentReports(this.courseID);
+          this.filteredStudents = this.studentReports;
         });
     }
   }

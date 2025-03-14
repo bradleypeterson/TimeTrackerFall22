@@ -452,6 +452,7 @@ exports.PutUserInPending = async (req, res, next) => {
   );
 };
 
+//Register a student for a course (used to skip the pending course registration process or approve students who are currently pending)
 exports.RegisterForCourse = async (req, res, next) => {
   console.log("CourseControllers.js file/RegisterForCourse route called");
 
