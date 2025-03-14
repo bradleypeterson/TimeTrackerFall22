@@ -67,3 +67,7 @@
     flex-direction: column;
     height: 100%;
 }
+
+.eval-btn{
+    right: 0;
+}

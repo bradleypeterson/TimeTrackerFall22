@@ -196,6 +196,11 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/project'], { state });
   }
 
+  GoToEval(evalID: number){
+    let state = {evalID : evalID};
+    this.router.navigate(['/eval'], {state});
+  }
+
   // student chooses to cancel a pending course
   cancel(CourseId: any) {
     let req = {

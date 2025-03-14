@@ -263,6 +263,7 @@ exports.DeleteQuestion = async (req, res, next) => {
     );
 };
 
+/*
 exports.AssignEvalToProjects = async (req, res, next) => {
     console.log("EvalControllers.js file/AssignEvalToProjects route called");
 
@@ -403,6 +404,30 @@ exports.AssignEvalToProjects = async (req, res, next) => {
         return res.status(200).json({ message: 'The project users have been assigned the selected eval.' });
     }
 };
+*/
+
+exports.AssignEvalToProjects = async (req, res, next) => {
+    console.log("AssignEvalToProject Called")
+
+    let data = [];
+
+    data[0] = req.body["evaluatorID"];
+    data[1] = req.body["evaluateeID"];
+    data[2] = req.body["templateID"];
+    data[3] = req.body["projectID"];
+    data[4] = req.body["evalCompleted"];
+
+    db.run(`INSERT INTO Assigned_Eval(evaluatorID, evaluateeID, templateID, projectID, evalCompleted)
+        VALUES(?, ?, ?, ?, ?)`, data, function (err, rows) {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        } else {
+            return res.status(200).json({ course: data });
+        }
+    });
+
+}
 
 exports.GetAssignedEvals = async (req, res, next) => {
     console.log("EvalControllers.js file/GetAssignedEvals route called");
