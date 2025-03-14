@@ -1,3 +1,6 @@
+// require("dotenv").config();
+// const JWT_SECRET = process.env.JWT_SECRET;
+
 var localStorage = require("node-localstorage").LocalStorage;
 const crypto = require("crypto");
 const ConnectToDB = require("../../database/DBConnection");
@@ -121,9 +124,13 @@ exports.Login = async (req, res, next) => {
         rows["isApproved"] === 1 &&
         rows["isActive"] === 1
       ) {
+        const safeUserData = { ...rows, password: undefined, salt: undefined };
+
+        // const token = JWT_SECRET.sign({})
+
         // we use 1 as true because the DB uses 1 as true and 0 as false
         console.log("User authenticated");
-        return res.status(200).json({ user: rows });
+        return res.status(200).json({ user: safeUserData });
       }
       // If the passwords do not match
       else if (rows["password"] !== password) {
