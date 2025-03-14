@@ -1,37 +1,39 @@
-version: "3.9"  
+version: "3.9"
 services:
-    angular:
-        tty: true
-        environment: 
-            - CHOKIDAR_USEPOLLING=true
-        build:
-            context: './Angular'
-            dockerfile: Dockerfile
-        ports:
-            - '4200:4200'
-        volumes:
-            - ./Angular:/usr/src/app
-            - /usr/src/app/node_modules
+  angular:
+    tty: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    #   - WATCHPACK_POLLING=true # Add this line
+    # command: ng serve --poll=2000 --host 0.0.0.0 # Add this line
+    build:
+      context: "./Angular"
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./Angular:/usr/src/app
+      - /usr/src/app/node_modules
 
-    node:
-        tty: true
-        environment: 
-            - CHOKIDAR_USEPOLLING=true
-        build:
-            context: './NodeAPI'
-            dockerfile: Dockerfile
-        ports:
-            - '8080:8080'
-        volumes:
-            - ./NodeAPI:/usr/src/app
-            - /usr/src/app/node_modules
+  node:
+    tty: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    build:
+      context: "./NodeAPI"
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./NodeAPI:/usr/src/app
+      - /usr/src/app/node_modules
 
-    nginx:  
-        build:
-            context: .  
-            dockerfile: Dockerfile.nginx 
-        ports:
-            - "80:80"
-        depends_on:
-            - angular
-            - node
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - angular
+      - node

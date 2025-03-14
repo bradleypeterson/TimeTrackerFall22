@@ -6,16 +6,15 @@ import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-course',
   templateUrl: './course.component.html',
-  styleUrls: ['./course.component.css']
+  styleUrls: ['./course.component.css'],
 })
-
 export class CourseComponent implements OnInit {
   public course: any;
-  public projects: any = [];  // This is redundant information, if the user is not part of any project, or the variable allUserGroups size is 0, then the variable nonUserGroups contains every project for the course.  I am however am not the one that created this logic so I am not removing it because I don't know if it is used in local storage in anywhere else but here, it will simply not be used in the HTML for the component.
+  public projects: any = []; // This is redundant information, if the user is not part of any project, or the variable allUserGroups size is 0, then the variable nonUserGroups contains every project for the course.  I am however am not the one that created this logic so I am not removing it because I don't know if it is used in local storage in anywhere else but here, it will simply not be used in the HTML for the component.
   public errMsg = '';
   public allUserGroups: any = [];
   public nonUserGroups: any = [];
-  public filteredProjects: any = [];  // This is redundant information because of the same reason as stated above.
+  public filteredProjects: any = []; // This is redundant information because of the same reason as stated above.
   public projectSearchQuery: any = '';
   public allUserFilteredProjects: any = [];
   public nonUserFilteredProjects: any = [];
@@ -24,6 +23,7 @@ export class CourseComponent implements OnInit {
   private courseID: any;
 
   public instructor: boolean = false;
+  public admin: boolean = false;
   public student: boolean = false;
   public userID: string = '';
   public userInCourse: boolean = false;
@@ -33,14 +33,18 @@ export class CourseComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute
   ) {
     const tempUser = localStorage.getItem('currentUser');
     if (tempUser) {
       this.currentUser = JSON.parse(tempUser);
     }
     // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
-    console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
+    console.log(
+      `State received: ${JSON.stringify(
+        this.router.getCurrentNavigation()?.extras.state
+      )}`
+    ); // For debugging only
     this.courseID = this.router.getCurrentNavigation()?.extras.state?.courseID;
   }
 
@@ -52,6 +56,8 @@ export class CourseComponent implements OnInit {
       this.instructor = true;
     } else if (userType === 'student') {
       this.student = true;
+    } else if (userType === 'admin') {
+      this.admin = true;
     }
 
     // if (this.courseID) { // set course to course from local storage based on course ID
@@ -201,25 +207,25 @@ export class CourseComponent implements OnInit {
   }
 
   NavigateToEditCourse() {
-    let state = {courseID: this.courseID};
+    let state = { courseID: this.courseID };
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate([`/edit-course`], { state });
   }
 
   NavigateToAddProject() {
-    let state = {courseID: this.courseID};
+    let state = { courseID: this.courseID };
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate([`/create-project`], { state });
   }
 
   NavigateToAssignEvals() {
-    let state = {courseID: this.courseID};
+    let state = { courseID: this.courseID };
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate([`/assign-evals`], { state });
-}
+  }
 
   GoToProject(projectID: number) {
-    let state = {projectID: projectID};
+    let state = { projectID: projectID };
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate([`/project`], { state });
   }
@@ -227,7 +233,7 @@ export class CourseComponent implements OnInit {
   join(ProjectID: any) {
     let req = {
       userID: this.currentUser.userID,
-      projectID: ProjectID
+      projectID: ProjectID,
     };
 
     this.http
@@ -250,7 +256,7 @@ export class CourseComponent implements OnInit {
   leave(ProjectID: any) {
     let req = {
       userID: this.currentUser.userID,
-      projectID: ProjectID
+      projectID: ProjectID,
     };
 
     this.http
@@ -271,9 +277,11 @@ export class CourseComponent implements OnInit {
   }
 
   delete() {
-    if(confirm("Are you sure you want to delete " + this.course.courseName + "?")){
+    if (
+      confirm('Are you sure you want to delete ' + this.course.courseName + '?')
+    ) {
       let req = {
-        courseID: this.courseID
+        courseID: this.courseID,
       };
 
       this.http
@@ -297,20 +305,22 @@ export class CourseComponent implements OnInit {
   searchProjects(): void {
     const projectName = this.projectSearchQuery.toLowerCase();
 
-    this.filtering = !projectName ? false : true;  // if the field is not supplied, then we are not filtering the data, we will return all the projects
+    this.filtering = !projectName ? false : true; // if the field is not supplied, then we are not filtering the data, we will return all the projects
 
     this.allUserFilteredProjects = this.allUserGroups.filter((project: any) => {
-        // The below Match condition is read as follows, if the field is not supplied OR the field's data matches the current project, then it is considered a match.
-        const nameMatch = !projectName || project.projectName.toLowerCase().includes(projectName);
+      // The below Match condition is read as follows, if the field is not supplied OR the field's data matches the current project, then it is considered a match.
+      const nameMatch =
+        !projectName || project.projectName.toLowerCase().includes(projectName);
 
-        return nameMatch;  // If the name matches, then the variable "project" is included inside the array "this.allUserFilteredProjects".
+      return nameMatch; // If the name matches, then the variable "project" is included inside the array "this.allUserFilteredProjects".
     });
 
     this.nonUserFilteredProjects = this.nonUserGroups.filter((project: any) => {
-        // The below Match condition is read as follows, if the field is not supplied OR the field's data matches the current project, then it is considered a match.
-        const nameMatch = !projectName || project.projectName.toLowerCase().includes(projectName);
+      // The below Match condition is read as follows, if the field is not supplied OR the field's data matches the current project, then it is considered a match.
+      const nameMatch =
+        !projectName || project.projectName.toLowerCase().includes(projectName);
 
-        return nameMatch;  // If the name matches, then the variable "project" is included inside the array "this.nonUserFilteredProjects".
+      return nameMatch; // If the name matches, then the variable "project" is included inside the array "this.nonUserFilteredProjects".
     });
   }
 }
