@@ -20,6 +20,7 @@ const app = express();
 app.use(
   cors({
     origin: "https://localhost:4200", // allows the supplied url to talk to the server https://137.190.19.220:4200
+
     credentials: true, // Allows credentials from the origin
   })
 );
@@ -28,7 +29,7 @@ app.use(
     extended: false,
   })
 );
-
+  
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Methods", "DELETE, PUT, GET, POST");
   res.header(
