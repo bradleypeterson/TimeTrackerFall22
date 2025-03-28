@@ -54,3 +54,8 @@
   padding: 5px 10px;
   font-size: 0.75rem;
 }
+
+.course-btns{
+  display: flex;
+  justify-content: space-between;
+}
