@@ -196,8 +196,9 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/project'], { state });
   }
 
-  GoToEval(evalID: number){
-    let state = {evalID : evalID};
+  GoToEval(projectID: number){
+    let state = {projectID : projectID};
+    console.log(projectID)
     this.router.navigate(['/eval'], {state});
   }
 

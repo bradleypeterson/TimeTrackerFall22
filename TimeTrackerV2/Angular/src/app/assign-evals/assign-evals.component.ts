@@ -160,18 +160,20 @@ export class AssignEvalsComponent implements OnInit {
       for (let i = 0; i < requestBody.projectIDs.length; i++) {
         //wait for result from LoadProjectInfo
         await this.LoadProjectInfo(requestBody.projectIDs[i]);
+
+        console.log(requestBody.projectIDs[i])
     
         const userIDs = this.projectInfo.users;
         console.log(userIDs);
     
         //iterate each user and assign eval
-        for (let i = 0; i < userIDs.length; i++) {
+        for (let j = 0; j < userIDs.length; j++) {
           let evalInfo = {
             evaluatorID: this.evalSelected.evaluatorID,
-            evaluateeID: userIDs[i],
+            evaluateeID: userIDs[j],
             templateID: this.evalSelected.templateID,
             projectID: requestBody.projectIDs[i],
-            evalCompleted: false
+            evalCompleted: 0
           };
     
           console.log(evalInfo);
@@ -184,6 +186,8 @@ export class AssignEvalsComponent implements OnInit {
           .subscribe({
             next: (data) => {
               this.router.navigate(['/dashboard']);
+              //this.router.navigate(['/assign-evals']); //This is for debugging
+              
             },
             error: (err) => {
               this.ShowMessage(err.error.message);

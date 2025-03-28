@@ -68,6 +68,10 @@
     height: 100%;
 }
 
+.div-submit{
+    display: flex;
+}
+
 .eval-btn{
-    right: 0;
+    margin-left: auto;
 }
