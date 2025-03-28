@@ -1,0 +1,223 @@
+const crypto = require('crypto');
+/*
+    INSERT ORDER: 
+    data[0] = username;
+        data[1] = password;
+        data[2] = firstName;
+        data[3] = lastName;
+        data[4] = type;
+        data[5] = isApproved;
+        data[6] = true; //isActive
+        data[7] = salt;
+
+    Template:
+    ,
+    [
+        'USERNAME',
+        'FIRST',
+        'LAST',
+        'TYPE',
+        'true'
+    ]
+*/
+
+var DummyData = [
+    [   "admin2",
+        "Secondary", 
+        'Admin',
+        'admin'
+    ],
+    [
+        'MrFeeny', 
+        'George', 
+        'Feeny',
+        'instructor'
+    ],
+    [
+        'MsFrizzle',
+        'Valerie',
+        'Frizzle',
+        'instructor'
+    ],
+    [
+        'MsHoney',
+        'Jennifer',
+        'Honey',
+        'instructor'
+    ],
+    [
+        'MrKeating',
+        'John',
+        'Keating',
+        'instructor'
+    ],
+    [
+        'MrSchneebly',
+        'Dewey',
+        'Finn',
+        'instructor'
+    ],
+    [
+        'MrsMcgonagall',
+        'Minerva',
+        'Mcgonagall',
+        'instructor'
+    ],
+    [
+        'MrNye',
+        'Bill',
+        'Nye',
+        'instructor'
+    ],
+    [
+        'RGilmore',
+        'Lorelai',
+        'Gilmore',
+        'student'
+    ],
+    [
+        'JMariano',
+        'Jess',
+        'Mariano',
+        'student'
+    ],
+    [
+        'DForester',
+        'Dean',
+        'Forester',
+        'student'
+    ],
+    [
+        'LKim',
+        'Lane',
+        'Kim',
+        'student'
+    ],
+    [
+        'PGeller',
+        'Paris',
+        'Geller',
+        'student'
+    ],
+    [
+        'LHuntzberger',
+        'Logan',
+        'Huntzberger',
+        'student'
+    ],
+    [
+        'LScott',
+        'Lucas',
+        'Scott',
+        'student'
+    ],
+    [
+        'NScott',
+        'Nathan',
+        'Scott',
+        'student'
+    ],
+    [
+        'PSawyer',
+        'Peyton',
+        'Sawyer',
+        'student'
+    ],
+    [
+        'BDavis',
+        'Brooke',
+        'Davis',
+        'student'
+    ],
+    [
+        'HJames',
+        'Haley',
+        'James',
+        'student'
+    ],
+    [
+        'Mouth',
+        'Marvin',
+        'McFadden',
+        'student'
+    ],
+    [
+        'RGatina',
+        'Rachel',
+        'Gatina',
+        'student'
+    ],
+    [
+        'JJagielski',
+        'Jake',
+        'Jagielski',
+        'student'
+    ],
+    [
+        'TSmith',
+        'Tim',
+        'Smith',
+        'student'
+    ],
+    [
+        'CMatthews',
+        'Cory',
+        'Matthews',
+        'student'
+    ],
+    [
+        'TLawrence',
+        'Topenga',
+        'Lawrence',
+        'student'
+    ],
+    [
+        'SHunter',
+        'Shawn',
+        'Hunter',
+        'student'
+    ],
+    [
+        'EForeman',
+        'Eric',
+        'Foreman',
+        'student'
+    ],
+    [
+        'DPinciotti',
+        'Donna',
+        'Pinciotti',
+        'student'
+    ],
+    [
+        'SHyde',
+        'Steven',
+        'Hyde',
+        'student'
+    ],
+    [
+        'MKelso',
+        'Michael',
+        'Kelso',
+        'student'
+    ],
+    [
+        'JBurkhart',
+        'Jackie',
+        'Burkhart',
+        'student'
+    ],
+    [
+        'Fez',
+        'Wilmer',
+        'Valderrama',
+        'student'
+    ]
+];
+
+
+
+
+module.exports = { DummyData };
+
+
