@@ -14,6 +14,23 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 import { RegisterComponent } from './register.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
+///HttpClientTestingModule fix: 
+/// Using simply import { HttpClientTestingModule}, we get an error, most likely because the version of 
+//Angular is not up to date, the below code works though.
+import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
+
+beforeEach(async () => {
+  await TestBed.configureTestingModule({
+    declarations: [RegisterComponent],
+    providers: [
+      { provide: HttpClient, useValue: { get: () => of({}), post: () => of({}) } }
+    ],
+  }).compileComponents();
+});
+//
+
+
 describe('RegisterComponent', () => {
     let component: RegisterComponent;
     let fixture: ComponentFixture<RegisterComponent>;
