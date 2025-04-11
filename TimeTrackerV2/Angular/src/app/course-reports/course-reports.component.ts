@@ -48,6 +48,7 @@ export class CourseReportsComponent implements OnInit {
   public studentsNotInCourse: any = [];
   public errMsg = '';
   public p: number = 1;
+  userType = false;
 
   constructor(
     private http: HttpClient,
@@ -63,6 +64,7 @@ export class CourseReportsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userType = JSON.parse(localStorage.getItem('currentUser')!).type;
     this.studentReports = this.getStudentReports(this.courseID);
     this.filteredStudents = this.studentReports;
     this.loadStudentsNotInCourse(this.courseID);
@@ -213,32 +215,99 @@ export class CourseReportsComponent implements OnInit {
     this.router.navigate(['/profile'], { state });
   }
 
-  RemoveStudentFromCourse(userID: number) {
-    let state = { userID: userID, courseID: this.courseID };
+  async RemoveStudentFromCourse(userID: number) {
+    try {
+      const response = confirm(
+        `Do you want to remove this student from the course?\nPlease confirm to continue.`
+      );
 
-    const response = confirm(
-      `Do you want to remove this student from the course?\nPlease confirm to continue.`
-    );
+      if (response) {
+        let requestBody = {
+          userID: userID,
+          courseID: this.courseID,
+        };
 
-    if (response) {
-      let requestBody = {
-        userID: userID,
-        courseID: this.courseID,
-      };
+        // Get all the projects for the student
+        const projectResponse = await this.http
+          .get<any>(
+            `${environment.apiURL}/api/ProjectsForUser/${this.courseID}/${userID}`
+          )
+          .toPromise();
 
-      this.http
-        .delete(`${environment.apiURL}/api/removeStudentFromCourse`, {
-          body: requestBody,
-        })
-        .subscribe((data: any) => {
-          console.log(data);
-          //Reload lists after the change is made:
-          this.studentsNotInCourse = this.loadStudentsNotInCourse(
-            this.courseID
-          );
-          this.studentReports = this.getStudentReports(this.courseID);
-          this.filteredStudents = this.studentReports;
-        });
+        console.log('The project response is: ', projectResponse);
+
+        //If student is in any projects from THIS course, remove them from those projects first:
+        if (projectResponse && projectResponse.length > 0) {
+          for (const project of projectResponse) {
+            this.removeFromProject(userID, project.projectID);
+          }
+
+          //Now we proceed to remove from course:
+          const removeFromCourse = await this.http
+            .delete(`${environment.apiURL}/api/removeStudentFromCourse`, {
+              body: {
+                userID: userID,
+                courseID: this.courseID,
+              },
+            })
+            .toPromise();
+        }
+      }
+    } catch (error) {
+      console.log(error);
     }
+
+    //       let state = { userID: userID, courseID: this.courseID };
+
+    //       const response = confirm(
+    //         `Do you want to remove this student from the course?\nPlease confirm to continue.`
+    //       );
+
+    //       if (response) {
+    //         let requestBody = {
+    //           userID: userID,
+    //           courseID: this.courseID,
+    //         };
+
+    //         this.http
+    //           .delete(`${environment.apiURL}/api/removeStudentFromCourse`, {
+    //             body: requestBody,
+    //           })
+    //           .subscribe((data: any) => {
+    //             console.log(data);
+    //             //Reload lists after the change is made:
+    //             this.studentsNotInCourse = this.loadStudentsNotInCourse(
+    //               this.courseID
+    //             );
+    //             this.studentReports = this.getStudentReports(this.courseID);
+    //             this.filteredStudents = this.studentReports;
+    //           });
+    //       }
+    //     }
+    // } catch (error) {
+    //   console.log(error);
+  }
+
+  private removeFromProject(UserID: any, projectID: any) {
+    let req = {
+      userID: UserID,
+      projectID: projectID,
+    };
+
+    this.http
+      .post<any>(`${environment.apiURL}/api/leaveGroup/`, req, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          // this.loadPage();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 }

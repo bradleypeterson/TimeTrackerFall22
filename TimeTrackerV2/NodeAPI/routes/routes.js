@@ -168,10 +168,7 @@ router.get("/Projects/:id/Users", GetUserTimesForProject);
 
 router.get("/Projects/:id", GetAllProjectsForCourse);
 
-router.get(
-  "/ProjectsForUser/:courseID/:userID/userGroups",
-  GetUserProjectsForCourse
-);
+router.get("/ProjectsForUser/:courseID/:userID/", GetUserProjectsForCourse);
 
 router.get(
   "/ProjectsForUser/:courseID/:userID/nonUserGroups",
