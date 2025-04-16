@@ -1,5 +1,4 @@
 /*
-##########################   MY WORK BELOW   ####################################
 TESTS: 
 Component Creation Test
 Form Initialization Test
@@ -46,7 +45,7 @@ describe('RegisterComponent', () => {
         fixture = TestBed.createComponent(RegisterComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-    });
+    });   
 
     //testing the component (page) is created successfully
     it('Should create the component', ()=>{
