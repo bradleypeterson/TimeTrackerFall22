@@ -13,11 +13,13 @@ Run the test with ng test
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CoursesComponent } from './courses.component';
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms'; // Import FormsModule
 import { of } from 'rxjs';
 
 beforeEach(async () => {
   await TestBed.configureTestingModule({
     declarations: [CoursesComponent],
+    imports: [FormsModule], // Add FormsModule here
     providers: [
       {
         provide: HttpClient,
