@@ -96,29 +96,60 @@ describe('LoginComponent', () => {
   //   // Step 1: Fill in the form with wrong credentials
   //   component.checkoutForm.patchValue({
   //     username: 'wronguser',
-  //     password: 'wrongpass',
+  //     //password: 'wrongpass',
   //   });
 
+  //   component.onSubmit();
+
   //   // Step 2: Mock the salt API response
-  //   httpClient.get.and.returnValue(of('some-salt'));
+  //   //httpClient.get.and.returnValue(of('some-salt'));
 
   //   // Step 3: Mock the failed login response
   //   const errorResponse = {
   //     error: {
-  //       message: 'Invalid credentials',
+  //       message: 'Missing required field',
   //     },
   //   };
   //   httpClient.post.and.returnValue(throwError(() => errorResponse));
 
   //   // Step 4: Trigger login
-  //   component.onSubmit();
+  //   //component.onSubmit();
 
   //   // Step 5: Verify error handling
-  //   expect(component.errMsg).toBe('Invalid credentials');
+  //   expect(component.errMsg).toBe('Missing required field');
   //   expect(router.navigate).not.toHaveBeenCalled();
   //   expect(localStorage.setItem).not.toHaveBeenCalledWith(
   //     'currentUser',
   //     jasmine.any(String)
   //   );
   // });
+
+  it('should prevent submission with invalid form', () => {
+    // Test empty form
+    component.checkoutForm.patchValue({
+      username: '',
+      password: '',
+    });
+    component.onSubmit();
+    expect(component.errMsg).toBe('Missing required field');
+    expect(httpClient.post).not.toHaveBeenCalled();
+
+    // Test missing username
+    component.checkoutForm.patchValue({
+      username: '',
+      password: 'somepass',
+    });
+    component.onSubmit();
+    expect(component.errMsg).toBe('Missing required field');
+    expect(httpClient.post).not.toHaveBeenCalled();
+
+    // Test missing password
+    component.checkoutForm.patchValue({
+      username: 'someuser',
+      password: '',
+    });
+    component.onSubmit();
+    expect(component.errMsg).toBe('Missing required field');
+    expect(httpClient.post).not.toHaveBeenCalled();
+  });
 });
