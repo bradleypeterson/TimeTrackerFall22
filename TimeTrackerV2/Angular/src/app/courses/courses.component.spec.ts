@@ -19,7 +19,7 @@ import { of } from 'rxjs';
 beforeEach(async () => {
   await TestBed.configureTestingModule({
     declarations: [CoursesComponent],
-    imports: [FormsModule], // Add FormsModule here
+    imports: [FormsModule], // Ensure FormsModule is imported
     providers: [
       {
         provide: HttpClient,
@@ -36,7 +36,12 @@ beforeEach(async () => {
             }
             return of([]);
           },
-          post: () => of({}),
+          post: (url: string, body: any) => {
+            if (url.includes('putUserInPending')) {
+              return of({ success: true }); // Mock successful registration response
+            }
+            return of({});
+          },
         },
       },
     ],
@@ -94,13 +99,13 @@ describe('CoursesComponent', () => {
 
   // Successful Registration Test
   it('Should register a user to a course successfully', () => {
-    spyOn(component, 'loadCourses').and.callThrough();
+    spyOn(component, 'loadCourses').and.callThrough(); // Spy on loadCourses
     const courseId = 101;
 
     component.register(courseId);
 
-    expect(component.errMsg).toBe('');
-    expect(component.loadCourses).toHaveBeenCalled();
+    expect(component.errMsg).toBe(''); // Ensure no error message
+    expect(component.loadCourses).toHaveBeenCalled(); // Ensure loadCourses is called
   });
 
   // Failed Registration Test
