@@ -1,36 +1,57 @@
 <div id="profile">
-    <h2 class="dashboard-head">Profile</h2>
-    <div *ngFor="let u of userProfile">
+  <h2 class="dashboard-head">Profile</h2>
+  <div *ngFor="let u of userProfile">
+    <div class="row">
+      <div class="col-12">
+        <h3 class="box-head rounded">{{ u.firstName }} {{ u.lastName }}</h3>
+        <hr />
         <div class="row">
-            <div class="col-10">
-                <h3 class="box-head rounded">{{u.firstName}} {{u.lastName}}</h3>
-                <hr>
-                <div class="row">
-                    <div class="col">
-                        <h4>User Info</h4>
-                        <b>Pronouns:</b> {{u.pronouns}}<br>
-                        <b>Contact:</b> {{u.contact}}<br>
-                    </div>
-                    <div class="col">
-                        <h4>Bio</h4>
-                        <p class="bio">{{u.bio}}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-2" *ngIf="sameUser || admin">
-                <div class="card">
-                    <div class="card-header">
-                        Options
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item"><button type="button" class="btn btn-purple btn-sm rounded" (click)="NavToEditProfile()">Edit Profile</button></li>
-                        <li class="list-group-item"><button type="button" class="btn btn-purple btn-sm rounded" (click)="NavToResetPassword()">Reset Password</button></li>
-                        <li class="list-group-item"><button type="button" class="btn btn-danger btn-sm rounded" (click)="DeleteAccount()">Delete Account</button></li>
-                        <li class="list-group-item"><button type="button" class="btn btn-danger btn-sm rounded" (click)="GenerateDummyData()">Test Database</button></li>
-                        <!-- ^^^Allows the Admin to run a script that fills the database with dummy data for testing -->
-                    </ul>
-                </div>
-            </div>
+          <div class="col">
+            <h4>User Info</h4>
+            <b>Pronouns:</b> {{ u.pronouns }}<br />
+            <b>Contact:</b> {{ u.contact }}<br />
+          </div>
+          <div class="col">
+            <h4>Bio</h4>
+            <p class="bio">{{ u.bio }}</p>
+          </div>
         </div>
+      </div>
+      <div class="col-12 mt-5" *ngIf="sameUser || admin">
+        <h3 class="box-head rounded">Options</h3>
+        <hr />
+        <ul class="row mt-2">
+          <li class="list-group-item col-3 me-3">
+            <button
+              type="button"
+              class="btn btn-purple btn-sm rounded"
+              (click)="NavToEditProfile()"
+            >
+              Edit Profile
+            </button>
+          </li>
+          <li class="list-group-item col-3 me-5">
+            <button
+              type="button"
+              class="btn btn-purple btn-sm rounded"
+              (click)="NavToResetPassword()"
+            >
+              Reset Password
+            </button>
+          </li>
+          <li class="list-group-item col-3">
+            <button
+              type="button"
+              class="btn btn-danger btn-sm rounded"
+              (click)="DeleteAccount()"
+            >
+              Delete Account
+            </button>
+          </li>
+          <li class="list-group-item"><button type="button" class="btn btn-danger btn-sm rounded" (click)="GenerateDummyData()">Test Database</button></li>
+        <!-- Allows the Admin to run a script that fills the database with dummy data for testing -->
+        </ul>
+      </div>
     </div>
+  </div>
 </div>

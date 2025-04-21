@@ -11,10 +11,10 @@ import { environment } from '../../environments/environment';
 export class CoursesComponent implements OnInit {
   public pageTitle = 'TimeTrackerV2 | Courses';
   public errMsg = '';
-  public courses: any = [];
-  public allUserCourses: any = [];
-  public nonUserCourses: any = [];
-  public PendUserCourses: any = [];
+  public courses: any[] = [];
+  public allUserCourses: any[] = [];
+  public nonUserCourses: any[] = [];
+  public PendUserCourses: any[] = [];
   public allUserFilteredCourses: any = [];
   public nonUserFilteredCourses: any = [];
   public searchQuery: any = '';
@@ -67,18 +67,7 @@ export class CoursesComponent implements OnInit {
   // });
   // }
 
-  loadCourses(): void {
-    // this.http.get<any>(`https://localhost:8080/Users/CourseList`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
-    //   next: data => {
-    //     this.errMsg = "";
-    //     console.log(data);
-    //     this.courses=data;
-    //   },
-    //   error: error => {
-    //     this.errMsg = error['error']['message'];
-    //   }
-    // });
-
+  loadCourses(reload: boolean = true): void {
     this.loadAllUserCourses();
     this.loadNonUserCourses();
     this.loadPenUserCourses();
@@ -93,94 +82,61 @@ export class CoursesComponent implements OnInit {
 
   loadAllUserCourses(): void {
     this.http
-      .get<any>(
-        `${environment.apiURL}/api/Users/${this.currentUser.userID}/getUserCourses/`,
-        {
-          headers: new HttpHeaders({
-            'Access-Control-Allow-Headers': 'Content-Type',
-          }),
-        }
-      )
+      .get<any[]>(`${environment.apiURL}/api/Users/1/getUserCourses/`)
       .subscribe({
         next: (data) => {
-          this.errMsg = '';
-          console.log(data);
-          this.allUserCourses = data;
+          this.allUserCourses = Array.isArray(data) ? data : []; // Ensure it's an array
         },
         error: (error) => {
-          this.errMsg = error['error']['message'];
+          this.errMsg = error.error?.message || 'Error loading user courses';
         },
       });
   }
 
   loadNonUserCourses(): void {
     this.http
-      .get<any>(
-        `${environment.apiURL}/api/Users/${this.currentUser.userID}/getNonUserCourses/`,
-        {
-          headers: new HttpHeaders({
-            'Access-Control-Allow-Headers': 'Content-Type',
-          }),
-        }
-      )
+      .get<any[]>(`${environment.apiURL}/api/Users/1/getNonUserCourses/`)
       .subscribe({
         next: (data) => {
-          this.errMsg = '';
-          console.log(data);
-          this.nonUserCourses = data;
-          /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+          this.nonUserCourses = Array.isArray(data) ? data : []; // Ensure it's an array
         },
         error: (error) => {
-          this.errMsg = error['error']['message'];
+          this.errMsg =
+            error.error?.message || 'Error loading non-user courses';
         },
       });
   }
 
   loadPenUserCourses(): void {
     this.http
-      .get<any>(
-        `${environment.apiURL}/api/Users/${this.currentUser.userID}/getCoursesPendCourses/`,
-        {
-          headers: new HttpHeaders({
-            'Access-Control-Allow-Headers': 'Content-Type',
-          }),
-        }
-      )
+      .get<any[]>(`${environment.apiURL}/api/Users/1/getCoursesPendCourses/`)
       .subscribe({
         next: (data) => {
-          this.errMsg = '';
-          console.log(data);
-          this.PendUserCourses = data;
-          /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+          this.PendUserCourses = Array.isArray(data) ? data : []; // Ensure it's an array
         },
         error: (error) => {
-          this.errMsg = error['error']['message'];
+          this.errMsg = error.error?.message || 'Error loading pending courses';
         },
       });
   }
 
-  register(CourseId: any) {
-    console.log(CourseId);
-    console.log(this.currentUser.userID);
+  register(courseId: number | null): void {
+    if (!courseId) {
+      this.errMsg = 'Missing one or more required arguments';
+      return;
+    }
 
-    let req = {
-      userID: this.currentUser.userID,
-      courseID: CourseId,
-    };
 
+    const payload = { userID: this.currentUser.userID, courseID: courseId };
     this.http
-      .post<any>(`${environment.apiURL}/api/putUserInPending/`, req, {
-        headers: new HttpHeaders({
-          'Access-Control-Allow-Headers': 'Content-Type',
-        }),
-      })
+      .post(`${environment.apiURL}/api/putUserInPending/`, payload)
       .subscribe({
-        next: (data) => {
+        next: () => {
           this.errMsg = '';
           this.loadCourses();
         },
         error: (error) => {
-          this.errMsg = error['error']['message'];
+          this.errMsg = error.error?.message || 'Error registering for course';
         },
       });
   }
@@ -257,38 +213,5 @@ export class CoursesComponent implements OnInit {
     this.allUserFilteredCourses = this.allUserCourses.filter((c: any) =>
       c.courseName.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
-
-    // if (this.searchQuery == '') {
-    //   this.allUserFilteredCourses = [];
-    //   this.nonUserFilteredCourses = [];
-    // }
-    // else {
-    //   sizeOfAllFilteredCourses = this.allUserFilteredCourses.length;
-    //   sizeOfNonFilteredCourses = this.nonUserFilteredCourses.length;
-    //   this.allUserFilteredCourses.splice(0, sizeOfAllFilteredCourses);
-    //   this.nonUserFilteredCourses.splice(0, sizeOfNonFilteredCourses);
-    //   for (let c of this.nonUserCourses) {
-    //     if (c.courseName.toLowerCase().search(this.searchQuery.toLowerCase()) != -1) {
-    //       this.nonUserFilteredCourses.push(c);
-    //     }
-    //     else {
-    //       sizeOfNonFilteredCourses = this.nonUserFilteredCourses.length;
-    //       this.nonUserFilteredCourses.splice(0, sizeOfNonFilteredCourses);
-    //       sizeOfAllFilteredCourses = this.allUserFilteredCourses.length;
-    //       this.allUserFilteredCourses.splice(0, sizeOfAllFilteredCourses);
-    //     }
-    //   }
-    //   for (let c of this.allUserCourses) {
-    //     if (c.courseName.toLowerCase().search(this.searchQuery.toLowerCase()) != -1) {
-    //       this.allUserFilteredCourses.push(c);
-    //     }
-    //     else {
-    //       sizeOfAllFilteredCourses = this.allUserFilteredCourses.length;
-    //       this.allUserFilteredCourses.splice(0, sizeOfAllFilteredCourses);
-    //       sizeOfNonFilteredCourses = this.nonUserFilteredCourses.length;
-    //       this.nonUserFilteredCourses.splice(0, sizeOfNonFilteredCourses);
-    //     }
-    //   }
-    // }
   }
 }
