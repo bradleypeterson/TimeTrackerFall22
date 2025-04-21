@@ -21,289 +21,202 @@ const crypto = require('crypto');
     ]
 */
 
-var DData = [
+var DummyData = [
+    [   "admin2",
+        "Secondary", 
+        'Admin',
+        'admin'
+    ],
     [
         'MrFeeny', 
         'George', 
         'Feeny',
-        'instructor',
-        'true',
-        'true'
+        'instructor'
     ],
     [
         'MsFrizzle',
         'Valerie',
         'Frizzle',
-        'instructor',
-        'true',
-        'true'
+        'instructor'
     ],
     [
         'MsHoney',
         'Jennifer',
         'Honey',
-        'instructor',
-        'true',
-        'true'
+        'instructor'
     ],
     [
         'MrKeating',
         'John',
         'Keating',
-        'instructor',
-        'true',
-        'true'
+        'instructor'
     ],
     [
         'MrSchneebly',
         'Dewey',
         'Finn',
-        'instructor',
-        'true',
-        'true'
+        'instructor'
     ],
     [
         'MrsMcgonagall',
         'Minerva',
         'Mcgonagall',
-        'instructor',
-        'true',
-        'true'
+        'instructor'
     ],
     [
         'MrNye',
         'Bill',
         'Nye',
-        'instructor',
-        'true',
-        'true'
+        'instructor'
     ],
     [
         'RGilmore',
         'Lorelai',
         'Gilmore',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'JMariano',
         'Jess',
         'Mariano',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'DForester',
         'Dean',
         'Forester',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'LKim',
         'Lane',
         'Kim',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'PGeller',
         'Paris',
         'Geller',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'LHuntzberger',
         'Logan',
         'Huntzberger',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'LScott',
         'Lucas',
         'Scott',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'NScott',
         'Nathan',
         'Scott',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'PSawyer',
         'Peyton',
         'Sawyer',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'BDavis',
         'Brooke',
         'Davis',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'HJames',
         'Haley',
         'James',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'Mouth',
         'Marvin',
         'McFadden',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'RGatina',
         'Rachel',
         'Gatina',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'JJagielski',
         'Jake',
         'Jagielski',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'TSmith',
         'Tim',
         'Smith',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'CMatthews',
         'Cory',
         'Matthews',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'TLawrence',
         'Topenga',
         'Lawrence',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'SHunter',
         'Shawn',
         'Hunter',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'EForeman',
         'Eric',
         'Foreman',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'DPinciotti',
         'Donna',
         'Pinciotti',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'SHyde',
         'Steven',
         'Hyde',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'MKelso',
         'Michael',
         'Kelso',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'JBurkhart',
         'Jackie',
         'Burkhart',
-        'student',
-        'true',
-        'true'
+        'student'
     ],
     [
         'Fez',
         'Wilmer',
         'Valderrama',
-        'student',
-        'true',
-        'true'
+        'student'
     ]
 ];
 
-var DummyData= new Array(32);
-for (let i = 0; i < DummyData.length; i++) {
-    DummyData[i]= new Array(6);
-}
 
-for(let i = 1; i< DummyData.length-1; i++){
-     //Fill username
-     DummyData[i][0]= DData[i][0];
-    
-     //Fill Password at position 1
-     var salt = crypto.randomBytes(16).toString('hex');
-     var hashPass = crypto.pbkdf2Sync('admin2', salt, 1000, 64, 'sha512');
-     DummyData[i][1]=hashPass.toString('hex');
 
-     //Fill firstname
-     DummyData[i][2]= DData[i][1];
-     //Fill Last name
-     DummyData[i][3]= DData[i][2];
-     //Fill Type
-     DummyData[i][4]= DData[i][3];
-     //Fill salt
-     DummyData[i][5]= salt;
-}
-
-var adminsalt = crypto.randomBytes(16).toString('hex');
-var adminhashPass = crypto.pbkdf2Sync('admin2', adminsalt, 1000, 64, 'sha512');
-DummyData[0] = [   "admin2",
-            adminhashPass.toString('hex'),
-            "Secondary", 
-            'Admin',
-            'admin', 
-            adminsalt]
 
 module.exports = { DummyData };
 

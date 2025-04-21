@@ -126,6 +126,7 @@ export class CoursesComponent implements OnInit {
       return;
     }
 
+
     const payload = { userID: this.currentUser.userID, courseID: courseId };
     this.http
       .post(`${environment.apiURL}/api/putUserInPending/`, payload)

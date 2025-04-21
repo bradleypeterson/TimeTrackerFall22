@@ -185,7 +185,7 @@
           </div>
         </div>
 
-        <!-- Single Submit Button for All Updates -->
+        <!-- Single Submit Button for All Updates
         <div class="submit-container">
           <button
             type="button"
@@ -198,15 +198,15 @@
             Changes saved!
           </span>
         </div>
+      </div> -->
+
+      <div class="question-btns">
+        <button type="button" class="btn btn-purple btn-courses" (click)="showQuestionModal = true">Add New Question</button>
+
+        <button type="button" class="btn-question btn btn-purple" (click)="submitAllUpdates()">Save All Changes</button>
+        <span class="badge bg-success" *ngIf="saveSuccessful"> Changes saved!</span>
       </div>
 
-      <button
-        type="button"
-        class="btn btn-purple btn-courses"
-        (click)="showQuestionModal = true"
-      >
-        Add New Question
-      </button>
 
       <!-- Modal for Adding a Question -->
       <div class="modal" *ngIf="showQuestionModal">

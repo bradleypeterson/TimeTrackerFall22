@@ -264,163 +264,46 @@ exports.DeleteQuestion = async (req, res, next) => {
 };
 
 exports.AssignEvalToProjects = async (req, res, next) => {
-    console.log("EvalControllers.js file/AssignEvalToProjects route called");
+    console.log("AssignEvalToProject Called")
 
-    console.log(JSON.stringify(req.body));
-    let evalTemplateID = req.body.evalTemplateID;
-    let projectIDs = req.body.projectIDs;
+    let data = [];
 
-    // These functions are used to re-define a new all/run sql query/command for the DB so that we can use the "await" operator inside this async function "AssignEvalToProjects" and have the server wait for a response from sqlite for if the all/run command was accepted.  The original idea for this code was found here with some slight modifications https://www.scriptol.com/sql/sqlite-async-await.php
-    function newAll(query, params) {
-        return new Promise(function (resolve, reject) {
-            if (params == undefined) params = []
+    data[0] = req.body["evaluatorID"];
+    data[1] = req.body["evaluateeID"];
+    data[2] = req.body["templateID"];
+    data[3] = req.body["projectID"];
+    data[4] = req.body["evalCompleted"];
 
-            db.all(query, params, (err, rows) => {
-                if (err) {
-                    console.log(err);
-                    reject(err);
-                }
-                else {
-                    resolve(rows);
-                }
-            });
-        });
-    }
-
-    function newRun(query, params) {
-        return new Promise(function (resolve, reject) {
-            if (params == undefined) params = []
-
-            db.run(query, params, (err) => {
-                if (err) {
-                    console.log(err);
-                    // reject(err.message);
-                    resolve(false);
-                }
-                else {
-                    resolve(true);
-                }
-            });
-        });
-    }
-
-    // Grab all the members for the projects supplied by the instructor
-    // We do this because the number of projects can change depending on what the user selects in the project.  However, there might be an issue with this method of doing this.  When we execute the SQL statement, we might get the following error returned to us "SQLITE_ERROR: too many SQL variables" as shown where I got this solution https://github.com/TryGhost/node-sqlite3/issues/762
-    const questionMarkPlaceHolders = projectIDs.map(() => "?").join(",");
-    let projectMembersSQL = `SELECT p.projectID, pu.userID
-    FROM Projects p
-    INNER JOIN project_Users pu ON pu.projectID = p.projectID
-    WHERE p.projectID IN (${questionMarkPlaceHolders})
-    ORDER BY p.projectID, pu.userID`;
-
-    var rows = await newAll(projectMembersSQL, projectIDs);
-
-    // If something happened to prevent the Node server for accessing the DB
-    if (!rows) {
-        return res.status(500).json({ message: 'Something went wrong in grabbing the users for the projects.\nPlease try again later.' });
-    }
-
-    let currentProjectID;
-    let processedRows = [];
-    let dataToBeAdded = {};
-
-    // Go through every row returned and process it before inserting the entries into the DB
-    rows.forEach((row, index) => {
-        // The below if statement is only used for debugging
-        if (row.projectID != currentProjectID) {
-            console.log(`\nNew project detected with an ID of ${row.projectID}`)
+    db.run(`INSERT INTO Assigned_Eval(evaluatorID, evaluateeID, templateID, projectID, evalCompleted)
+        VALUES(?, ?, ?, ?, ?)`, data, function (err, rows) {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        } else {
+            return res.status(200).json({ course: data });
         }
-        console.log("Processing the row: " + JSON.stringify(row));
-        // if it is a new user
-        if (row.projectID != currentProjectID) {
-            // If it is not the first row being processed
-            if (index != 0) {
-                processedRows.push(dataToBeAdded);
-            }
-            currentProjectID = row.projectID;
-
-            // Replace what is currently stored inside the variable dataToBeAdded with the current data in the row
-            dataToBeAdded = {
-                projectID: row.projectID,
-                userIDs: [row.userID]
-            }
-        }
-        // The project is already been processed before, so simply append the data to the usersID portion of the dataToBeAdded
-        else {
-            dataToBeAdded.userIDs.push(row.userID);
-        }
-        console.log(`Resulting processed data: ${JSON.stringify(dataToBeAdded)}`);  // For debugging
     });
 
-    // Add the very last item processed to the processedRows array
-    processedRows.push(dataToBeAdded);
-    console.log(`\nFinished Processing the data and the result is:\n${JSON.stringify(processedRows)}`);  // For debugging
-
-    let insertAssignedEvalSQL = `INSERT INTO Assigned_Eval (evaluatorID, evaluateeID, templateID, projectID, evalCompleted)
-    VALUES(?, ?, ?, ?, ?)`;
-
-    console.log("Beginning transaction");
-    let errorsGenerated = false;
-    db.run("BEGIN TRANSACTION");
-    // Example data that the above rows.forEach() loop outputs to better understand what it is doing in the below for loop:  [{"projectID":1,"userIDs":[3,4]}, {"projectID":2,"userIDs":[4]}]
-    // This way of processing the data makes it so that you can run the async function newRun inside of this for loop and was discovered here https://stackoverflow.com/a/66703757
-    for await (const pRow of processedRows) {
-        // Data being processed inside here {"projectID":1,"userIDs":[3,4]}
-        // Populate the data with what the information what will not change in the below for loops
-        let data = ["temp", "temp", evalTemplateID, pRow.projectID, false];
-
-        // We add the '?' after "pRow.userIDs" in this and the following for loop because a project might not have any users assigned to it, thus userIDs would be null.  The '?' makes it so that what comes after it is optional, I.E. it might or might not exist
-        for (let evaluatorIndex = 0; evaluatorIndex < pRow.userIDs?.length; evaluatorIndex++) {
-            // Grab the evaluatorID for the current user and assign it to the evaluatorID position of the data
-            data[0] = pRow.userIDs[evaluatorIndex];
-
-            for (let evaluateeIndex = 0; evaluateeIndex < pRow.userIDs?.length; evaluateeIndex++) {
-                // If the current index of the evaluator is not the same as the evaluatee index, then add the eval to the DB.  I.E. don't assign an eval to the same person making the evals
-                if (evaluatorIndex != evaluateeIndex) {
-                    // Grab the evaluateeID for the targeted user and assign it to the evaluateeID position of the data
-                    data[1] = pRow.userIDs[evaluateeIndex];
-                    console.log(`Data being inserted: ${JSON.stringify(data)}`);
-
-                    // This will insert multiple table entries into the DB so that we can simplify the SQL statement and simply change the information stored inside of "data".  The original idea for this changes was found here before we implemented the newRun function https://stackoverflow.com/questions/38387373/how-can-i-perform-a-bulk-insert-using-sqlite3-in-node-js
-                    const runCommandSuccessful = await newRun(insertAssignedEvalSQL, data);
-                    if (!runCommandSuccessful) {
-                        errorsGenerated = true;
-                    }
-                }
-            }
-        }
-    }
-
-    // If any errors occurred in inserting the data, rollback the changes to the DB, otherwise commit them to the DB.
-    if (errorsGenerated) {
-        console.log("Errors generated, rolling back changes");
-        db.run("ROLLBACK");
-        return res.status(500).json({ message: 'Something went wrong in assigning the evals to the users of the projects.  Please try again later.' });
-    }
-    else {
-        console.log("No errors were generated, committing changes");
-        db.run("COMMIT");
-        return res.status(200).json({ message: 'The project users have been assigned the selected eval.' });
-    }
 };
 
 exports.GetAssignedEvals = async (req, res, next) => {
     console.log("EvalControllers.js file/GetAssignedEvals route called");
 
     let evaluateeID = req.params["evaluateeID"];
+    let projectID = req.params["projectID"];
 
-    if (!evaluateeID) {
-        return res.status(400).json({ message: "evaluatee ID is required" });
+    if (!evaluateeID || !projectID) {
+        return res.status(404).json({ message: 'No evaluations found for this evaluatee and project.' });
     }
 
-    let sql = `SELECT q.questionID, q.questionText, qt.questionTypeText AS questionType, q.templateID, p.projectName AS projectName, a.evaluatorID AS evaluatorID
+    let sql = `SELECT q.questionID, q.questionText, qt.questionTypeText AS questionType, q.templateID, p.projectName AS projectName, a.evaluatorID AS evaluatorID, a.assignedEvalID as evalID
     FROM Question as q
     INNER JOIN Assigned_Eval as a ON a.templateID = q.templateID
     INNER JOIN Question_Type as qt ON qt.questionTypeID = q.questionType
     INNER JOIN Projects as p ON a.projectID = p.projectID
-    WHERE evaluateeID = ?`;
+    WHERE evaluateeID = ? AND a.projectID = ? AND evalCompleted = 0`;
 
-    db.all(sql, [evaluateeID], (err, rows) => {
+    db.all(sql, [evaluateeID, projectID], (err, rows) => {
         if (err) {
             console.error(err.message);
             return res.status(500).json({ message: "Error retrieving questions." });
@@ -447,3 +330,72 @@ exports.GetAssignedEvals = async (req, res, next) => {
         }
     });
 };
+
+exports.SubmitResponses = async (req, res, next) => {
+    console.log("SubmitResponses Called");
+
+    let data = [];
+
+    data[0] = req.body["evalID"];
+    data[1] = req.body["userID"];
+    data[2] = req.body["questionID"];
+    data[3] = req.body["rating"];
+    data[4] = req.body["response"];
+
+    db.serialize(() => {
+        db.run('BEGIN TRANSACTION;');
+
+        //SQL for responses
+        const sqlstmt = db.prepare('INSERT INTO Response (assignedEvalID, userID, questionID, rating, response) VALUES (?, ?, ?, ?, ?)');
+
+        //add data
+        sqlstmt.run(data, function(err) {
+            if (err) {
+                console.log(err);
+                db.run('ROLLBACK;');  //Rollback if there is an error
+                return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+            }
+        });
+
+        //commit if no errors
+        db.run('COMMIT;', (err) => {
+            if (err) {
+                console.log(err);
+                db.run('ROLLBACK;');  //Rollback if it can't commit
+                return res.status(500).json({ message: 'Something went wrong during commit. Please try again later.' });
+            } else {
+                return res.status(200).json({ message: 'Response recorded successfully.' });
+            }
+        });
+    });
+};
+
+
+exports.evalCompleted = async (req, res, next) => {
+    console.log("EvalCompleted Called")
+
+    const evalID = req.body.evalID
+
+    db.serialize(() => {
+        const sqlstmt = (`UPDATE Assigned_Eval SET evalCompleted = 1 WHERE assignedEvalID = ?`);
+
+        sqlstmt.run([evalID], function(err){
+            if(err) {
+                console.log(err);
+                db.run('ROLLBACK;');  //Rollback if there is an error
+                return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+            }
+        });
+
+        //commit if no errors
+        db.run('COMMIT;', (err) => {
+            if (err) {
+                console.log(err);
+                db.run('ROLLBACK;');  //Rollback if it can't commit
+                return res.status(500).json({ message: 'Something went wrong during commit. Please try again later.' });
+            } else {
+                return res.status(200).json({ message: 'Response recorded successfully.' });
+            }
+        });
+    })
+}
