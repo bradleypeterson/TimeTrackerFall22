@@ -1,14 +1,3 @@
-/*
-TESTS: 
-Component Creation Test
-Form Initialization Test
-Form Validation Test
-Successful Registration Test
-Failed Registration Test
-Run the test with ng test
-
-*/
-
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import { RegisterComponent } from './register.component';
 import { ReactiveFormsModule } from '@angular/forms';

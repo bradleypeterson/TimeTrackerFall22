@@ -135,6 +135,6 @@ describe('UserProfileComponent', ()=>{
     component.currentUserID = '30';
     component.viewingUserID = '30';
     expect(component.sameUser).toBeTrue();
-  })
+  });
  
 }); //end describe

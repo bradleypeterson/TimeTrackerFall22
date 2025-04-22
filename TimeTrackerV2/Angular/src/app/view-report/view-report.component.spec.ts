@@ -1,23 +1,46 @@
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ViewReportComponent } from './view-report.component';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { Router } from '@angular/router';
+import { of, throwError } from 'rxjs';
 
-// import { ViewReportComponent } from './view-report.component';
+const mockRouter = {
+    getCurrentNavigation: () => ({
+        extras: {
+            state: {
+                studentID: '30', 
+                projectID: '1', 
+                courseID: '1',
+            },
+        },
+    }),
+};
 
-// describe('ViewReportComponent', () => {
-//   let component: ViewReportComponent;
-//   let fixture: ComponentFixture<ViewReportComponent>;
+describe('ViewReportComponent', () =>{
 
-//   beforeEach(async () => {
-//     await TestBed.configureTestingModule({
-//       declarations: [ ViewReportComponent ]
-//     })
-//     .compileComponents();
+    let component: ViewReportComponent;
+    let fixture: ComponentFixture<ViewReportComponent>;
+    let httpMock: HttpTestingController;
 
-//     fixture = TestBed.createComponent(ViewReportComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+    beforeEach(async () =>{
+        await TestBed.configureTestingModule({
+            declarations: [ViewReportComponent], 
+            imports: [HttpClientTestingModule, 
+                NgxPaginationModule
+            ],
+            providers: [ {
+                provide: Router, useValue: mockRouter
+            },]
+        }).compileComponents();
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+        fixture = TestBed.createComponent(ViewReportComponent);
+        component = fixture.componentInstance;
+        httpMock = TestBed.inject(HttpTestingController);
+    
+    });
+
+    it('Should Create Component', ()=> {
+        expect(component).toBeTruthy();
+    })
+}); //end Describe
