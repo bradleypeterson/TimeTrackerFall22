@@ -286,6 +286,26 @@ exports.AssignEvalToProjects = async (req, res, next) => {
 
 };
 
+exports.GetAllEvals = async (req, res, next) => {
+    console.log("EvalControllers.js file/GetAllEvals route called");
+
+    let evaluateeID = req.params["evaluateeID"];
+
+    let sql = `SELECT assignedEvalID as evalID, projectID
+               FROM Assigned_Eval
+               WHERE evaluateeID = ? AND evalCompleted = 0`;
+
+    db.all(sql, [evaluateeID], (err, rows) => {
+        if (err) {
+            console.error(err.message);
+            return res.status(500).json({ message: "Error retrieving questions." });
+        } else {
+            res.status(200).json(rows);
+        }
+    });
+};
+
+
 exports.GetAssignedEvals = async (req, res, next) => {
     console.log("EvalControllers.js file/GetAssignedEvals route called");
 
@@ -314,7 +334,8 @@ exports.GetAssignedEvals = async (req, res, next) => {
         if (templateIDs.size === 1) {
             // Only one templateID, return a 1-D array
             res.status(200).json(rows);
-        } else {
+        } 
+        else {
             // Multiple templateIDs, return a 2-D array indexed by templateID
             let questionsByTemplateID = {};
             rows.forEach(row => {

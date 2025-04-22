@@ -19,27 +19,16 @@ let db = ConnectToDB();
 const app = express();
 const hostname = "137.190.19.215"
 
-app.use(
-  cors({
-    //origin: "https://137.190.19.215:4200", // allows the supplied url to talk to the server
-    origin: "https://localhost:4200",
-    credentials: true, // Allows credentials from the origin
-  })
-);
+app.use(cors({
+  origin: true,  // Will reflect the request origin (your Nginx server)
+  credentials: true
+}));
+
 app.use(
   express.json({
     extended: false,
   })
 );
-  
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Methods", "DELETE, PUT, GET, POST");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
 
 app.get("/", (req, res) => {
   return res.send("Hello World");
@@ -49,6 +38,16 @@ app.get("/", (req, res) => {
 app.use("/api", ExternalRoutes); //adds our custom http responses from the file specified for "ExternalRoutes"
 
 // We are using the readFileSync() because this information is vital for the server.  I.E. without these certificates, the server should not be started
+/*
+const sslServer = https.createServer(
+  {
+    key: fs.readFileSync(path.join(__dirname, "certificates/137.190.19.215-key.pem")), // __dirname = current directory.  And then grab the file key.pem located in the certificates folder
+    cert: fs.readFileSync(path.join(__dirname, "certificates/137.190.19.215.pem")),
+  },
+  app
+);
+*/
+
 const sslServer = https.createServer(
   {
     key: fs.readFileSync(path.join(__dirname, "certificates/key.key")), // __dirname = current directory.  And then grab the file key.pem located in the certificates folder
@@ -63,3 +62,8 @@ sslServer.listen(PORT, () => {
     console.log("Connected to the main database.");
   }
 });
+
+app.use((err, req, res, next) => {
+  console.error(err.stack); // Log error details
+  res.status(500).send('There was an Error');
+})
