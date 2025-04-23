@@ -67,3 +67,11 @@
     flex-direction: column;
     height: 100%;
 }
+
+.div-submit{
+    display: flex;
+}
+
+.eval-btn{
+    margin-left: auto;
+}
