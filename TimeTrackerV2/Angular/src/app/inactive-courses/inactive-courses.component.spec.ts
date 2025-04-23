@@ -17,12 +17,15 @@ import { NgxPaginationModule } from 'ngx-pagination';
 
 class MockRouter {
   navigate = jasmine.createSpy('navigate');
+  getCurrentNavigation = jasmine
+    .createSpy('getCurrentNavigation')
+    .and.returnValue(null); // Return null since it's not used here
 }
 
 beforeEach(async () => {
   await TestBed.configureTestingModule({
     declarations: [InactiveCoursesComponent],
-    imports: [NgxPaginationModule],
+    imports: [NgxPaginationModule], // Ensure NgxPaginationModule is imported
     providers: [
       {
         provide: HttpClient,
@@ -36,11 +39,18 @@ beforeEach(async () => {
             }
             return of([]);
           },
+          post: (url: string, body: any) => {
+            return of({ success: true }); // Mock successful post response
+          },
         },
       },
-      { provide: Router, useClass: MockRouter },
+      { provide: Router, useClass: MockRouter }, // Use the updated MockRouter
     ],
   }).compileComponents();
+});
+
+afterEach(() => {
+  TestBed.resetTestingModule(); // Reset TestBed after each test file
 });
 
 describe('InactiveCoursesComponent', () => {

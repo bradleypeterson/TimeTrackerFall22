@@ -1,150 +1,155 @@
-// /*
-// ##########################   MY WORK BELOW   ####################################
-// TESTS: 
-// Component Creation Test
-// Initialization Test
-// Course Loading Test
-// Form Submission Test
-// Navigation Test
-// Run the test with ng test
-// */
+/*
+##########################   MY WORK BELOW   ####################################
+TESTS:
+Component Creation Test
+Initialization Test
+Course Loading Test
+Form Submission Test
+Navigation Test
+Run the test with ng test
+*/
 
-// import { ComponentFixture, TestBed } from '@angular/core/testing';
-// import { EditCourseComponent } from './edit-course.component';
-// import { HttpClient } from '@angular/common/http';
-// import { ActivatedRoute, Router } from '@angular/router';
-// import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
-// import { of } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { EditCourseComponent } from './edit-course.component';
+import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UntypedFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 
-// class MockRouter {
-//   navigate = jasmine.createSpy('navigate');
-//   getCurrentNavigation = jasmine
-//     .createSpy('getCurrentNavigation')
-//     .and.returnValue({
-//       extras: {
-//         state: { courseID: '1' }, // Mock navigation state
-//       },
-//     });
-// }
+class MockRouter {
+  navigate = jasmine.createSpy('navigate');
+  getCurrentNavigation = jasmine
+    .createSpy('getCurrentNavigation')
+    .and.returnValue({
+      extras: {
+        state: { courseID: '1' }, // Mock navigation state
+      },
+    });
+}
 
-// class MockActivatedRoute {
-//   snapshot = { paramMap: { get: () => '1' } }; // Mock courseID as '1'
-// }
+class MockActivatedRoute {
+  snapshot = { paramMap: { get: () => '1' } }; // Mock courseID as '1'
+}
 
-// beforeEach(async () => {
-//   await TestBed.configureTestingModule({
-//     declarations: [EditCourseComponent],
-//     imports: [ReactiveFormsModule], // Import ReactiveFormsModule for form handling
-//     providers: [
-//       UntypedFormBuilder,
-//       {
-//         provide: HttpClient,
-//         useValue: {
-//           get: (url: string) => {
-//             if (url.includes('CourseInfo')) {
-//               return of({
-//                 courseName: 'Test Course',
-//                 description: 'Test Description',
-//                 isActive: true,
-//                 instructorID: '123',
-//               }); // Mock course info
-//             }
-//             return of({});
-//           },
-//           post: () => of({}),
-//         },
-//       },
-//       { provide: Router, useClass: MockRouter },
-//       { provide: ActivatedRoute, useClass: MockActivatedRoute },
-//     ],
-//   }).compileComponents();
-// });
+beforeEach(async () => {
+  await TestBed.configureTestingModule({
+    declarations: [EditCourseComponent],
+    imports: [ReactiveFormsModule], // Import ReactiveFormsModule for form handling
+    providers: [
+      UntypedFormBuilder,
+      {
+        provide: HttpClient,
+        useValue: {
+          get: (url: string) => {
+            if (url.includes('CourseInfo')) {
+              return of({
+                courseName: 'Test Course',
+                description: 'Test Description',
+                isActive: true,
+                instructorID: '123',
+              }); // Mock course info
+            }
+            return of({});
+          },
+          post: () => of({}),
+        },
+      },
+      { provide: Router, useClass: MockRouter },
+      { provide: ActivatedRoute, useClass: MockActivatedRoute },
+    ],
+  }).compileComponents();
+  TestBed.resetTestingModule();
+});
 
-// describe('EditCourseComponent', () => {
-//   let component: EditCourseComponent;
-//   let fixture: ComponentFixture<EditCourseComponent>;
-//   let router: MockRouter;
+afterEach(() => {
+  TestBed.resetTestingModule(); // Reset TestBed after each test file
+});
 
-//   beforeEach(() => {
-//     // Mock localStorage for currentUser
-//     spyOn(localStorage, 'getItem').and.callFake((key: string) => {
-//       if (key === 'currentUser') {
-//         return JSON.stringify({ userID: '123', type: 'instructor' }); // Mock currentUser
-//       }
-//       return null;
-//     });
+describe('EditCourseComponent', () => {
+  let component: EditCourseComponent;
+  let fixture: ComponentFixture<EditCourseComponent>;
+  let router: MockRouter;
 
-//     fixture = TestBed.createComponent(EditCourseComponent);
-//     component = fixture.componentInstance;
-//     router = TestBed.inject(Router) as unknown as MockRouter;
+  beforeEach(() => {
+    // Mock localStorage for currentUser
+    spyOn(localStorage, 'getItem').and.callFake((key: string) => {
+      if (key === 'currentUser') {
+        return JSON.stringify({ userID: '123', type: 'instructor' }); // Mock currentUser
+      }
+      return null;
+    });
 
-//     fixture.detectChanges();
-//   });
+    fixture = TestBed.createComponent(EditCourseComponent);
+    component = fixture.componentInstance;
+    router = TestBed.inject(Router) as unknown as MockRouter;
 
-//   // Component Creation Test
-//   it('Should create the component', () => {
-//     expect(component).toBeTruthy();
-//   });
+    fixture.detectChanges();
+  });
 
-//   // Initialization Test
-//   it('Should initialize the component', () => {
-//     expect(router.getCurrentNavigation).toHaveBeenCalled();
-//     expect(component.courseID).toBe('1'); // Mocked courseID
-//     expect(component.currentUser).toEqual({
-//       userID: '123',
-//       type: 'instructor',
-//     }); // Mocked currentUser
-//     expect(component.editCourseForm).toBeDefined();
-//   });
+  // Component Creation Test
+  it('Should create the component', () => {
+    expect(component).toBeTruthy();
+  });
 
-//   // Course Loading Test
-//   it('Should load course information successfully', () => {
-//     spyOn(component, 'getCourseInfo').and.callThrough();
+  // Initialization Test
+  it('Should initialize the component', () => {
+    expect(router.getCurrentNavigation).toHaveBeenCalled();
+    expect(component.courseID).toBe('1'); // Mocked courseID
+    expect(component.currentUser).toEqual({
+      userID: '123',
+      type: 'instructor',
+    }); // Mocked currentUser
+    expect(component.editCourseForm).toBeDefined();
+  });
 
-//     component.getCourseInfo();
+  // Course Loading Test
+  it('Should load course information successfully', () => {
+    spyOn(component, 'getCourseInfo').and.callThrough();
 
-//     expect(component.getCourseInfo).toHaveBeenCalled();
-//     expect(component.course).toEqual({
-//       courseName: 'Test Course',
-//       description: 'Test Description',
-//       isActive: true,
-//       instructorID: '123',
-//     });
-//     expect(component.editCourseForm.controls['courseName'].value).toBe(
-//       'Test Course'
-//     );
-//     expect(component.editCourseForm.controls['description'].value).toBe(
-//       'Test Description'
-//     );
-//     expect(component.editCourseForm.controls['isActive'].value).toBe(true);
-//   });
+    component.getCourseInfo();
 
-//   // Form Submission Test
-//   it('Should submit the form successfully', () => {
-//     spyOn(component, 'onSubmit').and.callThrough();
-//     spyOn(component, 'GoBackToCourse').and.callThrough();
+    expect(component.getCourseInfo).toHaveBeenCalled();
+    expect(component.course).toEqual({
+      courseName: 'Test Course',
+      description: 'Test Description',
+      isActive: true,
+      instructorID: '123',
+    });
+    expect(component.editCourseForm.controls['courseName'].value).toBe(
+      'Test Course'
+    );
+    expect(component.editCourseForm.controls['description'].value).toBe(
+      'Test Description'
+    );
+    expect(component.editCourseForm.controls['isActive'].value).toBe(true);
+  });
 
-//     component.editCourseForm.setValue({
-//       courseName: 'Updated Course',
-//       description: 'Updated Description',
-//       isActive: true,
-//       instructorID: '123',
-//     });
+  // Form Submission Test
+  it('Should submit the form successfully', () => {
+    spyOn(component, 'onSubmit').and.callThrough();
+    spyOn(component, 'GoBackToCourse').and.callThrough();
 
-//     component.onSubmit();
+    component.editCourseForm.setValue({
+      courseName: 'Updated Course',
+      description: 'Updated Description',
+      isActive: true,
+      instructorID: '123',
+    });
 
-//     expect(component.onSubmit).toHaveBeenCalled();
-//     expect(component.GoBackToCourse).toHaveBeenCalled();
-//     expect(router.navigate).toHaveBeenCalledWith(['/course'], {
-//       state: { courseID: '1' },
-//     });
-//   });
+    component.onSubmit();
 
-//   // Navigation Test
-//   it('Should navigate back to the course page', () => {
-//     component.GoBackToCourse();
-//     expect(router.navigate).toHaveBeenCalledWith(['/course'], {
-//       state: { courseID: '1' },
-//     });
-//   });
-// });
+    expect(component.onSubmit).toHaveBeenCalled();
+    expect(component.GoBackToCourse).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalledWith(['/course'], {
+      state: { courseID: '1' },
+    });
+  });
+
+  // Navigation Test
+  it('Should navigate back to the course page', () => {
+    component.GoBackToCourse();
+    expect(router.navigate).toHaveBeenCalledWith(['/course'], {
+      state: { courseID: '1' },
+    });
+  });
+});
