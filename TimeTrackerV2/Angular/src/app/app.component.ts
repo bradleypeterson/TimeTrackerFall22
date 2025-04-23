@@ -70,4 +70,17 @@ export class AppComponent implements OnInit {
       .navigateByUrl('/', { skipLocationChange: true })
       .then(() => this.router.navigate(['/profile'], { state }));
   }
+
+  logout() {
+    // Reset user roles
+    this.admin = false;
+    this.instructor = false;
+    this.student = false;
+
+    // Clear user session or token
+    localStorage.removeItem('userToken');
+
+    // Force navigation to login page
+    this.router.navigateByUrl('/login');
+  }
 }
