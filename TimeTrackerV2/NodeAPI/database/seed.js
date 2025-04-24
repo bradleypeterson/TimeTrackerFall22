@@ -223,12 +223,13 @@ db.run(`CREATE TABLE IF NOT EXISTS Question (
 // Create Eval Responses table (not yet in use)
 db.run(`CREATE TABLE IF NOT EXISTS Response (
     responseID INTEGER PRIMARY KEY AUTOINCREMENT,
+    assignedEvalID INTEGER NOT NULL,
     userID INTEGER NOT NULL,
-    evaluatorID INTEGER NOT NULL,
     questionID INTEGER NOT NULL,
-    rating INTEGER NOT NULL,
+    rating INTEGER,
+    response TEXT,
+    FOREIGN KEY (assignedEvalID) REFERENCES Assigned_Eval(assignedEvalID)
     FOREIGN KEY (userID) REFERENCES Users(userID),
-    FOREIGN KEY (evaluatorID) REFERENCES Users(userID),
     FOREIGN KEY (questionID) REFERENCES Question(questionID)
 );`);
 

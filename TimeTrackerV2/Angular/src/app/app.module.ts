@@ -22,6 +22,7 @@ import { EditCourseComponent } from './edit-course/edit-course.component';
 import { EditProjectComponent } from './edit-project/edit-project.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
+import { CourseComponent } from './course/course.component';
 import { CourseReportsComponent } from './course-reports/course-reports.component';
 import { EditTimecardComponent } from './edit-timecard/edit-timecard.component';
 import { InactiveCoursesComponent } from './inactive-courses/inactive-courses.component';
@@ -42,6 +43,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
     UserProfileComponent,
     EditProfileComponent,
     CourseReportsComponent,
+    CourseComponent,
     CoursesComponent,
     EditTimecardComponent,
     InactiveCoursesComponent,

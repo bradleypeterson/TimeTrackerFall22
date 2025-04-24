@@ -82,6 +82,8 @@ const {
     DeleteQuestion,
     AssignEvalToProjects,
     GetAssignedEvals,
+    SubmitResponses,
+    evalCompleted,
 } = require("./controllers/EvalControllers");
 //#endregion
 
@@ -242,7 +244,12 @@ router.delete("/deleteQuestion/:questionID", DeleteQuestion);
 
 router.post("/assignEvalToProjects", AssignEvalToProjects);
 
-router.get("/getAssignedEvals/:evaluateeID", GetAssignedEvals);
+router.get("/getAssignedEvals/:evaluateeID/:projectID", GetAssignedEvals);
+
+router.post("/submitResponses", SubmitResponses);
+
+router.post("/evalCompleted", evalCompleted);
+
 //#endregion
 
 module.exports = router; //export the constant "router" (which contains the get, post, put, and delete http responses) so that we can make use of it outside this file.  This is the middleware that Router.use() requires to run.  https://stackoverflow.com/questions/27465850/typeerror-router-use-requires-middleware-function-but-got-a-object
