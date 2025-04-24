@@ -2,7 +2,7 @@ var localStorage = require("node-localstorage").LocalStorage;
 const ConnectToDB = require("./DBConnection");
 
 let db = ConnectToDB();
-localStorage = new localStorage("./scratch");
+localStorage = new localStorage("../NodeAPI/scratch");
 
 //db.serialize();  // Serialize all following commands (not needed because we only need to serialize the Users and Profile tables and all actions attached to them) https://stackoverflow.com/questions/72620312/in-node-sqlite3-how-to-wait-until-run-is-finished
 
@@ -235,5 +235,3 @@ db.run(`CREATE TABLE IF NOT EXISTS Response (
 
 
 db.close(); // Close the connection because it doesn't need to be persistent for the creation of the DB
-
-// isApproved added to all relevant statements

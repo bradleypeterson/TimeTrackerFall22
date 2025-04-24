@@ -84,6 +84,7 @@ const {
     GetAssignedEvals,
     SubmitResponses,
     evalCompleted,
+    GetAllEvals,
 } = require("./controllers/EvalControllers");
 //#endregion
 
@@ -243,6 +244,8 @@ router.put("/updateQuestion/:questionID", UpdateQuestion);
 router.delete("/deleteQuestion/:questionID", DeleteQuestion);
 
 router.post("/assignEvalToProjects", AssignEvalToProjects);
+
+router.get("/getAllEvals/:evaluateeID", GetAllEvals);
 
 router.get("/getAssignedEvals/:evaluateeID/:projectID", GetAssignedEvals);
 
