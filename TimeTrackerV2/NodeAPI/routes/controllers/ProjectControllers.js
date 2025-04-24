@@ -1,6 +1,5 @@
 const { json } = require('body-parser');
-const ConnectToDB = require('../../Database/DBConnection');
-const insertAudit = require('./AuditLog')
+const ConnectToDB = require('../../database/DBConnection');
 
 let db = ConnectToDB();
 

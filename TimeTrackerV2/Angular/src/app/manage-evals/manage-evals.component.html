@@ -30,26 +30,25 @@
   </button>
 
   <hr />
-<!--
   <div *ngIf="isEvalSelected; else noSelection" class="form-container">
-  <-- Preview Section for Evaluation Form ->
+    <!-- Preview Section for Evaluation Form -->
     <div class="eval-preview" *ngIf="selectedTemplateQuestions.length > 0">
       <h3>Preview of Evaluation Form</h3>
 
-      <-- Loop through selectedTemplateQuestions and display each question in a vertical list ->
+      <!-- Loop through selectedTemplateQuestions and display each question in a vertical list -->
       <div class="questions-list">
         <div
           class="question-item"
           *ngFor="let question of selectedTemplateQuestions; let i = index"
         >
-          <-- Container for each question ->
+          <!-- Container for each question -->
           <div class="question-container">
             <label>{{ question.questionText }}</label>
 
-            <-- Rating Question Type ->
+            <!-- Rating Question Type -->
             <div *ngIf="question.questionType === '1-5 Rating'">
               <div class="rating-container">
-                <-- Radio Buttons for Rating ->
+                <!-- Radio Buttons for Rating -->
                 <div *ngFor="let rating of [1, 2, 3, 4, 5]; let j = index">
                   <input
                     type="radio"
@@ -62,7 +61,7 @@
               </div>
             </div>
 
-            <-- Text Response Question Type ->
+            <!-- Text Response Question Type -->
             <div *ngIf="question.questionType === 'Text Response'">
               <textarea class="form-control" id="textarea-{{ i }}"></textarea>
             </div>
@@ -71,9 +70,8 @@
       </div>
     </div>
   </div>
--->
-  
-<ng-template #noSelection>
+
+  <ng-template #noSelection>
     <!-- Content to show when nothing is selected -->
     <p>Please select an evaluation template to preview the form.</p>
   </ng-template>
@@ -117,19 +115,14 @@
         </div>
       </div>
     </div>
-
-    <div class="form-container" *ngIf="this.isEvalSelected == false;">
-      <h2 class="select-eval">Select an Eval</h2>
-    </div>
-
-    
-    <div class="form-container" *ngIf="this.isEvalSelected == true;">
+    <hr />
+    <div class="form-container">
       <h3>Edit Questions</h3>
       <h5>
         Reminder: You must press Sumbit All Updates at the bottom of the form to
         save your changes
       </h5>
-      <div class="questions-form">
+      <div class="questions-form" *ngIf="selectedTemplateQuestions.length > 0">
         <div
           *ngFor="let question of selectedTemplateQuestions; let i = index"
           class="mb-3"
@@ -210,7 +203,7 @@
       <div class="question-btns">
         <button type="button" class="btn btn-purple btn-courses" (click)="showQuestionModal = true">Add New Question</button>
 
-        <button type="button" class="btn-question btn btn-purple submit-btn" (click)="submitAllUpdates()">Save All Changes</button>
+        <button type="button" class="btn-question btn btn-purple" (click)="submitAllUpdates()">Save All Changes</button>
         <span class="badge bg-success" *ngIf="saveSuccessful"> Changes saved!</span>
       </div>
 
@@ -227,6 +220,14 @@
             ></button>
           </div>
           <div class="modal-body">
+            <label for="question-text">Question Text</label>
+            <input
+              type="text"
+              id="question-text"
+              class="form-control"
+              [(ngModel)]="newQuestionText"
+              name="newQuestionText"
+            />
 
             <label for="question-type" class="mt-2">Question Type</label>
             <select
@@ -243,17 +244,6 @@
                 {{ questionType }}
               </option>
             </select>
-
-            <label for="question-text">Question Text</label>
-            <input
-              type="text"
-              id="question-text"
-              class="form-control"
-              [(ngModel)]="newQuestionText"
-              name="newQuestionText"
-            />
-
-
           </div>
           <div class="modal-footer">
             <button
@@ -275,5 +265,155 @@
       </div>
     </div>
 
+    <!-- <div id="manageEvals" ng-cloak>
+  <div class="row position-relative">
+    <h3 class="mt-3">Manage Evaluations</h3>
+    <div class="mt-2 position-absolute" style="top: 15px; right: 95px;"> -->
+    <!-- ng-click="createBlankEvaluation()" -->
+    <!-- <button class="btn btn-purple">Create Evaluation</button>
+    </div>
+    <div class="mt-2 position-absolute" style="top: 15px; right: 15px;"> -->
+    <!-- ng-disabled="evaluations[config.currentTemplate].inUse" -->
+    <!-- <button class="btn btn-danger" ng-click="">Delete</button>
+    </div>
+  </div> -->
+
+    <!-- <div class="row"> -->
+    <!-- ng-if="$parent.user.type === 'A'" -->
+    <!-- <div class="input-group col-12 col-md-6 mt-2">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="instructor">Instructor</label>
+      </div> -->
+    <!--  ng-model="config.instructorId" ng-change="loadTemplates()" -->
+    <!-- <select class="custom-select" id="instructor"> -->
+    <!-- ng-repeat="i in instructors | orderObjectBy : 'firstName' | filter: {isActive: true}" value="{{i.userID}}" selected>{{i.firstName}} {{i.lastName}} -->
+    <!-- <option> </option>
+      </select>
+    </div>
+    <div class="input-group col-12 col-md-6 mt-2">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="template">Template</label>
+      </div> -->
+    <!-- ng-model="config.currentTemplate"
+          ng-options="t.evalTemplateID as t.templateName for t in evaluations " -->
+    <!-- <select class="custom-select" id="template">
+      </select>
+    </div>
+  </div> -->
+    <!-- ng-if="!hasEvaluationTemplates()" -->
+    <!-- <div class="row">
+    <h4 class="mx-auto mt-4">You don't have any templates, create a new one above.</h4>
+  </div> -->
+    <!-- ng-if="hasEvaluationTemplates()" -->
+    <!-- <div class="row">
+    <div class="input-group col-12 col-md-6 mt-2">
+      <div class="input-group-prepend">
+        <label class="input-group-text" for="templateName">Template Name</label>
+      </div> -->
+    <!-- ng-model="evaluations[config.currentTemplate].templateName"
+         ng-model-options="{debounce: 750}" ng-change="saveTemplateName(evaluations[config.currentTemplate])" -->
+    <!-- <input type="text" class="form-control" id="templateName" />
+    </div> -->
+    <!-- ng-if="evaluations[config.currentTemplate].inUse" -->
+    <!-- <div class="col-12 col-md-6 mt-2 text-center">
+      <h4 class="text-danger">In Use - Cannot Be Edited</h4>
+    </div>
+  </div> -->
+
+    <!-- ng-if="hasEvaluationTemplates()" -->
+    <!-- <div class="mt-4 table-responsive">
+
+    <table class="table table-condensed">
+      <thead class="thead-light">
+        <tr>
+          <th style="width: 225px; min-width: 150px;">Category/Question</th>
+          <th style="min-width: 150px;">
+            Options -->
+    <!-- ng-click="addQuestion(0)" ng-disabled="evaluations[config.currentTemplate].inUse" -->
+    <!-- <button class="btn btn-purple float-right">New Question</button> -->
+    <!-- ng-click="createCategory()" ng-disabled="evaluations[config.currentTemplate].inUse" -->
+    <!-- <button class="btn btn-purple float-right mr-2">New Category</button> -->
+    <!-- </th>
+        </tr>
+      </thead>
+      <tbody id="noCategoryQuestions"> -->
+    <!-- ng-repeat="tq in evaluations[config.currentTemplate].templateQuestions | orderObjectBy : 'number' | filter: {evalTemplateQuestionCategoryID: 0}" -->
+    <!-- <tr>
+          <td class="border-right"> -->
+    <!-- ng-model="tq.questionText" ng-disabled="evaluations[config.currentTemplate].inUse"
+            ng-model-options="{debounce: 750}" ng-change="saveQuestion(tq)" -->
+    <!-- <textarea class="h-100 w-100" placeholder="Question Text"></textarea>
+          </td>
+          <td class="align-middle border-right"> -->
+    <!-- ng-model="tq.questionType" ng-disabled="evaluations[config.currentTemplate].inUse"
+            ng-change="saveQuestion(tq)" -->
+    <!-- <select title="Question Type">
+              <option value="N">Number 0-5</option>
+              <option value="R">Short Reponse</option>
+            </select> -->
+    <!-- ng-model="tq.number" ng-disabled="evaluations[config.currentTemplate].inUse"
+            ng-model-options="{debounce: 750}" ng-change="saveQuestion(tq)" -->
+    <!-- <input type="number" style="height: 22px; width: 50px;" title="Order Number" /> -->
+    <!-- ng-model="tq.evalTemplateQuestionCategoryID" ng-disabled="evaluations[config.currentTemplate].inUse"
+            ng-options="c.evalTemplateQuestionCategoryID as c.categoryName for c in evaluations[config.currentTemplate].categories"
+            ng-change="saveQuestion(tq)" -->
+    <!-- <select title="Category">
+            </select> -->
+    <!-- ng-click="deleteQuestion(tq)" ng-disabled="evaluations[config.currentTemplate].inUse" -->
+    <!-- <button class="btn btn-danger float-right">Delete</button>
+          </td>
+        </tr>
+      </tbody> -->
+    <!-- ng-repeat="c in evaluations[config.currentTemplate].categories" ng-if="c.evalTemplateQuestionCategoryID > 0" -->
+    <!-- <tbody>
+        <tr style="background-color: ghostwhite;">
+          <th class="border-right"> -->
+    <!-- ng-model="c.categoryName" ng-disabled="evaluations[config.currentTemplate].inUse"
+            ng-model-options="{debounce: 750}" ng-change="saveCategory(c)" -->
+    <!-- <input class="font-weight-bold" type="text" />
+          </th>
+          <td> -->
+    <!-- ng-click="deleteCategory(c)" ng-disabled="evaluations[config.currentTemplate].inUse" -->
+    <!-- <button class="btn btn-danger float-right">Delete</button> -->
+    <!-- ng-click="addQuestion(c.evalTemplateQuestionCategoryID)" ng-disabled="evaluations[config.currentTemplate].inUse" -->
+    <!-- <button class="btn btn-purple float-right mr-2">New Question</button> -->
+    <!-- </td>
+        </tr> -->
+    <!-- ng-repeat="tq in evaluations[config.currentTemplate].templateQuestions | orderObjectBy : 'number' | filter: {evalTemplateQuestionCategoryID: c.evalTemplateQuestionCategoryID}"
+        ng-if="c.evalTemplateQuestionCategoryID > 0" -->
+    <!-- <tr>
+          <td class="border-right"> -->
+    <!-- ng-model="tq.questionText" ng-disabled="evaluations[config.currentTemplate].inUse"
+            ng-model-options="{debounce: 750}" ng-change="saveQuestion(tq)" -->
+    <!-- <textarea class="h-100 w-100" placeholder="Question Text"></textarea>
+          </td>
+          <td class="align-middle border-right"> -->
+    <!-- ng-model="tq.questionType" ng-disabled="evaluations[config.currentTemplate].inUse"
+            ng-change="saveQuestion(tq)" -->
+    <!-- <select title="Question Type">
+              <option value="N">Number 0-5</option>
+              <option value="R">Short Reponse</option>
+            </select> -->
+    <!-- ng-model="tq.number" ng-disabled="evaluations[config.currentTemplate].inUse"
+            ng-model-options="{debounce: 750}" ng-change="saveQuestion(tq)" -->
+    <!-- <input type="number" style="height: 22px; width: 50px;" title="Order Number" /> -->
+    <!-- ng-model="tq.evalTemplateQuestionCategoryID" ng-disabled="evaluations[config.currentTemplate].inUse"
+            ng-options="c.evalTemplateQuestionCategoryID as c.categoryName for c in evaluations[config.currentTemplate].categories"
+            ng-change="saveQuestion(tq)" -->
+    <!-- <select title="Category">
+            </select> -->
+    <!-- ng-click="deleteQuestion(tq)" ng-disabled="evaluations[config.currentTemplate].inUse" -->
+    <!-- <button class="btn btn-danger float-right">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <hr /> -->
+    <!-- ng-click="completeEval()" ng-disabled="evaluations[config.currentTemplate].inUse" -->
+    <!-- <button class="btn btn-success float-right">Complete Evaluation</button>
+  </div>
+</div> -->
   </div>
 </div>

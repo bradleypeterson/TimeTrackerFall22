@@ -1,2 +1,0 @@
-The below command needs to be executed inside the current directory, source for this command and the .cnf file https://stackoverflow.com/a/49150891
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout key.key -out cert.crt -config req.cnf -sha256

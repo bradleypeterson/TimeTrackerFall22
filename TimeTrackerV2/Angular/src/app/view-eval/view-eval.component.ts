@@ -16,10 +16,9 @@ interface Question {
 }
 
 @Component({
-    selector: 'app-view-eval',
-    templateUrl: './view-eval.component.html',
-    styleUrls: ['./view-eval.component.css'],
-    standalone: false
+  selector: 'app-view-eval',
+  templateUrl: './view-eval.component.html',
+  styleUrls: ['./view-eval.component.css']
 })
 export class ViewEvalComponent implements OnInit {
   selectedTemplateQuestions: Question[] = [];
