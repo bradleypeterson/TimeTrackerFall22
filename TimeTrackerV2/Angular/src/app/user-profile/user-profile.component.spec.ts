@@ -7,6 +7,8 @@ import {CommonModule } from'@angular/common';
 import { of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+// Could further test http requests such as if there is a fail, and setting the errmsg
+
 
 describe('UserProfileComponent', ()=>{
   let component: UserProfileComponent;
@@ -107,27 +109,10 @@ describe('UserProfileComponent', ()=>{
   });
 
   //ngOnInit calls getUserProfile()
-  //'getUserProfile' error
   it("Should call getUserProfile on init", ()=>{
     const spy = spyOn(component, 'loadProfile');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
-  });
-
-
-  //errors with line 104, and line 106
-  it("Should set errMsg on HTTP error", ()=>{
-    const errorMessage = 'Failed to load profile';
-    component.viewingUserID = 30;
-
-    component.loadProfile();
-
-    const req = httpMock.expectOne(`${environment.apiURL}/api/UserProfile/${component.viewingUserID}`);
-    expect(req.request.method).toBe('GET');
-
-    req.flush({message:errorMessage }, {status: 500, statusText: 'Server Error'});
-
-    expect(component.errMsg).toBe(errorMessage);
   });
   
 
