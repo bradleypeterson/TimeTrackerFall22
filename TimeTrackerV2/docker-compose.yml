@@ -7,10 +7,11 @@ services:
             context: './Angular'
             dockerfile: Dockerfile
         ports:
-            - '4200:4200'
+            - '9001:9001'
         volumes:
             - ./Angular:/usr/src/app
             - /usr/src/app/node_modules
+
 
     node:
         tty: true
