@@ -1,3 +1,15 @@
+/*
+##########################   MY WORK BELOW   ####################################
+TESTS: 
+Component Creation Test
+Form Initialization Test
+Form Validation Test
+Successful Registration Test
+Failed Registration Test
+Run the test with ng test
+
+*/
+
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import { RegisterComponent } from './register.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -34,7 +46,7 @@ describe('RegisterComponent', () => {
         fixture = TestBed.createComponent(RegisterComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-    });   
+    });
 
     //testing the component (page) is created successfully
     it('Should create the component', ()=>{

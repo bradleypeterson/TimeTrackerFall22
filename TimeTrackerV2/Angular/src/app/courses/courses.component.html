@@ -105,7 +105,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let c of PendUserCourses || []">
+      <tr *ngFor="let c of PendUserCourses">
         <td>{{ c.courseName }}</td>
         <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
         <td class="desc">{{ c.description }}</td>
@@ -137,7 +137,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let c of allUserCourses || []">
+      <tr *ngFor="let c of allUserCourses">
         <td>{{ c.courseName }}</td>
         <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
         <td class="desc">{{ c.description }}</td>
@@ -170,7 +170,7 @@
     </thead>
     <tbody>
       <!--  ng-repeat="c in courses | filter: search" ng-if="c.isActive || config.showInactiveCourses" ng-class="{inactive: !c.isActive}" -->
-      <tr *ngFor="let c of nonUserCourses || []">
+      <tr *ngFor="let c of nonUserCourses">
         <td>{{ c.courseName }}</td>
         <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
         <td class="desc">{{ c.description }}</td>

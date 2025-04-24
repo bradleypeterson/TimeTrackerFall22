@@ -1,4 +1,5 @@
-const ConnectToDB = require("../../database/DBConnection");
+const ConnectToDB = require('../../Database/DBConnection');
+const insertAudit = require('./AuditLog')
 
 let db = ConnectToDB();
 
@@ -454,28 +455,25 @@ exports.PutUserInPending = async (req, res, next) => {
 
 //Register a student for a course (used to skip the pending course registration process or approve students who are currently pending)
 exports.RegisterForCourse = async (req, res, next) => {
-  console.log("CourseControllers.js file/RegisterForCourse route called");
 
-  let data = [];
-  data[0] = req.body["userID"];
-  data[1] = req.body["courseID"];
+    console.log("CourseControllers.js file/RegisterForCourse route called");
 
-  db.run(
-    `INSERT INTO Course_Users(userID, courseID)
-        VALUES(?, ?)`,
-    data,
-    function (err, value) {
-      if (err) {
-        console.log(err);
-        return res
-          .status(500)
-          .json({ message: "Something went wrong. Please try again later." });
-      } else {
-        return res.status(200).json({ message: "User Course added." });
-      }
-    }
-  );
-};
+    let data = [];
+    data[0] = req.body["userID"];
+    data[1] = req.body["courseID"];
+
+    db.run(`INSERT INTO Course_Users(userID, courseID)
+        VALUES(?, ?)`, data, function (err, value) {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        else {
+            insertAudit(req.body['inID'], 'JOIN_COURSE', `Student: ${req.body['userID']} joined Course: ${req.body["courseID"]}`)
+            return res.status(200).json({ message: 'User Course added.' });
+        }
+    });
+}
 
 exports.DropCourse = async (req, res, next) => {
   console.log("CourseControllers.js file/DropCourse route called");

@@ -4,17 +4,6 @@ import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { environment } from '../../environments/environment';
 import { ActivatedRoute, Router } from '@angular/router';
 
-/*
-interface Question {
-  questionText: string;
-  questionType: string;
-  questionID: string;
-  response: string | number;
-  projectName: string;
-  evaluatorID: number;
-}
-*/
-
 interface Question{
   questionID: number;
   questionText: string;
@@ -22,17 +11,11 @@ interface Question{
   templateID: number;
   evaluatorID: number
 }
-/*
-interface QuestionGroup {
-  // courseName: string;
-  projectName: string;
-  questions: Question[];
-  evalIDs: any[];
-}
-*/
+
 @Component({
-  selector: 'app-evals',  templateUrl: './eval.component.html',
-  styleUrls: ['./eval.component.css']
+    selector: 'app-evals', templateUrl: './eval.component.html',
+    styleUrls: ['./eval.component.css'],
+    standalone: false
 })
 
 export class EvalComponent implements OnInit {

@@ -3,11 +3,19 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
+interface Eval {
+  projectID: number;
+  name: string;
+}
+
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'],
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.css'],
+    standalone: false
 })
+
+
 export class DashboardComponent implements OnInit {
   public projects: any = [];
   public courses: any = [];
@@ -16,6 +24,7 @@ export class DashboardComponent implements OnInit {
   public PendInstrCourses: any = [];
   public errMsg = '';
   public p: number = 1;
+  public Evals: any = [];
   public hasPendingEvals: boolean = false;
   public awaitingApprovalCount: number = 0; // Will hold count of users awaiting approval
 
@@ -29,6 +38,7 @@ export class DashboardComponent implements OnInit {
   userID: string = '';
 
   constructor(private http: HttpClient, private router: Router) {
+
     const tempUser = localStorage.getItem('currentUser');
     if (tempUser) {
       this.currentUser = JSON.parse(tempUser);
@@ -280,6 +290,7 @@ export class DashboardComponent implements OnInit {
     console.log('student userID', UserID);
 
     let req = {
+      inID: this.userID,
       userID: UserID,
       courseID: CourseId,
     };
@@ -310,8 +321,28 @@ export class DashboardComponent implements OnInit {
   }
 
   checkForPendingEvals(): void {
-    // Since there is no actual API, we simulate the API call here.
-    // In real scenario, this should be an HTTP GET request to check pending evaluations.
-    this.hasPendingEvals = true; // Assuming there are pending evaluations.
+    this.http.get<any>(`${environment.apiURL}/api/getAllEvals/${this.userID}`,{
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Headers': 'Content-Type',
+      }),
+    })
+    .subscribe({
+      next: (data) => {
+        console.log(data)
+        this.Evals = data
+        this.hasPendingEvals = true
+      },
+      error: (err) => {
+        this.ShowMessage(err.error.message);
+      },
+    });
+  }
+
+  doesProjectHaveEval(projectID: number):boolean{
+    return this.Evals.some((evalObj: Eval) => evalObj.projectID === projectID);
+  }
+
+  ShowMessage(message: string) {
+    alert(message);
   }
 }
