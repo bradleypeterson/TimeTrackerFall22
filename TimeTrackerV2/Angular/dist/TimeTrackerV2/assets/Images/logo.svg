@@ -1,0 +1,54 @@
+<svg  xmlns="http://www.w3.org/2000/svg"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      width="10cm" height="10cm"
+      viewBox="0 0 100 100">
+	<style type="text/css">
+		<![CDATA[
+			.purple-fill{
+				fill: #4F3868;
+			}
+			.purple-stroke{
+				stroke: #4F3868;
+			}
+			.offwhite-fill{
+				fill: #F5F5DC;
+			}
+			.offblack-fill{
+				fill: #353839;
+			}	
+		]]>
+	</style>
+	<defs>
+		<clipPath id="flatBottom">
+			<rect x="0" y="50" height="50" width="100"/>
+		</clipPath>
+		<clipPath id="topPart">
+			<path d="M 0 50 L 100 50 L 90 45 L 95 40 L 85 35 L 90 30 L 80 25 L 85 20 L 75 15 L 80 10 L 70 5 L 60 10 L 50 5 L 40 10 L 30 5 L 20 10 L 25 15 L 15 20 L 20 25 L 10 30 L 15 35 L 5 40 L 10 45 Z" />
+		</clipPath>
+	</defs>
+	<circle class="purple-stroke offwhite-fill" cx="50" cy="50" r="43" stroke-width="14"  clip-path="url(#topPart)"/>
+
+	
+	<ellipse class="offblack-fill" cx="60" cy="25" rx="4" ry="5" transform="rotate(-40, 60, 25)" />
+	<ellipse class="offblack-fill" cx="40" cy="25" rx="4" ry="5" transform="rotate(40, 40, 25)" />
+	<line class="purple-stroke" x1="55" x2="70" y1="42" y2="34"/>
+	<line class="purple-stroke" x1="45" x2="30" y1="42" y2="34"/>
+	<line class="purple-stroke" x1="45" x2="28" y1="42" y2="38"/>
+	<line class="purple-stroke" x1="55" x2="72" y1="42" y2="38"/>
+	<line class="purple-stroke" x1="55" x2="72" y1="42" y2="44"/>
+	<line class="purple-stroke" x1="45" x2="28" y1="42" y2="44"/>
+	<line class="purple-stroke" x1="45" x2="30" y1="42" y2="50"/>
+	<line class="purple-stroke" x1="55" x2="70" y1="42" y2="50"/>
+	
+	
+	<path class="offblack-fill" d="M 50 40 Q 25 40 50 50 Q 75 40 50 40"/>
+	
+	<circle  stroke-width="5" class="purple-stroke offwhite-fill" cx="50" cy="50" r="47.5" clip-path="url(#flatBottom)"/>
+	<rect class="offblack-fill" x="47.5" y="60" width="5" height="30" transform="rotate( -40, 50, 60 )"/>
+	<rect class="offblack-fill" x="46.25" y="60" width="7.5" height="20" transform="rotate(45, 50, 60 )"/>
+	<rect class="purple-fill" x="2.5" y="50" width="95" height="12.5"/>
+	<text x="5" y="50"  textLength="90" fill="white" lengthAdjust="spacing" dominant-baseline="hanging">TIMECATS</text>
+	
+          
+</svg>
+

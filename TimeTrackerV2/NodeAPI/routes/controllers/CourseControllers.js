@@ -1,5 +1,4 @@
-const ConnectToDB = require('../../Database/DBConnection');
-const insertAudit = require('./AuditLog')
+const ConnectToDB = require('../../database/DBConnection');
 
 let db = ConnectToDB();
 
@@ -381,7 +380,6 @@ exports.RegisterForCourse = async (req, res, next) => {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
         else {
-            insertAudit(req.body['inID'], 'JOIN_COURSE', `Student: ${req.body['userID']} joined Course: ${req.body["courseID"]}`)
             return res.status(200).json({ message: 'User Course added.' });
         }
     });

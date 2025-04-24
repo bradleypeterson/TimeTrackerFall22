@@ -5,10 +5,12 @@ WORKDIR /usr/src/app
 COPY package.json .
 COPY package-lock.json .
 
-RUN npm install @angular/cli
+RUN npm install -g@angular/cli
 
 COPY . .
 
-EXPOSE 9001
+RUN set -ex && apk --no-cache add sudo
 
-CMD node_modules/.bin/ng serve --watch --host 0.0.0.0 --port 9001
+EXPOSE 4200
+
+CMD sudo node_modules/.bin/ng serve --watch --host 0.0.0.0 
