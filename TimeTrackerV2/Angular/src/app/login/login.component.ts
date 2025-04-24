@@ -26,12 +26,13 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     localStorage.removeItem('currentUser');
-    if (!localStorage.getItem('foo')) {
-      localStorage.setItem('foo', 'no reload');
-      location.reload();
-    } else {
-      localStorage.removeItem('foo');
-    }
+    // if (!localStorage.getItem('foo')) {
+    //     localStorage.setItem('foo', 'no reload');
+    //     location.reload();
+    // }
+    // else {
+    //     localStorage.removeItem('foo');
+    // }
     this.defaultAdminCreated();
   }
 
@@ -40,7 +41,15 @@ export class LoginComponent implements OnInit {
       this.errMsg = 'Missing required field';
       return;
     }
+    this.defaultAdminCreated();
+  }
 
+  onSubmit(): void {
+
+    if (!this.checkoutForm.valid) {
+      this.errMsg = 'Missing required field';
+      return;
+    }
     //console.log("Username: " + this.checkoutForm.value['username'] + " | Password: " + this.checkoutForm.value['password']);
 
     let username = this.checkoutForm.value['username'];
@@ -62,6 +71,7 @@ export class LoginComponent implements OnInit {
             password: hashedPassword,
           };
 
+
           this.http
             .post<any>(`${environment.apiURL}/api/login/`, payload)
             .subscribe({
@@ -71,7 +81,9 @@ export class LoginComponent implements OnInit {
                   'currentUser',
                   JSON.stringify(data['user'])
                 );
+                
                 localStorage.setItem('userType', data['user']['type']);
+                
                 this.router.navigate(['./dashboard']); // ROUTED TO DASHBOARD
               },
               error: (error) => {

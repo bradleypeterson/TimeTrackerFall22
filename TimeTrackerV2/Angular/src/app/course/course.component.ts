@@ -16,11 +16,11 @@ export class CourseComponent implements OnInit {
   public nonUserGroups: any = [];
   public filteredProjects: any = []; // This is redundant information because of the same reason as stated above.
   public projectSearchQuery: any = '';
-  public allUserFilteredProjects: any = [];
-  public nonUserFilteredProjects: any = [];
+  public allUserFilteredProjects: any[] = [];
+  public nonUserFilteredProjects: any[] = [];
   public filtering: boolean = false;
 
-  private courseID: any;
+  public courseID: any;
 
   public instructor: boolean = false;
   public admin: boolean = false;
@@ -102,6 +102,28 @@ export class CourseComponent implements OnInit {
         error: (error) => {
           this.errMsg = error['error']['message'];
         },
+      });
+  }
+
+  loadProjects(): void {
+    this.http
+      .get(`${environment.apiURL}/api/Projects`)
+      .subscribe((response: any) => {
+        console.log('API Response:', response);
+
+        // Ensure response is not null or undefined
+        const allUserProjects = response?.allUserProjects || [];
+        const nonUserProjects = response?.nonUserProjects || [];
+
+        console.log('All User Projects:', allUserProjects);
+        console.log('Non-User Projects:', nonUserProjects);
+        // Transform response into arrays if necessary
+        this.allUserFilteredProjects = Array.isArray(allUserProjects)
+          ? allUserProjects
+          : Object.values(allUserProjects);
+        this.nonUserFilteredProjects = Array.isArray(nonUserProjects)
+          ? nonUserProjects
+          : Object.values(nonUserProjects);
       });
   }
 

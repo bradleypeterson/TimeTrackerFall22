@@ -6,16 +6,15 @@ import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-courses',
   templateUrl: './courses.component.html',
-  styleUrls: ['./courses.component.css']
+  styleUrls: ['./courses.component.css'],
 })
-
 export class CoursesComponent implements OnInit {
-  public pageTitle = 'TimeTrackerV2 | Courses'
+  public pageTitle = 'TimeTrackerV2 | Courses';
   public errMsg = '';
-  public courses: any = [];
-  public allUserCourses: any = [];
-  public nonUserCourses: any = [];
-  public PendUserCourses: any = [];
+  public courses: any[] = [];
+  public allUserCourses: any[] = [];
+  public nonUserCourses: any[] = [];
+  public PendUserCourses: any[] = [];
   public allUserFilteredCourses: any = [];
   public nonUserFilteredCourses: any = [];
   public searchQuery: any = '';
@@ -27,10 +26,7 @@ export class CoursesComponent implements OnInit {
   public currentUser: any;
   public userID: any;
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-  ) {
+  constructor(private http: HttpClient, private router: Router) {
     const tempUser = localStorage.getItem('currentUser');
     if (tempUser) {
       this.currentUser = JSON.parse(tempUser);
@@ -38,7 +34,6 @@ export class CoursesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.loadCourses();
     // this.loadAllCourses();
     //this.loadStudentCourses();
@@ -72,123 +67,76 @@ export class CoursesComponent implements OnInit {
   // });
   // }
 
-  loadCourses(): void {
-    // this.http.get<any>(`https://localhost:8080/Users/CourseList`, {headers: new HttpHeaders({"Access-Control-Allow-Headers": "Content-Type"})}).subscribe({
-    //   next: data => {
-    //     this.errMsg = "";
-    //     console.log(data);
-    //     this.courses=data;
-    //   },
-    //   error: error => {
-    //     this.errMsg = error['error']['message'];
-    //   }
-    // });
-
+  loadCourses(reload: boolean = true): void {
     this.loadAllUserCourses();
     this.loadNonUserCourses();
     this.loadPenUserCourses();
 
     if (!localStorage.getItem('foo')) {
-      localStorage.setItem('foo', 'no reload')
-      location.reload()
+      localStorage.setItem('foo', 'no reload');
+      location.reload();
     } else {
-      localStorage.removeItem('foo')
+      localStorage.removeItem('foo');
     }
   }
 
-
-
   loadAllUserCourses(): void {
     this.http
-      .get<any>(
-        `${environment.apiURL}/api/Users/${this.currentUser.userID}/getUserCourses/`,
-        {
-          headers: new HttpHeaders({
-            'Access-Control-Allow-Headers': 'Content-Type',
-          }),
-        }
-      )
+      .get<any[]>(`${environment.apiURL}/api/Users/1/getUserCourses/`)
       .subscribe({
         next: (data) => {
-          this.errMsg = '';
-          console.log(data);
-          this.allUserCourses = data;
+          this.allUserCourses = Array.isArray(data) ? data : []; // Ensure it's an array
         },
         error: (error) => {
-          this.errMsg = error['error']['message'];
+          this.errMsg = error.error?.message || 'Error loading user courses';
         },
       });
   }
 
   loadNonUserCourses(): void {
     this.http
-      .get<any>(
-        `${environment.apiURL}/api/Users/${this.currentUser.userID}/getNonUserCourses/`,
-        {
-          headers: new HttpHeaders({
-            'Access-Control-Allow-Headers': 'Content-Type',
-          }),
-        }
-      )
+      .get<any[]>(`${environment.apiURL}/api/Users/1/getNonUserCourses/`)
       .subscribe({
         next: (data) => {
-          this.errMsg = '';
-          console.log(data);
-          this.nonUserCourses = data;
-          /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+          this.nonUserCourses = Array.isArray(data) ? data : []; // Ensure it's an array
         },
         error: (error) => {
-          this.errMsg = error['error']['message'];
+          this.errMsg =
+            error.error?.message || 'Error loading non-user courses';
         },
       });
   }
-
 
   loadPenUserCourses(): void {
     this.http
-      .get<any>(
-        `${environment.apiURL}/api/Users/${this.currentUser.userID}/getCoursesPendCourses/`,
-        {
-          headers: new HttpHeaders({
-            'Access-Control-Allow-Headers': 'Content-Type',
-          }),
-        }
-      )
+      .get<any[]>(`${environment.apiURL}/api/Users/1/getCoursesPendCourses/`)
       .subscribe({
         next: (data) => {
-          this.errMsg = '';
-          console.log(data);
-          this.PendUserCourses = data;
-          /// populate a label to inform the user that they successfully clocked out, maybe with the time.
+          this.PendUserCourses = Array.isArray(data) ? data : []; // Ensure it's an array
         },
         error: (error) => {
-          this.errMsg = error['error']['message'];
+          this.errMsg = error.error?.message || 'Error loading pending courses';
         },
       });
   }
 
-  register(CourseId: any) {
-    console.log(CourseId);
-    console.log(this.currentUser.userID);
+  register(courseId: number | null): void {
+    if (!courseId) {
+      this.errMsg = 'Missing one or more required arguments';
+      return;
+    }
 
-    let req = {
-      userID: this.currentUser.userID,
-      courseID: CourseId
-    };
 
+    const payload = { userID: this.currentUser.userID, courseID: courseId };
     this.http
-      .post<any>(`${environment.apiURL}/api/putUserInPending/`, req, {
-        headers: new HttpHeaders({
-          'Access-Control-Allow-Headers': 'Content-Type',
-        }),
-      })
+      .post(`${environment.apiURL}/api/putUserInPending/`, payload)
       .subscribe({
-        next: (data) => {
+        next: () => {
           this.errMsg = '';
           this.loadCourses();
         },
         error: (error) => {
-          this.errMsg = error['error']['message'];
+          this.errMsg = error.error?.message || 'Error registering for course';
         },
       });
   }
@@ -196,7 +144,7 @@ export class CoursesComponent implements OnInit {
   drop(CourseId: any) {
     let req = {
       userID: this.currentUser.userID,
-      courseID: CourseId
+      courseID: CourseId,
     };
 
     this.http
@@ -217,15 +165,15 @@ export class CoursesComponent implements OnInit {
   }
 
   GoToCourse(courseID: number) {
-        let state = {courseID: courseID};
-        // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
-        this.router.navigate(['/course'], { state });
-    }
+    let state = { courseID: courseID };
+    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+    this.router.navigate(['/course'], { state });
+  }
 
   cancel(CourseId: any) {
     let req = {
       userID: this.currentUser.userID,
-      courseID: CourseId
+      courseID: CourseId,
     };
 
     this.http
@@ -245,46 +193,25 @@ export class CoursesComponent implements OnInit {
       });
   }
 
-
-
-
   searchCourses(): void {
     this.searched = true;
-    let sizeOfAllFilteredCourses = 0;
-    let sizeOfNonFilteredCourses = 0;
+    // Clear filtered courses arrays
+    this.allUserFilteredCourses = [];
+    this.nonUserFilteredCourses = [];
+
+    // If search query is empty, do nothing further
     if (this.searchQuery == '') {
-      this.allUserFilteredCourses = [];
-      this.nonUserFilteredCourses = [];
+      return;
     }
-    else {
-      sizeOfAllFilteredCourses = this.allUserFilteredCourses.length;
-      sizeOfNonFilteredCourses = this.nonUserFilteredCourses.length;
-      this.allUserFilteredCourses.splice(0, sizeOfAllFilteredCourses);
-      this.nonUserFilteredCourses.splice(0, sizeOfNonFilteredCourses);
-      for (let c of this.nonUserCourses) {
-        if (c.courseName.toLowerCase().search(this.searchQuery.toLowerCase()) != -1) {
-          this.nonUserFilteredCourses.push(c);
-        }
-        else {
-          sizeOfNonFilteredCourses = this.nonUserFilteredCourses.length;
-          this.nonUserFilteredCourses.splice(0, sizeOfNonFilteredCourses);
-          sizeOfAllFilteredCourses = this.allUserFilteredCourses.length;
-          this.allUserFilteredCourses.splice(0, sizeOfAllFilteredCourses);
-        }
-      }
-      for (let c of this.allUserCourses) {
-        if (c.courseName.toLowerCase().search(this.searchQuery.toLowerCase()) != -1) {
-          this.allUserFilteredCourses.push(c);
-        }
-        else {
-          sizeOfAllFilteredCourses = this.allUserFilteredCourses.length;
-          this.allUserFilteredCourses.splice(0, sizeOfAllFilteredCourses);
-          sizeOfNonFilteredCourses = this.nonUserFilteredCourses.length;
-          this.nonUserFilteredCourses.splice(0, sizeOfNonFilteredCourses);
-        }
-      }
-    }
+    ///Directly use .filter() to populate the filtered arrays instead of manually iterating through the courses with for loops.
+    // Filter non-registered courses
+    this.nonUserFilteredCourses = this.nonUserCourses.filter((c: any) =>
+      c.courseName.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+
+    // Filter registered courses
+    this.allUserFilteredCourses = this.allUserCourses.filter((c: any) =>
+      c.courseName.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
   }
-
 }
-

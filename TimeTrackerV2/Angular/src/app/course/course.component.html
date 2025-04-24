@@ -28,6 +28,57 @@
       <button class="btn btn-purple btn-elevated" type="submit">Search</button>
     </form>
     <div [ngSwitch]="true">
+  onSubmit(): void {
+
+    if (!this.checkoutForm.valid) {
+
+      this.errMsg = 'Missing required field';
+
+      return;
+
+    }
+
+
+
+    //console.log("Username: " + this.checkoutForm.value['username'] + " | Password: " + this.checkoutForm.value['password']);
+
+
+
+    let username = this.checkoutForm.value['username'];
+
+
+
+    this.http
+
+      .get<any>(`${environment.apiURL}/api/saltForUser/${username}`)
+
+      .subscribe({
+
+        next: (data) => {
+
+          this.errMsg = '';
+
+          const salt = data;
+
+          const hashedPassword = CryptoES.PBKDF2(
+
+            this.checkoutForm.value['password'],
+
+            salt,
+
+            { keySize: 512 / 32, iterations: 1000 }
+
+          ).toString();
+
+
+
+          let payload = {
+
+            username: username,
+
+            password: hashedPassword,
+
+          };
       <div *ngSwitchCase="instructor || admin">
         <button
           class="btn btn-success btn-spacer"
@@ -63,7 +114,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let p of allUserFilteredProjects">
+        <tr *ngFor="let p of allUserFilteredProjects || []">
           <td>{{ p.projectName }}</td>
           <td class="desc">{{ p.description }}</td>
           <td>
@@ -81,7 +132,7 @@
             </div>
           </td>
         </tr>
-        <tr *ngFor="let p of nonUserFilteredProjects">
+        <tr *ngFor="let p of nonUserFilteredProjects || []">
           <td>{{ p.projectName }}</td>
           <td class="desc">{{ p.description }}</td>
           <td>

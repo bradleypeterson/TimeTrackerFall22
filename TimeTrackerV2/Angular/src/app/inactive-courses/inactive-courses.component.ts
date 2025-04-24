@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-inactive-courses',
   templateUrl: './inactive-courses.component.html',
-  styleUrls: ['./inactive-courses.component.css']
+  styleUrls: ['./inactive-courses.component.css'],
 })
 export class InactiveCoursesComponent implements OnInit {
   public inactiveCourses: any;
@@ -17,10 +17,7 @@ export class InactiveCoursesComponent implements OnInit {
 
   public p: number = 1;
 
-  constructor(
-    private http: HttpClient,
-    private router: Router,
-  ) {
+  constructor(private http: HttpClient, private router: Router) {
     const tempUser = localStorage.getItem('currentUser');
     if (tempUser) {
       this.currentUser = JSON.parse(tempUser);
@@ -32,30 +29,19 @@ export class InactiveCoursesComponent implements OnInit {
   }
 
   loadInactiveCourses(): void {
-    this.http
-      .get<any>(
-        `${environment.apiURL}/api/Courses/${this.currentUser.userID}/getInactiveCourses/`,
-        {
-          headers: new HttpHeaders({
-            'Access-Control-Allow-Headers': 'Content-Type',
-          }),
-        }
-      )
-      .subscribe({
-        next: (data) => {
-          this.errMsg = '';
-          console.log(data);
-          this.inactiveCourses = data.reverse();
-        },
-        error: (error) => {
-          this.errMsg = error['error']['message'];
-        },
-      });
+    this.http.get(`${environment.apiURL}/api/getInactiveCourses`).subscribe({
+      next: (data) => {
+        this.inactiveCourses = data;
+        this.errMsg = ''; // Set errMsg to an empty string on success
+      },
+      error: (error) => {
+        this.errMsg = error.error.message;
+      },
+    });
   }
 
-  GoToCourse(courseID: number) {
-    let state = {courseID: courseID};
+  GoToCourse(courseID: number): void {
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
-    this.router.navigate(['/course'], { state });
+    this.router.navigate(['/course'], { state: { courseID } });
   }
 }

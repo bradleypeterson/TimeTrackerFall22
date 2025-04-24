@@ -10,6 +10,9 @@ scratch/
 /tmp
 /out-tsc
 *.db
+*.db-shm
+*.db-wal
+
 # Only exists if Bazel was run
 /bazel-out
 

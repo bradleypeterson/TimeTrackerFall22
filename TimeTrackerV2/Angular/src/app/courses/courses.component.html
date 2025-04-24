@@ -10,72 +10,89 @@
       [(ngModel)]="searchQuery"
       name="searchQuery"
       type="text"
-      placeholder="Search"
-      aria-label="Search"
+      placeholder="Search for a course"
+      aria-label="Search courses"
     />
     <button class="btn btn-purple btn-elevated" type="submit">Search</button>
   </form>
+
+  <!-- Alert Message for No Courses Found -->
   <div
     class="alert alert-danger"
     *ngIf="
       searched &&
-      allUserFilteredCourses?.length <= 0 &&
-      nonUserFilteredCourses?.length <= 0
+      allUserFilteredCourses?.length === 0 &&
+      nonUserFilteredCourses?.length === 0
     "
   >
     No courses found.
   </div>
 
+  <!-- Display Filtered Courses -->
   <div
     *ngIf="
       allUserFilteredCourses?.length > 0 || nonUserFilteredCourses?.length > 0
     "
   >
-    <h3 class="sub-head">Searched Courses</h3>
-    <!-- <div
-      class="alert alert-danger"
-      *ngIf="
-        allUserFilteredCourses?.length <= 0 &&
-        nonUserFilteredCourses?.length <= 0
-      "
-    >
-      No courses found.
-    </div> -->
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th class="table-head">Course Name</th>
-          <th class="table-head">Instructor</th>
-          <th class="table-head">Description</th>
-          <th class="table-head"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let c of allUserFilteredCourses">
-          <td>{{ c.courseName }}</td>
-          <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
-          <td class="desc">{{ c.description }}</td>
-          <td>
-            <div class="btn-group float-right">
-              <button class="btn btn-purple" (click)="GoToCourse(c.courseID)">View</button>
-              <button class="btn btn-danger" (click)="drop(c.courseID)">Drop</button>
-            </div>
-          </td>
-        </tr>
-        <tr *ngFor="let c of nonUserFilteredCourses">
-          <td>{{ c.courseName }}</td>
-          <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
-          <td class="desc">{{ c.description }}</td>
-          <td>
-            <div class="btn-group float-right">
-                <button class="btn btn-purple" (click)="GoToCourse(c.courseID)">View</button>
-                <button class="btn btn-success float-right" (click)="register(c.courseID)">Register</button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <h3 class="sub-head">Search Courses</h3>
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th class="table-head">Course Name</th>
+            <th class="table-head">Instructor</th>
+            <th class="table-head">Description</th>
+            <th class="table-head">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Display Registered Courses -->
+          <tr *ngFor="let c of allUserFilteredCourses">
+            <td>{{ c.courseName }}</td>
+            <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
+            <td class="desc">{{ c.description }}</td>
+            <td>
+              <div>
+                <button
+                  class="btn btn-purple me-2"
+                  (click)="GoToCourse(c.courseID)"
+                >
+                  View
+                </button>
+                <button class="btn btn-danger me-2" (click)="drop(c.courseID)">
+                  Drop
+                </button>
+              </div>
+            </td>
+          </tr>
+
+          <!-- Display Non-Registered Courses -->
+          <tr *ngFor="let c of nonUserFilteredCourses">
+            <td>{{ c.courseName }}</td>
+            <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
+            <td class="desc">{{ c.description }}</td>
+            <td>
+              <div>
+                <button
+                  class="btn btn-purple me-2"
+                  (click)="GoToCourse(c.courseID)"
+                >
+                  View
+                </button>
+                <button
+                  class="btn btn-success me-2"
+                  (click)="register(c.courseID)"
+                >
+                  Register
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+
   <!---->
   <h3 *ngIf="PendUserCourses.length > 0" class="sub-head">Pending Courses</h3>
   <table class="table table-hover" *ngIf="PendUserCourses.length > 0">
@@ -88,14 +105,21 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let c of PendUserCourses">
+      <tr *ngFor="let c of PendUserCourses || []">
         <td>{{ c.courseName }}</td>
         <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
         <td class="desc">{{ c.description }}</td>
         <td>
-          <div class="btn-group float-right">
-            <button class="btn btn-purple" (click)="GoToCourse(c.courseID)">View</button>
-            <button class="btn btn-danger" (click)="cancel(c.courseID)">Cancel</button>
+          <div>
+            <button
+              class="btn btn-purple me-2"
+              (click)="GoToCourse(c.courseID)"
+            >
+              View
+            </button>
+            <button class="btn btn-danger me-2" (click)="cancel(c.courseID)">
+              Cancel
+            </button>
           </div>
         </td>
       </tr>
@@ -113,14 +137,21 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let c of allUserCourses">
+      <tr *ngFor="let c of allUserCourses || []">
         <td>{{ c.courseName }}</td>
         <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
         <td class="desc">{{ c.description }}</td>
         <td>
-          <div class="btn-group float-right">
-            <button class="btn btn-purple" (click)="GoToCourse(c.courseID)">View</button>
-            <button class="btn btn-danger" (click)="drop(c.courseID)">Drop</button>
+          <div>
+            <button
+              class="btn btn-purple me-2"
+              (click)="GoToCourse(c.courseID)"
+            >
+              View
+            </button>
+            <button class="btn btn-danger me-2" (click)="drop(c.courseID)">
+              Drop
+            </button>
           </div>
         </td>
       </tr>
@@ -139,14 +170,21 @@
     </thead>
     <tbody>
       <!--  ng-repeat="c in courses | filter: search" ng-if="c.isActive || config.showInactiveCourses" ng-class="{inactive: !c.isActive}" -->
-      <tr *ngFor="let c of nonUserCourses">
+      <tr *ngFor="let c of nonUserCourses || []">
         <td>{{ c.courseName }}</td>
         <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
         <td class="desc">{{ c.description }}</td>
         <td>
-          <div class="btn-group float-right">
-            <button class="btn btn-purple" (click)="GoToCourse(c.courseID)">View</button>
-            <button class="btn btn-success float-right" (click)="register(c.courseID)">Register</button>
+          <div>
+            <button
+              class="btn btn-purple me-2"
+              (click)="GoToCourse(c.courseID)"
+            >
+              View
+            </button>
+            <button class="btn btn-success me-2" (click)="register(c.courseID)">
+              Register
+            </button>
           </div>
         </td>
       </tr>

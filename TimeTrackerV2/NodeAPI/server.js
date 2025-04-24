@@ -17,9 +17,12 @@ let db = ConnectToDB();
 
 // App
 const app = express();
+const hostname = "137.190.19.215"
+
 app.use(
   cors({
-    origin: "https://localhost:4200", // allows the supplied url to talk to the server
+    //origin: "https://137.190.19.215:4200", // allows the supplied url to talk to the server
+    origin: "https://localhost:4200",
     credentials: true, // Allows credentials from the origin
   })
 );
@@ -28,7 +31,7 @@ app.use(
     extended: false,
   })
 );
-
+  
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Methods", "DELETE, PUT, GET, POST");
   res.header(
@@ -55,7 +58,7 @@ const sslServer = https.createServer(
 );
 
 sslServer.listen(PORT, () => {
-  console.log(`Running on https://137.190.19.220:${PORT}`);
+  console.log(`Running on https://137.190.19.215:${PORT}`);
   if (db) {
     console.log("Connected to the main database.");
   }

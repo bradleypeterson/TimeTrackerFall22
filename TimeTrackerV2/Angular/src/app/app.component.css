@@ -1,32 +1,38 @@
+.navbar {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(73, 35, 101, 0.102);
+}
+.nav-link {
+  color: #492365 !important;
+  text-shadow: 0 1px 1px #492365 !important;
+  background-color: #ffffff;
+}
+
+.nav-link:hover {
+  color: #6e4097 !important;
+}
+
+.nav-link.active {
+  color: #6e4097 !important;
+  text-decoration: underline;
+}
+
+.dropdown {
+  border: none;
+}
+
 /* Only apply styles on screens with max width of 992px (Bootstrap's lg breakpoint) */
 @media (max-width: 992px) {
-    .dark-nav-link {
-        color: #333 !important;
-        text-shadow: 0 1px 1px #492365 !important;
-    }
+  .navbar-nav {
+    justify-content: center;
+  }
 
-    .dark-nav-link:hover {
-        color: #6e4097 !important;
-    }
+  .navbar-nav .nav-item {
+    flex: 1;
+    text-align: center;
+  }
 
-    .navbar-nav {
-        justify-content: center;
-    }
-
-    .navbar-nav .nav-item {
-        flex: 1;
-        text-align: center;
-    }
-
-    .navbar-nav .nav-item.ml-auto {
-        margin-left: 0 !important;
-    }
-}
-
-.navOption {
-    color: black;
-}
-
-.clickable:hover {
-    background-color: #3f1a5f;
+  .navbar-nav .nav-item.ml-auto {
+    margin-left: 0 !important;
+  }
 }

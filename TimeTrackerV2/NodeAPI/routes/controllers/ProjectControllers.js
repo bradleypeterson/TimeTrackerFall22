@@ -13,20 +13,39 @@ exports.GetProjectInfo = (req, res) => {
     FROM Projects
     WHERE projectID = ?`;
 
-  db.get(sql, [projectID], (err, rows) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ message: "Something went wrong. Please try again later." });
-    }
-    if (rows) {
-      console.log(`Rows retrieved:  ${JSON.stringify(rows)}`);
-      return res.send(rows);
-    } else {
-      return res.send("No errors occurred, however no rows were found either.");
-    }
-  });
-};
+    let usersSql = `SELECT userID
+    FROM Project_Users
+    WHERE projectID = ?`;
+
+    db.get(sql, [projectID], (err, rows) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows) {
+            db.all(usersSql, [projectID], (err, userRows) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+                }
+                if (userRows) {
+                    const userIDs = userRows.map(user => user.userID)
+                    console.log(`Rows retrieved:  ${JSON.stringify(userRows)}`);
+                    let projectInfo = {
+                        project: rows,
+                        users: userIDs || []
+                    }
+                    return res.send(projectInfo);
+                }
+                else {
+                    return res.send("No errors occurred, however no rows were found either.");
+                }
+
+            })
+        }
+        else {
+            return res.send("No errors occurred, however no rows were found either.");
+        }
+    });
+}
 
 exports.GetActiveProjectsForUser = (req, res) => {
   console.log(

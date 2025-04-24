@@ -190,6 +190,12 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/project'], { state });
   }
 
+  GoToEval(projectID: number){
+    let state = {projectID : projectID};
+    console.log(projectID)
+    this.router.navigate(['/eval'], {state});
+  }
+
   // student chooses to cancel a pending course
   cancel(CourseId: any) {
     let req = {
