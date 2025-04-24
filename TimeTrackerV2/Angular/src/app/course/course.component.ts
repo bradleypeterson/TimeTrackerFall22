@@ -73,6 +73,7 @@ export class CourseComponent implements OnInit {
     //     }
     //   }
     // }
+    //
 
     this.checkUserInCourse();
 
