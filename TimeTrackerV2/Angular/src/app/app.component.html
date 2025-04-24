@@ -172,6 +172,190 @@
     </div>
   </div>
 </nav>
+=======
+<div class="navbar navbar-expand-lg sticky-top">
+  <a class="navbar-left">
+    <img
+      height="40"
+      alt="Time Tracker Logo"
+      src="../assets/Images/TimeTrackerLogo.png"
+    />
+  </a>
+  <button
+    class="navbar-toggler custom-toggler"
+    type="button"
+    (click)="isNavbarExpanded = !isNavbarExpanded"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false"
+    aria-label="Toggle navigation"
+  >
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div [ngSwitch]="true">
+      <!-- INSTRUCTOR SWITCH CASE -->
+      <div *ngSwitchCase="instructor">
+        <div class="navbar-nav mx-auto">
+          <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <select
+              class="nav-item nav-link active dark-nav-link centered-on-small dropdown"
+              (change)="onUserOptionChange($event)"
+            >
+              <option value="" disabled selected>{{ name }}</option>
+              <option class="navOption" value="viewProfile">
+                View Profile
+              </option>
+              <option class="navOption" value="#">Logout</option>
+            </select>
+          </div>
+          <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <select
+              name="courseOptions"
+              class="nav-item nav-link active dark-nav-link centered-on-small"
+              onchange="window.location = this.value;"
+            >
+              <option value="" disabled selected>Course Options</option>
+              <option class="navOption" value="/create-course">
+                Create New Course
+              </option>
+              <option class="navOption" value="/past-courses">
+                Past Courses
+              </option>
+              <option class="navOption" value="/manage-evals">
+                Manage Evaluations
+              </option>
+            </select>
+          </div>
+          <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <a
+              class="nav-item nav-link active centered-on-small"
+              routerLink="./dashboard"
+              >Dashboard</a
+            >
+          </div>
+        </div>
+      </div>
+      <!-- STUDENT SWITCH CASE -->
+      <div *ngSwitchCase="student">
+        <div class="navbar-nav mx-auto">
+          <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <select
+              class="nav-item nav-link active dark-nav-link centered-on-small dropdown"
+              (change)="onUserOptionChange($event)"
+            >
+              <option value="" disabled selected>{{ name }}</option>
+              <option class="navOption" value="viewProfile">
+                View Profile
+              </option>
+              <option class="navOption" value="#">Logout</option>
+            </select>
+          </div>
+          <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <a
+              class="nav-item nav-link active centered-on-small"
+              routerLink="./dashboard"
+              >Dashboard</a
+            >
+          </div>
+          <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <a
+              class="nav-link active dark-nav-link centered-on-small"
+              routerLink="./courses"
+              >Courses</a
+            >
+          </div>
+        </div>
+      </div>
+      <!-- ADMIN SWITCH CASE -->
+      <div *ngSwitchCase="admin">
+        <div class="navbar-nav mx-auto">
+          <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <select
+              class="nav-item nav-link active dark-nav-link centered-on-small dropdown"
+              (change)="onUserOptionChange($event)"
+            >
+              <option value="" disabled selected>{{ name }}</option>
+              <option class="navOption" value="viewProfile">
+                View Profile
+              </option>
+              <option class="navOption" value="#">Logout</option>
+            </select>
+          </div>
+          <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <select
+              name="courseOptions"
+              class="nav-item nav-link active dark-nav-link centered-on-small"
+              onchange="window.location = this.value;"
+            >
+              <!-- Need to create NEW route for admin to search through instructors/courses and the ability to create/delete/edit them (including assignning/removing students and evals). 
+               Right now the functionality is the same as the instructors abilities.-->
+              <option value="" disabled selected>Course Options</option>
+              <option class="navOption" value="/create-course">
+                Create New Course
+              </option>
+              <option class="navOption" value="/past-courses">
+                Past Courses
+              </option>
+              <option class="navOption" value="/manage-evals">
+                Manage Evaluations
+              </option>
+            </select>
+          </div>
+          <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <a
+              class="nav-item nav-link active dark-nav-link centered-on-small"
+              routerLink="./users"
+              >Users</a
+            >
+          </div>
+          <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <a
+              class="nav-item nav-link active centered-on-small"
+              routerLink="./dashboard"
+              >Dashboard</a
+            >
+          </div>
+        </div>
+      </div>
+      <div *ngSwitchDefault>
+        <div class="navbar-nav"></div>
+      </div>
+    </div>
+  </div>
+</div>
 <div
   class="container mt-2"
   [ngStyle]="{ 'padding-top': isNavbarExpanded ? '250px' : '60px' }"
