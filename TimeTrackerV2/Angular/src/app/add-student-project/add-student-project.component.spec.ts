@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AddStudentProjectComponent } from './add-student-project.component';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -53,7 +53,7 @@ describe('AddStudentProjectComponent', () => {
     spyOn(localStorage, 'removeItem');
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientModule, NgxPaginationModule],
+      imports: [NgxPaginationModule],
       declarations: [AddStudentProjectComponent],
       providers: [
         { provide: HttpClient, useValue: httpClient },

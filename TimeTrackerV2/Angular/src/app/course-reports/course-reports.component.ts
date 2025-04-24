@@ -42,6 +42,10 @@ export class CourseReportsComponent implements OnInit {
 
   courseID: number;
 
+  public instructor: boolean = false;
+  public admin: boolean = false;
+  public student: boolean = false;
+
   public filteredStudents: any = [];
   public studentSearchQuery: any = '';
   public filtering: boolean = false;
@@ -49,12 +53,19 @@ export class CourseReportsComponent implements OnInit {
   public errMsg = '';
   public p: number = 1;
   userType = false;
+  public userID: string = '';
+  public currentUser: any;
 
   constructor(
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router
   ) {
+    const tempUser = localStorage.getItem('currentUser');
+    if (tempUser) {
+      this.currentUser = JSON.parse(tempUser);
+    }
+
     // The below line of code will grab the section of the URL that is ":id" and store it into the variable courseID.  Where I found this code https://stackoverflow.com/questions/44864303/send-data-through-routing-paths-in-angular
     // The '!' at the end is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be
     // this.courseID = Number(this.route.snapshot.paramMap.get('id')!);
@@ -64,6 +75,17 @@ export class CourseReportsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // get user type
+    var userType = this.currentUser.type;
+    this.userID = this.currentUser.userID;
+    if (userType === 'instructor') {
+      this.instructor = true;
+    } else if (userType === 'student') {
+      this.student = true;
+    } else if (userType === 'admin') {
+      this.admin = true;
+    }
+
     this.userType = JSON.parse(localStorage.getItem('currentUser')!).type;
     this.studentReports = this.getStudentReports(this.courseID);
     this.filteredStudents = this.studentReports;
