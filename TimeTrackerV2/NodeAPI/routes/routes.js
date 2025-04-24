@@ -15,61 +15,63 @@ const {
 } = require("./controllers/AccountControllers");
 
 const {
-    GetAllCoursesNamesDescriptionIDs,
-    GetAllCoursesForInstructorID,
-    GetInactiveCoursesForInstructorID,
-    GetCourseInfo,
-    CheckUserInCourse,
-    CreateCourse,
-    EditCourse,
-    DeleteCourse,
-    GetPendInstrCourses,
-    GetCoursesRegisteredFor,
-    GetCoursesNotRegisteredFor,
-    GetCoursesPendCourses,
-    PutUserInPending,
-    RegisterForCourse,
-    DropCourse,
-    RemovePendUser,
-    GetRecentCourses,
+  GetAllCoursesNamesDescriptionIDs,
+  GetAllCoursesForInstructorID,
+  GetInactiveCoursesForInstructorID,
+  GetCourseInfo,
+  CheckUserInCourse,
+  CreateCourse,
+  EditCourse,
+  DeleteCourse,
+  GetPendInstrCourses,
+  GetCoursesRegisteredFor,
+  GetCoursesNotRegisteredFor,
+  GetCoursesPendCourses,
+  PutUserInPending,
+  RegisterForCourse,
+  DropCourse,
+  RemovePendUser,
+  GetRecentCourses,
+  RemoveStudentFromCourse,
+  GetStudentsNotInCourse,
 } = require("./controllers/CourseControllers");
 
 const { CreateNewGroup } = require("./controllers/MiscellaneousControllers");
 
 const {
-    GetProjectInfo,
-    GetActiveProjectsForUser,
-    GetUserTimesForProject,
-    GetAllProjectsForCourse,
-    GetUserProjectsForCourse,
-    GetNonUserProjectsForCourse,
-    JoinGroup,
-    LeaveGroup,
-    GetAllStudentsInProject,
-    GetAllStudentsNotInProject,
-    CreateProject,
-    EditProject,
-    DeleteProject,
-    GetRecentProjects,
+  GetProjectInfo,
+  GetActiveProjectsForUser,
+  GetUserTimesForProject,
+  GetAllProjectsForCourse,
+  GetUserProjectsForCourse,
+  GetNonUserProjectsForCourse,
+  JoinGroup,
+  LeaveGroup,
+  GetAllStudentsInProject,
+  GetAllStudentsNotInProject,
+  CreateProject,
+  EditProject,
+  DeleteProject,
+  GetRecentProjects,
 } = require("./controllers/ProjectControllers");
 
 const {
-    GetReportsData,
-    GetAllTimeCardsForUserInProject,
-    GetAllTimeCardsForUser,
-    SaveTimeCard,
-    DeleteTimeCard,
-    EditTimeCard,
-    GetTimeCardInfo,
+  GetReportsData,
+  GetAllTimeCardsForUserInProject,
+  GetAllTimeCardsForUser,
+  SaveTimeCard,
+  DeleteTimeCard,
+  EditTimeCard,
+  GetTimeCardInfo,
 } = require("./controllers/TimeCardControllers");
 
 const {
-    GetUserInfo,
-    GetUserProfile,
-    EditUserProfile,
-    GetUsersInfo,
-    GetRecentUsers,
-    GetUsersPendingApproval,
+  GetUserInfo,
+  GetUserProfile,
+  EditUserProfile,
+  GetUsersInfo,
+  GetRecentUsers,
+  GetUsersPendingApproval,
 } = require("./controllers/UsersControllers");
 
 const {
@@ -84,12 +86,13 @@ const {
     GetAssignedEvals,
     SubmitResponses,
     evalCompleted,
+
 } = require("./controllers/EvalControllers");
 //#endregion
 
 //This is used to validate that the api route is working, it has no functional purposes other then that
 router.get("/", (req, res) => {
-    res.send("api route working");
+  res.send("api route working");
 });
 
 //#region Account routes
@@ -102,6 +105,8 @@ router.get("/saltForUser/:username", GrabSaltForUser);
 router.post("/login", Login);
 
 router.delete("/deleteAccount", DeleteAccount);
+
+router.delete("/removeStudentFromCourse", RemoveStudentFromCourse);
 
 router.get("/defaultAdminCreated", DefaultAdminAccountCreated);
 
@@ -116,8 +121,8 @@ router.get("/Courses", GetAllCoursesNamesDescriptionIDs);
 router.get("/Courses/:id", GetAllCoursesForInstructorID);
 
 router.get(
-    "/Courses/:id/getInactiveCourses",
-    GetInactiveCoursesForInstructorID
+  "/Courses/:id/getInactiveCourses",
+  GetInactiveCoursesForInstructorID
 );
 
 router.get("/CourseInfo/:id", GetCourseInfo);
@@ -169,14 +174,11 @@ router.get("/Projects/:id/Users", GetUserTimesForProject);
 
 router.get("/Projects/:id", GetAllProjectsForCourse);
 
-router.get(
-    "/ProjectsForUser/:courseID/:userID/userGroups",
-    GetUserProjectsForCourse
-);
+router.get("/ProjectsForUser/:courseID/:userID/", GetUserProjectsForCourse);
 
 router.get(
-    "/ProjectsForUser/:courseID/:userID/nonUserGroups",
-    GetNonUserProjectsForCourse
+  "/ProjectsForUser/:courseID/:userID/nonUserGroups",
+  GetNonUserProjectsForCourse
 );
 
 router.post("/joinGroup", JoinGroup);
@@ -193,6 +195,8 @@ router.get("/AddToProject/:projectID/InProject", GetAllStudentsInProject);
 
 router.get("/AddToProject/:projectID/NotInProject", GetAllStudentsNotInProject);
 
+router.get("/GetStudentsNotInCourse/:courseID", GetStudentsNotInCourse);
+
 router.get("/GetRecentProjects/", GetRecentProjects);
 //#endregion
 
@@ -200,8 +204,8 @@ router.get("/GetRecentProjects/", GetRecentProjects);
 router.get("/Course/:courseID/GetReportsData", GetReportsData);
 
 router.get(
-    "/Users/:userID/:projectID/activities",
-    GetAllTimeCardsForUserInProject
+  "/Users/:userID/:projectID/activities",
+  GetAllTimeCardsForUserInProject
 );
 
 router.get("/Users/:userID/activities", GetAllTimeCardsForUser);

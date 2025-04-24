@@ -1,7 +1,9 @@
 <div id="project-students">
-  <button class="btn btn-purple btn-sm" (click)="NavigateBackToProject()">Back to Project</button>
-  <h2>Add Students to {{project?.projectName}}</h2>
-  <hr>
+  <button class="btn btn-purple btn-sm" (click)="NavigateBackToProject()">
+    Back to Project
+  </button>
+  <h2>Add Students to {{ project?.projectName }}</h2>
+  <hr />
 
   <h3>Students in Project</h3>
   <table class="table table-hover">
@@ -14,9 +16,13 @@
     </thead>
     <tbody>
       <tr *ngFor="let u of studentsInProject">
-        <td>{{u.firstName}}</td>
-        <td>{{u.lastName}}</td>
-        <td><button class="btn btn-danger float-right" (click)="drop(u.userID)">Drop</button></td>
+        <td>{{ u.firstName }}</td>
+        <td>{{ u.lastName }}</td>
+        <td>
+          <button class="btn btn-danger float-right" (click)="drop(u.userID)">
+            Drop
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>
@@ -31,10 +37,19 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let u of studentsNotInProject | paginate: { itemsPerPage: 10, currentPage: p }">
-        <td>{{u.firstName}}</td>
-        <td>{{u.lastName}}</td>
-        <td><button class="btn btn-success float-right" (click)="add(u.userID)">Add</button></td>
+      <tr
+        *ngFor="
+          let u of studentsNotInProject
+            | paginate : { itemsPerPage: 10, currentPage: p }
+        "
+      >
+        <td>{{ u.firstName }}</td>
+        <td>{{ u.lastName }}</td>
+        <td>
+          <button class="btn btn-success float-right" (click)="add(u.userID)">
+            Add
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>

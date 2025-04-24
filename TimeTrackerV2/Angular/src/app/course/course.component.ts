@@ -23,6 +23,7 @@ export class CourseComponent implements OnInit {
   public courseID: any;
 
   public instructor: boolean = false;
+  public admin: boolean = false;
   public student: boolean = false;
   public userID: string = '';
   public userInCourse: boolean = false;
@@ -55,6 +56,8 @@ export class CourseComponent implements OnInit {
       this.instructor = true;
     } else if (userType === 'student') {
       this.student = true;
+    } else if (userType === 'admin') {
+      this.admin = true;
     }
 
     // if (this.courseID) { // set course to course from local storage based on course ID
@@ -70,6 +73,7 @@ export class CourseComponent implements OnInit {
     //     }
     //   }
     // }
+    //
 
     this.checkUserInCourse();
 
@@ -78,18 +82,9 @@ export class CourseComponent implements OnInit {
 
   loadPage(): void {
     this.getCourseInfo();
-
     // get projects
-    this.loadProjects();
     this.loadAllUserGroups();
     this.loadNonUserGroups();
-
-    if (!localStorage.getItem('foo')) {
-      localStorage.setItem('foo', 'no reload');
-      location.reload();
-    } else {
-      localStorage.removeItem('foo');
-    }
   }
 
   getCourseInfo(): void {
@@ -135,7 +130,7 @@ export class CourseComponent implements OnInit {
   loadAllUserGroups(): void {
     this.http
       .get<any>(
-        `${environment.apiURL}/api/ProjectsForUser/${this.courseID}/${this.userID}/userGroups`,
+        `${environment.apiURL}/api/ProjectsForUser/${this.courseID}/${this.userID}`,
         {
           headers: new HttpHeaders({
             'Access-Control-Allow-Headers': 'Content-Type',
@@ -145,9 +140,10 @@ export class CourseComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          // console.log(data);
           this.allUserGroups = data;
           this.allUserFilteredProjects = data;
+          console.log('allUserGroups', this.allUserGroups);
+          console.log('allUserFilteredProjects', this.allUserFilteredProjects);
           if (this.allUserGroups) {
             localStorage.setItem(
               'allUserGroups',
@@ -253,7 +249,9 @@ export class CourseComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          this.loadPage();
+          // Directly load the groups without page reload
+          this.loadAllUserGroups();
+          this.loadNonUserGroups();
         },
         error: (error) => {
           this.errMsg = error['error']['message'];
@@ -276,7 +274,9 @@ export class CourseComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          this.loadPage();
+          // Directly load the groups without page reload
+          this.loadAllUserGroups();
+          this.loadNonUserGroups();
         },
         error: (error) => {
           this.errMsg = error['error']['message'];
