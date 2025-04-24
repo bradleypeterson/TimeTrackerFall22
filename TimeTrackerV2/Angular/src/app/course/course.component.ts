@@ -16,8 +16,8 @@ export class CourseComponent implements OnInit {
   public nonUserGroups: any = [];
   public filteredProjects: any = []; // This is redundant information because of the same reason as stated above.
   public projectSearchQuery: any = '';
-  public allUserFilteredProjects: any[] = [];
-  public nonUserFilteredProjects: any[] = [];
+  public allUserFilteredProjects: any = [];
+  public nonUserFilteredProjects: any = [];
   public filtering: boolean = false;
 
   public courseID: any;

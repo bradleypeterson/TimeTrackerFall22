@@ -33,8 +33,16 @@ beforeEach(async () => {
           get: (url: string) => {
             if (url.includes('getInactiveCourses')) {
               return of([
-                { courseID: 1, courseName: 'Course 1' },
-                { courseID: 2, courseName: 'Course 2' },
+                {
+                  courseID: 1,
+                  courseName: 'Course 1',
+                  description: 'Description 1',
+                },
+                {
+                  courseID: 2,
+                  courseName: 'Course 2',
+                  description: 'Description 2',
+                },
               ]); // Mock inactive courses
             }
             return of([]);
@@ -90,12 +98,15 @@ describe('InactiveCoursesComponent', () => {
   it('Should load inactive courses successfully', () => {
     spyOn(component, 'loadInactiveCourses').and.callThrough();
 
-    component.loadInactiveCourses();
+    component.ngOnInit();
+    fixture.detectChanges(); // Trigger change detection
+
+    console.log('Inactive courses:', component.inactiveCourses); // Debugging
 
     expect(component.loadInactiveCourses).toHaveBeenCalled();
     expect(component.inactiveCourses).toEqual([
-      { courseID: 1, courseName: 'Course 1' },
-      { courseID: 2, courseName: 'Course 2' },
+      { courseID: 1, courseName: 'Course 1', description: 'Description 1' },
+      { courseID: 2, courseName: 'Course 2', description: 'Description 2' },
     ]);
     expect(component.errMsg).toBe('');
   });
