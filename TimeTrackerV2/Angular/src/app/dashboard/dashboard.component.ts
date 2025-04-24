@@ -296,6 +296,7 @@ export class DashboardComponent implements OnInit {
     console.log("student userID", UserID);
 
     let req = {
+      inID: this.userID,
       userID: UserID,
       courseID: CourseId
     };

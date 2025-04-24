@@ -30,7 +30,48 @@
   </button>
 
   <hr />
+<!--
+  <div *ngIf="isEvalSelected; else noSelection" class="form-container">
+  <-- Preview Section for Evaluation Form ->
+    <div class="eval-preview" *ngIf="selectedTemplateQuestions.length > 0">
+      <h3>Preview of Evaluation Form</h3>
 
+      <-- Loop through selectedTemplateQuestions and display each question in a vertical list ->
+      <div class="questions-list">
+        <div
+          class="question-item"
+          *ngFor="let question of selectedTemplateQuestions; let i = index"
+        >
+          <-- Container for each question ->
+          <div class="question-container">
+            <label>{{ question.questionText }}</label>
+
+            <-- Rating Question Type ->
+            <div *ngIf="question.questionType === '1-5 Rating'">
+              <div class="rating-container">
+                <-- Radio Buttons for Rating ->
+                <div *ngFor="let rating of [1, 2, 3, 4, 5]; let j = index">
+                  <input
+                    type="radio"
+                    [id]="'rating-' + i + ' - ' + j"
+                    name="rating-{{ i }}"
+                    [value]="rating"
+                  />
+                  <label [for]="'rating-' + i + ' - ' + j">{{ rating }}</label>
+                </div>
+              </div>
+            </div>
+
+            <-- Text Response Question Type ->
+            <div *ngIf="question.questionType === 'Text Response'">
+              <textarea class="form-control" id="textarea-{{ i }}"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+-->
   
 <ng-template #noSelection>
     <!-- Content to show when nothing is selected -->

@@ -12,6 +12,7 @@ services:
             - ./Angular:/usr/src/app
             - /usr/src/app/node_modules
 
+
     node:
         tty: true
         environment: 
@@ -29,8 +30,6 @@ services:
         build:
             context: .  
             dockerfile: Dockerfile.nginx 
-        volumes:
-            - ./certificates:/etc/nginx/certificates
         ports:
             - "80:80"
         depends_on:
