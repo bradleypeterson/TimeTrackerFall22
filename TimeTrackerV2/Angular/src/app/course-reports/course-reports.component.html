@@ -1,57 +1,123 @@
 <div class="form-inline mb-3">
-    <form class="mr-3" (ngSubmit)="searchStudents()">
-        <input class="form-control mr-3 search-students" [(ngModel)]="studentSearchQuery" name="studentSearchQuery" type="text" placeholder="Search Students" aria-label="Search">
-        <button class="btn btn-purple btn-elevated search-students" type="submit">Search</button>
-    </form>
+  <form class="mr-3" (ngSubmit)="searchStudents()">
+    <input
+      class="form-control mr-3 search-students"
+      [(ngModel)]="studentSearchQuery"
+      name="studentSearchQuery"
+      type="text"
+      placeholder="Search Students"
+      aria-label="Search"
+    />
+    <button class="btn btn-purple btn-elevated search-students" type="submit">
+      Search
+    </button>
+  </form>
 </div>
 
 <div>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th class="table-head">{{!filtering ? "All Students" : "Searched Students" }}</th>
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
-    <div class="row align-items-start">
-        <div *ngFor="let studentReport of filteredStudents" class="col-md-4 col-6">
-            <div class="card report-card">
-                <div class="card-header" (click)="toggleCard(studentReport.id)">
-                    <img src="../../assets/Images/icons8-dropdown-50.png" alt="Expand/Collapse" class="expandArrow" [id]="studentReport.id">
-                    {{ studentReport.studentName }}
-                </div>
-                <div class="card-body" *ngIf="expandedCards[studentReport.id]">
-                    <button class="btn btn-purple btn-sm" (click)="ViewStudentProfile(studentReport.id)">View Student Profile</button><br><br>
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th class="table-head">Project</th>
-                                <th class="table-head">Total Time</th>
-                                <th class="table-head"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let project of studentReport.projects">
-                                <td *ngIf="project.name !== null">
-                                    {{ project.name }}
-                                </td>
-                                <td *ngIf="project.name !== null">
-                                    {{ project.totalTime | totalTimePipe }}
-                                </td>
-                                <td *ngIf="project.name !== null">
-                                    <button class="btn btn-purple btn-sm" (click)="SeeTimeLogs(studentReport.id, project.id)">Details</button>
-                                </td>
-                                <td *ngIf="project.name === null">This user has not been assigned to any projects yet.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th class="table-head">
+          {{ !filtering ? "All Students" : "Searched Students" }}
+        </th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <div class="row align-items-start">
+    <div *ngFor="let studentReport of filteredStudents" class="col-md-4 col-6">
+      <div class="card report-card">
+        <div class="card-header" (click)="toggleCard(studentReport.id)">
+          <img
+            src="../../assets/Images/icons8-dropdown-50.png"
+            alt="Expand/Collapse"
+            class="expandArrow"
+            [id]="studentReport.id"
+          />
+          {{ studentReport.studentName }}
         </div>
-    </div>    <!-- if no projects were found, show this message saying that no projects were found -->
-    <div *ngIf="filteredStudents.length == 0" class="alert alert-danger">
-        No users found
+        <div *ngIf="instructor || admin">
+          <div class="card-body" *ngIf="expandedCards[studentReport.id]">
+            <button
+              class="btn btn-purple btn-sm"
+              (click)="ViewStudentProfile(studentReport.id)"
+            >
+              View Student Profile</button
+            ><br /><br />
+            <button
+              class="btn btn-purple btn-sm"
+              (click)="RemoveStudentFromCourse(studentReport.id)"
+            >
+              Remove Student</button
+            ><br /><br />
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th class="table-head">Project</th>
+                  <th class="table-head">Total Time</th>
+                  <th class="table-head"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let project of studentReport.projects">
+                  <td *ngIf="project.name !== null">
+                    {{ project.name }}
+                  </td>
+                  <td *ngIf="project.name !== null">
+                    {{ project.totalTime | totalTimePipe }}
+                  </td>
+                  <td *ngIf="project.name !== null">
+                    <button
+                      class="btn btn-purple btn-sm"
+                      (click)="SeeTimeLogs(studentReport.id, project.id)"
+                    >
+                      Details
+                    </button>
+                  </td>
+                  <td *ngIf="project.name === null">
+                    This user has not been assigned to any projects yet.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+  <!-- if no projects were found, show this message saying that no projects were found -->
+  <div *ngIf="filteredStudents.length == 0" class="alert alert-danger">
+    No users found
+  </div>
+</div>
+
+<div>
+  <h3>Students Not in Course</h3>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        *ngFor="
+          let u of studentsNotInCourse
+            | paginate : { itemsPerPage: 10, currentPage: p }
+        "
+      >
+        <td>{{ u.firstName }}</td>
+        <td>{{ u.lastName }}</td>
+        <td *ngIf="instructor || admin">
+          <button class="btn btn-success float-right" (click)="add(u.userID)">
+            Add
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <pagination-controls (pageChange)="p = $event"></pagination-controls>
 </div>

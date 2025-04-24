@@ -26,12 +26,12 @@ services:
             - ./NodeAPI:/usr/src/app
             - /usr/src/app/node_modules
 
-    nginx:  
-        build:
-            context: .  
-            dockerfile: Dockerfile.nginx 
-        ports:
-            - "80:80"
-        depends_on:
-            - angular
-            - node
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - angular
+      - node

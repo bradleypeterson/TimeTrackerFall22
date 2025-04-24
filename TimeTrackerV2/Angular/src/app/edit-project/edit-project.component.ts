@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-edit-project',
   templateUrl: './edit-project.component.html',
-  styleUrls: ['./edit-project.component.css']
+  styleUrls: ['./edit-project.component.css'],
 })
 export class EditProjectComponent implements OnInit {
   public errMsg = '';
@@ -20,20 +20,24 @@ export class EditProjectComponent implements OnInit {
     private formBuilder: UntypedFormBuilder,
     private http: HttpClient,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
+    private activatedRoute: ActivatedRoute
   ) {
-      const tempUser = localStorage.getItem('currentUser');
-      if (tempUser) {
-        this.currentUser = JSON.parse(tempUser);
-      }
-
-      // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
-      console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
-      this.projectID = this.router.getCurrentNavigation()?.extras.state?.projectID;
+    const tempUser = localStorage.getItem('currentUser');
+    if (tempUser) {
+      this.currentUser = JSON.parse(tempUser);
     }
 
-  ngOnInit(): void {
+    // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
+    console.log(
+      `State received: ${JSON.stringify(
+        this.router.getCurrentNavigation()?.extras.state
+      )}`
+    ); // For debugging only
+    this.projectID =
+      this.router.getCurrentNavigation()?.extras.state?.projectID;
+  }
 
+  ngOnInit(): void {
     // let tempProjects = localStorage.getItem('projects');
     //   if (tempProjects) {
     //     const projects = JSON.parse(tempProjects);
@@ -63,6 +67,7 @@ export class EditProjectComponent implements OnInit {
         next: (data) => {
           this.errMsg = '';
           this.project = data;
+          console.log(this.project);
           if (this.project) {
             this.editProjectForm.controls['projectName'].setValue(
               this.project.projectName
@@ -90,8 +95,8 @@ export class EditProjectComponent implements OnInit {
 
   onSubmit(): void {
     // An extra check condition to prevent submission of the data unless the form is valid
-    if(!this.editProjectForm.valid) {
-        return;
+    if (!this.editProjectForm.valid) {
+      return;
     }
 
     let payload = {
@@ -99,7 +104,7 @@ export class EditProjectComponent implements OnInit {
       description: this.editProjectForm.value['description'],
       isActive: this.editProjectForm.value['isActive'],
       projectID: this.projectID,
-    }
+    };
 
     this.http
       .post<any>(`${environment.apiURL}/api/editProject`, payload, {
@@ -119,7 +124,7 @@ export class EditProjectComponent implements OnInit {
   }
 
   NavigateBackToProject() {
-    let state = {projectID: this.projectID};
+    let state = { projectID: this.projectID };
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate(['/project'], { state });
   }
