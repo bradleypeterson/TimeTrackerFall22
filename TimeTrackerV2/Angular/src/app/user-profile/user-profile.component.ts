@@ -11,7 +11,7 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./user-profile.component.css']
 })
 export class UserProfileComponent {
-  public userProfile: any[] = [];
+  public userProfile: any;
   public viewingUserID: any;  // The userID of the profile we want to view
   public errMsg = '';
 
@@ -70,7 +70,7 @@ export class UserProfileComponent {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          this.userProfile = Array.isArray(data) ? data : [data];
+          this.userProfile = data;
           if (this.userProfile) {
             localStorage.setItem(
               'userProfile',

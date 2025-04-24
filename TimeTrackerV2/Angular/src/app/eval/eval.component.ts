@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { environment } from '../../environments/environment';
+import { ActivatedRoute, Router } from '@angular/router';
 
+/*
 interface Question {
   questionText: string;
   questionType: string;
@@ -11,39 +13,52 @@ interface Question {
   projectName: string;
   evaluatorID: number;
 }
+*/
 
+interface Question{
+  questionID: number;
+  questionText: string;
+  questionType: string;
+  templateID: number;
+  evaluatorID: number
+}
+/*
 interface QuestionGroup {
   // courseName: string;
   projectName: string;
   questions: Question[];
   evalIDs: any[];
 }
-
+*/
 @Component({
-  selector: 'app-evals',
-  templateUrl: './eval.component.html',
+  selector: 'app-evals',  templateUrl: './eval.component.html',
   styleUrls: ['./eval.component.css']
 })
 
 export class EvalComponent implements OnInit {
-  selectedTemplateQuestions: Question[] = [];
+  eval: Question[] = [];
   evalForm: FormGroup;
+  evalID : number = 0;
+  public projectID: number;
+  selectedTemplateQuestions: Question[] = [];
   currentUser: any;
   evaluateeID: any;
-  forms: FormGroup[] = [];
+  unanswered: number[] = []
   userName: string | undefined;
   // courseName: string | undefined;
-  projectName = "place holder"; // assign actual project name
-  // projectName: string | undefined;
-  questionGroups: QuestionGroup[] = [];
+  projectName: string | undefined;
+  numQuestions: number = 0;
 
-  constructor(private http: HttpClient, private formBuilder: FormBuilder) {
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, private router: Router,) {
     this.evalForm = this.formBuilder.group({});
+
+    //console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);
+    this.projectID = this.router.getCurrentNavigation()?.extras.state?.projectID;
   }
 
   ngOnInit() {
     this.getCurrentUser();
-    this.fetchEval();
+    this.fetchEval(this.projectID);
     // this.evalForm = this.formBuilder.group({});
   }
 
@@ -62,109 +77,157 @@ export class EvalComponent implements OnInit {
     }
   }
 
+sortEval(data: any) {
+  let q = data
 
-  fetchEval() {
-    this.http
-      .get<any[]>(
-        `${environment.apiURL}/api/getAssignedEvals/${this.evaluateeID}`
-      )
-      .subscribe(
-        (response) => {
-          console.log('Response received:', response);
-    this.http
-      .get<any[]>(
-        `${environment.apiURL}/api/getAssignedEvals/${this.evaluateeID}`
-      )
-      .subscribe(
-        (response) => {
-          console.log('Response received:', response);
+  this.numQuestions = q.length
+  const formControls: { [key: string]: FormControl } = {};
 
-          let evalIDs: any[] = [];
+  this.projectName = q[0].projectName
+  this.evalID = q[0].evalID
 
-          if (response.length > 0) {
-            // for (let i = 0; i < response.length; i++) {
-            //     for (let j = 0; j < evalIDs.length; j++) {
-            //       if (response[i].evaluatorID === evalIDs[j]) {
-            //         console.log("j val: " + j);
-            //         console.log("After the second for, in the if statement: " + evalIDs.length);
-            //         console.log("EvalIDs content: " + evalIDs);
-            //         console.log("Response evaluatorID: " + response[i].evaluatorID);
-            //         push = false;
-            //       }
-            //     }
-            //     if (push === true) evalIDs.push(response[i].evaluatorID);
-            // }
-
-            response.forEach(function (question) {
-              if (!evalIDs.includes(question.evaluatorID)) {
-                evalIDs.push(question.evaluatorID);
-              }
-              console.log(evalIDs);
-            });
-
-
-
-          if (response[0] instanceof Array) {
-            // Response is a 2-D array of QuestionGroup
-            this.questionGroups = response.map((group: Question[]) => ({
-              projectName: group[0]?.projectName || 'Default Project',
-              questions: group,
-              evalIDs: evalIDs
-            }));
-          } else {
-            // Response is a 1-D array of Question, wrap it in a single QuestionGroup
-            this.questionGroups = [{
-              projectName: response[0]?.projectName || 'Default Project',
-              questions: response,
-              evalIDs: evalIDs
-            }];
-          }
-        } else {
-          this.questionGroups = [];
-        }
-
-          this.forms = this.questionGroups.map((group) =>
-            this.createFormGroupForGroup(group.questions)
-          );
-        },
-        (error) => console.error('Error fetching questions:', error)
-      );
-          this.forms = this.questionGroups.map((group) =>
-            this.createFormGroupForGroup(group.questions)
-          );
-        },
-        (error) => console.error('Error fetching questions:', error)
-      );
-  }
-
-  private createFormGroupForGroup(questions: Question[]): FormGroup {
-    const group: any = {};
-    questions.forEach(question => {
-      group['response-' + question.questionID] = [''];
+  q.forEach((q: any) => {
+    formControls['response_' + q.questionID] = new FormControl('');
+    this.eval.push({
+      questionID: q.questionID,
+      questionText: q.questionText,
+      questionType: q.questionType,
+      templateID: q.templateID,
+      evaluatorID: q.evaluatorID,
     });
-    return this.formBuilder.group(group);
+  });
+  this.evalForm = new FormGroup(formControls);
+  console.log(this.eval)
+
   }
 
-  onSubmit(form: FormGroup) {
-    if (!form.valid) {
+  fetchEval(projectID: number) {
+    this.http
+    .get(
+      `${environment.apiURL}/api/getAssignedEvals/${this.evaluateeID}/${this.projectID}`,
+      {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      }
+    )
+    .subscribe({
+      next: (data) => {
+        if (data && Object.keys(data).length === 0) {
+          // if there is not data go home
+          this.router.navigate(['/dashboard']);
+        } else {
+          // Sort data if there is an eval
+          this.sortEval(data);
+        }
+      },
+      error: (err) => {
+        this.ShowMessage(err.error.message);
+      },
+    });
+  }
+
+  evalCompleted(){
+    let completed = {
+      evalID: this.evalID
+    }
+
+    this.http.post<any>(`${environment.apiURL}/api/evalCompleted`, completed, {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Headers': 'Content-Type',
+      }),
+    })
+    .subscribe({
+      next: (data) => {
+        console.log('Evaluation completed:', data);
+        this.router.navigate(['/dashboard']);
+      },
+      error: (err) => {
+        this.ShowMessage(err.error.message);
+      },
+    });
+  }
+
+  SubmitResponses() {
+    const form = document.getElementById('evalForm') as HTMLFormElement;
+
+    if (!form.checkValidity()) {
       alert('Please fill out the form correctly.');
       return;
     }
+  
+    this.eval.forEach((q: any) => {
+      let i=0
+      let responseinfo = {}
 
-    const responses = form.value;
-    console.log('responses:', responses);
-    const apiUrl = `${environment.apiURL}/api/submitResponses`; // Replace with the actual API endpoint
-
-    this.http.post(apiUrl, responses).subscribe(
-      () => {
-        // alert('Responses submitted successfully!');
-      },
-      error => {
-        alert('Error submitting responses!');
-        console.error('Error:', error);
+      const responseControl = this.evalForm.get('response_'+q.questionID);
+      //console.log(responseControl?.value);
+      
+      if(!responseControl?.value){
+        this.unanswered.push(q.questionID)
+        i++;
       }
-    );
+      else{
+        this.unanswered.splice(i)
+      }
+
+      if(this.unanswered.length <= 0){
+        if(typeof responseControl?.value == 'number'){
+          responseinfo = {
+            evalID: this.evalID,
+            userID: this.currentUser.userID,
+            questionID: q.questionID,
+            rating: responseControl?.value,
+            response: null
+          };
+        }
+        else{
+          responseinfo = {
+            evalID: this.evalID,
+            userID: this.currentUser.userID,
+            questionID: q.questionID,
+            rating: null,
+            response: responseControl?.value
+          };
+        }
+        //console.log(responseinfo)
+        
+        this.http.post<any>(`${environment.apiURL}/api/submitResponses`, responseinfo, {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
+        })
+        .subscribe({
+          next: (data) => {
+            console.log('Response recorded:', data);
+            //this.router.navigate(['/dashboard']);
+            
+          },
+          error: (err) => {
+            this.ShowMessage(err.error.message);
+          },
+        });
+        
+      }
+      //console.log(responseinfo)
+
+    });
+    
+    if(this.unanswered.length > 0){
+      let alert_msg = "Please answer:\n"
+      this.unanswered.forEach( (q) => {
+        alert_msg = alert_msg + ("Question "+q+"\n")
+      });
+      alert(alert_msg)
+      return
+    }
+
+    this.evalCompleted()
+    
+
   }
 
-
+  ShowMessage(message: string) {
+    alert(message);
+  }
 }

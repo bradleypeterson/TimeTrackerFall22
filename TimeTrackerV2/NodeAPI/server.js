@@ -17,10 +17,12 @@ let db = ConnectToDB();
 
 // App
 const app = express();
+const hostname = "137.190.19.215"
+
 app.use(
   cors({
-    origin: "https://localhost:4200", // allows the supplied url to talk to the server https://137.190.19.220:4200
-
+    //origin: "https://137.190.19.215:4200", // allows the supplied url to talk to the server
+    origin: "https://localhost:4200",
     credentials: true, // Allows credentials from the origin
   })
 );

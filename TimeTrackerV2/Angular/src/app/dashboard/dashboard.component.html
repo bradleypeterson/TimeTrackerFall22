@@ -1,3 +1,4 @@
+<!--#region Student Dashboard-->
 <div [ngSwitch]="true">
   <div *ngSwitchCase="student" id="dashboard">
     <h2 class="dashboard-head">Dashboard</h2>
@@ -5,9 +6,7 @@
     <div>
       <h3 class="box-head rounded">Courses</h3>
       <!-- This class will make the below button come next to it so they are on one line -->
-      <a href="/courses" class="btn btn-purple btn-courses rounded">Browse Courses</a>
       <a href="/eval" class="btn btn-warning btn-courses rounded">Evaluation Due</a>
-
     </div>
     <hr />
     <div class="alert alert-danger" *ngIf="courses?.length <= 0">
@@ -67,15 +66,22 @@
           <div class="card-body">
             <h5 class="card-title">{{ p.courseName }}</h5>
             <p class="card-text">{{ p.description }}</p>
-            <button class="btn btn-purple rounded" (click)="GoToProject(p.projectID)">
-              View Project
-            </button>
+            <div class="course-btns">
+              <button class="btn btn-purple rounded" (click)="GoToProject(p.projectID)">
+                View Project
+              </button>
+              <button class="btn btn-purple rounded" (click)="GoToEval(p.projectID)">
+                View Eval
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+<!--#endregion-->
 
+<!--#region Instructor Dashboard-->
   <div *ngSwitchCase="instructor" id="dashboard">
     <h2 class="dashboard-head">Dashboard</h2>
     <div>
@@ -142,7 +148,9 @@
     </div>
     <!--  -->
   </div>
+<!--#endregion-->
 
+<!--#region Admin Dashboard-->
   <div *ngSwitchCase="admin" id="dashboard">
     <h2 class="dashboard-head">Dashboard</h2>
     <div>
@@ -211,3 +219,4 @@
     </div>
   </div>
 </div>
+<!--#endregion-->
