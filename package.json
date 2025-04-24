@@ -4,8 +4,5 @@
     "@angular/forms": "^14.2.9",
     "@angular/router": "^14.2.9",
     "crypto-es": "^2.1.0"
-  },
-  "devDependencies": {
-    "jasmine": "^5.6.0"
   }
 }
