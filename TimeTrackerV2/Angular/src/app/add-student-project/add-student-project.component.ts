@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-add-student-project',
   templateUrl: './add-student-project.component.html',
-  styleUrls: ['./add-student-project.component.css'],
+  styleUrls: ['./add-student-project.component.css']
 })
 export class AddStudentProjectComponent implements OnInit {
   public project: any;
@@ -23,24 +23,20 @@ export class AddStudentProjectComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
   ) {
-    const tempUser = localStorage.getItem('currentUser');
-    if (tempUser) {
-      this.currentUser = JSON.parse(tempUser);
+      const tempUser = localStorage.getItem('currentUser');
+      if (tempUser) {
+        this.currentUser = JSON.parse(tempUser);
+      }
+
+      // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
+      console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
+      this.projectID = this.router.getCurrentNavigation()?.extras.state?.projectID;
     }
 
-    // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
-    console.log(
-      `State received: ${JSON.stringify(
-        this.router.getCurrentNavigation()?.extras.state
-      )}`
-    ); // For debugging only
-    this.projectID =
-      this.router.getCurrentNavigation()?.extras.state?.projectID;
-  }
-
   ngOnInit(): void {
+
     this.getProjectInfo();
 
     // set to project from local storage
@@ -152,7 +148,7 @@ export class AddStudentProjectComponent implements OnInit {
   add(UserID: any) {
     let req = {
       userID: UserID,
-      projectID: this.projectID,
+      projectID: this.projectID
     };
 
     this.http
@@ -175,7 +171,7 @@ export class AddStudentProjectComponent implements OnInit {
   drop(UserID: any) {
     let req = {
       userID: UserID,
-      projectID: this.projectID,
+      projectID: this.projectID
     };
 
     this.http
@@ -196,7 +192,7 @@ export class AddStudentProjectComponent implements OnInit {
   }
 
   NavigateBackToProject() {
-    let state = { projectID: this.projectID };
+    let state = {projectID: this.projectID};
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate(['/project'], { state });
   }

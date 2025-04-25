@@ -3,11 +3,18 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
+interface Eval {
+  projectID: number;
+  name: string;
+}
+
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+    selector: 'app-dashboard',
+    templateUrl: './dashboard.component.html',
+    styleUrls: ['./dashboard.component.css'],
+    standalone: false
 })
+
 
 export class DashboardComponent implements OnInit {
   public projects: any = [];
@@ -17,6 +24,7 @@ export class DashboardComponent implements OnInit {
   public PendInstrCourses: any = [];
   public errMsg = '';
   public p: number = 1;
+  public Evals: any = [];
   public hasPendingEvals: boolean = false;
   public awaitingApprovalCount: number = 0; // Will hold count of users awaiting approval
 
@@ -28,6 +36,9 @@ export class DashboardComponent implements OnInit {
   student: boolean = false;
   admin: boolean = false;
   userID: string = '';
+
+  
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -45,17 +56,18 @@ export class DashboardComponent implements OnInit {
     if (userType === 'instructor') {
       this.instructor = true;
       this.loadInstrPenUserCourses();
-    } else if (userType === 'student') {
+    }
+    else if (userType === 'student') {
       this.student = true;
       this.loadProjects();
       this.loadPenUserCourses();
       this.checkForPendingEvals();
-    } else if (userType === 'admin') {
+    }
+    else if (userType === 'admin') {
       this.admin = true;
       this.loadRecentUsers();
       this.loadRecentCourses();
       this.loadRecentProjects();
-      this.loadInstrPenUserCourses();
       this.checkForPendingApproval(); // Check for users where isApproved = false (awaiting approval)
     }
 
@@ -64,10 +76,11 @@ export class DashboardComponent implements OnInit {
 
     // makes the page properly update on changes
     if (!localStorage.getItem('foo')) {
-      localStorage.setItem('foo', 'no reload');
-      location.reload();
-    } else {
-      localStorage.removeItem('foo');
+      localStorage.setItem('foo', 'no reload')
+      location.reload()
+    }
+    else {
+      localStorage.removeItem('foo')
     }
   }
 
@@ -89,7 +102,7 @@ export class DashboardComponent implements OnInit {
           console.error('Error fetching pending approval count', err);
         },
       });
-  }
+}
 
   // get projects student is in
   loadProjects(): void {
@@ -111,7 +124,7 @@ export class DashboardComponent implements OnInit {
         console.log(data);
         this.courses = data;
         for (let i = 0; i < data.length; i++) {
-          localStorage.setItem('courses', JSON.stringify(this.courses));
+          localStorage.setItem("courses", JSON.stringify(this.courses));
         }
       });
     }
@@ -123,7 +136,7 @@ export class DashboardComponent implements OnInit {
         console.log(data);
         this.courses = data;
         for (let i = 0; i < data.length; i++) {
-          localStorage.setItem('courses', JSON.stringify(this.courses));
+          localStorage.setItem("courses", JSON.stringify(this.courses));
         }
       });
     }
@@ -203,7 +216,7 @@ export class DashboardComponent implements OnInit {
   cancel(CourseId: any) {
     let req = {
       userID: this.currentUser.userID,
-      courseID: CourseId,
+      courseID: CourseId
     };
 
     this.http
@@ -230,7 +243,7 @@ export class DashboardComponent implements OnInit {
   cancelIns(CourseId: any, UserID: any) {
     let req = {
       userID: UserID,
-      courseID: CourseId,
+      courseID: CourseId
     };
 
     this.http
@@ -278,13 +291,14 @@ export class DashboardComponent implements OnInit {
 
   // instructor approves student application to course
   register(CourseId: any, UserID: any) {
-    console.log('Register function called');
-    console.log('the course ', CourseId);
-    console.log('student userID', UserID);
+    console.log("Register function called");
+    console.log("the course ", CourseId);
+    console.log("student userID", UserID);
 
     let req = {
+      inID: this.userID,
       userID: UserID,
-      courseID: CourseId,
+      courseID: CourseId
     };
 
     this.http
@@ -303,6 +317,7 @@ export class DashboardComponent implements OnInit {
           this.errMsg = error['error']['message'];
         },
       });
+
   }
 
   // navigate to a user's profile
@@ -313,8 +328,29 @@ export class DashboardComponent implements OnInit {
   }
 
   checkForPendingEvals(): void {
-    // Since there is no actual API, we simulate the API call here.
-    // In real scenario, this should be an HTTP GET request to check pending evaluations.
-    this.hasPendingEvals = true; // Assuming there are pending evaluations.
+    this.http.get<any>(`${environment.apiURL}/api/getAllEvals/${this.userID}`,{
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Headers': 'Content-Type',
+      }),
+    })
+    .subscribe({
+      next: (data) => {
+        console.log(data)
+        this.Evals = data
+        this.hasPendingEvals = true
+      },
+      error: (err) => {
+        this.ShowMessage(err.error.message);
+      },
+    });
   }
+
+  doesProjectHaveEval(projectID: number):boolean{
+    return this.Evals.some((evalObj: Eval) => evalObj.projectID === projectID);
+  }
+
+  ShowMessage(message: string) {
+    alert(message);
+  }
+
 }
