@@ -17,8 +17,7 @@ interface User {
 @Component({
     selector: 'app-assign-evals',
     templateUrl: './assign-evals.component.html',
-    styleUrls: ['./assign-evals.component.css'],
-    standalone: false
+    styleUrls: ['./assign-evals.component.css']
 })
 
 export class AssignEvalsComponent implements OnInit {

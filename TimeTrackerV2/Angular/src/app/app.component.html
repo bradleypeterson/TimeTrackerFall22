@@ -1,4 +1,178 @@
 <!-- Toolbar -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <!-- Logo -->
+    <a class="navbar-brand" href="/dashboard">
+      <img
+        height="40"
+        alt="Time Tracker Logo"
+        src="../assets/Images/TimeTrackerLogo.png"
+        class="d-inline-block align-text-top me-2"
+      />
+      TimeTracker
+    </a>
+    <!-- Toggler for responsive navbar -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      (click)="isNavbarExpanded = !isNavbarExpanded"
+      [attr.aria-expanded]="isNavbarExpanded"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div
+      class="collapse navbar-collapse"
+      [ngClass]="{ show: isNavbarExpanded }"
+    >
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Profile Dropdown admin -->
+        <li class="nav-item dropdown" *ngIf="admin">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {{ name }}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a class="dropdown-item" (click)="ViewProfile()">View Profile</a>
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="logout()">Logout</a>
+            </li>
+          </ul>
+        </li>
+        <!-- Dashboard Link admin -->
+        <li class="nav-item" *ngIf="admin">
+          <a class="nav-link" href="/dashboard">Dashboard</a>
+        </li>
+
+        <!-- Admin Dropdown -->
+        <li class="nav-item dropdown" *ngIf="admin">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="adminDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Course Options
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+            <li>
+              <a class="dropdown-item" href="/create-course"
+                >Create New Course</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="/past-courses">Past Courses</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/manage-evals"
+                >Manage Evaluations</a
+              >
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item" *ngIf="admin">
+          <a class="nav-link" href="/users">Users</a>
+        </li>
+
+        <!-- Profile Dropdown instructor -->
+        <li class="nav-item dropdown" *ngIf="instructor">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {{ name }}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a class="dropdown-item" (click)="ViewProfile()">View Profile</a>
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="logout()">Logout</a>
+            </li>
+          </ul>
+        </li>
+        <!-- Dashboard Link instructor -->
+        <li class="nav-item" *ngIf="instructor">
+          <a class="nav-link" href="/dashboard">Dashboard</a>
+        </li>
+
+        <!-- Instructor Dropdown -->
+        <li class="nav-item dropdown" *ngIf="instructor">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="instructorDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Course Options
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="instructorDropdown">
+            <li>
+              <a class="dropdown-item" href="/create-course"
+                >Create New Course</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="/past-courses">Past Courses</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="/manage-evals"
+                >Manage Evaluations</a
+              >
+            </li>
+          </ul>
+        </li>
+
+        <!-- Profile Dropdown student -->
+        <li class="nav-item dropdown" *ngIf="student">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="navbarDropdown"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {{ name }}
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li>
+              <a class="dropdown-item" (click)="ViewProfile()">View Profile</a>
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="logout()">Logout</a>
+            </li>
+          </ul>
+        </li>
+        <!-- Dashboard Link student-->
+        <li class="nav-item" *ngIf="student">
+          <a class="nav-link" href="/dashboard">Dashboard</a>
+        </li>
+
+        <!-- Student Link -->
+        <li class="nav-item" *ngIf="student">
+          <a class="nav-link" href="/courses">Courses</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+=======
 <div class="navbar navbar-expand-lg sticky-top">
   <a class="navbar-left">
     <img
@@ -182,7 +356,6 @@
     </div>
   </div>
 </div>
-
 <div
   class="container mt-2"
   [ngStyle]="{ 'padding-top': isNavbarExpanded ? '250px' : '60px' }"

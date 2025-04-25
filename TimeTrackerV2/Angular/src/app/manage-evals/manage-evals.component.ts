@@ -22,10 +22,9 @@ interface UpdateQuestionPayload {
 }
 
 @Component({
-    selector: 'app-manage-evals',
-    templateUrl: './manage-evals.component.html',
-    styleUrls: ['./manage-evals.component.css'],
-    standalone: false
+  selector: 'app-manage-evals',
+  templateUrl: './manage-evals.component.html',
+  styleUrls: ['./manage-evals.component.css'],
 })
 export class ManageEvalsComponent implements OnInit {
   showModal: boolean = false;
@@ -62,6 +61,9 @@ export class ManageEvalsComponent implements OnInit {
     this.isEvalSelected = false;
   }
 
+
+
+
   private getCurrentUser() {
     const currentUserData = localStorage.getItem('currentUser');
     if (currentUserData) {
@@ -72,6 +74,23 @@ export class ManageEvalsComponent implements OnInit {
       console.log('No current user found in local storage.');
     }
   }
+
+  // loadQuestionsForTemplate(templateId: string) {
+  //   this.http.get<Question[]>(`https://localhost:8080/api/questions/${templateId}`).subscribe(
+  //     data => {
+  //       this.selectedTemplateQuestions = data;
+  //       // Store initial state
+  //       this.storeInitialState(data);
+  //       console.log('Fetched Questions:', data);
+  //     },
+  //     error => console.error('Error fetching questions:', error)
+  //   );
+  // }
+
+  // loadDefaultTemplate() {
+  //   this.selectedTemplateId = this.defaultTemplateId;
+  //   this.loadQuestionsForTemplate(this.defaultTemplateId);
+  // }
 
   loadTemplates() {
     this.http
@@ -248,6 +267,10 @@ export class ManageEvalsComponent implements OnInit {
     forkJoin(updateRequests).subscribe(
       () => {
         this.reloadQuestions();
+        // WHY DO INSTRUCTORS HAVE DROP DOWN TO MANAGE COURSES ALONG WITH BUTTONS ON DASHBOARD....SEEMS REDUNDANT - Ask group...
+        // PREVIEW OF EVAL FORM - Question text can overrun the box....need to either trim it or have div wrap...
+        // Displays Save Successful -- RIGHT NOW DOESN'T DEFAULT BACK TO NOT SHOwiNG SAVE MESSAGE
+        // SAVE -- Not always popping up, not resetting (See above comment for failure to not disappear)
         this.saveSuccessful = true; // Show success message
         setTimeout(() => {
           this.saveSuccessful = false;

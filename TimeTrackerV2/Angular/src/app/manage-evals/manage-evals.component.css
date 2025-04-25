@@ -95,16 +95,3 @@ h5{
     flex-direction: column;
     height: 100%;
 }
-
-.question-btns{
-    position: relative;
-}
-
-.select-eval{
-    text-align: center;
-}
-
-.submit-btn{
-    position: absolute;
-    right: 0;
-}

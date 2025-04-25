@@ -3,11 +3,10 @@
 
 var localStorage = require('node-localstorage').LocalStorage;
 const crypto = require('crypto');
-const ConnectToDB = require('../../Database/DBConnection');
-const insertAudit = require('./AuditLog')
+const ConnectToDB = require('../../database/DBConnection');
 let db = ConnectToDB();
 localStorage = new localStorage('./scratch');
-const DummyData = require('../../Database/DummyData');
+const DummyData = require('../../database/DummyData');
 
 exports.Register = async (req, res, next) => {
   console.log("AccountControllers.js file/Register route called");
@@ -61,8 +60,6 @@ exports.Register = async (req, res, next) => {
                 console.log(err);
                 return res.status(500).json({ message: 'Something went wrong in creating the account. Please try again later.' });
             } else {
-                const userID = this.lastID;
-                insertAudit(userID, 'CREATE_USER', `${type}: ${username} created`)
                 return res.status(200).json({ message: 'User registered' });
             }
         });
@@ -228,34 +225,18 @@ exports.DeleteAccount = async (req, res, next) => {
   let userID = req.body.userID;
   console.log("userID: " + userID);
 
-    let sqlGetUser = `SELECT username, type FROM Users WHERE userID = ?`;
+    let sql = `DELETE
+    FROM Users
+    WHERE userID = ?`;
 
-    db.get(sqlGetUser, [userID], (err, row) => {
+    db.run(sql, [userID], (err, value) => {
         if (err) {
             console.log(err);
-            return res.status(500).json({ message: 'Something went wrong while fetching user details. Please try again later.' });
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
-
-        if (!row) {
-            return res.status(404).json({ message: 'User not found.' });
+        else {
+            return res.status(200).json({ message: 'The account has been deleted.' });
         }
-
-        let { username, type } = row;
-
-        let sql = `DELETE
-        FROM Users
-        WHERE userID = ?`;
-
-        db.run(sql, [userID], (err, value) => {
-            if (err) {
-                console.log(err);
-                return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
-            }
-            else {
-                insertAudit(req.body.currentUserID, 'DELETE_USER', `${type}: ${username}: ${userID} deleted`)
-                return res.status(200).json({ message: 'The account has been deleted.' });
-            }
-        });
     });
 }
 

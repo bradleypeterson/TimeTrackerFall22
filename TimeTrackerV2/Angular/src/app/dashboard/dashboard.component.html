@@ -6,10 +6,10 @@
     <div>
       <h3 class="box-head rounded">Courses</h3>
       <!-- This class will make the below button come next to it so they are on one line -->
-
       <!--<button class="btn btn-purple rounded" (click)="GoToEval(p.projectID)">-->
       <a href="/courses" class="btn btn-purple btn-courses rounded">Browse Courses</a>
       <a *ngIf="hasPendingEvals" href="/eval" class="btn btn-warning btn-courses rounded">{{Evals.length}} {{Evals.length === 1 ? 'Evaluation' : 'Evaluations'}} Due </a>
+
     </div>
     <hr />
     <div class="alert alert-danger" *ngIf="courses?.length <= 0">
@@ -82,8 +82,8 @@
               <button class="btn btn-purple rounded" (click)="GoToProject(p.projectID)">
                 View Project
               </button>
-              <button *ngIf="doesProjectHaveEval(p.projectID)" class="btn btn-purple rounded" (click)="GoToEval(p.projectID)">
-                Take Eval
+              <button class="btn btn-purple rounded" (click)="GoToEval(p.projectID)">
+                View Eval
               </button>
             </div>
           </div>

@@ -64,4 +64,17 @@ export class AppComponent implements OnInit {
     // however, the only issue with this implementation is that it replaces the other user profile from this history.  I.E. if you go back a page from viewing your profile, you are taken to the page that you were at before viewing the other user’s profile.
     this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => this.router.navigate(['/profile'], { state }));
   }
+
+  logout() {
+    // Reset user roles
+    this.admin = false;
+    this.instructor = false;
+    this.student = false;
+
+    // Clear user session or token
+    localStorage.removeItem('userToken');
+
+    // Force navigation to login page
+    this.router.navigateByUrl('/login');
+  }
 }

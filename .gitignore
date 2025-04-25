@@ -53,4 +53,3 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-/TimeTrackerV2/Angular/src/app/manage-evals/manage-evals.component.html
