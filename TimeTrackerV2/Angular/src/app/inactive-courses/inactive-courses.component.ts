@@ -9,7 +9,7 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./inactive-courses.component.css']
 })
 export class InactiveCoursesComponent implements OnInit {
-  public inactiveCourses: any[] = []; // Initialize as an empty array
+  public inactiveCourses: any;
 
   public currentUser: any;
 
@@ -32,16 +32,25 @@ export class InactiveCoursesComponent implements OnInit {
   }
 
   loadInactiveCourses(): void {
-    this.http.get(`${environment.apiURL}/api/getInactiveCourses`).subscribe({
-      next: (data) => {
-        console.log('Mocked data received:', data); // Debugging
-        this.inactiveCourses = Array.isArray(data) ? data : [];
-        this.errMsg = ''; // Set errMsg to an empty string on success
-      },
-      error: (error) => {
-        this.errMsg = error.error.message;
-      },
-    });
+    this.http
+      .get<any>(
+        `${environment.apiURL}/api/Courses/${this.currentUser.userID}/getInactiveCourses/`,
+        {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
+        }
+      )
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          console.log(data);
+          this.inactiveCourses = data.reverse();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
   }
 
   GoToCourse(courseID: number) {

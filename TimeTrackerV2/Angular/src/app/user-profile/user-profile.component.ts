@@ -33,14 +33,12 @@ export class UserProfileComponent {
     if (tempUser) {
       this.currentUser = JSON.parse(tempUser);
     }
-
     // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
     console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
     this.viewingUserID = this.router.getCurrentNavigation()?.extras.state?.userID;
   }
 
   ngOnInit(): void {
-
     // get user type
     var userType = this.currentUser.type;
     this.currentUserID = this.currentUser.userID;
@@ -136,9 +134,19 @@ export class UserProfileComponent {
             const response = confirm(`WARNING:  Deleting an account is irreversible.\n\nIf you continue with this process, the account will be deleted.\nDo you wish to continue?`);
             // The user wants to delete the user
             if (response) {
+
+                const currentUser = localStorage.getItem('currentUser');
+                let userID = 0
+                if (currentUser) {
+                  const user = JSON.parse(currentUser);
+                  userID = user.userID;  // Access the userID safely
+                } else {
+                  console.log('No user found in localStorage');
+                }
                 // Make a body variable for the http.delete request so we can safely delete user instead of passing the variable in the URL.  https://stackoverflow.com/a/40857437
                 let requestBody = {
-                    userID: this.viewingUserID
+                    userID: this.viewingUserID,
+                    currentUserID: userID
                 };
 
                 // This http delete request will delete the account attached to the user with the userID as specified in the body of the request, it will then remove the user from the local list of users so that the UI and the DB match.

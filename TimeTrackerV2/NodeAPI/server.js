@@ -23,7 +23,7 @@ const app = express();
 const hostname = "137.190.19.215"
 
 app.use(cors({
-  origin: true,  // Will reflect the request origin (your Nginx server)
+  origin: true, 
   credentials: true
 }));
 
@@ -49,7 +49,7 @@ const sslServer = https.createServer(
   app
 );
 
-sslServer.listen(PORT, () => {
+sslServer.listen(PORT, '0.0.0.0', () => {
   console.log(`Running on https://137.190.19.215:${PORT}`);
   if (db) {
     console.log("Connected to the main database.");
