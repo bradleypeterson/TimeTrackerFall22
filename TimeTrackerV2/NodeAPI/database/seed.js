@@ -237,3 +237,4 @@ db.run(`CREATE TABLE IF NOT EXISTS Response (
 db.close(); // Close the connection because it doesn't need to be persistent for the creation of the DB
 
 // isApproved added to all relevant statements
+

@@ -34,15 +34,17 @@ export class LoginComponent implements OnInit {
         else {
             localStorage.removeItem('foo');
         }
-        this.defaultAdminCreated();
+        this.defaultAdminCreated();   
     }
 
-    onSubmit(): void {
-        if(!this.checkoutForm.valid) {
-            this.errMsg = "Missing required field";
-            return;
-        }
 
+  onSubmit(): void {
+
+    if (!this.checkoutForm.valid) {
+      this.errMsg = 'Missing required field';
+      return;
+    }
+    //console.log("Username: " + this.checkoutForm.value['username'] + " | Password: " + this.checkoutForm.value['password']);
         //console.log("Username: " + this.checkoutForm.value['username'] + " | Password: " + this.checkoutForm.value['password']);
 
         let username = this.checkoutForm.value['username'];
