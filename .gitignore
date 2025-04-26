@@ -1,7 +1,6 @@
 node_modules/
 package-lock.json
 scratch/
-.env
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
@@ -10,6 +9,9 @@ scratch/
 /tmp
 /out-tsc
 *.db
+*.db-shm
+*.db-wal
+
 # Only exists if Bazel was run
 /bazel-out
 
@@ -50,3 +52,4 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+/TimeTrackerV2/Angular/src/app/manage-evals/manage-evals.component.html

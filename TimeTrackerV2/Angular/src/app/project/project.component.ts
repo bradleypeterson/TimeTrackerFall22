@@ -105,7 +105,6 @@ export class ProjectComponent implements OnInit {
 
     instructor: boolean = false;
     student: boolean = false;
-    admin: boolean = false;
     userID: string = '';
     isProjectUser: boolean = false;
 
@@ -136,8 +135,6 @@ export class ProjectComponent implements OnInit {
                 this.instructor = true;
             } else if (userType === 'student') {
                 this.student = true;
-            } else if (userType === 'admin') {
-                this.admin = true;
             }
 
             // let tempProjects = localStorage.getItem('projects');

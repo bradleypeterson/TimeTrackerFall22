@@ -1,3 +1,4 @@
+<!--#region Student Dashboard-->
 <div [ngSwitch]="true">
   <div *ngSwitchCase="student" id="dashboard">
     <h2 class="dashboard-head">Dashboard</h2>
@@ -5,9 +6,10 @@
     <div>
       <h3 class="box-head rounded">Courses</h3>
       <!-- This class will make the below button come next to it so they are on one line -->
-      <a href="/eval" class="btn btn-warning btn-courses rounded"
-        >Evaluation Due</a
-      >
+
+      <!--<button class="btn btn-purple rounded" (click)="GoToEval(p.projectID)">-->
+
+      <a *ngIf="hasPendingEvals" href="/eval" class="btn btn-warning btn-courses rounded">{{Evals.length}} {{Evals.length === 1 ? 'Evaluation' : 'Evaluations'}} Due </a>
     </div>
     <hr />
     <div class="alert alert-danger" *ngIf="courses?.length <= 0">
@@ -30,16 +32,10 @@
           <td>{{ c.description }}</td>
           <td>
             <div class="btn-group float-right">
-              <button
-                class="btn btn-purple rounded"
-                (click)="GoToCourse(c.courseID)"
-              >
+              <button class="btn btn-purple rounded" (click)="GoToCourse(c.courseID)">
                 View
               </button>
-              <button
-                class="btn btn-danger rounded"
-                (click)="cancel(c.courseID)"
-              >
+              <button class="btn btn-danger rounded" (click)="cancel(c.courseID)">
                 Cancel
               </button>
             </div>
@@ -53,10 +49,7 @@
           <h5 class="card-header">{{ c.courseName }}</h5>
           <div class="card-body">
             <p class="card-text">{{ c.description }}</p>
-            <button
-              class="btn btn-purple btn-sm rounded"
-              (click)="GoToCourse(c.courseID)"
-            >
+            <button class="btn btn-purple btn-sm rounded" (click)="GoToCourse(c.courseID)">
               View Course
             </button>
           </div>
@@ -76,32 +69,30 @@
           <div class="card-body">
             <h5 class="card-title">{{ p.courseName }}</h5>
             <p class="card-text">{{ p.description }}</p>
-            <button
-              class="btn btn-purple rounded"
-              (click)="GoToProject(p.projectID)"
-            >
-              View Project
-            </button>
+            <div class="course-btns">
+              <button class="btn btn-purple rounded" (click)="GoToProject(p.projectID)">
+                View Project
+              </button>
+              <button *ngIf="doesProjectHaveEval(p.projectID)" class="btn btn-purple rounded" (click)="GoToEval(p.projectID)">
+                Take Eval
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+<!--#endregion-->
 
+<!--#region Instructor Dashboard-->
   <div *ngSwitchCase="instructor" id="dashboard">
     <h2 class="dashboard-head">Dashboard</h2>
     <div>
       <h3 class="box-head rounded">Courses</h3>
       <!-- This class will make the below button come next to it so they are on one line -->
-      <a href="/create-course" class="btn btn-success btn-courses rounded"
-        >Create New Course</a
-      >
-      <a href="/past-courses" class="btn btn-purple btn-courses rounded"
-        >View Past Courses</a
-      >
-      <a href="/manage-evals" class="btn btn-purple btn-courses rounded"
-        >Manage Evaluations</a
-      >
+      <a href="/create-course" class="btn btn-success btn-courses rounded">Create New Course</a>
+      <a href="/past-courses" class="btn btn-purple btn-courses rounded">View Past Courses</a>
+      <a href="/manage-evals" class="btn btn-purple btn-courses rounded">Manage Evaluations</a>
     </div>
     <hr />
     <div class="alert alert-danger" *ngIf="courses?.length <= 0">
@@ -113,10 +104,7 @@
           <h5 class="card-header">{{ c.courseName }}</h5>
           <div class="card-body">
             <p class="card-text">{{ c.description }}</p>
-            <button
-              class="btn btn-purple btn-sm rounded"
-              (click)="GoToCourse(c.courseID)"
-            >
+            <button class="btn btn-purple btn-sm rounded" (click)="GoToCourse(c.courseID)">
               View Course
             </button>
           </div>
@@ -142,29 +130,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr
-            *ngFor="
-              let c of PendInstrCourses
-                | paginate : { itemsPerPage: 10, currentPage: p }
-            "
-          >
+          <tr *ngFor="let c of PendInstrCourses | paginate: { itemsPerPage: 10, currentPage: p }">
             <td>{{ c.courseName }}</td>
             <td>{{ c.studentFirstName }} {{ c.studentLastName }}</td>
-            <td>
-              <i>{{ c.description }}</i>
-            </td>
+            <td><i>{{ c.description }}</i></td>
             <td>
               <div class="btn-group float-right">
-                <button
-                  class="btn btn-purple rounded"
-                  (click)="register(c.courseID, c.studentID)"
-                >
+                <button class="btn btn-purple rounded" (click)="register(c.courseID, c.studentID)">
                   Approve
                 </button>
-                <button
-                  class="btn btn-danger rounded"
-                  (click)="cancelIns(c.courseID, c.studentID)"
-                >
+                <button class="btn btn-danger rounded" (click)="cancelIns(c.courseID, c.studentID)">
                   Deny
                 </button>
               </div>
@@ -176,20 +151,20 @@
     </div>
     <!--  -->
   </div>
+<!--#endregion-->
 
+<!--#region Admin Dashboard-->
   <div *ngSwitchCase="admin" id="dashboard">
     <h2 class="dashboard-head">Dashboard</h2>
     <div>
       <h3 class="box-head rounded">Recent Users</h3>
-      <a href="/users" class="btn btn-purple btn-courses rounded"
-        >Manage Users</a
-      >
+      <a href="/users" class="btn btn-purple btn-courses rounded">Manage Users</a>
       <!-- Notification badge if there are users awaiting approval -->
       <span class="badge bg-danger" *ngIf="awaitingApprovalCount > 0">
         {{ awaitingApprovalCount }} User(s) Awaiting Approval
       </span>
     </div>
-    <hr />
+    <hr>
     <div class="alert alert-danger" *ngIf="recentUsers?.length <= 0">
       No users have been created.
     </div>
@@ -198,21 +173,15 @@
         <div class="card">
           <h5 class="card-header">{{ u.firstName }} {{ u.lastName }}</h5>
           <div class="card-body">
-            <p class="card-text">
-              <button
-                class="btn btn-purple btn-sm rounded"
-                (click)="ViewProfile(u.userID)"
-              >
-                View Profile
-              </button>
-            </p>
+            <p class="card-text"><button class="btn btn-purple btn-sm rounded" (click)="ViewProfile(u.userID)">View
+                Profile</button></p>
           </div>
         </div>
       </div>
     </div>
 
     <h3 class="box-head rounded">Recent Courses</h3>
-    <hr />
+    <hr>
     <div class="alert alert-danger" *ngIf="recentCourses?.length <= 0">
       No courses have been created.
     </div>
@@ -221,22 +190,17 @@
         <div class="card">
           <h5 class="card-header">{{ c.courseName }}</h5>
           <div class="card-body">
-            <p class="card-text">
-              {{ c.firstName }} {{ c.lastName }} <br />
-              {{ c.description }}
-            </p>
-            <button
-              class="btn btn-purple btn-sm rounded"
-              (click)="GoToCourse(c.courseID)"
-            >
+            <p class="card-text">{{c.firstName}} {{ c.lastName }} <br> {{ c.description }}</p>
+            <button class="btn btn-purple btn-sm rounded" (click)="GoToCourse(c.courseID)">
               View Course
             </button>
           </div>
         </div>
       </div>
     </div>
+
     <h3 class="box-head rounded">Recent Projects</h3>
-    <hr />
+    <hr>
     <div class="alert alert-danger" *ngIf="recentProjects?.length <= 0">
       No projects have been created.
     </div>
@@ -245,75 +209,17 @@
         <div class="card">
           <h5 class="card-header">{{ p.projectName }}</h5>
           <div class="card-body">
-            <p class="card-text">
-              {{ p.firstName }} {{ p.lastName }} <br />
-              {{ p.description }}
-            </p>
-            <button
-              class="btn btn-purple btn-sm rounded"
-              (click)="GoToProject(p.projectID)"
-            >
+            <p class="card-text">{{ p.firstName}} {{ p.lastName }} <br> {{ p.description }}</p>
+            <button class="btn btn-purple btn-sm rounded" (click)="GoToProject(p.projectID)">
               View Project
             </button>
-            <button
-              class="btn btn-purple btn-sm btn-spacing rounded"
-              (click)="GoToCourse(p.courseID)"
-            >
+            <button class="btn btn-purple btn-sm btn-spacing rounded" (click)="GoToCourse(p.courseID)">
               View Course
             </button>
           </div>
         </div>
       </div>
     </div>
-    <h3 *ngIf="courses.length > 0" class="box-head rounded">
-      Pending Requests to Courses
-    </h3>
-    <hr />
-    <div class="alert alert-danger" *ngIf="PendInstrCourses?.length <= 0">
-      No Pending Requests
-    </div>
-    <div *ngIf="PendInstrCourses.length > 0">
-      <table class="table table-hover">
-        <thead>
-          <tr>
-            <th class="table-head">Course Name</th>
-            <th class="table-head">Student</th>
-            <th class="table-head">Description</th>
-            <th class="table-head"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            *ngFor="
-              let c of PendInstrCourses
-                | paginate : { itemsPerPage: 10, currentPage: p }
-            "
-          >
-            <td>{{ c.courseName }}</td>
-            <td>{{ c.studentFirstName }} {{ c.studentLastName }}</td>
-            <td>
-              <i>{{ c.description }}</i>
-            </td>
-            <td>
-              <div class="btn-group float-right">
-                <button
-                  class="btn btn-purple rounded"
-                  (click)="register(c.courseID, c.studentID)"
-                >
-                  Approve
-                </button>
-                <button
-                  class="btn btn-danger rounded"
-                  (click)="cancelIns(c.courseID, c.studentID)"
-                >
-                  Deny
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <pagination-controls (pageChange)="p = $event"></pagination-controls>
-    </div>
   </div>
 </div>
+<!--#endregion-->

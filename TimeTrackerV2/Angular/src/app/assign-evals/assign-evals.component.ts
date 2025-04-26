@@ -10,10 +10,15 @@ interface ProjectSelection {
     isSelected: boolean;
 }
 
+interface User {
+  userID: number;
+}
+
 @Component({
     selector: 'app-assign-evals',
     templateUrl: './assign-evals.component.html',
-    styleUrls: ['./assign-evals.component.css']
+    styleUrls: ['./assign-evals.component.css'],
+    standalone: false
 })
 
 export class AssignEvalsComponent implements OnInit {
@@ -27,6 +32,7 @@ export class AssignEvalsComponent implements OnInit {
     aProjectIsSelected: boolean = true;
     evalTemplates: any;
     evalSelected: any;
+    projectInfo: any;
 
     constructor(
         private http: HttpClient,
@@ -96,6 +102,25 @@ export class AssignEvalsComponent implements OnInit {
             },
           });
     }
+    
+    async LoadProjectInfo(projectID: number): Promise<any> {
+      try {
+        const response = await this.http.get<any>(`${environment.apiURL}/api/ProjectInfo/${projectID}`, {
+          headers: new HttpHeaders({
+            'Access-Control-Allow-Headers': 'Content-Type',
+          }),
+        }).toPromise();
+    
+        this.projectInfo = response;
+        return response;
+      } catch (err: any) {
+        this.ShowMessage(err.error?.message || 'An error occurred');
+        throw err;
+      }
+    }
+    
+    
+    
 
     // The original idea for both the ToggleSelectAll() and OptionClicked() functions was found here and they were modified to fit my needs https://stackblitz.com/edit/angular-material-select-all-checkbox?file=src%2Fapp%2Fapp.component.ts,src%2Fapp%2Fapp.component.html
     ToggleSelectAll(eventTarget: any) {
@@ -118,38 +143,61 @@ export class AssignEvalsComponent implements OnInit {
         this.selectAllProjects = newSelectAllProjects;
     }
 
-    AssignEvals() {
-        // Make a body variable for the http.put request so we can assign the eval to students in the project
-        let projectIDs: number[] = [];  // This is placed outside of the {} for the requestBody, because you can't seem to define an array of numbers inside it
-        let requestBody = {
-            evalTemplateID: this.evalSelected.templateID,
-            projectIDs: projectIDs
-        };
+    async AssignEvals() {
+      console.log("AssignEvals");
 
-        // This will filter all the projects by selecting only the projects that has their "isSelected" property set as true, I.E. it has been selected.  It will then grab all the id for said projects because we don't need the name of the projects to be sent to the server.
-        const onlySelectedProjects = this.courseProjects.filter((project: ProjectSelection) => {
-            return project.isSelected == true
-        }).map((project: ProjectSelection) => {
-            return project.id
-        });
+      let projectIDs: number[] = [];
+      let requestBody = {
+        evalTemplateID: this.evalSelected.templateID,
+        projectIDs: projectIDs
+      };
+    
+      const onlySelectedProjects = this.courseProjects.filter((project: ProjectSelection) => project.isSelected === true)
+        .map((project: ProjectSelection) => project.id);
+    
+      requestBody.projectIDs = onlySelectedProjects;
+      console.log(requestBody.projectIDs.length);
+    
+      for (let i = 0; i < requestBody.projectIDs.length; i++) {
+        //wait for result from LoadProjectInfo
+        await this.LoadProjectInfo(requestBody.projectIDs[i]);
 
-        requestBody.projectIDs = onlySelectedProjects;
-
-        //console.log("\"Select All\" Selected:", this.selectAllProjects, "\ncourseProjects state:", this.courseProjects, "\nEval Template Selected:", this.evalSelected);  // For debugging purposes
-
-        this.http
-          .post(`${environment.apiURL}/api/assignEvalToProjects`, requestBody)
-          .subscribe(
-            (res: any) => {
-              this.ShowMessage(res.message);
+        console.log(requestBody.projectIDs[i])
+    
+        const userIDs = this.projectInfo.users;
+        console.log(userIDs);
+    
+        //iterate each user and assign eval
+        for (let j = 0; j < userIDs.length; j++) {
+          let evalInfo = {
+            evaluatorID: this.evalSelected.evaluatorID,
+            evaluateeID: userIDs[j],
+            templateID: this.evalSelected.templateID,
+            projectID: requestBody.projectIDs[i],
+            evalCompleted: 0
+          };
+    
+          console.log(evalInfo);
+    
+          this.http.post<any>(`${environment.apiURL}/api/assignEvalToProjects`, evalInfo, {
+            headers: new HttpHeaders({
+              'Access-Control-Allow-Headers': 'Content-Type',
+            }),
+          })
+          .subscribe({
+            next: (data) => {
+              this.router.navigate(['/dashboard']);
+              //this.router.navigate(['/assign-evals']); //This is for debugging
+              
             },
-            (err) => {
+            error: (err) => {
               this.ShowMessage(err.error.message);
-            }
-          );
-
+            },
+          });
+        }
+      }
     }
-
+    
     goBackToCoursePage(): void {
         this.location.back();
     }
