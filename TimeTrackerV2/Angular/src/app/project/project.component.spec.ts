@@ -98,7 +98,7 @@ describe('ProjectComponent', () => {
     // Set up default response for any unmatched GET requests
     httpClient.get.and.returnValue(of([]));
 
-    // Mock HTTP responses for specific endpoints
+    // Mock HTTP responses for specific endpoints:
     httpClient.get
       .withArgs(
         `${environment.apiURL}/api/AddToProject/1/InProject`,

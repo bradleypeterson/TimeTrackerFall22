@@ -91,7 +91,7 @@ router.get("/", (req, res) => {
   res.send("api route working");
 });
 
-//#region Account routes
+//#region Account routes:
 router.post("/register", Register);
 
 router.get("/saltForUser/:username", GrabSaltForUser);
