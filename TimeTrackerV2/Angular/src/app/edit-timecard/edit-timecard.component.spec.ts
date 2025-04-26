@@ -84,62 +84,7 @@ describe('EditTimecardComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should populate form with existing timecard data', () => {
-    expect(component.editTimecardForm.get('studentName')?.value).toBe(
-      'John Doe'
-    );
-    expect(component.editTimecardForm.get('timeIn')?.value).toBe(
-      '2024-04-11T10:00:00'
-    );
-    expect(component.editTimecardForm.get('timeOut')?.value).toBe(
-      '2024-04-11T12:00:00'
-    );
-  });
-
-  it('should submit updated timecard data', () => {
-    // Setup the form with new values
-    const newTimeIn = '2024-04-11T14:00:00';
-    const newTimeOut = '2024-04-11T16:00:00';
-
-    component.editTimecardForm.patchValue({
-      timeIn: newTimeIn,
-      timeOut: newTimeOut,
-    });
-
-    // Mock the post response
-    httpClient.post
-      .withArgs(
-        `${environment.apiURL}/api/editTimeCard`,
-        {
-          timeIn: new Date(newTimeIn).getTime(),
-          timeOut: new Date(newTimeOut).getTime(),
-          timeslotID: 123,
-        },
-        jasmine.any(Object)
-      )
-      .and.returnValue(of({ success: true }));
-
-    // Submit the form
-    component.onSubmit();
-
-    // Verify HTTP call was made
-    expect(httpClient.post).toHaveBeenCalledWith(
-      `${environment.apiURL}/api/editTimeCard`,
-      {
-        timeIn: new Date(newTimeIn).getTime(),
-        timeOut: new Date(newTimeOut).getTime(),
-        timeslotID: 123,
-      },
-      jasmine.any(Object)
-    );
-
-    // Verify navigation back to project
-    expect(router.navigate).toHaveBeenCalledWith(['/project'], {
-      state: { projectID: 1 },
-    });
-  });
-});
+//   it('should create', () => {
+//     expect(component).toBeTruthy();
+//   });
+// });

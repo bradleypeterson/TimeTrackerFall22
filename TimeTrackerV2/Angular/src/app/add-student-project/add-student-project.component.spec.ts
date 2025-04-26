@@ -24,6 +24,7 @@ describe('AddStudentProjectComponent', () => {
     { userID: 2, name: 'Student 2' },
   ];
 
+  // Mock data for students not in the project
   const mockStudentsNotInProject = [
     { userID: 3, name: 'Student 3' },
     { userID: 4, name: 'Student 4' },

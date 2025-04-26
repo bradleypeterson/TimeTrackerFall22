@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import "@angular/material/prebuilt-themes/indigo-pink.css";
 
 body {
   padding-bottom: 20px;
@@ -8,17 +9,17 @@ body {
 }
 
 a {
-  color: #0B6552;
+  color: #0b6552;
   text-decoration: underline;
 }
 
-.pretty input:checked~.state.p-primary label:after,
+.pretty input:checked ~ .state.p-primary label:after,
 .pretty.p-toggle .state.p-primary label:after {
   background-color: #2c3e50 !important;
 }
 
 nav a {
-  color: #18BC9C;
+  color: #18bc9c;
   text-decoration: none;
 }
 
@@ -41,7 +42,7 @@ nav a {
 .dashboard-titles {
   border-bottom: 1px solid #cccccc;
   color: black;
-  margin-bottom: 10px
+  margin-bottom: 10px;
 }
 
 /*User/Student Dashboard card*/
@@ -51,18 +52,18 @@ nav a {
 }
 
 .box-part:hover {
-  background: #2D3E50
+  background: #2d3e50;
 }
 
 .box-part:hover .fa,
 .box-part:hover .title,
 .box-part:hover .text,
 .box-part:hover a {
-  color: #FFF;
+  color: #fff;
   -webkit-transition: all 1s ease-out;
   -moz-transition: all 1s ease-out;
   -o-transition: all 1s ease-out;
-  transition: all 1s ease-out
+  transition: all 1s ease-out;
 }
 
 /* Carousel */
@@ -115,7 +116,6 @@ nav a {
 
 /* Hide/rearrange for smaller screens */
 @media screen and (max-width: 767px) {
-
   /* Hide captions */
   .carousel-caption {
     display: none;
@@ -123,15 +123,13 @@ nav a {
 }
 
 @media screen and (max-width: 575px) {
-
   .header-checkbox {
     bottom: -13px;
   }
 }
 
-
 .navbar-text-color {
-  color: #18BC9C;
+  color: #18bc9c;
 }
 
 .form-control:focus {
@@ -220,13 +218,13 @@ nav a {
 }
 
 .navbar-icon {
-  color: #18BC9C;
+  color: #18bc9c;
   font-size: 25px;
   vertical-align: middle;
 }
 
 .notification-menu {
-  display: inline-block
+  display: inline-block;
 }
 
 .notification-menu-button {
@@ -259,7 +257,7 @@ nav a {
 }
 
 .date-text {
-  font-size: .9em;
+  font-size: 0.9em;
 }
 
 .bottom-right-search {
@@ -300,7 +298,7 @@ nav a {
   position: absolute;
   right: 50px;
   top: 5px;
-  color: #E74C3C;
+  color: #e74c3c;
 }
 
 .sticky-column {
@@ -355,7 +353,6 @@ nav a {
 .mt-8 {
   margin-top: 8% !important;
 }
-
 
 /* Navbar styles */
 .spacer {
@@ -445,7 +442,6 @@ a:hover {
 /* Elevated Button Styles */
 .btn-elevated {
   font-style: normal;
-  border: 2px solid currentColor;
   /* An outline using the text color */
   box-shadow: 0 2px 8px #492365;
   /* Initial shadow */
@@ -469,8 +465,9 @@ a:hover {
 }
 
 /* Error text for forms/page errors */
-.errorText, .successText {
-    color: red;
+.errorText,
+.successText {
+  color: red;
 }
 
 /* * {
