@@ -16,7 +16,7 @@ describe('LoginComponent', () => {
     httpClient = jasmine.createSpyObj('HttpClient', ['get', 'post']);
     httpClient.get.and.returnValue(of(false));
 
-    // Mock localStorage
+    // Mock localStorage:
     spyOn(localStorage, 'getItem').and.returnValue('no reload'); // Prevent reload
     spyOn(localStorage, 'setItem');
     spyOn(localStorage, 'removeItem');

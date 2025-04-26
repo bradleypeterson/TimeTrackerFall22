@@ -31,7 +31,7 @@ describe('EditTimecardComponent', () => {
   };
 
   beforeEach(async () => {
-    // Mock localStorage
+    // Mock localStorage:
     spyOn(localStorage, 'getItem').and.callFake((key) => {
       if (key === 'currentUser') {
         return JSON.stringify(mockUser);
