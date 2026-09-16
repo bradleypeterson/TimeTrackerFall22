@@ -39,12 +39,22 @@ export class CourseReportsComponent implements OnInit {
     public filteredStudents: any = [];
     public studentSearchQuery: any = '';
     public filtering: boolean = false;
+    // Stores whether the signed-in user is an instructor or admin.
+    public instructor: boolean = false;
+    public admin: boolean = false;
+    public currentUser: any;
 
     constructor(
         private http: HttpClient,
         private route: ActivatedRoute,
         private router: Router
     ) {
+        // Gets the signed-in user from the browser.
+        const tempUser = localStorage.getItem('currentUser');
+        if (tempUser) {
+            this.currentUser = JSON.parse(tempUser);
+        }
+
         // The below line of code will grab the section of the URL that is ":id" and store it into the variable courseID.  Where I found this code https://stackoverflow.com/questions/44864303/send-data-through-routing-paths-in-angular
         // The '!' at the end is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be
         // this.courseID = Number(this.route.snapshot.paramMap.get('id')!);
@@ -54,6 +64,9 @@ export class CourseReportsComponent implements OnInit {
      }
 
     ngOnInit(): void {
+        // Checks whether the signed-in user is an instructor or admin.
+        this.instructor = this.currentUser?.type === 'instructor';
+        this.admin = this.currentUser?.type === 'admin';
         this.studentReports = this.getStudentReports(this.courseID);
         this.filteredStudents = this.studentReports;
     }
@@ -134,5 +147,33 @@ export class CourseReportsComponent implements OnInit {
         let state = {userID: userID};
         // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
         this.router.navigate(['/profile'], { state });
+    }
+
+    // Removes the student from the course and refreshes the list.
+    RemoveStudentFromCourse(userID: number): void {
+        if (!confirm('Are you sure you want to remove this student from the course?')) {
+            return;
+        }
+
+        const request = {
+            userID,
+            courseID: this.courseID,
+        };
+
+        this.http
+            .post(`${environment.apiURL}/api/deleteUserCourse/`, request, {
+                headers: new HttpHeaders({
+                    'Access-Control-Allow-Headers': 'Content-Type',
+                }),
+            })
+            .subscribe({
+                next: () => {
+                    this.studentReports = this.getStudentReports(this.courseID);
+                    this.filteredStudents = this.studentReports;
+                },
+                error: (error) => {
+                    alert(error.error?.message ?? 'Unable to remove the student from the course.');
+                },
+            });
     }
 }
