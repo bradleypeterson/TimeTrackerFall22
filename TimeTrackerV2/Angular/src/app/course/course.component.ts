@@ -81,12 +81,6 @@ export class CourseComponent implements OnInit {
     this.loadAllUserGroups();
     this.loadNonUserGroups();
 
-    if (!localStorage.getItem('foo')) {
-      localStorage.setItem('foo', 'no reload');
-      location.reload();
-    } else {
-      localStorage.removeItem('foo');
-    }
   }
 
   getCourseInfo(): void {
@@ -216,7 +210,12 @@ export class CourseComponent implements OnInit {
     let state = {courseID: this.courseID};
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate([`/assign-evals`], { state });
-}
+  }
+
+  NavigateToViewEvals() {
+    let state = {courseID: this.courseID};
+    this.router.navigate([`/view-evals`], { state });
+  }
 
   GoToProject(projectID: number) {
     let state = {projectID: projectID};

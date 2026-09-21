@@ -81,12 +81,6 @@ export class AddStudentProjectComponent implements OnInit {
     this.loadStudentsInProject();
     this.loadStudentsNotInProject();
 
-    if (!localStorage.getItem('foo')) {
-      localStorage.setItem('foo', 'no reload');
-      location.reload();
-    } else {
-      localStorage.removeItem('foo');
-    }
   }
 
   loadStudentsInProject(): void {

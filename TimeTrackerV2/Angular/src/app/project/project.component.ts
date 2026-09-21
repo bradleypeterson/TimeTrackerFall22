@@ -99,6 +99,8 @@ export class ProjectComponent implements OnInit {
 
     start: any;
     TimerRunning = false;
+    timerStopped = false;
+    timerStoppedAt: number | null = null;
     totalTime: any = "00:00:00";
 
     currentUser: any;
@@ -205,7 +207,7 @@ export class ProjectComponent implements OnInit {
           .subscribe({
             next: (data) => {
               this.errMsg = '';
-              this.project = data;
+              this.project = data.project;
             },
             error: (error) => {
               this.errMsg = error['error']['message'];
@@ -216,7 +218,17 @@ export class ProjectComponent implements OnInit {
     clockIn(): void {
         if (!this.TimerRunning) {
             localStorage.setItem("timeIn", Date.now().toString());
+            this.timerStopped = false;
+            this.timerStoppedAt = null;
             this.startTimer();
+        }
+    }
+
+    toggleTimer(): void {
+        if (this.TimerRunning) {
+            this.stopTimer();
+        } else {
+            this.clockIn();
         }
     }
 
@@ -335,14 +347,11 @@ export class ProjectComponent implements OnInit {
             return;
         }
 
-        this.TimerRunning = true;
-        this.stopTimer();
-
         let req = {
             isManualEntry: false,
             // the timeIn and timeOut is the number of milliseconds since midnight, January 1, 1970 UTC.
             timeIn: localStorage.getItem("timeIn"),
-            timeOut: Date.now(), // pull date from the HTML
+            timeOut: this.timerStoppedAt,
             isEdited: false,
 
             userID: this.currentUser.userID,
@@ -365,6 +374,8 @@ export class ProjectComponent implements OnInit {
 
               // Clear the input inside the form
               this.autoForm.controls.description.setValue(''); // you can also us the code "this.description.setValue("");" because the code currently being used references this variable.
+              this.timerStopped = false;
+              this.timerStoppedAt = null;
 
               this.getActivities();
               this.loadProjectUserTimes();
@@ -480,6 +491,8 @@ export class ProjectComponent implements OnInit {
     stopTimer(): void {
         clearInterval(this.start);
         this.TimerRunning = false;
+        this.timerStopped = true;
+        this.timerStoppedAt = Date.now();
 
         this.totalTime = this.hours.toString() + ":" + this.minutes.toString() + ":" + this.seconds.toString();
 

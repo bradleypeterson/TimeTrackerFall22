@@ -78,9 +78,14 @@ const {
     AddTemplate,
     GetQuestions,
     GetTemplates,
+    ArchiveTemplate,
+    UpdateTemplate,
     UpdateQuestion,
     DeleteQuestion,
     AssignEvalToProjects,
+    GetAssignmentSummaries,
+    GetCourseEvaluations,
+    GetEvaluationResponses,
     GetAssignedEvals,
     SubmitResponses,
     evalCompleted,
@@ -239,11 +244,21 @@ router.get("/questions/:templateID", GetQuestions);
 
 router.get("/templates/:evaluatorID", GetTemplates);
 
+router.post("/templates/:templateID/archive", ArchiveTemplate);
+
+router.put("/templates/:templateID", UpdateTemplate);
+
 router.put("/updateQuestion/:questionID", UpdateQuestion);
 
 router.delete("/deleteQuestion/:questionID", DeleteQuestion);
 
 router.post("/assignEvalToProjects", AssignEvalToProjects);
+
+router.get("/assignedEvalSummaries/:evaluatorID/:courseID", GetAssignmentSummaries);
+
+router.get("/courseEvaluations/:courseID/:evaluatorID", GetCourseEvaluations);
+
+router.get("/evaluationResponses/:assignedEvalID/:evaluatorID", GetEvaluationResponses);
 
 router.get("/getAllEvals/:evaluateeID", GetAllEvals);
 

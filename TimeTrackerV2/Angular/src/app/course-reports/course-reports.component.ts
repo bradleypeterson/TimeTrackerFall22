@@ -67,8 +67,7 @@ export class CourseReportsComponent implements OnInit {
         // Checks whether the signed-in user is an instructor or admin.
         this.instructor = this.currentUser?.type === 'instructor';
         this.admin = this.currentUser?.type === 'admin';
-        this.studentReports = this.getStudentReports(this.courseID);
-        this.filteredStudents = this.studentReports;
+        this.getStudentReports(this.courseID);
     }
 
     // Method to toggle expanded state of student card
@@ -89,12 +88,11 @@ export class CourseReportsComponent implements OnInit {
     }
 
     // Grab a list of students registered for the course and the totalTimes for their projects
-    getStudentReports(courseID: number): StudentReport[] {
-        let returnData: StudentReport[] = []
-
+    getStudentReports(courseID: number): void {
         this.http
           .get(`${environment.apiURL}/api/Course/${courseID}/GetReportsData`)
           .subscribe((data: any) => {
+            const reports: StudentReport[] = [];
             // console.log("Data returned\n" + JSON.stringify(data));
 
             // for every entry in data
@@ -116,11 +114,12 @@ export class CourseReportsComponent implements OnInit {
               });
 
               // after processing the data, add it to the array "returnData" and increment the value of cardID
-              returnData.push(toBeAdded);
+              reports.push(toBeAdded);
             });
-          });
 
-        return returnData;
+            this.studentReports = reports;
+            this.filteredStudents = reports;
+          });
     }
 
     SeeTimeLogs(studentID: number, projectID: number) {
@@ -168,8 +167,7 @@ export class CourseReportsComponent implements OnInit {
             })
             .subscribe({
                 next: () => {
-                    this.studentReports = this.getStudentReports(this.courseID);
-                    this.filteredStudents = this.studentReports;
+                    this.getStudentReports(this.courseID);
                 },
                 error: (error) => {
                     alert(error.error?.message ?? 'Unable to remove the student from the course.');

@@ -5,7 +5,7 @@
 <div [ngSwitch]="true">
     <div *ngSwitchCase="instructor">
         <div class="btn-group">
-            <button class="btn btn-purple" (click)="AddStudents()">Add Students</button>
+            <button class="btn btn-purple" (click)="AddStudents()">Manage Project Students</button>
             <button class="btn btn-secondary" (click)="Edit()">Edit</button>
             <button class="btn btn-danger" (click)="delete()">Delete</button>
         </div>
@@ -46,10 +46,15 @@
                 <div class="row center">
                     <h1>{{hours}}:{{minutes}}:{{seconds}}</h1>
                 </div>
+                <div class="row center" *ngIf="timerStopped">
+                    <p>Timer stopped at {{totalTime}}. Add a description and save the time entry.</p>
+                </div>
                 <!--Start/Stop Buttons-->
                 <div class="gap-2 d-md-flex justify-content-md-center">
-                    <button (click)="clockIn()" type="button" class="btn btn-success"
-                        [disabled]="TimerRunning">Start</button>
+                    <button (click)="toggleTimer()" type="button" class="btn"
+                        [class.btn-success]="!TimerRunning" [class.btn-danger]="TimerRunning">
+                        {{ TimerRunning ? "Stop" : "Start" }}
+                    </button>
                 </div>
                 <!--Submit Button-->
                 <div class="gap-4 d-md-flex justify-content-md-center">
@@ -66,7 +71,7 @@
                             </p>-->
                             <!-- If the field is not valid, see the below form submission section for the explain why we don't check the form itself, and the timer is not running.  Then disable the submit button -->
                             <button type="submit" class="btn btn-purple mt-2"
-                                [disabled]="!(autoForm.controls.description.valid && TimerRunning)">Submit</button>
+                                [disabled]="!(autoForm.controls.description.valid && timerStopped)">Save Time Entry</button>
                         </div>
                     </form>
                 </div>
