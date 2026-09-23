@@ -53,7 +53,8 @@ export class DashboardComponent implements OnInit {
     // get user type
     var userType = this.currentUser.type;
     this.userID = this.currentUser.userID;
-    if (userType === 'instructor') {
+    // Admins also manage courses as instructors.
+    if (userType === 'instructor' || userType === 'admin') {
       this.instructor = true;
       this.loadInstrPenUserCourses();
     }
@@ -63,7 +64,7 @@ export class DashboardComponent implements OnInit {
       this.loadPenUserCourses();
       this.checkForPendingEvals();
     }
-    else if (userType === 'admin') {
+    if (userType === 'admin') {
       this.admin = true;
       this.loadRecentUsers();
       this.loadRecentCourses();
