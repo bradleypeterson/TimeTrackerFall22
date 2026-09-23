@@ -1,18 +1,4 @@
 services:
-    angular:
-        tty: true
-        environment: 
-            - CHOKIDAR_USEPOLLING=true
-        build:
-            context: './Angular'
-            dockerfile: Dockerfile
-        ports:
-            - '9001:9001'
-        volumes:
-            - ./Angular:/usr/src/app
-            - /usr/src/app/node_modules
-
-
     node:
         tty: true
         environment: 
@@ -27,11 +13,12 @@ services:
             - /usr/src/app/node_modules
 
     nginx:  
+        # This builds Angular and puts the finished website inside nginx.
         build:
             context: .  
             dockerfile: Dockerfile.nginx 
         ports:
             - "80:80"
         depends_on:
-            - angular
+            # Starts Node first because nginx sends API requests to it.
             - node

@@ -74,14 +74,6 @@ export class DashboardComponent implements OnInit {
     // get courses
     this.loadCourses();
 
-    // makes the page properly update on changes
-    if (!localStorage.getItem('foo')) {
-      localStorage.setItem('foo', 'no reload')
-      location.reload()
-    }
-    else {
-      localStorage.removeItem('foo')
-    }
   }
 
   public pageTitle = 'TimeTrackerV2 | Dashboard';

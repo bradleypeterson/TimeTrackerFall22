@@ -6,13 +6,13 @@
   <!--<label>{{ eval }}:</label>-->
     <div class="question-container">
 
-        <label>{{ i+1 }}: {{ question.questionText }}  {{ question.questionID }}</label>
+        <label>{{ i+1 }}: {{ question.questionText }}</label>
 
         <!-- Radio Buttons for Rating -->
         <div *ngIf="question.questionType === '1-5 Rating'">
           <div *ngFor="let rating of [1, 2, 3, 4, 5]; let j = index">
             <input type="radio" [id]="'rating-' + question.questionID + '-' + (j+1)"
-              [name]="'response_' + (i+1)" [formControlName]="'response_' + (i+1)"
+              [name]="'response_' + question.questionID" [formControlName]="'response_' + question.questionID"
               [value]="rating" />
               
             <label [for]="'rating-' + question.questionID + '-' + j">{{ rating }}</label>
@@ -22,7 +22,7 @@
         <!-- Text Response -->
         <div *ngIf="question.questionType === 'Text Response'">
           <textarea class="form-control" [id]="'textarea-' + i "
-            [formControlName]="'response_' + (i+1)"></textarea>
+            [formControlName]="'response_' + question.questionID"></textarea>
         </div>
 
     </div>

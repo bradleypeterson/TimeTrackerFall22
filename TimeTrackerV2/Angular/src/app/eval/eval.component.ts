@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { environment } from '../../environments/environment';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 interface Question{
   questionID: number;
@@ -23,10 +23,8 @@ export class EvalComponent implements OnInit {
   evalForm: FormGroup;
   evalID : number = 0;
   public projectID: number;
-  selectedTemplateQuestions: Question[] = [];
   currentUser: any;
   evaluateeID: any;
-  unanswered: number[] = []
   userName: string | undefined;
   // courseName: string | undefined;
   projectName: string | undefined;
@@ -60,28 +58,18 @@ export class EvalComponent implements OnInit {
     }
   }
 
-sortEval(data: any) {
-  let q = data
+  sortEval(data: any) {
+    this.numQuestions = data.length;
+    const formControls: { [key: string]: FormControl } = {};
 
-  this.numQuestions = q.length
-  const formControls: { [key: string]: FormControl } = {};
-
-  this.projectName = q[0].projectName
-  this.evalID = q[0].evalID
-
-  q.forEach((q: any) => {
-    formControls['response_' + q.questionID] = new FormControl('');
-    this.eval.push({
-      questionID: q.questionID,
-      questionText: q.questionText,
-      questionType: q.questionType,
-      templateID: q.templateID,
-      evaluatorID: q.evaluatorID,
+    this.projectName = data[0].projectName;
+    this.evalID = data[0].evalID;
+    this.eval = data.map((question: Question) => {
+      // Use question IDs so these controls match the HTML fields
+      formControls['response_' + question.questionID] = new FormControl('');
+      return question;
     });
-  });
-  this.evalForm = new FormGroup(formControls);
-  console.log(this.eval)
-
+    this.evalForm = new FormGroup(formControls);
   }
 
   fetchEval(projectID: number) {
@@ -105,7 +93,8 @@ sortEval(data: any) {
         }
       },
       error: (err) => {
-        this.ShowMessage(err.error.message);
+        // Show a helpful message when the server provides no details
+        this.ShowMessage(err.error?.message || 'Unable to load this evaluation.');
       },
     });
   }
@@ -126,88 +115,43 @@ sortEval(data: any) {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.ShowMessage(err.error.message);
+        // Show a helpful message when the server provides no details
+        this.ShowMessage(err.error?.message || 'Unable to complete the evaluation.');
       },
     });
   }
 
-  SubmitResponses() {
-    const form = document.getElementById('evalForm') as HTMLFormElement;
+  async SubmitResponses() {
+    // Do not save the evaluation until every question has an answer
+    const unansweredQuestions = this.eval
+      .map((question, index) => ({
+        question,
+        index,
+        value: this.evalForm.get('response_' + question.questionID)?.value,
+      }))
+      .filter((entry) => entry.value === null || entry.value === '');
 
-    if (!form.checkValidity()) {
-      alert('Please fill out the form correctly.');
+    if (unansweredQuestions.length > 0) {
+      alert(`Please answer question${unansweredQuestions.length === 1 ? '' : 's'} ${unansweredQuestions.map((entry) => entry.index + 1).join(', ')}.`);
       return;
     }
-  
-    this.eval.forEach((q: any) => {
-      let i=0
-      let responseinfo = {}
 
-      const responseControl = this.evalForm.get('response_'+q.questionID);
-      //console.log(responseControl?.value);
-      
-      if(!responseControl?.value){
-        this.unanswered.push(q.questionID)
-        i++;
+    try {
+      // Save every response before marking the evaluation as complete
+      for (const question of this.eval) {
+        const value = this.evalForm.get('response_' + question.questionID)?.value;
+        await this.http.post<any>(`${environment.apiURL}/api/submitResponses`, {
+          evalID: this.evalID,
+          userID: this.currentUser.userID,
+          questionID: question.questionID,
+          rating: question.questionType === '1-5 Rating' ? Number(value) : null,
+          response: question.questionType === 'Text Response' ? value : null,
+        }).toPromise();
       }
-      else{
-        this.unanswered.splice(i)
-      }
-
-      if(this.unanswered.length <= 0){
-        if(typeof responseControl?.value == 'number'){
-          responseinfo = {
-            evalID: this.evalID,
-            userID: this.currentUser.userID,
-            questionID: q.questionID,
-            rating: responseControl?.value,
-            response: null
-          };
-        }
-        else{
-          responseinfo = {
-            evalID: this.evalID,
-            userID: this.currentUser.userID,
-            questionID: q.questionID,
-            rating: null,
-            response: responseControl?.value
-          };
-        }
-        //console.log(responseinfo)
-        
-        this.http.post<any>(`${environment.apiURL}/api/submitResponses`, responseinfo, {
-          headers: new HttpHeaders({
-            'Access-Control-Allow-Headers': 'Content-Type',
-          }),
-        })
-        .subscribe({
-          next: (data) => {
-            console.log('Response recorded:', data);
-            //this.router.navigate(['/dashboard']);
-            
-          },
-          error: (err) => {
-            this.ShowMessage(err.error.message);
-          },
-        });
-        
-      }
-      //console.log(responseinfo)
-
-    });
-    
-    if(this.unanswered.length > 0){
-      let alert_msg = "Please answer:\n"
-      this.unanswered.forEach( (q) => {
-        alert_msg = alert_msg + ("Question "+q+"\n")
-      });
-      alert(alert_msg)
-      return
+      this.evalCompleted();
+    } catch (err: any) {
+      this.ShowMessage(err.error?.message || 'Unable to save the evaluation responses.');
     }
-
-    this.evalCompleted()
-    
-
   }
 
   ShowMessage(message: string) {

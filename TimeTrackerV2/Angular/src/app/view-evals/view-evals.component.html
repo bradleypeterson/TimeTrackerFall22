@@ -1,101 +1,47 @@
-<div id="viewEvals" ng-cloak>
-  <h3 class="mt-3">Evaluation Results</h3>
-
-  <div class="input-group mb-3">
-    <div class="input-group-prepend">
-      <label class="input-group-text" for="student">Student</label>
-    </div>
-    <!-- ng-model="currentUser" ng-change="loadEvals(currentUser)"
-          ng-options="u.userID as (u.firstName + ' ' + u.lastName) for u in group.users" -->
-    <select class="custom-select" id="student">
-    </select>
+<div id="viewEvals">
+  <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
+    <h3>Evaluation Results</h3>
+    <button class="btn btn-secondary" (click)="backToCourse()">Back to Course</button>
   </div>
 
-  <div class="input-group mb-3">
-    <div class="input-group-prepend">
-      <label class="input-group-text" for="evaluation">Evaluation</label>
-    </div>
-    <!-- ng-model="currentEval"
-          ng-options="e.number as ('Evaluation ' + e.number) for e in group.evaluations" -->
-    <select class="custom-select" id="evaluation">
-    </select>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div *ngIf="!errorMessage && evaluations.length === 0" class="alert alert-info">
+    No evaluations have been assigned in this course.
   </div>
 
-  <div class="mt-4 table-responsive">
-    <!-- ng-repeat="e in group.evaluations" ng-if="e.number === currentEval"  -->
-    <table class="table table-condensed">
-      <thead class="thead-light">
+  <div *ngIf="evaluations.length > 0" class="table-responsive">
+    <table class="table table-hover">
+      <thead>
         <tr>
-          <!--  -->
-          <th class="sticky-column" style="width: 225px; min-width: 150px;">Evaluation #</th>
-          <!-- ng-repeat="ev in e.evals" -->
-          <th style="min-width: 150px;">FirstName LastName</th>
+          <th>Student</th>
+          <th>Project</th>
+          <th>Evaluation Form</th>
+          <th>Status</th>
+          <th></th>
         </tr>
       </thead>
-      <tbody id="noCategoryQuestions">
-        <!-- ng-repeat="tq in e.templateQuestions | orderObjectBy : 'number' | filter: {evalTemplateQuestionCategoryID: 0}" -->
-        <tr>
-          <td class="sticky-column">Question Text</td>
-          <!-- ng-repeat="ev in e.evals" -->
-          <td class="p-0 align-middle border-right">
-            <!-- ng-if="tq.questionType === 'R'" {{getResponse(e.number, ev.evalID, tq.evalTemplateQuestionID)}}-->
-            <textarea class="response-text" readonly>getResponse(), question ID</textarea>
-            <!-- ng-if="tq.questionType === 'N'" value="{{getResponse(e.number, ev.evalID, tq.evalTemplateQuestionID)}}" -->
-            <input class="text-center w-100 border-0" readonly />
-          </td>
-        </tr>
-
-      </tbody>
-      <!-- ng-repeat="c in e.categories" -->
       <tbody>
-        <tr>
-          <th class="sticky-column">Category name</th>
-          <!-- {{calculateCategoryTotal(c.evalTemplateQuestionCategoryID, e.evalID)}} -->
-          <td class="border-right" ng-repeat="ev in e.evals">
-            Category total
+        <tr *ngFor="let evaluation of evaluations">
+          <td>{{ evaluation.studentName }}</td>
+          <td>{{ evaluation.projectName }}</td>
+          <td>{{ evaluation.templateName }}</td>
+          <td>
+            <span [class.text-success]="evaluation.evalCompleted" [class.text-warning]="!evaluation.evalCompleted">
+              {{ evaluation.evalCompleted ? 'Submitted' : 'Pending' }}
+            </span>
           </td>
-        </tr>
-        <!-- ng-repeat="tq in e.templateQuestions | orderObjectBy : 'number' | filter: {evalTemplateQuestionCategoryID: c.evalTemplateQuestionCategoryID}" -->
-        <tr>
-          <td class="pl-3 sticky-column">Question Text</td>
-          <!-- ng-repeat="ev in e.evals" -->
-          <td class="p-0 align-middle border-right">
-            <!-- ng-if="tq.questionType === 'R'"  {{getResponse(e.number, ev.evalID, tq.evalTemplateQuestionID)}} -->
-            <textarea class="response-text" readonly>Response</textarea>
-            <!-- ng-if="tq.questionType === 'N'" value="{{getResponse(e.number, ev.evalID, tq.evalTemplateQuestionID)}}" -->
-            <input class="text-center w-100 border-0" readonly />
-          </td>
-        </tr>
-
-      </tbody>
-      <!--Jamison Edit-->
-      <tbody>
-        <tr>
-          <th class="sticky-column">Total</th>
-          <!-- ng-repeat="ev in e.evals" -->
-          <td class="p-0 align-middle border-right">
-            <!-- value="{{getTotal(e.number, ev.evalID)}}" -->
-            <input class="text-center w-100 border-0" readonly />
-          </td>
-        </tr>
-        <tr>
-          <th class="sticky-column">Average rating teammate gave</th>
-          <!-- ng-repeat="ev in e.evals" -->
-          <td class="border-right">
-            <!-- value="{{getUserAvg(e.number, ev.evalID)}}" -->
-            <input class="text-center w-100 border-0" readonly />
-          </td>
-        </tr>
-        <tr>
-          <th class="sticky-column">Weighted Rating</th>
-          <!-- ng-repeat="ev in e.evals" -->
-          <td class="border-right">
-            <!-- value="{{getDiff(e.number, ev.evalID)}}" -->
-            <input class="text-center w-100 border-0" readonly />
+          <td>
+            <button
+              *ngIf="evaluation.evalCompleted"
+              class="btn btn-purple btn-sm"
+              (click)="viewEvaluation(evaluation.assignedEvalID)"
+            >
+              View
+            </button>
           </td>
         </tr>
       </tbody>
-      <!--End Edit-->
     </table>
   </div>
 </div>

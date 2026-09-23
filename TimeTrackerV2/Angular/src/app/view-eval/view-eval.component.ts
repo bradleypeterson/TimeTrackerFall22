@@ -1,18 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { forkJoin } from 'rxjs';
+import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 
-interface EvalTemplate {
-  templateID: string;
+interface EvaluationResponse {
+  assignedEvalID: number;
+  studentName: string;
+  projectName: string;
   templateName: string;
-}
-
-interface Question {
   questionText: string;
   questionType: string;
-  questionID: string;
-  response: string | number;
+  rating: number | null;
+  response: string | null;
 }
 
 @Component({
@@ -22,32 +21,54 @@ interface Question {
     standalone: false
 })
 export class ViewEvalComponent implements OnInit {
-  selectedTemplateQuestions: Question[] = [];
-  templates: EvalTemplate[] = [];
-  templateID: string = '';
-  
-  constructor(private http: HttpClient) {}
+  public responses: EvaluationResponse[] = [];
+  public errorMessage = '';
+  public assignedEvalID: number | undefined;
+  public courseID: number | undefined;
+  private currentUser: any;
 
-  ngOnInit(): void {
-    this.loadTemplates();
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
+    const currentUserData = localStorage.getItem('currentUser');
+    if (currentUserData) {
+      this.currentUser = JSON.parse(currentUserData);
+    }
+    const state = this.router.getCurrentNavigation()?.extras.state;
+    this.assignedEvalID = state?.assignedEvalID;
+    this.courseID = state?.courseID;
   }
 
-  public pageTitle = 'TimeTrackerV2 | View Eval'
-
-    loadTemplates() {
-      this.http
-        .get<EvalTemplate[]>(
-          `${environment.apiURL}/api/eval/${this.templateID}`
-        )
-        .subscribe(
-          (data) => {
-            this.templates = data;
-            console.log('Fetched Templates:', data);
-          },
-          (error) => console.error('Error fetching templates:', error)
-        );
+  ngOnInit(): void {
+    if (!this.assignedEvalID) {
+      this.errorMessage = 'No submitted evaluation was selected.';
+      return;
     }
 
-}
+    this.loadResponses();
+  }
 
+  public pageTitle = 'TimeTrackerV2 | View Eval';
+
+  loadResponses(): void {
+    this.http
+      .get<EvaluationResponse[]>(
+        `${environment.apiURL}/api/evaluationResponses/${this.assignedEvalID}/${this.currentUser.userID}`
+      )
+      .subscribe({
+        next: (data) => {
+          this.responses = data;
+          this.errorMessage = '';
+        },
+        error: (error) => {
+          this.errorMessage = error.error?.message || 'Unable to load evaluation responses.';
+        },
+      });
+  }
+
+  backToEvaluations(): void {
+    this.router.navigate(['/view-evals'], { state: { courseID: this.courseID } });
+  }
+}
 

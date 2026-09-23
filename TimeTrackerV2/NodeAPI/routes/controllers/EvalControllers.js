@@ -157,8 +157,13 @@ exports.GetTemplates = async (req, res, next) => {
         return res.status(400).json({ message: "evaluatorID is required" });
     }
 
-    db.all("SELECT * FROM Template WHERE evaluatorID = ?",
-        [evaluatorID],
+    const includeArchived = req.query.includeArchived === "true";
+
+    db.all(`SELECT templateID, templateName, evaluatorID, isArchived
+        FROM Template
+        WHERE evaluatorID = ? AND (? = 1 OR isArchived = 0)
+        ORDER BY isArchived, templateName`,
+        [evaluatorID, includeArchived ? 1 : 0],
         (err, rows) => {
             if (err) {
                 console.error(err.message);
@@ -166,6 +171,59 @@ exports.GetTemplates = async (req, res, next) => {
             }
             res.status(200).json(rows);
         });
+};
+
+exports.ArchiveTemplate = async (req, res, next) => {
+    const templateID = req.params.templateID;
+    const evaluatorID = req.body.evaluatorID;
+
+    if (!templateID || !evaluatorID) {
+        return res.status(400).json({ message: "Template ID and evaluator ID are required." });
+    }
+
+    db.run(
+        `UPDATE Template
+        SET isArchived = 1
+        WHERE templateID = ? AND evaluatorID = ?`,
+        [templateID, evaluatorID],
+        function (err) {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ message: "Unable to archive the evaluation form." });
+            }
+            if (this.changes === 0) {
+                return res.status(404).json({ message: "Evaluation form not found." });
+            }
+            return res.status(200).json({ message: "Evaluation form archived." });
+        }
+    );
+};
+
+exports.UpdateTemplate = async (req, res, next) => {
+    const templateID = req.params.templateID;
+    const evaluatorID = req.body.evaluatorID;
+    const templateName = req.body.templateName?.trim();
+
+    if (!templateID || !evaluatorID || !templateName) {
+        return res.status(400).json({ message: "Template ID, evaluator ID, and form name are required." });
+    }
+
+    db.run(
+        `UPDATE Template
+        SET templateName = ?
+        WHERE templateID = ? AND evaluatorID = ?`,
+        [templateName, templateID, evaluatorID],
+        function (err) {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ message: "Unable to update the evaluation form." });
+            }
+            if (this.changes === 0) {
+                return res.status(404).json({ message: "Evaluation form not found." });
+            }
+            return res.status(200).json({ message: "Evaluation form updated." });
+        }
+    );
 };
 
 exports.UpdateQuestion = async (req, res, next) => {
@@ -267,24 +325,122 @@ exports.DeleteQuestion = async (req, res, next) => {
 exports.AssignEvalToProjects = async (req, res, next) => {
     console.log("AssignEvalToProject Called")
 
-    let data = [];
-
-    data[0] = req.body["evaluatorID"];
-    data[1] = req.body["evaluateeID"];
-    data[2] = req.body["templateID"];
-    data[3] = req.body["projectID"];
-    data[4] = req.body["evalCompleted"];
+    const data = [
+        req.body["evaluatorID"],
+        req.body["evaluateeID"],
+        req.body["templateID"],
+        req.body["projectID"],
+        req.body["evalCompleted"],
+    ];
 
     db.run(`INSERT INTO Assigned_Eval(evaluatorID, evaluateeID, templateID, projectID, evalCompleted)
-        VALUES(?, ?, ?, ?, ?)`, data, function (err, rows) {
+        SELECT ?, ?, ?, ?, ?
+        WHERE NOT EXISTS (
+            SELECT 1
+            FROM Assigned_Eval
+            WHERE evaluatorID = ? AND evaluateeID = ? AND templateID = ? AND projectID = ?
+        )`, [...data, data[0], data[1], data[2], data[3]], function (err) {
         if (err) {
             console.log(err);
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
-        } else {
-            return res.status(200).json({ course: data });
         }
+        if (this.changes === 0) {
+            return res.status(409).json({ message: 'This evaluation is already assigned to this student for this project.' });
+        }
+        return res.status(201).json({ message: 'Evaluation assigned.' });
     });
+};
 
+exports.GetAssignmentSummaries = async (req, res, next) => {
+    const evaluatorID = req.params.evaluatorID;
+    const courseID = req.params.courseID;
+
+    db.all(
+        `SELECT a.projectID, a.templateID, COUNT(DISTINCT a.evaluateeID) AS studentCount
+        FROM Assigned_Eval a
+        INNER JOIN Projects p ON p.projectID = a.projectID
+        WHERE a.evaluatorID = ? AND p.courseID = ?
+        GROUP BY a.projectID, a.templateID`,
+        [evaluatorID, courseID],
+        (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ message: 'Unable to retrieve assigned evaluations.' });
+            }
+            return res.status(200).json(rows);
+        }
+    );
+};
+
+exports.GetCourseEvaluations = async (req, res, next) => {
+    const courseID = req.params.courseID;
+    const evaluatorID = req.params.evaluatorID;
+
+    if (!courseID || !evaluatorID) {
+        return res.status(400).json({ message: 'Course ID and evaluator ID are required.' });
+    }
+
+    db.all(
+        `SELECT a.assignedEvalID, a.evaluateeID,
+            u.firstName || ' ' || u.lastName AS studentName,
+            p.projectName, t.templateName, a.evalCompleted
+        FROM Assigned_Eval a
+        INNER JOIN Projects p ON p.projectID = a.projectID
+        INNER JOIN Users u ON u.userID = a.evaluateeID
+        INNER JOIN Template t ON t.templateID = a.templateID
+        WHERE p.courseID = ? AND a.evaluatorID = ?
+        ORDER BY studentName, p.projectName, t.templateName`,
+        [courseID, evaluatorID],
+        (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ message: 'Unable to retrieve course evaluations.' });
+            }
+            return res.status(200).json(rows);
+        }
+    );
+};
+
+exports.GetEvaluationResponses = async (req, res, next) => {
+    const assignedEvalID = req.params.assignedEvalID;
+    const evaluatorID = req.params.evaluatorID;
+
+    if (!assignedEvalID || !evaluatorID) {
+        return res.status(400).json({ message: 'Evaluation ID and evaluator ID are required.' });
+    }
+
+    db.all(
+        `SELECT a.assignedEvalID,
+            u.firstName || ' ' || u.lastName AS studentName,
+            p.projectName, t.templateName,
+            q.questionID, q.questionText, qt.questionTypeText AS questionType,
+            r.rating, r.response
+        FROM Assigned_Eval a
+        INNER JOIN Users u ON u.userID = a.evaluateeID
+        INNER JOIN Projects p ON p.projectID = a.projectID
+        INNER JOIN Template t ON t.templateID = a.templateID
+        INNER JOIN Question q ON q.templateID = a.templateID
+        INNER JOIN Question_Type qt ON qt.questionTypeID = q.questionType
+        LEFT JOIN Response r ON r.responseID = (
+            SELECT MAX(latest.responseID)
+            FROM Response latest
+            WHERE latest.assignedEvalID = a.assignedEvalID
+                AND latest.questionID = q.questionID
+        )
+        WHERE a.assignedEvalID = ? AND a.evaluatorID = ?
+        ORDER BY q.questionID`,
+        [assignedEvalID, evaluatorID],
+        (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ message: 'Unable to retrieve evaluation responses.' });
+            }
+            if (rows.length === 0) {
+                return res.status(404).json({ message: 'Evaluation responses not found.' });
+            }
+            return res.status(200).json(rows);
+        }
+    );
 };
 
 exports.GetAllEvals = async (req, res, next) => {
@@ -396,28 +552,26 @@ exports.SubmitResponses = async (req, res, next) => {
 exports.evalCompleted = async (req, res, next) => {
     console.log("EvalCompleted Called")
 
-    const evalID = req.body.evalID
+    const evalID = req.body.evalID;
 
-    db.serialize(() => {
-        const sqlstmt = (`UPDATE Assigned_Eval SET evalCompleted = 1 WHERE assignedEvalID = ?`);
+    if (!evalID) {
+        return res.status(400).json({ message: 'Evaluation ID is required.' });
+    }
 
-        sqlstmt.run([evalID], function(err){
-            if(err) {
-                console.log(err);
-                db.run('ROLLBACK;');  //Rollback if there is an error
-                return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
-            }
-        });
-
-        //commit if no errors
-        db.run('COMMIT;', (err) => {
+    db.run(
+        `UPDATE Assigned_Eval
+        SET evalCompleted = 1
+        WHERE assignedEvalID = ?`,
+        [evalID],
+        function (err) {
             if (err) {
-                console.log(err);
-                db.run('ROLLBACK;');  //Rollback if it can't commit
-                return res.status(500).json({ message: 'Something went wrong during commit. Please try again later.' });
-            } else {
-                return res.status(200).json({ message: 'Response recorded successfully.' });
+                console.error(err.message);
+                return res.status(500).json({ message: 'Unable to complete the evaluation.' });
             }
-        });
-    })
-}
+            if (this.changes === 0) {
+                return res.status(404).json({ message: 'Evaluation not found.' });
+            }
+            return res.status(200).json({ message: 'Evaluation completed successfully.' });
+        }
+    );
+};

@@ -9,7 +9,7 @@
 
       <!--<button class="btn btn-purple rounded" (click)="GoToEval(p.projectID)">-->
 
-      <a *ngIf="hasPendingEvals" href="/eval" class="btn btn-warning btn-courses rounded">{{Evals.length}} {{Evals.length === 1 ? 'Evaluation' : 'Evaluations'}} Due </a>
+      <button *ngIf="hasPendingEvals" (click)="GoToEval(Evals[0].projectID)" class="btn btn-warning btn-courses rounded">{{Evals.length}} {{Evals.length === 1 ? 'Evaluation' : 'Evaluations'}} Due</button>
     </div>
     <hr />
     <div class="alert alert-danger" *ngIf="courses?.length <= 0">
