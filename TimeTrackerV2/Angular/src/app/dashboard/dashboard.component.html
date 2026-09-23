@@ -1,7 +1,7 @@
 <!--#region Student Dashboard-->
-<div [ngSwitch]="true">
-  <div *ngSwitchCase="student" id="dashboard">
-    <h2 class="dashboard-head">Dashboard</h2>
+<div id="dashboard">
+  <h2 class="dashboard-head">Dashboard</h2>
+  <div *ngIf="student">
     <!-- <a href="/user-reports" class="btn btn-purple btn-elevated">Reports</a> -->
     <div>
       <h3 class="box-head rounded">Courses</h3>
@@ -85,8 +85,7 @@
 <!--#endregion-->
 
 <!--#region Instructor Dashboard-->
-  <div *ngSwitchCase="instructor" id="dashboard">
-    <h2 class="dashboard-head">Dashboard</h2>
+  <div *ngIf="instructor">
     <div>
       <h3 class="box-head rounded">Courses</h3>
       <!-- This class will make the below button come next to it so they are on one line -->
@@ -154,8 +153,7 @@
 <!--#endregion-->
 
 <!--#region Admin Dashboard-->
-  <div *ngSwitchCase="admin" id="dashboard">
-    <h2 class="dashboard-head">Dashboard</h2>
+  <div *ngIf="admin">
     <div>
       <h3 class="box-head rounded">Recent Users</h3>
       <a href="/users" class="btn btn-purple btn-courses rounded">Manage Users</a>

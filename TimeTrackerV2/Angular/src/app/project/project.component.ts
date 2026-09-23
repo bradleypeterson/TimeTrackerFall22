@@ -133,7 +133,7 @@ export class ProjectComponent implements OnInit {
             // get user type
             var userType = this.currentUser.type;
             this.userID = this.currentUser.userID;
-            if (userType === 'instructor') {
+            if (userType === 'instructor' || userType === 'admin') {
                 this.instructor = true;
             } else if (userType === 'student') {
                 this.student = true;
