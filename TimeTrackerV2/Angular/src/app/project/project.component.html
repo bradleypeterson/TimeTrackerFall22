@@ -5,9 +5,15 @@
 <div [ngSwitch]="true">
     <div *ngSwitchCase="instructor">
         <div class="btn-group">
-            <button class="btn btn-purple" (click)="AddStudents()">Manage Project Students</button>
-            <button class="btn btn-secondary" (click)="Edit()">Edit</button>
-            <button class="btn btn-danger" (click)="delete()">Delete</button>
+            <div title="Drop or add students to course">
+                <button class="btn btn-purple" (click)="AddStudents()">Manage Project Students</button>
+            </div>
+            <div title="Edits the current project">
+                <button class="btn btn-secondary" (click)="Edit()">Edit</button>
+            </div>
+            <div title="Deletes the current project">
+                <button class="btn btn-danger" (click)="delete()">Delete</button>
+            </div>
         </div>
     </div>
 </div>
