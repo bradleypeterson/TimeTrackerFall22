@@ -11,3 +11,7 @@
     margin:auto;
     max-width:400px;
 }
+
+.description-input {
+    width: 600px;
+}

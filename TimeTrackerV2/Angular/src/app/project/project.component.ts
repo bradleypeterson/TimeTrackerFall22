@@ -50,40 +50,72 @@ export class ProjectComponent implements OnInit {
     });
     // Manual time card form
     manualForm = new FormGroup({
+        
+        datecard: new UntypedFormControl(),
         timecardStart: new UntypedFormControl(''),
         timecardEnd: new UntypedFormControl(''),
         description: this.description
     }, {
-        validators: [this.CreateDateRangeValidator()]
+        validators: [this.CreateTimeDifferenceValidator(),
+        this.CreateManualFieldsValidator(),
+        this.CreateMaximumDateValidator()]
     });
     // Instructor Manual time card form
     instructorManualForm = new FormGroup({
         studentID: new UntypedFormControl(''),
+        datecard: new UntypedFormControl(),
         timecardStart: new UntypedFormControl(''),
         timecardEnd: new UntypedFormControl(''),
         description: this.descriptionINS
     }, {
-        validators: [this.CreateDateRangeValidator()]
+        validators: [this.CreateTimeDifferenceValidator(),
+          this.CreateMaximumDateValidator()]
     });
 
-    // This function is used to make sure that the starting date is always before the ending date.  Source https://blog.angular-university.io/angular-custom-validators/#:~:text=our%20previous%20article.-,Form%2Dlevel%20(multi%2Dfield)%20Validators,-Besides%20being%20able
-    CreateDateRangeValidator(): ValidatorFn {
-        // The AbstractControl replaces the FormGroup because apparently the above source uses a different typescript version than this project.  It seems to be caused by a bug in the TypeScript version.  Fix source https://stackoverflow.com/a/63306484
-        return (form: AbstractControl): ValidationErrors | null => {
-            // The '!' at the end is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be
-            const start: string = form.get("timecardStart")!.value;
-            const end: string = form.get("timecardEnd")!.value;
+    // This function is used to check if an end time is less than a start time so we can give a warning.
+    CreateTimeDifferenceValidator(): ValidatorFn {
+      return (form: AbstractControl): ValidationErrors | null => {
+        const date: string = form.get("datecard")?.value;
+        const start: string = form.get("timecardStart")!.value;
+        const end: string = form.get("timecardEnd")!.value;
 
-            if (start && end) {
-                const dateStart = new Date(start);
-                const dateEnd = new Date(end);
-                const isRangeValid = (dateEnd.getTime() - dateStart.getTime() > 0);
+        if (start && end && date) {
+            // We have to use this format to translate fields into a Date
+            const dateStart = new Date(`${date}T${start}`);
+            const dateEnd = new Date(`${date}T${end}`);
+            console.log("dateStart:" + dateStart);
+            console.log("dateEnd: " + dateEnd)
+            const isRangeValid = (dateEnd.getTime() > dateStart.getTime());
 
-                return isRangeValid ? null : { dateRange: true };
-            }
-
-            return null;
+            return isRangeValid ? null : { timeRange: true };
         }
+
+        return null;
+      }
+    }
+
+    // Checks if every field is filled out
+    CreateManualFieldsValidator(): ValidatorFn {
+      return (form: AbstractControl): ValidationErrors | null => {
+        const date: string = form.get("datecard")?.value;
+        const start: string = form.get("timecardStart")!.value;
+        const end: string = form.get("timecardEnd")!.value;
+        const descript = form.get("description")!.value;
+
+        return ( (start && end && date && descript) ) ? null : { fieldsCheck: true }
+      }
+    }
+
+    // Checks if the date entered isn't after the system date, does not return an error if there is no entered date
+    CreateMaximumDateValidator(): ValidatorFn {
+      return (form: AbstractControl): ValidationErrors | null => {
+        const date: string = form.get("datecard")?.value;
+        if (date) {
+          const dateValue = new Date(form.get("datecard")?.value);
+          return ( (dateValue <= this.date) ) ? null : { dateCheck: true }
+        }
+        return null;
+      }
     }
 
     activities: any = [];
@@ -91,7 +123,10 @@ export class ProjectComponent implements OnInit {
     manualTimeCardEntry: boolean = false;  // This will be overwritten in the constructor() method below
 
     date: Date = new Date();
+    //This value is used for the automatic submission
     currDate = formatDate(this.date, 'MM/dd/yyyy', 'en-US');
+    //This value is used for getting a default value on manual submission
+    defaultDate = formatDate(this.date, 'yyyy-MM-dd', 'en-US');
 
     seconds: any = '0' + 0;
     minutes: any = '0' + 0;
@@ -195,6 +230,9 @@ export class ProjectComponent implements OnInit {
 
         // iterate through the projectUsers to check against current user ID
         this.loadProjectUsers();
+
+        this.manualForm.controls.datecard.setValue(this.defaultDate);
+        this.instructorManualForm.controls.datecard.setValue(this.defaultDate);
     }
 
     getProjectInfo(): void {
@@ -390,16 +428,27 @@ export class ProjectComponent implements OnInit {
     }
 
     manualSubmit(): void {
-        // An extra check condition to prevent submission of the data unless for form is valid
-        if (!this.manualForm.valid) {
+        // An extra check condition to prevent submission of the data if there are incomplete fields
+        if (this.manualForm.errors?.fieldsCheck || this.manualForm.errors?.dateCheck) {
             return;
+        }
+
+        const date: string = this.manualForm.controls.datecard.value;
+        const startTime: string = this.manualForm.controls.timecardStart.value;
+        const endTime: string = this.manualForm.controls.timecardEnd.value;
+        var dateStart = new Date(`${date}T${startTime}`);
+        var dateEnd = new Date(`${date}T${endTime}`);
+
+        // Here we can add 24 hours to the end date to account for overnight sessions
+        if(dateStart > dateEnd) {
+          dateEnd.setDate(dateEnd.getDate() + 1);
         }
 
         let req = {
             isManualEntry: true,
             // We format the timeIn and timeOut like this so that it will return the number of milliseconds since midnight, January 1, 1970 UTC.  https://stackoverflow.com/questions/9756120/how-do-i-get-a-utc-timestamp-in-javascript#:~:text=new%20Date().getTime()%20is%20always%20UTC
-            timeIn: new Date(this.manualForm.controls.timecardStart.value).getTime(),
-            timeOut: new Date(this.manualForm.controls.timecardEnd.value).getTime(),
+            timeIn: dateStart.getTime(),
+            timeOut: dateEnd.getTime(),
             isEdited: false,
 
             userID: this.currentUser.userID,
@@ -421,6 +470,7 @@ export class ProjectComponent implements OnInit {
               console.log(`contents of \"req.isEdited\":` + req.isEdited);
 
               // Clear the inputs inside the form
+              this.manualForm.controls.datecard.setValue('');
               this.manualForm.controls.timecardStart.setValue('');
               this.manualForm.controls.timecardEnd.setValue('');
               this.manualForm.controls.description.setValue(''); // You can also us the code "this.description.setValue("");" because the code currently being used references this variable.
@@ -576,15 +626,26 @@ export class ProjectComponent implements OnInit {
 
     instructorManualSubmit() : void {
         // An extra check condition to prevent submission of the data unless for form is valid
-        if (!this.instructorManualForm.valid) {
+        if (this.instructorManualForm.errors?.dateCheck) {
             return;
+        }
+
+        const date: string = this.instructorManualForm.controls.datecard.value;
+        const startTime: string = this.instructorManualForm.controls.timecardStart.value;
+        const endTime: string = this.instructorManualForm.controls.timecardEnd.value;
+        var dateStart = new Date(`${date}T${startTime}`);
+        var dateEnd = new Date(`${date}T${endTime}`);
+
+        // Here we can add 24 hours to the end date to account for overnight sessions
+        if(dateStart > dateEnd) {
+          dateEnd.setDate(dateEnd.getDate() + 1);
         }
 
         let req = {
             isManualEntry: true,
             // We format the timeIn and timeOut like this so that it will return the number of milliseconds since midnight, January 1, 1970 UTC.  https://stackoverflow.com/questions/9756120/how-do-i-get-a-utc-timestamp-in-javascript#:~:text=new%20Date().getTime()%20is%20always%20UTC
-            timeIn: new Date(this.instructorManualForm.controls.timecardStart.value).getTime(),
-            timeOut: new Date(this.instructorManualForm.controls.timecardEnd.value).getTime(),
+            timeIn: new Date(dateStart).getTime(),
+            timeOut: new Date(dateEnd).getTime(),
             isEdited: false,
 
             userID: this.instructorManualForm.controls.studentID.value, // pull userID from the form

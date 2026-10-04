@@ -67,7 +67,7 @@
                     <form [formGroup]="autoForm" (ngSubmit)="autoSubmit()">
                         <div class="row mt-2">
                             <input formControlName="description" type="text" placeholder="Work Description"
-                                class="form-control" required>
+                                class="form-control description-input" maxlength="250" required>
                         </div>
                         <div class="d-grid d-md-flex justify-content-md-center">
                             <!-- For debugging purposes only -->
@@ -87,24 +87,30 @@
                 <div class="gap-4 d-md-flex justify-content-md-center">
                     <form [formGroup]="manualForm" (ngSubmit)="manualSubmit()">
                         <!-- Start time row -->
+                         <div class="row mt-2">
+                            <label for="Start">Date</label>
+                            <input formControlName="datecard" type="date" id="Date" class="form-control"
+                                max="{{defaultDate}}" required>
+                        </div>
                         <div class="row mt-2">
                             <label for="Start">Start Time</label>
-                            <input formControlName="timecardStart" type="datetime-local" id="Start" class="form-control"
+                            <input formControlName="timecardStart" type="time" id="Start" class="form-control"
                                 required>
                         </div>
                         <!-- End time row -->
                         <div class="row mt-2">
                             <label for="End">End Time</label>
-                            <input formControlName="timecardEnd" type="datetime-local" id="End" class="form-control"
+                            <input formControlName="timecardEnd" type="time" id="End" class="form-control"
                                 required>
                         </div>
-                        <div *ngIf="manualForm.errors?.dateRange" class="row mt-2 errorText">
-                            Your "Start Time" has to be before your "End Time"
+                        <div *ngIf="manualForm.errors?.timeRange" class="row mt-2 errorText" style="max-width: 600px;">
+                            The end time is earlier than the start time. 
+                            If the session happened over midnight, set the date to when you started. Otherwise, do not proceed!
                         </div>
                         <!-- Description row -->
                         <div class="row mt-2">
                             <input formControlName="description" type="text" placeholder="Work Description"
-                                class="form-control" required>
+                                class="form-control description-input" maxlength="250" required>
                         </div>
                         <div class="d-grid d-md-flex justify-content-md-center">
                             <!-- For debugging purposes only -->
@@ -115,7 +121,7 @@
                             </p>-->
                             <!-- The reason why we are checking every individual field instead of the form to see if it is valid is because the form is only validated when you submit it -->
                             <button type="submit" class="btn btn-purple mt-2"
-                                [disabled]="!(!manualForm.errors?.dateRange && manualForm.controls.description.valid)">Submit</button>
+                                [disabled]="(manualForm.errors?.fieldsCheck || manualForm.errors?.dateCheck)">Submit</button>
                         </div>
                     </form>
                 </div>
@@ -141,7 +147,7 @@
                             <th scope="col">Start Time</th>
                             <th scope="col">End Time</th>
                             <th scope="col">Total Time</th>
-                            <th scope="col">Description</th>
+                            <th scope="col" style="max-width: 500px;">Description</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -149,7 +155,7 @@
                             <td>{{activity.timeIn | date:'medium'}}</td>
                             <td>{{activity.timeOut | date:'medium'}}</td>
                             <td>{{activity.timeOut - activity.timeIn | totalTimePipe}}</td>
-                            <td>{{activity.description}}</td>
+                            <td style="max-width: 500px;">{{activity.description}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -327,25 +333,35 @@
                                     </ng-container>
                                 </select>
                             </div>
+                            <!-- Date row -->
+                            <div class="row mt-2">
+                            <label for="Start">Date</label>
+                            <input formControlName="datecard" type="date" id="Date" class="form-control"
+                                max="{{defaultDate}}" required>
+                            </div>
                             <!-- Start time row -->
                             <div class="row mt-2">
                                 <label for="Start">Start Time</label>
-                                <input formControlName="timecardStart" type="datetime-local" id="Start"
-                                    class="form-control" required>
+                                <input formControlName="timecardStart" type="time" id="Start" class="form-control"
+                                    required>
                             </div>
                             <!-- End time row -->
                             <div class="row mt-2">
                                 <label for="End">End Time</label>
-                                <input formControlName="timecardEnd" type="datetime-local" id="End" class="form-control"
+                                <input formControlName="timecardEnd" type="time" id="End" class="form-control"
                                     required>
                             </div>
-                            <div *ngIf="instructorManualForm.errors?.dateRange" class="row mt-2 errorText">
-                                Your "Start Time" has to be before your "End Time"
+                            <div *ngIf="instructorManualForm.errors?.timeRange" class="row mt-2 errorText">
+                                The end time is earlier than the start time. 
+                                If the session happened over midnight, set the date to when you started. Otherwise, do not proceed!
+                            </div>
+                            <div *ngIf="instructorManualForm.errors?.dateCheck" class="row mt-2 errorText">
+                                The date entered is later than the current date.
                             </div>
                             <!-- Description row -->
                             <div class="row mt-2">
                                 <input formControlName="description" type="text" placeholder="Work Description"
-                                    class="form-control" required>
+                                    class="form-control description-input" maxlength="250" required>
                             </div>
                             <div class="d-grid d-md-flex justify-content-md-center">
                                 <button type="submit" class="btn btn-purple mt-2"
@@ -413,7 +429,7 @@
                                 <td>{{user.timeIn | date:'medium'}}</td>
                                 <td>{{user.timeOut | date:'medium'}}</td>
                                 <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
-                                <td>{{user.description}}</td>
+                                <td style="max-width: 900px;">{{user.description}}</td>
 
                                 <td>
                                     <div class="btn-group float-right">

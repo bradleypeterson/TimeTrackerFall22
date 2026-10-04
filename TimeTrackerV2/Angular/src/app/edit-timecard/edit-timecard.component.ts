@@ -78,7 +78,8 @@ export class EditTimecardComponent implements OnInit {
     timeOut: '',
     timeslotID: '',
   }, {
-    validators: [this.CreateDateRangeValidator()]
+    validators: [this.CreateDateRangeValidator(),
+      this.CreateFieldsValidator()]
 });
 
 // This function is used to make sure that the starting date is always before the ending date.  Source https://blog.angular-university.io/angular-custom-validators/#:~:text=our%20previous%20article.-,Form%2Dlevel%20(multi%2Dfield)%20Validators,-Besides%20being%20able
@@ -101,7 +102,20 @@ CreateDateRangeValidator(): ValidatorFn {
     }
 }
 
+// This function checks that all needed forms are filled out
+CreateFieldsValidator(): ValidatorFn {
+  return (form: AbstractControl): ValidationErrors | null => {
+    const start: string = form.get("timeIn")!.value;
+    const end: string = form.get("timeOut")!.value;
+    return (start && end) ? null : { validFields: true }
+  }
+}
+
   onSubmit(): void {
+    // checking if the form is valid
+    if (!this.editTimecardForm.valid) {
+        return;
+    }
     let startTime = new Date(this.editTimecardForm.value['timeIn']).getTime();
     let endTime = new Date(this.editTimecardForm.value['timeOut']).getTime();
     let payload = {
