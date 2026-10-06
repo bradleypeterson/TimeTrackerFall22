@@ -11,3 +11,15 @@
     margin:auto;
     max-width:400px;
 }
+
+.history-table {
+    min-width: 48rem;
+}
+
+.history-table th,
+.history-table td:nth-child(2),
+.history-table td:nth-child(3),
+.history-table td:nth-child(4),
+.history-table .btn {
+    white-space: nowrap;
+}

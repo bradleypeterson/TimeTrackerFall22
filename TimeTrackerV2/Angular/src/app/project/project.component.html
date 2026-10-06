@@ -16,7 +16,7 @@
 <!-- Project user version -->
 <div class="container" *ngIf="isProjectUser">
     <div class="row">
-        <div class="col-6">
+        <div class="col-12 col-md-6">
             <div *ngIf="pieChartLabels.length != 0" class="chart-container">
                 <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
                     [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
@@ -25,7 +25,7 @@
         </div>
 
         <!-- Time Card Creation -->
-        <div class="col-6" *ngIf="project.isActive">
+        <div class="col-12 col-md-6" *ngIf="project.isActive">
             <!-- Toggle button to change between auto and manual mode -->
             <!-- <div class="gap-2 d-md-flex justify-content-md-left">
                 <button (click)="changeSubmitType()" class="btn btn-secondary">{{manualTimeCardEntry ? "Switch to Auto Mode" :
@@ -119,7 +119,7 @@
 
     <div class="row">
         <!-- Current user's activity -->
-        <div class="col-6 border-right">
+        <div class="col-12 col-md-6 border-right">
             <div class="row">
                 <div class="col-9">
                     <h3>Your Recent Activity</h3>
@@ -129,6 +129,7 @@
                 </div>
             </div>
             <div class="row">
+                <div class="table-responsive">
                 <table class="table table-light table-sm table-hover table-bordered border-dark">
                     <thead>
                         <tr>
@@ -147,14 +148,16 @@
                         </tr>
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
         <!-- Team Times -->
-        <div class="col-6 border-left">
+        <div class="col-12 col-md-6 border-left">
             <div class="row">
                 <h3>Team Times</h3>
             </div>
             <div class="row">
+                <div class="table-responsive">
                 <table class="table table-light table-sm table-hover table-bordered border-dark">
                     <thead>
                         <tr>
@@ -169,6 +172,7 @@
                         </tr>
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     </div>
@@ -185,8 +189,8 @@
                 </div>
             </div>
             <div class="row">
-                <table class="table table-light table-sm table-hover table-bordered border-dark"
-                    style="max-height: 200px; overflow-y:scroll">
+                <div class="table-responsive">
+                <table class="table table-light table-sm table-hover table-bordered border-dark history-table">
                     <thead>
                         <tr>
                             <th scope="col">Name</th>
@@ -208,6 +212,7 @@
                         </ng-container>
                     </tbody>
                 </table>
+                </div>
                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
             </div>
         </div>
@@ -217,7 +222,7 @@
 <!-- Not project user and not instructor version -->
 <div class="container" *ngIf="!isProjectUser && !instructor">
     <div class="row">
-        <div class="col-6">
+        <div class="col-12 col-md-6">
             <div *ngIf="pieChartLabels.length != 0" class="chart-container">
                 <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
                     [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
@@ -226,11 +231,12 @@
         </div>
 
         <!-- Team Times -->
-        <div class="col-6">
+        <div class="col-12 col-md-6">
             <div class="row">
                 <h3>Team Times</h3>
             </div>
             <div class="row">
+                <div class="table-responsive">
                 <table class="table table-light table-sm table-hover table-bordered border-dark">
                     <thead>
                         <tr>
@@ -245,6 +251,7 @@
                         </tr>
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     </div>
@@ -261,8 +268,8 @@
                 </div>
             </div>
             <div class="row">
-                <table class="table table-light table-sm table-hover table-bordered border-dark"
-                    style="max-height: 200px; overflow-y:scroll">
+                <div class="table-responsive">
+                <table class="table table-light table-sm table-hover table-bordered border-dark history-table">
                     <thead>
                         <tr>
                             <th scope="col">Name</th>
@@ -283,6 +290,7 @@
                         </ng-container>
                     </tbody>
                 </table>
+                </div>
                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
             </div>
         </div>
@@ -292,8 +300,8 @@
 <!-- Instructor version -->
 <div class="container" *ngIf="instructor">
     <div class="row">
-        <div class="row">
-            <div class="col-6">
+        <div class="col-12 row">
+            <div class="col-12 col-md-6">
                 <div *ngIf="pieChartLabels.length != 0" class="chart-container">
                     <canvas baseChart [type]="'pie'" [datasets]="pieChartDatasets" [labels]="pieChartLabels"
                         [options]="pieChartOptions" [plugins]="pieChartPlugins" [legend]="pieChartLegend">
@@ -302,7 +310,7 @@
             </div>
 
             <!-- Time Card Creation -->
-            <div class="col-6" *ngIf="project.isActive">
+            <div class="col-12 col-md-6" *ngIf="project.isActive">
 
                 <!-- Instructor Manual time card -->
                 <div class="col">
@@ -352,11 +360,12 @@
         </div>
 
         <!-- Team Times -->
-        <div class="col-6">
+        <div class="col-12">
             <div class="row">
                 <h3>Team Times</h3>
             </div>
             <div class="row">
+                <div class="table-responsive">
                 <table class="table table-light table-sm table-hover table-bordered border-dark">
                     <thead>
                         <tr>
@@ -371,6 +380,7 @@
                         </tr>
                     </tbody>
                 </table>
+                </div>
             </div>
         </div>
     </div>
@@ -387,8 +397,8 @@
                 </div>
             </div>
             <div class="row">
-                <table class="table table-light table-sm table-hover table-bordered border-dark"
-                    style="max-height: 200px; overflow-y:scroll">
+                <div class="table-responsive">
+                <table class="table table-light table-sm table-hover table-bordered border-dark history-table">
                     <thead>
                         <tr>
                             <th scope="col">Name</th>
@@ -422,6 +432,7 @@
                         </ng-container>
                     </tbody>
                 </table>
+                </div>
                 <pagination-controls (pageChange)="p = $event"></pagination-controls>
             </div>
         </div>
