@@ -11,16 +11,14 @@
     class="navbar-toggler custom-toggler"
     type="button"
     (click)="isNavbarExpanded = !isNavbarExpanded"
-    data-toggle="collapse"
-    data-target="#navbarNavAltMarkup"
     aria-controls="navbarNavAltMarkup"
-    aria-expanded="false"
+    [attr.aria-expanded]="isNavbarExpanded"
     aria-label="Toggle navigation"
   >
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup" [class.show]="isNavbarExpanded">
     <div [ngSwitch]="true">
       <!-- INSTRUCTOR SWITCH CASE -->
       <div *ngSwitchCase="instructor">
@@ -183,9 +181,6 @@
   </div>
 </div>
 
-<div
-  class="container mt-2"
-  [ngStyle]="{ 'padding-top': isNavbarExpanded ? '250px' : '60px' }"
->
+<div class="container mt-2 navbar-content">
   <router-outlet></router-outlet>
 </div>
