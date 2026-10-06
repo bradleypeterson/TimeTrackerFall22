@@ -1,33 +1,35 @@
 <div id="course">
-  <h2 class="course-head">{{course?.courseName}}
+  <div class="d-flex flex-wrap align-items-center gap-2">
+    <h2 class="course-head mb-0">{{course?.courseName}}</h2>
     <div [ngSwitch]="true">
       <div *ngSwitchCase="instructor">
-        <div class="btn-group">
+        <div class="d-flex flex-wrap gap-2">
           <button class="btn btn-secondary" (click)="NavigateToEditCourse()">Edit</button>
           <button class="btn btn-danger" (click)="delete()">Delete</button>
         </div>
       </div>
     </div>
-  </h2>
+  </div>
   <hr>
 
   <!-- ng-model="search" ??? -->
-  <div class="form-inline mb-3">
-    <form class="mr-3" (ngSubmit)="searchProjects()">
-      <input class="form-control mr-3" [(ngModel)]="projectSearchQuery" name="projectSearchQuery" type="text" placeholder="Search Projects" aria-label="Search">
-      <button class="btn btn-purple btn-elevated" type="submit">Search</button>
+  <div class="d-flex flex-wrap align-items-start gap-2 mb-3">
+    <form class="d-flex flex-column flex-sm-row gap-2" (ngSubmit)="searchProjects()">
+      <input class="form-control" [(ngModel)]="projectSearchQuery" name="projectSearchQuery" type="text" placeholder="Search Projects" aria-label="Search">
+      <button class="btn btn-purple btn-elevated align-self-start flex-shrink-0" type="submit">Search</button>
     </form>
     <div [ngSwitch]="true">
-      <div *ngSwitchCase="instructor">
-        <button class="btn btn-success btn-spacer" (click)="NavigateToAddProject()" *ngIf="course.isActive">Create New Project</button>
-        <button class="btn btn-purple btn-spacer" (click)="NavigateToAssignEvals()" *ngIf="course.isActive">Assign Evals</button>
-        <button class="btn btn-purple btn-spacer" (click)="NavigateToViewEvals()">View Evaluations</button>
+      <div *ngSwitchCase="instructor" class="d-flex flex-wrap gap-2">
+        <button class="btn btn-success" (click)="NavigateToAddProject()" *ngIf="course.isActive">Create New Project</button>
+        <button class="btn btn-purple" (click)="NavigateToAssignEvals()" *ngIf="course.isActive">Assign Evals</button>
+        <button class="btn btn-purple" (click)="NavigateToViewEvals()">View Evaluations</button>
         <i *ngIf="!course.isActive">Course is inactive. Reactivate course in edit page to create projects.</i>
       </div>
     </div>
   </div>
 
   <div>
+    <div class="table-responsive">
     <table class="table table-hover">
       <thead>
         <tr>
@@ -41,7 +43,7 @@
           <td>{{ p.projectName }}</td>
           <td class="desc">{{ p.description }}</td>
           <td>
-            <div class="btn-group float-right">
+            <div class="d-flex flex-wrap justify-content-end gap-2">
               <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
               <button *ngIf="userInCourse" class="btn btn-danger" (click)="leave(p.projectID)">Leave</button>
             </div>
@@ -51,7 +53,7 @@
           <td>{{ p.projectName }}</td>
           <td class="desc">{{ p.description }}</td>
           <td>
-            <div class="btn-group float-right">
+            <div class="d-flex flex-wrap justify-content-end gap-2">
                 <button class="btn btn-purple" (click)="GoToProject(p.projectID)">View</button>
                 <button *ngIf="userInCourse" class="btn btn-success" (click)="join(p.projectID)">Join</button>
             </div>
@@ -59,6 +61,7 @@
         </tr>
       </tbody>
     </table>
+    </div>
     <!-- if no projects were found, show this message saying that no projects were found -->
     <div *ngIf="allUserFilteredProjects.length == 0 && nonUserFilteredProjects.length == 0" class="alert alert-danger">
         No projects found
