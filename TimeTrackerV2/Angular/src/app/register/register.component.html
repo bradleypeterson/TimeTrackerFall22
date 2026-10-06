@@ -56,6 +56,22 @@
               style="border: none; border-top-right-radius: 0;  border-bottom-right-radius: 0;" name="password"
               placeholder="Password" ng-model="password" required>
           </div>
+          <div class="small text-muted mt-2 mb-2">
+            Use a long, unique password. Avoid names, common phrases,
+            and passwords you use elsewhere.
+
+            <div *ngIf="passwordLength > 0">
+              <div
+                style="height: 6px; border-radius: 4px; margin: 6px 0;"
+                [style.backgroundColor]="passwordLengthColor"
+              ></div>
+
+              <span>
+                Password length: {{ passwordLength }} characters
+              </span>
+            </div>
+          </div>
+
           <div class="input-group" style="margin-top: 1px;">
             <div class="input-group-prepend"><span class="input-group-text"
                 style="width:40px; border: none; border-top-left-radius: 0;"><i class="fa fa-lock"

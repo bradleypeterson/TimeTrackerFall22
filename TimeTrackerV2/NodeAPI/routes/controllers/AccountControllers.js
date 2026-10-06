@@ -18,6 +18,20 @@ exports.Register = async (req, res, next) => {
     let password = req.body["password"];
     let salt = req.body["salt"];
 
+
+    // Reject missing, non-text, or whitespace-only identity fields.
+    const identityFields = [username, firstName, lastName];
+
+    const hasBlankText = identityFields.some(
+    (value) => typeof value !== 'string' || value.trim().length === 0
+        );
+
+    if (hasBlankText) {
+    return res.status(400).json({
+        message: 'Username, first name, and last name are required and cannot contain only spaces.'
+         });
+        }
+
     // Validate user doesn't already exist (can be handled by the unique constraint, but this is left in so we have more control without having to determine what cause the error)
     let sql = `SELECT *
 		FROM Users
@@ -258,6 +272,7 @@ exports.ChangePassword = (req, res) => {
     console.log(JSON.stringify(req.body));
     let password = req.body.password;
     let salt = req.body.salt;
+
 
     let sql = `UPDATE Users
     SET password = ?, salt = ?
