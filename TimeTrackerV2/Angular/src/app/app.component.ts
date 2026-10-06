@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
   name: string = '';
   userID: string = '';
   isNavbarExpanded = false;
+  openMenu: 'account' | 'course' | null = null;
 
   constructor (
     private router: Router,
@@ -42,9 +43,13 @@ export class AppComponent implements OnInit {
   }
   title = 'TimeTrackerV2';
 
+  toggleMenu(menu: 'account' | 'course'): void {
+    this.openMenu = this.openMenu === menu ? null : menu;
+  }
+
   // Used for dropdown for View Profile and Logout
-  onUserOptionChange(event: Event) {
-    const selectedOption = (event.target as HTMLSelectElement).value;
+  onUserOptionChange(selectedOption: 'viewProfile' | '#') {
+    this.openMenu = null;
   
     if (selectedOption === 'viewProfile') {
       this.ViewProfile();
@@ -52,9 +57,6 @@ export class AppComponent implements OnInit {
     else if (selectedOption === '#') {
       window.location.href = selectedOption;  // Directly sets the location for Logout
     }
-  
-    // Reset dropdown selection after action
-    (event.target as HTMLSelectElement).selectedIndex = 0;
   }
   
   ViewProfile() {
