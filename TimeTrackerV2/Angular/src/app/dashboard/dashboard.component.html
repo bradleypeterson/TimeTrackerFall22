@@ -1,4 +1,6 @@
 <!--#region Student Dashboard-->
+<div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+<div *ngIf="errMsg" class="alert alert-danger">{{ errMsg }}</div>
 <div [ngSwitch]="true">
   <div *ngSwitchCase="student" id="dashboard">
     <h2 class="dashboard-head">Dashboard</h2>

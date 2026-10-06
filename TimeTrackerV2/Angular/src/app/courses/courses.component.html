@@ -1,5 +1,7 @@
 <!-- ng-cloak && user.type == student-->
 <div id="courses">
+  <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+  <div *ngIf="errMsg" class="alert alert-danger">{{ errMsg }}</div>
   <h2 class="course-head">Courses</h2>
   <hr />
 

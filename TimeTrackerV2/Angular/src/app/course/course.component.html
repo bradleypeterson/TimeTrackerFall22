@@ -1,4 +1,6 @@
 <div id="course">
+  <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+  <div *ngIf="errMsg" class="alert alert-danger">{{ errMsg }}</div>
   <h2 class="course-head">{{course?.courseName}}
     <div [ngSwitch]="true">
       <div *ngSwitchCase="instructor">

@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
   public PendUserCourses: any = [];
   public PendInstrCourses: any = [];
   public errMsg = '';
+  public successMsg = '';
   public p: number = 1;
   public Evals: any = [];
   public hasPendingEvals: boolean = false;
@@ -220,10 +221,9 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          // Refresh the data on the page
+          this.successMsg = 'Course request cancelled.';
           this.loadCourses();
-          // The following line will refresh the page
-          location.reload();
+          this.loadPenUserCourses();
         },
         error: (error) => {
           this.errMsg = error['error']['message'];
@@ -232,7 +232,7 @@ export class DashboardComponent implements OnInit {
   }
 
   // instructor denies a student for a course
-  cancelIns(CourseId: any, UserID: any) {
+  cancelIns(CourseId: any, UserID: any, successMessage = 'Course request denied.') {
     let req = {
       userID: UserID,
       courseID: CourseId
@@ -247,10 +247,9 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          // Refresh the data on the page
+          this.successMsg = successMessage;
           this.loadCourses();
-          // The following line will refresh the page
-          location.reload();
+          this.loadInstrPenUserCourses();
         },
         error: (error) => {
           this.errMsg = error['error']['message'];
@@ -302,7 +301,7 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          this.cancelIns(CourseId, UserID);
+          this.cancelIns(CourseId, UserID, 'Student approved and added to the course.');
           // this.loadCourses();
         },
         error: (error) => {

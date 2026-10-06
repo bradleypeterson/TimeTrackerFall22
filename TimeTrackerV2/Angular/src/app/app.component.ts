@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -21,10 +22,24 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let currentUser = localStorage.getItem('currentUser');
-    var userData = currentUser ? JSON.parse(currentUser) : null;
+    this.loadCurrentUser();
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => this.loadCurrentUser());
+  }
+
+  loadCurrentUser(): void {
+    const currentUser = localStorage.getItem('currentUser');
+    const userData = currentUser ? JSON.parse(currentUser) : null;
+
     this.userType = userData?.type;
     this.userID = userData?.userID;
+    this.instructor = false;
+    this.student = false;
+    this.admin = false;
+    this.nullType = false;
+    this.name = '';
+
     if (this.userType === 'admin') {
       this.admin = true;
       this.name = userData.firstName + ' ' + userData.lastName;
@@ -38,7 +53,6 @@ export class AppComponent implements OnInit {
     } else {
       this.nullType = true;
     }
-    // console.log(this.userType);
   }
   title = 'TimeTrackerV2';
 
@@ -48,12 +62,11 @@ export class AppComponent implements OnInit {
   
     if (selectedOption === 'viewProfile') {
       this.ViewProfile();
-    } 
-    else if (selectedOption === '#') {
-      window.location.href = selectedOption;  // Directly sets the location for Logout
+    } else if (selectedOption === '#') {
+      localStorage.removeItem('currentUser');
+      this.router.navigate(['/']);
     }
-  
-    // Reset dropdown selection after action
+
     (event.target as HTMLSelectElement).selectedIndex = 0;
   }
   

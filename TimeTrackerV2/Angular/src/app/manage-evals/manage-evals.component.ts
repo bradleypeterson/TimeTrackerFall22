@@ -7,6 +7,7 @@ import { environment } from '../../environments/environment';
 interface EvalTemplate {
   templateID: string;
   templateName: string;
+  isArchived: boolean;
 }
 
 interface Question {
@@ -33,17 +34,20 @@ export class ManageEvalsComponent implements OnInit {
   templates: EvalTemplate[] = [];
   selectedTemplateQuestions: Question[] = [];
   selectedTemplateId: string | null = null;
+  selectedTemplateName = '';
   newTemplateName: string = '';
+  renameTemplateName: string = '';
+  templateToRename: EvalTemplate | null = null;
   showQuestionModal = false;
+  showRenameModal = false;
   newQuestionText = '';
   newQuestionType = '';
-  defaultTemplateId = '1';
   initialQuestionsState: Record<string, Question> = {};
   currentUser: any;
   evaluatorID: string = '';
   saveSuccessful: boolean = false;
-  isEvalSelected: boolean = false;
-  isFormChanged: boolean = false;
+  statusMessage = '';
+  errorMessage = '';
 
   constructor(private http: HttpClient) {}
 
@@ -52,14 +56,6 @@ export class ManageEvalsComponent implements OnInit {
     this.loadTemplates();
     // this.loadDefaultTemplate();
     this.LoadQuestionTypes();
-  }
-
-  onEvalSelected() {
-    this.isEvalSelected = true;
-  }
-
-  onEvalDeselected() {
-    this.isEvalSelected = false;
   }
 
   private getCurrentUser() {
@@ -77,13 +73,17 @@ export class ManageEvalsComponent implements OnInit {
     this.http
       .get<EvalTemplate[]>(
         `${environment.apiURL}/api/templates/${this.evaluatorID}`
+        + '?includeArchived=true'
       )
       .subscribe(
         (data) => {
           this.templates = data;
           console.log('Fetched Templates:', data);
         },
-        (error) => console.error('Error fetching templates:', error)
+        (error) => {
+          this.errorMessage = error.error?.message || 'Unable to load evaluation forms.';
+          console.error('Error fetching templates:', error);
+        }
       );
   }
 
@@ -95,17 +95,21 @@ export class ManageEvalsComponent implements OnInit {
           this.questionTypes = data;
           console.log('Fetched question types:', data);
         },
-        (error) => console.error('Error fetching question types:', error)
+        (error) => {
+          this.errorMessage = error.error?.message || 'Unable to load question types.';
+          console.error('Error fetching question types:', error);
+        }
       );
   }
 
-  onTemplateSelect(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const templateId = selectElement.value;
-    this.selectedTemplateId = templateId;
+  selectTemplate(template: EvalTemplate) {
+    this.selectedTemplateId = template.templateID;
+    this.selectedTemplateName = template.templateName;
+    this.statusMessage = '';
+    this.errorMessage = '';
 
     this.http
-      .get<Question[]>(`${environment.apiURL}/api/questions/${templateId}`)
+      .get<Question[]>(`${environment.apiURL}/api/questions/${template.templateID}`)
       .subscribe(
         (data) => {
           this.selectedTemplateQuestions = data;
@@ -113,7 +117,10 @@ export class ManageEvalsComponent implements OnInit {
           this.storeInitialState(data);
           console.log('Fetched Questions:', data);
         },
-        (error) => console.error('Error fetching questions:', error)
+        (error) => {
+          this.errorMessage = error.error?.message || 'Unable to load evaluation questions.';
+          console.error('Error fetching questions:', error);
+        }
       );
   }
 
@@ -134,7 +141,10 @@ export class ManageEvalsComponent implements OnInit {
             this.selectedTemplateQuestions = data;
             console.log('Fetched Questions:', data);
           },
-          (error) => console.error('Error fetching questions:', error)
+          (error) => {
+            this.errorMessage = error.error?.message || 'Unable to load evaluation questions.';
+            console.error('Error fetching questions:', error);
+          }
         );
     }
   }
@@ -154,8 +164,9 @@ export class ManageEvalsComponent implements OnInit {
       )
       .subscribe(
         () => {
-          // alert('Template created successfully!');
-          this.loadTemplates(); // Reload templates to include the new one
+          this.loadTemplates();
+          this.statusMessage = 'Evaluation form created.';
+          this.newTemplateName = '';
           this.showModal = false;
         },
         (error) => {
@@ -163,6 +174,65 @@ export class ManageEvalsComponent implements OnInit {
           console.error('Error creating template:', error);
         }
       );
+  }
+
+  openRenameModal(template: EvalTemplate) {
+    this.templateToRename = template;
+    this.renameTemplateName = template.templateName;
+    this.showRenameModal = true;
+  }
+
+  renameTemplate() {
+    if (!this.templateToRename || !this.renameTemplateName.trim()) {
+      return;
+    }
+
+    this.http
+      .put(
+        `${environment.apiURL}/api/templates/${this.templateToRename.templateID}`,
+        {
+          evaluatorID: this.evaluatorID,
+          templateName: this.renameTemplateName,
+        }
+      )
+      .subscribe(
+        () => {
+          this.loadTemplates();
+          this.statusMessage = 'Evaluation form renamed.';
+          this.showRenameModal = false;
+          this.templateToRename = null;
+          this.renameTemplateName = '';
+        },
+        (error) => {
+          alert(error.error?.message || 'Unable to rename the evaluation form.');
+        }
+      );
+  }
+
+  archiveTemplate(template: EvalTemplate) {
+      if (!confirm(`Archive "${template.templateName}"? It will remain available for history but cannot be assigned again.`)) {
+        return;
+      }
+
+      this.http
+        .post(
+          `${environment.apiURL}/api/templates/${template.templateID}/archive`,
+          { evaluatorID: this.evaluatorID }
+        )
+        .subscribe(
+          () => {
+            if (this.selectedTemplateId === template.templateID) {
+              this.selectedTemplateId = null;
+              this.selectedTemplateName = '';
+              this.selectedTemplateQuestions = [];
+            }
+            this.loadTemplates();
+            this.statusMessage = 'Evaluation form archived.';
+          },
+          (error) => {
+            alert(error.error?.message || 'Unable to archive the evaluation form.');
+          }
+        );
   }
 
   addQuestion() {
@@ -184,14 +254,16 @@ export class ManageEvalsComponent implements OnInit {
 
     this.http.post(`${environment.apiURL}/api/AddQuestion`, payload).subscribe(
       () => {
-        // alert('Question added successfully!');
         this.reloadQuestions();
         this.showQuestionModal = false;
         this.newQuestionText = '';
         this.newQuestionType = '';
+        this.statusMessage = '1 question added successfully.';
+        this.errorMessage = '';
       },
       (error) => {
-        alert('Error updating question!');
+        this.errorMessage = error.error?.message || 'Unable to add the question. Please try again.';
+        this.statusMessage = '';
         console.error('Error adding question:', error);
       }
     );
@@ -204,11 +276,13 @@ export class ManageEvalsComponent implements OnInit {
       .delete(`${environment.apiURL}/api/deleteQuestion/${questionID}`)
       .subscribe(
         () => {
-          // alert('Question deleted successfully!');
           this.reloadQuestions();
+          this.statusMessage = '1 question deleted successfully.';
+          this.errorMessage = '';
         },
         (error) => {
-          alert('Error creating deleting question. Please try again.');
+          this.errorMessage = error.error?.message || 'Unable to delete the question. Please try again.';
+          this.statusMessage = '';
           console.error('Error deleting question:', error);
         }
       );
@@ -235,7 +309,8 @@ export class ManageEvalsComponent implements OnInit {
       .filter(Boolean);
 
     if (updates.length === 0) {
-      console.error('No changes to submit');
+      this.statusMessage = 'There are no question changes to save.';
+      this.errorMessage = '';
       return;
     }
     const updateRequests = updates.map((update) =>
@@ -248,13 +323,16 @@ export class ManageEvalsComponent implements OnInit {
     forkJoin(updateRequests).subscribe(
       () => {
         this.reloadQuestions();
+        this.statusMessage = 'Question changes saved successfully.';
+        this.errorMessage = '';
         this.saveSuccessful = true; // Show success message
         setTimeout(() => {
           this.saveSuccessful = false;
         }, 3000);
       },
       (error) => {
-        alert('Error updating questions. Please try again.');
+        this.errorMessage = error.error?.message || 'Unable to save question changes. Please try again.';
+        this.statusMessage = '';
         console.error('Error updating questions:', error);
       }
     );

@@ -1,4 +1,6 @@
 <button class="btn btn-purple btn-sm" (click)="GoBackToCourse()">Back to Course</button>
+<div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+<div *ngIf="errMsg" class="alert alert-danger">{{ errMsg }}</div>
 <h2>{{project?.projectName}}</h2>
 
 <!-- Instructor Add Students, Edit, and Delete buttons -->
@@ -51,10 +53,10 @@
                 </div>
                 <!--Start/Stop Buttons-->
                 <div class="gap-2 d-md-flex justify-content-md-center">
-                    <button (click)="toggleTimer()" type="button" class="btn"
-                        [class.btn-success]="!TimerRunning" [class.btn-danger]="TimerRunning">
-                        {{ TimerRunning ? "Stop" : "Start" }}
-                    </button>
+                  <button (click)="toggleTimer()" type="button" class="btn"
+                          [class.btn-success]="!TimerRunning" [class.btn-danger]="TimerRunning">
+                    {{ TimerRunning ? "Stop" : "Start" }}
+                  </button>cd C:\Users\arave\Desktop\DockerTest
                 </div>
                 <!--Submit Button-->
                 <div class="gap-4 d-md-flex justify-content-md-center">
