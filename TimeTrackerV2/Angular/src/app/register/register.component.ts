@@ -11,6 +11,9 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
+  public showPassword = false;
+  public showRepeatPassword = false;
+
   public pageTitle = 'TimeTrackerV2 | Register';
   public errMsg = '';
   // Message to show user who registers as instructor
