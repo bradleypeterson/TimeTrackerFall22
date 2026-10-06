@@ -23,3 +23,13 @@
 .history-table .btn {
     white-space: nowrap;
 }
+
+@media (min-width: 992px) {
+    .project-content {
+        max-width: 60rem;
+    }
+
+    .project-content .chart-container {
+        max-width: 20rem;
+    }
+}
