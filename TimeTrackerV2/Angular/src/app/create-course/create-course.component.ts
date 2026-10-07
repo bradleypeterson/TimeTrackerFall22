@@ -13,6 +13,7 @@ export class CreateCourseComponent implements OnInit {
   public errMsg = '';
 
   public currentUser: any;
+  public instructors: any[] = [];
 
   constructor(
     private formBuilder: UntypedFormBuilder,
@@ -26,12 +27,29 @@ export class CreateCourseComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.currentUser?.type === 'admin') {
+      this.loadInstructors();
+    }
+  }
 
+  loadInstructors(): void {
+    this.http.get<any[]>(`${environment.apiURL}/api/Users`).subscribe({
+      next: (users) => {
+        this.instructors = users.filter((user) => user.type === 'instructor');
+        this.errMsg = this.instructors.length === 0
+          ? 'No instructors are available. Add an instructor before creating a course.'
+          : '';
+      },
+      error: (error) => {
+        this.errMsg = error.error?.message || 'Unable to load instructors.';
+      },
+    });
   }
 
   createCourseForm = this.formBuilder.group({
     courseName: '',
     description: '',
+    instructorID: '',
   });
 
   onSubmit(): void {
@@ -40,11 +58,20 @@ export class CreateCourseComponent implements OnInit {
         return;
     }
 
+    const instructorID = this.currentUser?.type === 'admin'
+      ? this.createCourseForm.value['instructorID']
+      : this.currentUser.userID;
+    if (this.currentUser?.type === 'admin' && !this.instructors.some(
+      (instructor) => String(instructor.userID) === String(instructorID)
+    )) {
+      return;
+    }
+
     let payload = {
       courseName: this.createCourseForm.value['courseName'],
       description: this.createCourseForm.value['description'],
       isActive: true,
-      instructorID: this.currentUser.userID,
+      instructorID: instructorID,
     }
 
     this.http
