@@ -1,6 +1,8 @@
 <div id="project-students">
   <button class="btn btn-purple btn-sm" (click)="NavigateBackToProject()">Back to Project</button>
-  <h2>Add Students to {{project?.projectName}}</h2>
+  <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+  <div *ngIf="errMsg" class="alert alert-danger">{{ errMsg }}</div>
+  <h2>Manage Students in {{project?.projectName}}</h2>
   <hr>
 
   <h3>Students in Project</h3>

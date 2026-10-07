@@ -1,4 +1,6 @@
 <!--#region Student Dashboard-->
+<div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+<div *ngIf="errMsg" class="alert alert-danger">{{ errMsg }}</div>
 <div id="dashboard">
   <h2 class="dashboard-head">Dashboard</h2>
   <div *ngIf="student">

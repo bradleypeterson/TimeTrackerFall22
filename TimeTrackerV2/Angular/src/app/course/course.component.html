@@ -1,4 +1,7 @@
 <div id="course">
+  <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+  <div *ngIf="errMsg" class="alert alert-danger">{{ errMsg }}</div>
+
   <div class="d-flex flex-wrap align-items-center gap-2">
     <h2 class="course-head mb-0">{{course?.courseName}}</h2>
     <div [ngSwitch]="true">

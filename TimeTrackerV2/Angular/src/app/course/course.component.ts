@@ -13,6 +13,7 @@ export class CourseComponent implements OnInit {
   public course: any;
   public projects: any = [];  // This is redundant information, if the user is not part of any project, or the variable allUserGroups size is 0, then the variable nonUserGroups contains every project for the course.  I am however am not the one that created this logic so I am not removing it because I don't know if it is used in local storage in anywhere else but here, it will simply not be used in the HTML for the component.
   public errMsg = '';
+  public successMsg = '';
   public allUserGroups: any = [];
   public nonUserGroups: any = [];
   public filteredProjects: any = [];  // This is redundant information because of the same reason as stated above.
@@ -238,6 +239,7 @@ export class CourseComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
+          this.successMsg = 'You joined the project.';
           this.loadPage();
         },
         error: (error) => {
@@ -261,6 +263,7 @@ export class CourseComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
+          this.successMsg = 'You left the project.';
           this.loadPage();
         },
         error: (error) => {

@@ -11,6 +11,7 @@ import { environment } from '../../environments/environment';
 export class CoursesComponent implements OnInit {
   public pageTitle = 'TimeTrackerV2 | Courses';
   public errMsg = '';
+  public successMsg = '';
   public courses: any = [];
   public allUserCourses: any = [];
   public nonUserCourses: any = [];
@@ -171,6 +172,7 @@ export class CoursesComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
+          this.successMsg = 'Course registration request submitted.';
           this.loadCourses();
         },
         error: (error) => {
@@ -194,6 +196,7 @@ export class CoursesComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
+          this.successMsg = 'You dropped the course.';
           this.loadCourses();
         },
         error: (error) => {
@@ -223,6 +226,7 @@ export class CoursesComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
+          this.successMsg = 'Course registration request cancelled.';
           this.loadCourses();
         },
         error: (error) => {

@@ -27,12 +27,6 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     localStorage.removeItem('currentUser');
-    if (!localStorage.getItem('foo')) {
-      localStorage.setItem('foo', 'no reload');
-      location.reload();
-    } else {
-      localStorage.removeItem('foo');
-    }
     this.defaultAdminCreated();
   }
 

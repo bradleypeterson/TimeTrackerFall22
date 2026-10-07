@@ -18,6 +18,7 @@ import { environment } from '../../environments/environment';
 export class ProjectComponent implements OnInit {
     public pageTitle = 'TimeTrackerV2 | Project'
     public errMsg = '';
+    public successMsg = '';
     public project: any;
     public projectUsers: any;
     public projectUserTimes: any;
@@ -370,6 +371,7 @@ export class ProjectComponent implements OnInit {
           .subscribe({
             next: (data) => {
               this.errMsg = '';
+              this.successMsg = 'Time entry saved.';
               console.log(`contents of \"req.isEdited\":` + req.isEdited);
 
               // Clear the input inside the form
@@ -418,6 +420,7 @@ export class ProjectComponent implements OnInit {
           .subscribe({
             next: (data) => {
               this.errMsg = '';
+              this.successMsg = 'Time entry saved.';
               console.log(`contents of \"req.isEdited\":` + req.isEdited);
 
               // Clear the inputs inside the form
@@ -559,7 +562,10 @@ export class ProjectComponent implements OnInit {
             this.http.post<any>(`${environment.apiURL}/api/deleteTimeCard/`, req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
                 next: data => {
                     this.errMsg = "";
-                    window.location.reload();
+                    this.successMsg = 'Time entry deleted.';
+                    this.p = 1;
+                    this.getActivities();
+                    this.loadProjectUserTimes();
                 },
                 error: error => {
                     this.errMsg = error['error']['message'];
@@ -603,6 +609,7 @@ export class ProjectComponent implements OnInit {
           .subscribe({
             next: (data) => {
               this.errMsg = '';
+              this.successMsg = 'Time entry saved.';
               console.log(`contents of \"req.isEdited\":` + req.isEdited);
 
               // Clear the inputs inside the form
