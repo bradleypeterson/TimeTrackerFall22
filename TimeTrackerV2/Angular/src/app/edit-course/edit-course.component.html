@@ -16,9 +16,17 @@
             <label class="form-check-label" for="isActive">Active Course</label>
         </div>
 
+        <div class="form-group" *ngIf="currentUser?.type === 'admin' && course?.courseID">
+            <label for="instructorID">Instructor</label>
+            <select id="instructorID" formControlName="instructorID" class="form-control" required>
+                <option *ngIf="!hasCurrentInstructor" [value]="instructorID">Current assignment (User #{{ instructorID }})</option>
+                <option *ngFor="let instructor of instructors" [value]="instructor.userID">{{ instructor.firstName }} {{ instructor.lastName }}</option>
+            </select>
+        </div>
+
         <div class="btn-group">
-            <button type="submit" class="btn btn-success" [disabled]="!(editCourseForm.controls.courseName.valid && editCourseForm.controls.description.valid)">Save Changes</button>
-            <button class="btn btn-danger" (click)="GoBackToCourse()">Cancel</button>
+            <button type="submit" class="btn btn-success" [disabled]="!course?.courseID || !editCourseForm.valid">Save Changes</button>
+            <button type="button" class="btn btn-danger" (click)="GoBackToCourse()">Cancel</button>
         </div>
     </form>
 </div>
