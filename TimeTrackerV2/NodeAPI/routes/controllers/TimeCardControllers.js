@@ -250,36 +250,47 @@ exports.DeleteTimeCard = async (req, res, next) => {
 }
 
 exports.EditTimeCard = async (req, res, next) => {
-    console.log("TimeCardControllers.js file/EditTimeCard route called");
+    const description = req.body.description;
 
-    let data = [];
-    data[0] = req.body["timeIn"];
-    data[1] = req.body["timeOut"];
-    data[2] = req.body["timeslotID"];
+    if (description !== undefined && typeof description !== 'string') {
+        return res.status(400).json({
+            message: 'Description must be text.'
+        });
+    }
 
-    sql = `UPDATE TimeCard
-    SET timeIn = ?, timeOut = ?
-    WHERE timeslotID = ?`;
+    const data = [
+        req.body.timeIn,
+        req.body.timeOut,
+        description ?? null,
+        req.body.timeslotID
+    ];
 
-    db.run(sql, data, function (err, rows) {
+    const sql = `UPDATE TimeCard
+        SET timeIn = ?, timeOut = ?, description = COALESCE(?, description)
+        WHERE timeslotID = ?`;
+
+    db.run(sql, data, function (err) {
         if (err) {
-            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
-        } else {
-            return res.status(200).json({ project: data });
+            return res.status(500).json({
+                message: 'Something went wrong. Please try again later.'
+            });
         }
+
+        return res.status(200).json({ project: data });
     });
-}
+};
 
 exports.GetTimeCardInfo = (req, res) => {
     console.log("TimeCardControllers.js file/GetTimeCardInfo route called");
 
-    let timeslotID = req.params["timeslotID"];
+    let timeslotID = req.params["id"];
     console.log("timeslotID: " + timeslotID);
 
-    let sql = `SELECT u.firstName || " " || u.lastName AS studentName, t.timeIn, t.timeOut
-		FROM TimeCard t
-        INNER JOIN Users u ON u.userID = t.userID
-        WHERE t.timeslotID = ?`;
+    let sql = `SELECT u.firstName || " " || u.lastName AS studentName,
+                  t.timeIn, t.timeOut, t.description
+    FROM TimeCard t
+    INNER JOIN Users u ON u.userID = t.userID
+    WHERE t.timeslotID = ?`;
 
     db.all(sql, [timeslotID], (err, rows) => {
         if (err) {
