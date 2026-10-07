@@ -87,7 +87,7 @@
 <!--#region Instructor Dashboard-->
   <div *ngIf="instructor">
     <div>
-      <h3 class="box-head rounded">Courses</h3>
+      <h3 class="box-head rounded">{{ admin ? "All Courses" : "Courses" }}</h3>
       <!-- This class will make the below button come next to it so they are on one line -->
       <a href="/create-course" class="btn btn-success btn-courses rounded">Create New Course</a>
       <a href="/past-courses" class="btn btn-purple btn-courses rounded">View Past Courses</a>
@@ -95,7 +95,7 @@
     </div>
     <hr />
     <div class="alert alert-danger" *ngIf="courses?.length <= 0">
-      You have not created any courses.
+      {{ admin ? "No courses have been created." : "You have no active courses assigned." }}
     </div>
     <div class="row">
       <div class="col-sm-3 mb-3" *ngFor="let c of courses">
