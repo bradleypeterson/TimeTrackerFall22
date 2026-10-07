@@ -111,9 +111,11 @@ export class DashboardComponent implements OnInit {
   }
 
   loadCourses(): void {
-    // attempt to pull only the courses the instructor has created
+    // Admins load all courses; instructors load their assigned active courses.
     if (this.instructor) {
-      var request = `${environment.apiURL}/api/Courses/${this.userID}`;
+      var request = this.admin
+        ? `${environment.apiURL}/api/Courses`
+        : `${environment.apiURL}/api/Courses/${this.userID}`;
       this.http.get(request).subscribe((data: any) => {
         console.log(data);
         this.courses = data;

@@ -1,82 +1,83 @@
 <!-- ng-cloak ng-if="loaded" -->
 
 <div id="users">
-  <div class="row g-2">
+  <h2 class="mb-3">Users</h2>
+  <div class="row">
     <!-- ng-model="search"  -->
 
     <form
       [formGroup]="searchForm"
       (ngSubmit)="filterUsers()"
-      class="col-6 mx-auto"
+      class="col-12 mb-3"
     >
-      <div>
-        <h4>Filter By:</h4>
-      </div>
-      <!-- mb/mt stand for margin bottom/top -->
-      <div class="input-group mb-1 mt-2">
-        <br />
-        <span class="input-group-text">Name</span>
-        <input
-          formControlName="name"
-          type="text"
-          id="name"
-          class="form-control"
-        />
-      </div>
-
-      <div class="input-group mb-1 mt-2">
-        <span class="input-group-text">Active</span>
-        <select
-          formControlName="active"
-          id="isActive"
-          class="form-select form-control"
-        >
-          <option value="" selected></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
-      </div>
-
-      <div class="input-group mb-1 mt-2">
-        <span class="input-group-text">Approved</span>
-        <select
-          formControlName="approved"
-          id="isApproved"
-          class="form-select form-control"
-        >
-          <option value="" selected></option>
-          <option value="true">True</option>
-          <option value="false">False</option>
-        </select>
-      </div>
-
-      <div class="input-group mb-1">
-        <span class="input-group-text">User Type</span>
-        <select
-          formControlName="type"
-          id="type"
-          class="form-select form-control"
-        >
-          <option value="" selected></option>
-          <option value="student">Student</option>
-          <option value="instructor">Instructor</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div>
-
-      <div class="mb-1 text-center">
-        <button class="btn btn-purple btn-elevated" type="submit">
-          Search
-        </button>
-        <button class="btn btn-purple btn-elevated" type="reset">Clear</button>
+      <h3 class="h6 mb-2">Filter users</h3>
+      <div class="row g-2">
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="input-group">
+            <span class="input-group-text">Name</span>
+            <input
+              formControlName="name"
+              type="text"
+              id="name"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="input-group">
+            <span class="input-group-text">Active</span>
+            <select
+              formControlName="active"
+              id="isActive"
+              class="form-select form-control"
+            >
+              <option value="" selected></option>
+              <option value="true">True</option>
+              <option value="false">False</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="input-group">
+            <span class="input-group-text">Approved</span>
+            <select
+              formControlName="approved"
+              id="isApproved"
+              class="form-select form-control"
+            >
+              <option value="" selected></option>
+              <option value="true">True</option>
+              <option value="false">False</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+          <div class="input-group">
+            <span class="input-group-text">User Type</span>
+            <select
+              formControlName="type"
+              id="type"
+              class="form-select form-control"
+            >
+              <option value="" selected></option>
+              <option value="student">Student</option>
+              <option value="instructor">Instructor</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-12 d-flex gap-2">
+          <button class="btn btn-purple" type="submit">
+            Search
+          </button>
+          <button class="btn btn-purple" type="reset">Clear</button>
+        </div>
       </div>
     </form>
   </div>
 
-  <div>
-    <h3>Users</h3>
-  </div>
-  <table class="table table-hover">
+  <div class="table-responsive">
+  <table class="table table-hover table-sm align-middle">
     <thead>
       <tr>
         <th>Name</th>
@@ -84,7 +85,7 @@
         <th class="text-center">Active</th>
         <th class="text-center">Approved</th>
         <th class="text-center d-none d-sm-table-cell">Type</th>
-        <th class="text-center"></th>
+        <th class="text-center">Actions</th>
       </tr>
     </thead>
 
@@ -173,7 +174,7 @@
           </select>
         </td>
 
-        <td class="text-center d-none d-sm-table-cell">
+        <td class="text-center">
           <button
             *ngIf="UserModified(u)"
             type="button"
@@ -187,6 +188,7 @@
       <!-- To be moved to the profile page for the selected user -->
     </tbody>
   </table>
+  </div>
   <div *ngIf="errMsg != ''" class="alert alert-danger">
     {{ errMsg }}
   </div>

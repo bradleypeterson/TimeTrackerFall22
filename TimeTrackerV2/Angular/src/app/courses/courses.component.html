@@ -6,16 +6,16 @@
   <hr />
 
   <!-- ng-model="search" ??? -->
-  <form class="form-inline mb-3" (ngSubmit)="searchCourses()">
+  <form class="d-flex flex-column flex-sm-row gap-2 mb-3" (ngSubmit)="searchCourses()">
     <input
-      class="form-control mr-3"
+      class="form-control"
       [(ngModel)]="searchQuery"
       name="searchQuery"
       type="text"
       placeholder="Search for a course"
       aria-label="Search courses"
     />
-    <button class="btn btn-purple btn-elevated" type="submit">Search</button>
+    <button class="btn btn-purple btn-elevated align-self-start flex-shrink-0" type="submit">Search</button>
   </form>
 
   <!-- Alert Message for No Courses Found -->
@@ -54,14 +54,14 @@
             <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
             <td class="desc">{{ c.description }}</td>
             <td>
-              <div>
+              <div class="d-flex flex-wrap gap-2">
                 <button
-                  class="btn btn-purple me-2"
+                  class="btn btn-purple"
                   (click)="GoToCourse(c.courseID)"
                 >
                   View
                 </button>
-                <button class="btn btn-danger me-2" (click)="drop(c.courseID)">
+                <button class="btn btn-danger" (click)="drop(c.courseID)">
                   Drop
                 </button>
               </div>
@@ -74,15 +74,15 @@
             <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
             <td class="desc">{{ c.description }}</td>
             <td>
-              <div>
+              <div class="d-flex flex-wrap gap-2">
                 <button
-                  class="btn btn-purple me-2"
+                  class="btn btn-purple"
                   (click)="GoToCourse(c.courseID)"
                 >
                   View
                 </button>
                 <button
-                  class="btn btn-success me-2"
+                  class="btn btn-success"
                   (click)="register(c.courseID)"
                 >
                   Register
@@ -97,6 +97,7 @@
 
   <!---->
   <h3 *ngIf="PendUserCourses.length > 0" class="sub-head">Pending Courses</h3>
+  <div class="table-responsive">
   <table class="table table-hover" *ngIf="PendUserCourses.length > 0">
     <thead>
       <tr>
@@ -112,14 +113,14 @@
         <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
         <td class="desc">{{ c.description }}</td>
         <td>
-          <div>
+          <div class="d-flex flex-wrap gap-2">
             <button
-              class="btn btn-purple me-2"
+              class="btn btn-purple"
               (click)="GoToCourse(c.courseID)"
             >
               View
             </button>
-            <button class="btn btn-danger me-2" (click)="cancel(c.courseID)">
+            <button class="btn btn-danger" (click)="cancel(c.courseID)">
               Cancel
             </button>
           </div>
@@ -127,8 +128,10 @@
       </tr>
     </tbody>
   </table>
+  </div>
   <!---->
   <h3 class="sub-head">Student Courses</h3>
+  <div class="table-responsive">
   <table class="table table-hover">
     <thead>
       <tr>
@@ -144,14 +147,14 @@
         <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
         <td class="desc">{{ c.description }}</td>
         <td>
-          <div>
+          <div class="d-flex flex-wrap gap-2">
             <button
-              class="btn btn-purple me-2"
+              class="btn btn-purple"
               (click)="GoToCourse(c.courseID)"
             >
               View
             </button>
-            <button class="btn btn-danger me-2" (click)="drop(c.courseID)">
+            <button class="btn btn-danger" (click)="drop(c.courseID)">
               Drop
             </button>
           </div>
@@ -159,8 +162,10 @@
       </tr>
     </tbody>
   </table>
+  </div>
 
   <h3 class="sub-head">Register for Courses</h3>
+  <div class="table-responsive">
   <table class="table table-hover">
     <thead>
       <tr>
@@ -177,14 +182,14 @@
         <td>{{ c.instructorFN }} {{ c.instructorLN }}</td>
         <td class="desc">{{ c.description }}</td>
         <td>
-          <div>
+          <div class="d-flex flex-wrap gap-2">
             <button
-              class="btn btn-purple me-2"
+              class="btn btn-purple"
               (click)="GoToCourse(c.courseID)"
             >
               View
             </button>
-            <button class="btn btn-success me-2" (click)="register(c.courseID)">
+            <button class="btn btn-success" (click)="register(c.courseID)">
               Register
             </button>
           </div>
@@ -192,4 +197,5 @@
       </tr>
     </tbody>
   </table>
+  </div>
 </div>
