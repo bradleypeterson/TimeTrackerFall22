@@ -44,12 +44,12 @@
       </tbody>
     </table>
     <div class="row">
-      <div class="col-sm-3 mb-3" *ngFor="let c of courses">
-        <div class="card">
+      <div class="col-12 col-md-6 col-lg-3 mb-3" *ngFor="let c of courses">
+        <div class="card h-100">
           <h5 class="card-header">{{ c.courseName }}</h5>
-          <div class="card-body">
+          <div class="card-body d-flex flex-column">
             <p class="card-text">{{ c.description }}</p>
-            <button class="btn btn-purple btn-sm rounded" (click)="GoToCourse(c.courseID)">
+            <button class="btn btn-purple btn-sm rounded mt-auto align-self-start" (click)="GoToCourse(c.courseID)">
               View Course
             </button>
           </div>
@@ -63,13 +63,13 @@
       You are not assigned any projects.
     </div>
     <div class="row">
-      <div class="col-sm-3 mb-3" *ngFor="let p of projects">
-        <div class="card">
+      <div class="col-12 col-md-6 col-lg-3 mb-3" *ngFor="let p of projects">
+        <div class="card h-100">
           <h5 class="card-header">{{ p.projectName }}</h5>
-          <div class="card-body">
+          <div class="card-body d-flex flex-column">
             <h5 class="card-title">{{ p.courseName }}</h5>
             <p class="card-text">{{ p.description }}</p>
-            <div class="course-btns">
+            <div class="course-btns mt-auto">
               <button class="btn btn-purple rounded" (click)="GoToProject(p.projectID)">
                 View Project
               </button>
@@ -98,12 +98,12 @@
       You have not created any courses.
     </div>
     <div class="row">
-      <div class="col-sm-3 mb-3" *ngFor="let c of courses">
-        <div class="card">
+      <div class="col-12 col-md-6 col-lg-3 mb-3" *ngFor="let c of courses">
+        <div class="card h-100">
           <h5 class="card-header">{{ c.courseName }}</h5>
-          <div class="card-body">
+          <div class="card-body d-flex flex-column">
             <p class="card-text">{{ c.description }}</p>
-            <button class="btn btn-purple btn-sm rounded" (click)="GoToCourse(c.courseID)">
+            <button class="btn btn-purple btn-sm rounded mt-auto align-self-start" (click)="GoToCourse(c.courseID)">
               View Course
             </button>
           </div>
@@ -167,11 +167,11 @@
       No users have been created.
     </div>
     <div class="row">
-      <div class="col-sm-3 mb-3" *ngFor="let u of recentUsers">
-        <div class="card">
+      <div class="col-12 col-md-6 col-lg-3 mb-3" *ngFor="let u of recentUsers">
+        <div class="card h-100">
           <h5 class="card-header">{{ u.firstName }} {{ u.lastName }}</h5>
-          <div class="card-body">
-            <p class="card-text"><button class="btn btn-purple btn-sm rounded" (click)="ViewProfile(u.userID)">View
+          <div class="card-body d-flex flex-column">
+            <p class="card-text mt-auto mb-0"><button class="btn btn-purple btn-sm rounded" (click)="ViewProfile(u.userID)">View
                 Profile</button></p>
           </div>
         </div>
@@ -184,12 +184,12 @@
       No courses have been created.
     </div>
     <div class="row">
-      <div class="col-sm-3 mb-3" *ngFor="let c of recentCourses">
-        <div class="card">
+      <div class="col-12 col-md-6 col-lg-3 mb-3" *ngFor="let c of recentCourses">
+        <div class="card h-100">
           <h5 class="card-header">{{ c.courseName }}</h5>
-          <div class="card-body">
+          <div class="card-body d-flex flex-column">
             <p class="card-text">{{c.firstName}} {{ c.lastName }} <br> {{ c.description }}</p>
-            <button class="btn btn-purple btn-sm rounded" (click)="GoToCourse(c.courseID)">
+            <button class="btn btn-purple btn-sm rounded mt-auto align-self-start" (click)="GoToCourse(c.courseID)">
               View Course
             </button>
           </div>
@@ -203,17 +203,19 @@
       No projects have been created.
     </div>
     <div class="row">
-      <div class="col-sm-3 mb-3" *ngFor="let p of recentProjects">
-        <div class="card">
+      <div class="col-12 col-md-6 col-lg-3 mb-3" *ngFor="let p of recentProjects">
+        <div class="card h-100">
           <h5 class="card-header">{{ p.projectName }}</h5>
-          <div class="card-body">
+          <div class="card-body d-flex flex-column">
             <p class="card-text">{{ p.firstName}} {{ p.lastName }} <br> {{ p.description }}</p>
-            <button class="btn btn-purple btn-sm rounded" (click)="GoToProject(p.projectID)">
-              View Project
-            </button>
-            <button class="btn btn-purple btn-sm btn-spacing rounded" (click)="GoToCourse(p.courseID)">
-              View Course
-            </button>
+            <div class="mt-auto">
+              <button class="btn btn-purple btn-sm rounded" (click)="GoToProject(p.projectID)">
+                View Project
+              </button>
+              <button class="btn btn-purple btn-sm btn-spacing rounded" (click)="GoToCourse(p.courseID)">
+                View Course
+              </button>
+            </div>
           </div>
         </div>
       </div>
