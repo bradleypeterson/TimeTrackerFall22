@@ -39,17 +39,17 @@ test('an empty roster returns HTTP 200 with []', () => {
 
 test('nonempty reports keep student grouping, projects, and recorded totals', () => {
     const response = getReports([
-        { userID: 3, studentName: 'Pluto The Dog', projectID: 10, projectName: 'First', totalTime: 3600000 },
-        { userID: 3, studentName: 'Pluto The Dog', projectID: 11, projectName: 'Second', totalTime: 60000 },
-        { userID: 4, studentName: 'Student Two', projectID: 10, projectName: 'First', totalTime: 120000 },
+        { userID: 3, studentName: 'Student A', projectID: 10, projectName: 'First', totalTime: 3600000 },
+        { userID: 3, studentName: 'Student A', projectID: 11, projectName: 'Second', totalTime: 60000 },
+        { userID: 4, studentName: 'Student B', projectID: 10, projectName: 'First', totalTime: 120000 },
     ]);
     assert.equal(response.statusCode, 200);
     assert.deepEqual(response.body, [
-        { userID: 3, studentName: 'Pluto The Dog', projects: [
+        { userID: 3, studentName: 'Student A', projects: [
             { projectID: 10, projectName: 'First', totalTime: 3600000 },
             { projectID: 11, projectName: 'Second', totalTime: 60000 },
         ] },
-        { userID: 4, studentName: 'Student Two', projects: [
+        { userID: 4, studentName: 'Student B', projects: [
             { projectID: 10, projectName: 'First', totalTime: 120000 },
         ] },
     ]);
@@ -57,10 +57,10 @@ test('nonempty reports keep student grouping, projects, and recorded totals', ()
 
 test('a student without projects retains the existing null project fields', () => {
     const response = getReports([
-        { userID: 3, studentName: 'Pluto The Dog', projectID: null, projectName: null, totalTime: null },
+        { userID: 3, studentName: 'Student A', projectID: null, projectName: null, totalTime: null },
     ]);
     assert.deepEqual(response.body, [
-        { userID: 3, studentName: 'Pluto The Dog', projects: [
+        { userID: 3, studentName: 'Student A', projects: [
             { projectID: null, projectName: null, totalTime: null },
         ] },
     ]);

@@ -15,10 +15,10 @@ describe('CourseReportsComponent refresh', () => {
   const reportURL = `${environment.apiURL}/api/Course/2/GetReportsData`;
   const removalURL = `${environment.apiURL}/api/deleteUserCourse/`;
   const reports = [
-    { userID: 3, studentName: 'Pluto The Dog', projects: [
+    { userID: 3, studentName: 'Student A', projects: [
       { projectID: 2, projectName: 'History Project', totalTime: 3600000 },
     ] },
-    { userID: 4, studentName: 'Goofy', projects: [
+    { userID: 4, studentName: 'Student B', projects: [
       { projectID: null, projectName: null, totalTime: null },
     ] },
   ];
@@ -53,10 +53,10 @@ describe('CourseReportsComponent refresh', () => {
 
   it('keeps project totals and students without projects in a nonempty roster', () => {
     expect(component.studentReports).toEqual([
-      { id: 3, studentName: 'Pluto The Dog', projects: [
+      { id: 3, studentName: 'Student A', projects: [
         { id: 2, name: 'History Project', totalTime: 3600000 },
       ] },
-      { id: 4, studentName: 'Goofy', projects: [
+      { id: 4, studentName: 'Student B', projects: [
         { id: null as any, name: null as any, totalTime: null as any },
       ] },
     ]);
@@ -67,7 +67,7 @@ describe('CourseReportsComponent refresh', () => {
   });
 
   it('clears reports, search results, and expanded cards on an empty refresh', () => {
-    component.studentSearchQuery = 'Pluto';
+    component.studentSearchQuery = 'Student A';
     component.searchStudents();
     component.expandedCards = { 3: true, 4: false };
     component.getStudentReports(2);
@@ -77,7 +77,7 @@ describe('CourseReportsComponent refresh', () => {
     expect(component.studentReports).toEqual([]);
     expect(component.filteredStudents).toEqual([]);
     expect(component.expandedCards).toEqual({});
-    expect(component.studentSearchQuery).toBe('Pluto');
+    expect(component.studentSearchQuery).toBe('Student A');
     expect(component.filtering).toBeTrue();
     expect(fixture.nativeElement.querySelectorAll('.report-card').length).toBe(0);
     expect(fixture.nativeElement.textContent).toContain('No users found');
@@ -124,12 +124,12 @@ describe('CourseReportsComponent refresh', () => {
     expect(component.filteredStudents.map((report: any) => report.id)).toEqual([4]);
     expect(component.expandedCards).toEqual({ 4: true });
     expect(fixture.nativeElement.querySelectorAll('.report-card').length).toBe(1);
-    expect(fixture.nativeElement.textContent).toContain('Goofy');
-    expect(fixture.nativeElement.textContent).not.toContain('Pluto The Dog');
+    expect(fixture.nativeElement.textContent).toContain('Student B');
+    expect(fixture.nativeElement.textContent).not.toContain('Student A');
   });
 
   it('reapplies the active search and retains expansion state for students outside the search', () => {
-    component.studentSearchQuery = 'Pluto';
+    component.studentSearchQuery = 'Student A';
     component.searchStudents();
     component.expandedCards = { 3: true, 4: true };
     component.getStudentReports(2);
@@ -138,16 +138,16 @@ describe('CourseReportsComponent refresh', () => {
 
     expect(component.studentReports.map(report => report.id)).toEqual([4]);
     expect(component.filteredStudents).toEqual([]);
-    expect(component.studentSearchQuery).toBe('Pluto');
+    expect(component.studentSearchQuery).toBe('Student A');
     expect(component.filtering).toBeTrue();
     expect(component.expandedCards).toEqual({ 4: true });
-    component.studentSearchQuery = 'GOOF';
+    component.studentSearchQuery = 'DENT B';
     component.searchStudents();
     expect(component.filteredStudents.map((report: any) => report.id)).toEqual([4]);
   });
 
   it('keeps existing reports, search results, and expansion state when removal fails', () => {
-    component.studentSearchQuery = 'Pluto';
+    component.studentSearchQuery = 'Student A';
     component.searchStudents();
     component.expandedCards = { 3: true, 4: false };
     const previousReports = component.studentReports;
@@ -161,7 +161,7 @@ describe('CourseReportsComponent refresh', () => {
     expect(component.studentReports).toBe(previousReports);
     expect(component.filteredStudents).toBe(previousResults);
     expect(component.expandedCards).toEqual({ 3: true, 4: false });
-    expect(component.studentSearchQuery).toBe('Pluto');
+    expect(component.studentSearchQuery).toBe('Student A');
     expect(alert).toHaveBeenCalledWith('Removal failed.');
   });
 
