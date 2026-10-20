@@ -112,7 +112,7 @@ export class EditCourseComponent implements OnInit {
         next: (data) => {
           console.log('data reached');
           this.errMsg = '';
-          this.GoBackToCourse();
+          this.GoBackToCourse('Course updated.');
         },
         error: (error) => {
           console.log('Error reached');
@@ -121,8 +121,8 @@ export class EditCourseComponent implements OnInit {
       });
   }
 
-  GoBackToCourse() {
-    let state = {courseID: this.courseID};
+  GoBackToCourse(successMsg = '') {
+    let state = {courseID: this.courseID, successMsg};
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate(['/course'], { state });
   }

@@ -21,6 +21,8 @@ export class UsersComponent implements OnInit {
     });
     currentUserID!: number;
     errMsg: string = "";
+    successMsg: string = "";
+    infoMsg: string = "";
 
     constructor(
         private http: HttpClient,
@@ -131,6 +133,9 @@ export class UsersComponent implements OnInit {
           })
           .subscribe({
             next: (res) => {
+              this.errMsg = '';
+              this.infoMsg = '';
+              this.successMsg = 'User settings updated.';
               // How update the master list so that it mirrors the UI's user
               let index = this.FindIndexOfUserWithID(
                 this.users,
@@ -144,6 +149,12 @@ export class UsersComponent implements OnInit {
               this.ShowMessage(err.error.message);
             },
           });
+    }
+
+    MarkUserChanged() {
+        this.errMsg = '';
+        this.successMsg = '';
+        this.infoMsg = 'Changes have not been saved. Select Save Changes to apply them.';
     }
 
     //#region Helper functions

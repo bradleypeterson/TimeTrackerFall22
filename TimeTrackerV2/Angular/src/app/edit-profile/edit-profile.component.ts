@@ -100,7 +100,7 @@ export class EditProfileComponent implements OnInit {
         next: (data) => {
           this.errMsg = '';
           console.log('data posted');
-          this.NavigateBackToProfile();
+          this.NavigateBackToProfile('Profile updated.');
         },
         error: (error) => {
           this.errMsg = error['error']['message'];
@@ -108,8 +108,8 @@ export class EditProfileComponent implements OnInit {
       });
   }
 
-  NavigateBackToProfile() {
-    let state = {userID: this.userID};
+  NavigateBackToProfile(successMsg = '') {
+    let state = {userID: this.userID, successMsg};
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate(['/profile'], { state });
   }

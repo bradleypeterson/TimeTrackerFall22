@@ -1,5 +1,7 @@
 <div id="profile">
     <h2 class="dashboard-head">Profile</h2>
+    <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+    <div *ngIf="errMsg" class="alert alert-danger">{{ errMsg }}</div>
     <div *ngFor="let u of userProfile">
         <div class="row">
             <div class="col-10">

@@ -236,57 +236,45 @@ export class CoursesComponent implements OnInit {
   }
 
   searchCourses(): void {
-    this.searched = true;
-    // Clear filtered courses arrays
+    const searchTerm = this.searchQuery.trim().toLowerCase();
+
     this.allUserFilteredCourses = [];
     this.nonUserFilteredCourses = [];
 
-    // If search query is empty, do nothing further
-    if (this.searchQuery == '') {
+    if (!searchTerm) {
+      this.searched = false;
       return;
     }
-    ///Directly use .filter() to populate the filtered arrays instead of manually iterating through the courses with for loops.
-    // Filter non-registered courses
-    this.nonUserFilteredCourses = this.nonUserCourses.filter((c: any) =>
-      c.courseName.toLowerCase().includes(this.searchQuery.toLowerCase())
-    );
 
-    // Filter registered courses
-    this.allUserFilteredCourses = this.allUserCourses.filter((c: any) =>
-      c.courseName.toLowerCase().includes(this.searchQuery.toLowerCase())
+    this.searched = true;
+    this.nonUserFilteredCourses = this.nonUserCourses.filter((course: any) =>
+      this.courseMatchesSearch(course, searchTerm)
     );
+    this.allUserFilteredCourses = this.allUserCourses.filter((course: any) =>
+      this.courseMatchesSearch(course, searchTerm)
+    );
+  }
 
-    // if (this.searchQuery == '') {
-    //   this.allUserFilteredCourses = [];
-    //   this.nonUserFilteredCourses = [];
-    // }
-    // else {
-    //   sizeOfAllFilteredCourses = this.allUserFilteredCourses.length;
-    //   sizeOfNonFilteredCourses = this.nonUserFilteredCourses.length;
-    //   this.allUserFilteredCourses.splice(0, sizeOfAllFilteredCourses);
-    //   this.nonUserFilteredCourses.splice(0, sizeOfNonFilteredCourses);
-    //   for (let c of this.nonUserCourses) {
-    //     if (c.courseName.toLowerCase().search(this.searchQuery.toLowerCase()) != -1) {
-    //       this.nonUserFilteredCourses.push(c);
-    //     }
-    //     else {
-    //       sizeOfNonFilteredCourses = this.nonUserFilteredCourses.length;
-    //       this.nonUserFilteredCourses.splice(0, sizeOfNonFilteredCourses);
-    //       sizeOfAllFilteredCourses = this.allUserFilteredCourses.length;
-    //       this.allUserFilteredCourses.splice(0, sizeOfAllFilteredCourses);
-    //     }
-    //   }
-    //   for (let c of this.allUserCourses) {
-    //     if (c.courseName.toLowerCase().search(this.searchQuery.toLowerCase()) != -1) {
-    //       this.allUserFilteredCourses.push(c);
-    //     }
-    //     else {
-    //       sizeOfAllFilteredCourses = this.allUserFilteredCourses.length;
-    //       this.allUserFilteredCourses.splice(0, sizeOfAllFilteredCourses);
-    //       sizeOfNonFilteredCourses = this.nonUserFilteredCourses.length;
-    //       this.nonUserFilteredCourses.splice(0, sizeOfNonFilteredCourses);
-    //     }
-    //   }
-    // }
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.searched = false;
+    this.allUserFilteredCourses = [];
+    this.nonUserFilteredCourses = [];
+  }
+
+  private courseMatchesSearch(course: any, searchTerm: string): boolean {
+    const instructorName =
+      `${course.instructorFN ?? ''} ${course.instructorLN ?? ''}`.trim();
+    const searchableFields = [
+      course.courseName,
+      course.instructorFN,
+      course.instructorLN,
+      instructorName,
+      course.description,
+    ];
+
+    return searchableFields.some((field) =>
+      String(field ?? '').toLowerCase().includes(searchTerm)
+    );
   }
 }

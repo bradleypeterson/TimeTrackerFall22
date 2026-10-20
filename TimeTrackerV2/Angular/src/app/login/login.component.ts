@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import CryptoES from 'crypto-es';
 import { environment } from '../../environments/environment';
 
@@ -13,6 +13,7 @@ import { environment } from '../../environments/environment';
 export class LoginComponent implements OnInit {
 
     public errMsg = '';
+    public successMsg = '';
 
     checkoutForm = this.formBuilder.group({
         username: '',
@@ -23,10 +24,18 @@ export class LoginComponent implements OnInit {
         private formBuilder: UntypedFormBuilder,
         private http: HttpClient,
         private router: Router,
+        private activatedRoute: ActivatedRoute
     ) { }
 
     ngOnInit(): void {
         localStorage.removeItem("currentUser");
+        this.successMsg =
+          this.router.getCurrentNavigation()?.extras.state?.successMsg ??
+          history.state?.successMsg ??
+          (this.activatedRoute.snapshot.queryParamMap.get('registration') ===
+          'success'
+            ? 'Registration successful. Please sign in.'
+            : '');
         this.defaultAdminCreated();
     }
 

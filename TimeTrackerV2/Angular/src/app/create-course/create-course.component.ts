@@ -32,6 +32,7 @@ export class CreateCourseComponent implements OnInit {
   createCourseForm = this.formBuilder.group({
     courseName: '',
     description: '',
+    isActive: true,
   });
 
   onSubmit(): void {
@@ -43,7 +44,7 @@ export class CreateCourseComponent implements OnInit {
     let payload = {
       courseName: this.createCourseForm.value['courseName'],
       description: this.createCourseForm.value['description'],
-      isActive: true,
+      isActive: this.createCourseForm.value['isActive'],
       instructorID: this.currentUser.userID,
     }
 
@@ -56,7 +57,9 @@ export class CreateCourseComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          this.router.navigate(['/dashboard']);
+          this.router.navigate(['/dashboard'], {
+            state: { successMsg: 'Course created.' },
+          });
         },
         error: (error) => {
           this.errMsg = error['error']['message'];

@@ -14,6 +14,7 @@ export class UserProfileComponent {
   public userProfile: any;
   public viewingUserID: any;  // The userID of the profile we want to view
   public errMsg = '';
+  public successMsg = '';
 
   public instructor: boolean = false;
   public student: boolean = false;
@@ -36,6 +37,10 @@ export class UserProfileComponent {
     // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
     console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
     this.viewingUserID = this.router.getCurrentNavigation()?.extras.state?.userID;
+    this.successMsg =
+      this.router.getCurrentNavigation()?.extras.state?.successMsg ??
+      history.state?.successMsg ??
+      '';
   }
 
   ngOnInit(): void {

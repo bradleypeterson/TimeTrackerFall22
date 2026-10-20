@@ -48,6 +48,10 @@ export class DashboardComponent implements OnInit {
     if (tempUser) {
       this.currentUser = JSON.parse(tempUser);
     }
+    this.successMsg =
+      this.router.getCurrentNavigation()?.extras.state?.successMsg ??
+      history.state?.successMsg ??
+      '';
   }
 
   ngOnInit(): void {
@@ -93,6 +97,8 @@ export class DashboardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error fetching pending approval count', err);
+          this.errMsg =
+            err.error?.message || 'Unable to load pending approval requests.';
         },
       });
 }
@@ -162,8 +168,13 @@ export class DashboardComponent implements OnInit {
   loadRecentUsers(): void {
     this.http
       .get(`${environment.apiURL}/api/GetRecentUsers/`)
-      .subscribe((data: any) => {
-        this.recentUsers = data;
+      .subscribe({
+        next: (data: any) => {
+          this.recentUsers = data;
+        },
+        error: (error) => {
+          this.errMsg = error.error?.message || 'Unable to load recent users.';
+        },
       });
   }
 
@@ -171,8 +182,13 @@ export class DashboardComponent implements OnInit {
   loadRecentCourses(): void {
     this.http
       .get(`${environment.apiURL}/api/GetRecentCourses/`)
-      .subscribe((data: any) => {
-        this.recentCourses = data;
+      .subscribe({
+        next: (data: any) => {
+          this.recentCourses = data;
+        },
+        error: (error) => {
+          this.errMsg = error.error?.message || 'Unable to load recent courses.';
+        },
       });
   }
 
@@ -180,8 +196,14 @@ export class DashboardComponent implements OnInit {
   loadRecentProjects(): void {
     this.http
       .get(`${environment.apiURL}/api/GetRecentProjects/`)
-      .subscribe((data: any) => {
-        this.recentProjects = data;
+      .subscribe({
+        next: (data: any) => {
+          this.recentProjects = data;
+        },
+        error: (error) => {
+          this.errMsg =
+            error.error?.message || 'Unable to load recent projects.';
+        },
       });
   }
 

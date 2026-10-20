@@ -76,6 +76,9 @@
   <div>
     <h3>Users</h3>
   </div>
+  <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+  <div *ngIf="errMsg" class="alert alert-danger">{{ errMsg }}</div>
+  <div *ngIf="infoMsg" class="alert alert-info">{{ infoMsg }}</div>
   <table class="table table-hover">
     <thead>
       <tr>
@@ -122,6 +125,7 @@
               type="checkbox"
               [checked]="u.isActive"
               [(ngModel)]="u.isActive"
+              (ngModelChange)="MarkUserChanged()"
               [disabled]="currentUserID === u.userID"
             />
             <div class="state p-primary">
@@ -145,6 +149,7 @@
               type="checkbox"
               [checked]="u.isApproved"
               [(ngModel)]="u.isApproved"
+              (ngModelChange)="MarkUserChanged()"
               [disabled]="currentUserID === u.userID"
             />
             <div class="state p-primary">
@@ -162,7 +167,11 @@
         <td class="text-center d-none d-sm-table-cell">
           <!--  Jason Steadman     Notes: Removed the ability for a user to change their own type.-->
           <!-- ng-model="u.type" ng-change="saveUser(u)" ng-disabled="$parent.user.userID === u.userID" -->
-          <select [(ngModel)]="u.type" [disabled]="currentUserID === u.userID">
+          <select
+            [(ngModel)]="u.type"
+            (ngModelChange)="MarkUserChanged()"
+            [disabled]="currentUserID === u.userID"
+          >
             <option value="student" [selected]="u.type == 'student'">
               Student
             </option>
@@ -187,7 +196,4 @@
       <!-- To be moved to the profile page for the selected user -->
     </tbody>
   </table>
-  <div *ngIf="errMsg != ''" class="alert alert-danger">
-    {{ errMsg }}
-  </div>
 </div>

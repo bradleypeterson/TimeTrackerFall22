@@ -128,6 +128,10 @@ export class ProjectComponent implements OnInit {
         // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
         console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
         this.projectID = this.router.getCurrentNavigation()?.extras.state?.projectID;
+        this.successMsg =
+            this.router.getCurrentNavigation()?.extras.state?.successMsg ??
+            history.state?.successMsg ??
+            '';
 
         console.log("The current project is: " + this.projectID);
         if (this.projectID) {
@@ -532,7 +536,10 @@ export class ProjectComponent implements OnInit {
                 next: (data) => {
                   this.errMsg = '';
 
-                  let state = { courseID: this.project.courseID };
+                  let state = {
+                    courseID: this.project.courseID,
+                    successMsg: 'Project deleted.',
+                  };
                   // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
                   // This method of navigating is special, the "replaceUrl" will make it will prevent the user from going back to this page when they delete the project.  This is documented here https://angular.io/api/router/NavigationBehaviorOptions
                   this.router.navigate(['/course'], {

@@ -38,7 +38,7 @@ export class CreateProjectComponent implements OnInit {
   createProjectForm = this.formBuilder.group({
     projectName: '',
     description: '',
-    isActive: '',
+    isActive: true,
     courseID: '',
   });
 
@@ -51,7 +51,7 @@ export class CreateProjectComponent implements OnInit {
     let payload = {
       projectName: this.createProjectForm.value['projectName'],
       description: this.createProjectForm.value['description'],
-      isActive: true,
+      isActive: this.createProjectForm.value['isActive'],
       courseID: this.courseID,
     }
 
@@ -64,7 +64,7 @@ export class CreateProjectComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          this.GoBackToCourse();
+          this.GoBackToCourse('Project created.');
         },
         error: (error) => {
           this.errMsg = error['error']['message'];
@@ -72,8 +72,8 @@ export class CreateProjectComponent implements OnInit {
       });
   }
 
-  GoBackToCourse() {
-    let state = {courseID: this.courseID};
+  GoBackToCourse(successMsg = '') {
+    let state = {courseID: this.courseID, successMsg};
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate(['/course'], { state });
   }
