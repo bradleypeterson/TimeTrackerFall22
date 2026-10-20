@@ -7,17 +7,24 @@ import { environment } from '../../environments/environment';
 @Component({
   selector: 'app-create-course',
   templateUrl: './create-course.component.html',
-  styleUrls: ['./create-course.component.css']
+  styleUrls: ['./create-course.component.css'],
 })
 export class CreateCourseComponent implements OnInit {
   public errMsg = '';
-
   public currentUser: any;
+  public instructors: any[] = [];
+
+  createCourseForm = this.formBuilder.group({
+    courseName: '',
+    description: '',
+    instructorID: '',
+    isActive: true,
+  });
 
   constructor(
     private formBuilder: UntypedFormBuilder,
     private http: HttpClient,
-    private router: Router,
+    private router: Router
   ) {
     const tempUser = localStorage.getItem('currentUser');
     if (tempUser) {
@@ -26,27 +33,51 @@ export class CreateCourseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    if (this.currentUser?.type === 'admin') {
+      this.loadInstructors();
+    }
   }
 
-  createCourseForm = this.formBuilder.group({
-    courseName: '',
-    description: '',
-    isActive: true,
-  });
+  loadInstructors(): void {
+    this.http.get<any[]>(`${environment.apiURL}/api/Users`).subscribe({
+      next: (users) => {
+        this.instructors = users.filter((user) => user.type === 'instructor');
+        this.errMsg =
+          this.instructors.length === 0
+            ? 'No instructors are available. Add an instructor before creating a course.'
+            : '';
+      },
+      error: (error) => {
+        this.errMsg = error.error?.message || 'Unable to load instructors.';
+      },
+    });
+  }
 
   onSubmit(): void {
-    // An extra check condition to prevent submission of the data unless the form is valid
     if (!this.createCourseForm.valid) {
-        return;
+      return;
     }
 
-    let payload = {
+    const instructorID =
+      this.currentUser?.type === 'admin'
+        ? this.createCourseForm.value['instructorID']
+        : this.currentUser.userID;
+
+    if (
+      this.currentUser?.type === 'admin' &&
+      !this.instructors.some(
+        (instructor) => String(instructor.userID) === String(instructorID)
+      )
+    ) {
+      return;
+    }
+
+    const payload = {
       courseName: this.createCourseForm.value['courseName'],
       description: this.createCourseForm.value['description'],
-      isActive: this.createCourseForm.value['isActive'],
-      instructorID: this.currentUser.userID,
-    }
+      isActive: true,
+      instructorID: instructorID,
+    };
 
     this.http
       .post<any>(`${environment.apiURL}/api/createCourse`, payload, {
@@ -55,7 +86,7 @@ export class CreateCourseComponent implements OnInit {
         }),
       })
       .subscribe({
-        next: (data) => {
+        next: () => {
           this.errMsg = '';
           this.router.navigate(['/dashboard'], {
             state: { successMsg: 'Course created.' },
@@ -66,5 +97,4 @@ export class CreateCourseComponent implements OnInit {
         },
       });
   }
-
 }

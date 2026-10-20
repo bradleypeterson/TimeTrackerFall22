@@ -15,6 +15,8 @@ export class EditCourseComponent implements OnInit {
   userID: string = '';
   public courseID = '';
   public course: any;
+  public instructors: any[] = [];
+  public hasCurrentInstructor = false;
 
   public currentUser: any;
 
@@ -74,11 +76,29 @@ export class EditCourseComponent implements OnInit {
             this.course.isActive
           );
           this.instructorID = this.course.instructorID;
+          this.editCourseForm.controls['instructorID'].setValue(String(this.instructorID));
+          if (this.currentUser?.type === 'admin') {
+            this.loadInstructors();
+          }
         },
         error: (error) => {
           this.errMsg = error['error']['message'];
         },
       });
+  }
+
+  loadInstructors(): void {
+    this.http.get<any[]>(`${environment.apiURL}/api/Users`).subscribe({
+      next: (users) => {
+        this.instructors = users.filter((user) => user.type === 'instructor');
+        this.hasCurrentInstructor = this.instructors.some(
+          (instructor) => String(instructor.userID) === String(this.instructorID)
+        );
+      },
+      error: (error) => {
+        this.errMsg = error.error?.message || 'Unable to load instructors.';
+      },
+    });
   }
 
   editCourseForm = this.formBuilder.group({
@@ -90,7 +110,7 @@ export class EditCourseComponent implements OnInit {
 
   onSubmit(): void {
     // An extra check condition to prevent submission of the data unless the form is valid
-    if(!this.editCourseForm.valid) {
+    if(!this.course?.courseID || !this.editCourseForm.valid) {
         return;
     }
 
@@ -98,7 +118,9 @@ export class EditCourseComponent implements OnInit {
       courseName: this.editCourseForm.value['courseName'],
       description: this.editCourseForm.value['description'],
       isActive: this.editCourseForm.value['isActive'],
-      instructorID: this.instructorID,
+      instructorID: this.currentUser?.type === 'admin'
+        ? this.editCourseForm.value['instructorID']
+        : this.instructorID,
       courseID: this.courseID,
     }
 

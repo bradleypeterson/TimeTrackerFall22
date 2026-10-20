@@ -2,6 +2,8 @@
 button.btn-link {
     background: 0 0;
     border: 0;
+    padding: 0;
+    text-align: left;
     text-decoration: none;
     color: #0B6552;
     
@@ -9,4 +11,8 @@ button.btn-link {
     &:hover {
         color: rgb(110, 64, 151);
     }
+}
+
+#users .table td:last-child {
+    white-space: nowrap;
 }

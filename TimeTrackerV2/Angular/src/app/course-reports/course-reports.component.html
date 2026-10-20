@@ -1,16 +1,16 @@
 <h3>Student Reports</h3>
 
-<div class="form-inline mb-3">
-  <form class="mr-3" (ngSubmit)="searchStudents()">
+<div class="mb-3">
+  <form class="d-flex flex-column flex-sm-row gap-2" (ngSubmit)="searchStudents()">
     <input
-      class="form-control mr-3 search-students"
+      class="form-control search-students"
       [(ngModel)]="studentSearchQuery"
       name="studentSearchQuery"
       type="text"
       placeholder="Search Students"
       aria-label="Search"
     />
-    <button class="btn btn-purple btn-elevated search-students" type="submit">
+    <button class="btn btn-purple btn-elevated search-students align-self-start flex-shrink-0" type="submit">
       Search
     </button>
   </form>
@@ -28,7 +28,7 @@
     <tbody></tbody>
   </table>
   <div class="row align-items-start">
-    <div *ngFor="let studentReport of filteredStudents" class="col-md-4 col-6">
+    <div *ngFor="let studentReport of filteredStudents" class="col-12 col-md-6 col-lg-4">
       <div class="card report-card">
         <div class="card-header" (click)="toggleCard(studentReport.id)">
           <img
@@ -41,18 +41,19 @@
         </div>
         <div *ngIf="instructor || admin">
           <div class="card-body" *ngIf="expandedCards[studentReport.id]">
-            <button
-              class="btn btn-purple btn-sm"
-              (click)="ViewStudentProfile(studentReport.id)"
-            >
-              View Student Profile</button
-            ><br /><br />
-            <button
-              class="btn btn-purple btn-sm"
-              (click)="RemoveStudentFromCourse(studentReport.id)"
-            >
-              Remove Student</button
-            ><br /><br />
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <button
+                class="btn btn-purple btn-sm"
+                (click)="ViewStudentProfile(studentReport.id)"
+              >
+                View Student Profile</button>
+              <button
+                class="btn btn-purple btn-sm"
+                (click)="RemoveStudentFromCourse(studentReport.id)"
+              >
+                Remove Student</button>
+            </div>
+            <div class="table-responsive">
             <table class="table table-hover">
               <thead>
                 <tr>
@@ -83,6 +84,7 @@
                 </tr>
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       </div>

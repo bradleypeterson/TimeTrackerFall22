@@ -58,7 +58,8 @@ export class DashboardComponent implements OnInit {
     // get user type
     var userType = this.currentUser.type;
     this.userID = this.currentUser.userID;
-    if (userType === 'instructor') {
+    // Admins also manage courses as instructors.
+    if (userType === 'instructor' || userType === 'admin') {
       this.instructor = true;
       this.loadInstrPenUserCourses();
     }
@@ -68,7 +69,7 @@ export class DashboardComponent implements OnInit {
       this.loadPenUserCourses();
       this.checkForPendingEvals();
     }
-    else if (userType === 'admin') {
+    if (userType === 'admin') {
       this.admin = true;
       this.loadRecentUsers();
       this.loadRecentCourses();
@@ -116,9 +117,11 @@ export class DashboardComponent implements OnInit {
   }
 
   loadCourses(): void {
-    // attempt to pull only the courses the instructor has created
+    // Admins load all courses; instructors load their assigned active courses.
     if (this.instructor) {
-      var request = `${environment.apiURL}/api/Courses/${this.userID}`;
+      var request = this.admin
+        ? `${environment.apiURL}/api/Courses`
+        : `${environment.apiURL}/api/Courses/${this.userID}`;
       this.http.get(request).subscribe((data: any) => {
         console.log(data);
         this.courses = data;

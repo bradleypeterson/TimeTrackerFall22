@@ -75,7 +75,7 @@ export class ViewReportComponent implements OnInit {
           .subscribe({
             next: (data) => {
               this.errMsg = '';
-              this.projectName = data.projectName;
+              this.projectName = data.project.projectName;
             },
             error: (error) => {
               this.errMsg = error['error']['message'];
