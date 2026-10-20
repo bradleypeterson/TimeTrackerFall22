@@ -58,7 +58,7 @@ exports.GetActiveProjectsForUser = (req, res) => {
         FROM Projects as p
         INNER JOIN Courses as c ON c.courseID = p.courseID
         INNER JOIN Course_Users as cu ON cu.CourseID = c.courseID
-        INNER JOIN Users as u on u.userID = ?
+        INNER JOIN Users as u on u.userID = cu.userID AND u.userID = ?
         INNER JOIN Project_Users as pu on pu.userID = u.userID AND pu.projectID = p.projectID
         WHERE p.isActive`;
 

@@ -390,21 +390,54 @@ exports.RegisterForCourse = async (req, res, next) => {
 exports.DropCourse = async (req, res, next) => {
     console.log("CourseControllers.js file/DropCourse route called");
 
-    let data = [];
-    data[0] = req.body["courseID"];
-    data[1] = req.body["userID"];
+    let courseID = req.body["courseID"];
+    let userID = req.body["userID"];
 
-    let sql = `delete from Course_Users
-        where courseID = ? and userID = ?;`;
+    // Keep this transaction separate from other requests using the shared connection.
+    let transactionDB = ConnectToDB();
 
-    db.run(sql, data, function (err, value) {
+    const rollback = (err) => {
+        console.log(err);
+        transactionDB.run('ROLLBACK', (rollbackError) => {
+            if (rollbackError) {
+                console.log(rollbackError);
+            }
+            transactionDB.close();
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        });
+    };
+
+    transactionDB.run('BEGIN TRANSACTION', (err) => {
         if (err) {
-            console.log(err)
+            console.log(err);
+            transactionDB.close();
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         }
-        else {
-            return res.status(200).json({ message: 'User Course deleted.' });
-        }
+
+        transactionDB.run(`DELETE FROM Project_Users
+            WHERE userID = ? AND projectID IN (
+                SELECT projectID FROM Projects WHERE courseID = ?
+            )`, [userID, courseID], (err) => {
+            if (err) {
+                return rollback(err);
+            }
+
+            transactionDB.run(`DELETE FROM Course_Users
+                WHERE courseID = ? AND userID = ?`, [courseID, userID], (err) => {
+                if (err) {
+                    return rollback(err);
+                }
+
+                transactionDB.run('COMMIT', (err) => {
+                    if (err) {
+                        return rollback(err);
+                    }
+
+                    transactionDB.close();
+                    return res.status(200).json({ message: 'User Course deleted.' });
+                });
+            });
+        });
     });
 }
 

@@ -70,8 +70,10 @@ exports.GetReportsData = (req, res) => {
                 }
             });
 
-            // Add the very last item processed to the returnData array 
-            returnData.push(dataToBeAdded);
+            // Add the last student only when the query returned rows.
+            if (rows.length > 0) {
+                returnData.push(dataToBeAdded);
+            }
 
             console.log("Resulting data that made after processing the rows:\n" + JSON.stringify(returnData));
 
