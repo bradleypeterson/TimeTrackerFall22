@@ -1,0 +1,23 @@
+<div class="card mx-auto mt-5" style="max-width: 440px; width: 90%;">
+    <div class="card-header">Verify recovery email</div>
+
+    <div class="card-body">
+      <p>Confirm this email address for your TimeTracker password recovery.</p>
+
+      <p *ngIf="message" role="status">{{ message }}</p>
+
+      <button
+        *ngIf="!verified"
+        type="button"
+        class="btn btn-purple w-100"
+        [disabled]="busy"
+        (click)="verify()"
+      >
+        {{ busy ? 'Verifying…' : 'Verify email' }}
+      </button>
+
+      <a routerLink="/" class="d-block text-center mt-3">
+        Back to Login
+      </a>
+    </div>
+  </div>

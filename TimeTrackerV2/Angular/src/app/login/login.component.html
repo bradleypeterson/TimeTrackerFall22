@@ -2,12 +2,14 @@
   <div class="row no-gutters">
     <div class="col"></div>
     <!-- Extra col div for some auto bootstrap centering -->
-    <div class="card mt-5 col-10 col-sm-6 col-md-5 col-xl-3">
+    <div class="card mt-5 login-card">
       <div class="card-header">Login</div>
       <div class="card-body">
         <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
           <div>
-            <p class="errorText">{{ errMsg }}</p>
+            <p *ngIf="errMsg" class="errorText" role="alert">
+              {{ errMsg }}
+            </p>
           </div>
           <div class="input-group">
             <div class="input-group-prepend">
@@ -66,15 +68,21 @@
               ></i>
             </button>
           </div>
-          <div class="row mt-2 pl-3 pr-3">
-            <button
-              type="button"
-              class="btn btn-purple col mr-1"
-              [routerLink]="['/register']"
-            >
-              Register
+          <div class="mt-3">
+            <button type="submit" class="btn btn-purple w-100">
+              Login
             </button>
-            <button type="submit" class="btn btn-purple col ml-1">Login</button>
+          </div>
+
+          <div class="text-center mt-3">
+            <a class="login-link" routerLink="/forgot-password">
+              Forgot password?
+            </a>
+          </div>
+
+          <div class="registration-link">
+            Don’t have an account?
+            <a class="login-link" routerLink="/register">Create an account</a>
           </div>
         </form>
       </div>

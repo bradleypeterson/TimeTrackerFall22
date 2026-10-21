@@ -1,0 +1,64 @@
+<div class="card mx-auto mt-5" style="max-width: 440px; width: 90%;">
+    <div class="card-header">Set up recovery email</div>
+
+    <div class="card-body">
+      <p *ngIf="adminMode">
+        After verifying the account owner’s identity, enter their recovery
+        email. They must verify the address using the emailed link.
+      </p>
+
+      <p *ngIf="!adminMode">
+        Confirm your current password and verify your recovery email.
+      </p>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <ng-container *ngIf="!adminMode">
+          <label for="recovery-username">Username</label>
+          <input
+            id="recovery-username"
+            class="form-control mb-3"
+            formControlName="username"
+            autocomplete="username"
+          />
+
+          <label for="recovery-password">Current password</label>
+          <input
+            id="recovery-password"
+            type="password"
+            class="form-control mb-3"
+            formControlName="password"
+            autocomplete="current-password"
+          />
+        </ng-container>
+
+        <label for="recovery-email">Recovery email</label>
+        <input
+          id="recovery-email"
+          type="email"
+          class="form-control mb-3"
+          formControlName="email"
+          autocomplete="email"
+          maxlength="254"
+        />
+
+        <button
+          type="submit"
+          class="btn btn-purple w-100"
+          [disabled]="busy"
+        >
+          {{ busy ? 'Sending…' : 'Send verification email' }}
+        </button>
+
+        <p *ngIf="message" class="mt-3" role="status">
+          {{ message }}
+        </p>
+      </form>
+
+      <a *ngIf="adminMode" routerLink="/users" class="d-block mt-3">
+        Back to Users
+      </a>
+      <a *ngIf="!adminMode" routerLink="/" class="d-block mt-3">
+        Back to Login
+      </a>
+    </div>
+  </div>

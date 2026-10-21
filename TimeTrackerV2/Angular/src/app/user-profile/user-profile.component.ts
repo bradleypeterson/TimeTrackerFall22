@@ -14,6 +14,11 @@ export class UserProfileComponent {
   public viewingUserID: any; // The userID of the profile we want to view
   public errMsg = '';
 
+  public recoveryPassword = '';
+  public recoveryBusy = false;
+  public recoveryMessage = '';
+  public recoveryDetails: { email: string | null; verified: boolean } | null = null;
+
   public instructor: boolean = false;
   public student: boolean = false;
   public admin: boolean = false;
@@ -83,6 +88,69 @@ export class UserProfileComponent {
           this.errMsg = error['error']['message'];
         },
       });
+  }
+
+  ViewRecoveryDetails(): void {
+    if (this.recoveryBusy) return;
+
+    this.recoveryDetails = null;
+    this.recoveryMessage = '';
+
+    const username = this.currentUser?.username;
+    const password = this.recoveryPassword;
+    const isAdmin = this.currentUser?.type === 'admin';
+
+    if (!isAdmin && (!username || !password)) {
+      this.recoveryMessage = 'Enter your own current password.';
+      return;
+    }
+
+    this.recoveryBusy = true;
+
+    const handleError = (error: any) => {
+      this.recoveryBusy = false;
+      this.recoveryPassword = '';
+      this.recoveryMessage =
+        error.error?.message || 'Unable to load recovery details.';
+    };
+
+    const loadDetails = (hashedPassword?: string) => {
+      this.http.post<{ email: string | null; verified: boolean }>(
+        `${environment.apiURL}/api/recovery/status`,
+        {
+          userID: this.viewingUserID,
+          password: hashedPassword,
+        },
+        { withCredentials: true }
+      ).subscribe({
+        next: (data) => {
+          this.recoveryBusy = false;
+          this.recoveryPassword = '';
+          this.recoveryDetails = data;
+        },
+        error: handleError,
+      });
+    };
+
+    // The backend verifies the admin role using the login session.
+    if (isAdmin) {
+      loadDetails();
+      return;
+    }
+
+    this.http.get<string>(
+      `${environment.apiURL}/api/saltForUser/${encodeURIComponent(username)}`
+    ).subscribe({
+      next: (salt) => {
+        const hashedPassword = CryptoES.PBKDF2(password, salt, {
+          keySize: 512 / 32,
+          iterations: 1000,
+        }).toString();
+
+        loadDetails(hashedPassword);
+      },
+      error: handleError,
+    });
   }
 
   GenerateDummyData(): void {

@@ -28,9 +28,14 @@ import { EditProjectComponent } from './edit-project/edit-project.component';
 import { AddStudentProjectComponent } from './add-student-project/add-student-project.component';
 import { EditTimecardComponent } from './edit-timecard/edit-timecard.component';
 import { InactiveCoursesComponent } from './inactive-courses/inactive-courses.component';
+import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
+import { VerifyRecoveryEmailComponent } from './verify-recovery-email/verify-recovery-email.component';
+import { SetupRecoveryComponent } from './setup-recovery/setup-recovery.component';
+import { RecoverPasswordComponent } from './recover-password/recover-password.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent }, // forgot password
   { path: 'admin-evals', component: AdminEvalsComponent, canActivate: [loginGuard] },
   { path: 'assign-evals', component: AssignEvalsComponent, canActivate: [instructGuard]},
   { path: 'course', component: CourseComponent, canActivate: [loginGuard] },  // Previously course/:id
@@ -57,6 +62,9 @@ const routes: Routes = [
   { path: 'add-students-project', component: AddStudentProjectComponent, canActivate: [instructGuard] },  // Previously add-students-project/:id
   { path: 'edit-timecard', component: EditTimecardComponent, canActivate: [instructGuard] },  // Previously edit-timecard/:id
   { path: 'past-courses', component: InactiveCoursesComponent, canActivate: [instructGuard] },
+  { path: 'verify-recovery-email', component: VerifyRecoveryEmailComponent }, // Previously verify-recovery-email/:id
+  { path: 'setup-recovery', component: SetupRecoveryComponent }, // Previously setup-recovery/:id
+  { path: 'recover-password', component: RecoverPasswordComponent }, // Previously recover-password/:id
 ];
 
 @NgModule({
@@ -85,5 +93,9 @@ export const RoutingComponents = [
   AddCoursesComponent,
   CreateCourseComponent,
   CreateProjectComponent,
-  AddStudentProjectComponent
+  AddStudentProjectComponent,
+  ForgotPasswordComponent,
+  VerifyRecoveryEmailComponent,
+  SetupRecoveryComponent,
+  RecoverPasswordComponent,
 ]
