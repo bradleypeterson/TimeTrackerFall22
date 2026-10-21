@@ -10,6 +10,48 @@
             <h4>User Info</h4>
             <b>Pronouns:</b> {{ u.pronouns }}<br />
             <b>Contact:</b> {{ u.contact }}<br />
+            <section *ngIf="sameUser || admin" class="mt-3">
+              <h4>Recovery email</h4>
+
+              <ng-container *ngIf="!admin">
+                <label for="profile-recovery-password">
+                  Confirm your current password
+                </label>
+                <input
+                  id="profile-recovery-password"
+                  type="password"
+                  class="form-control mb-2"
+                  [(ngModel)]="recoveryPassword"
+                  autocomplete="current-password"
+                  [disabled]="recoveryBusy"
+                />
+              </ng-container>
+
+              <button
+                type="button"
+                class="btn btn-purple btn-sm"
+                [disabled]="recoveryBusy"
+                (click)="ViewRecoveryDetails()"
+              >
+                {{ recoveryBusy ? "Checking…" : "View recovery details" }}
+              </button>
+
+
+              <p *ngIf="recoveryMessage" class="errorText mt-2" role="alert">
+                {{ recoveryMessage }}
+              </p>
+
+              <div *ngIf="recoveryDetails" class="mt-2" role="status">
+                <p *ngIf="recoveryDetails.email; else noRecoveryEmail">
+                  {{ recoveryDetails.email }} —
+                  {{ recoveryDetails.verified ? "Verified" : "Not verified" }}
+                </p>
+
+                <ng-template #noRecoveryEmail>
+                  <p>No recovery email has been set up.</p>
+                </ng-template>
+              </div>
+            </section>
           </div>
           <div class="col">
             <h4>Bio</h4>
@@ -30,6 +72,16 @@
                 Edit Profile
               </button>
             </li>
+
+            <li class="list-group-item" *ngIf="sameUser">
+              <a
+                routerLink="/setup-recovery"
+                class="btn btn-purple btn-sm rounded"
+              >
+                Set up recovery email
+              </a>
+            </li>
+
             <li class="list-group-item">
               <button
                 type="button"
@@ -39,6 +91,18 @@
                 Reset Password
               </button>
             </li>
+
+            <li class="list-group-item" *ngIf="admin && !sameUser">
+              <a
+                routerLink="/setup-recovery"
+                [queryParams]="{ userID: viewingUserID }"
+                class="btn btn-purple btn-sm rounded"
+              >
+                Set up recovery email
+              </a>
+            </li>
+
+
             <li class="list-group-item">
               <button
                 type="button"

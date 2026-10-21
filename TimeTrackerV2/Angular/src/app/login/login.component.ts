@@ -58,7 +58,9 @@ export class LoginComponent implements OnInit {
           };
 
           this.http
-            .post<any>(`${environment.apiURL}/api/login/`, payload)
+          .post<any>(`${environment.apiURL}/api/login/`, payload, {
+            withCredentials: true,
+          })
             .subscribe({
               next: (data) => {
                 this.errMsg = '';

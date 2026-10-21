@@ -12,7 +12,7 @@ db.serialize(() => {
     db.run(
         // isApproved goes under type for ALL statements - added
         `CREATE TABLE IF NOT EXISTS Users(
-        userID INTEGER PRIMARY KEY, 
+        userID INTEGER PRIMARY KEY,
         username TEXT NOT NULL UNIQUE,
         password TEXT NOT NULL,
         firstName TEXT NOT NULL,
@@ -106,7 +106,7 @@ db.run(`CREATE TABLE IF NOT EXISTS TimeCard(
 
 // Create the Courses table
 db.run(`CREATE TABLE IF NOT EXISTS Courses(
-    courseID INTEGER PRIMARY KEY, 
+    courseID INTEGER PRIMARY KEY,
     courseName TEXT NOT NULL,
     isActive BOOL NOT NULL,
     instructorID INTEGER NOT NULL,
@@ -116,7 +116,7 @@ db.run(`CREATE TABLE IF NOT EXISTS Courses(
 
 // Create the Projects table
 db.run(`CREATE TABLE IF NOT EXISTS Projects(
-    projectID INTEGER PRIMARY KEY, 
+    projectID INTEGER PRIMARY KEY,
     projectName TEXT NOT NULL,
     isActive BOOL NOT NULL,
     courseID INTEGER NOT NULL,
@@ -250,5 +250,31 @@ db.run(`CREATE TABLE IF NOT EXISTS Response (
     FOREIGN KEY (questionID) REFERENCES Question(questionID)
 );`);
 
+// Recovery addresses are separate so existing Users rows stay unchanged.
+db.serialize(() => {
+    db.run(`
+        CREATE TABLE IF NOT EXISTS RecoveryEmails (
+            userID INTEGER PRIMARY KEY,
+            email TEXT NOT NULL,
+            verifiedAt INTEGER,
+            FOREIGN KEY (userID)
+                REFERENCES Users(userID) ON DELETE CASCADE
+        )
+    `);
+
+    db.run(`
+        CREATE TABLE IF NOT EXISTS AccountRecoveryTokens (
+            tokenHash TEXT PRIMARY KEY,
+            userID INTEGER NOT NULL,
+            purpose TEXT NOT NULL
+                CHECK (purpose IN ('verify-email', 'reset-password')),
+            email TEXT NOT NULL,
+            expiresAt INTEGER NOT NULL,
+            usedAt INTEGER,
+            FOREIGN KEY (userID)
+                REFERENCES Users(userID) ON DELETE CASCADE
+        )
+    `);
+});
 
 db.close(); // Close the connection because it doesn't need to be persistent for the creation of the DB
