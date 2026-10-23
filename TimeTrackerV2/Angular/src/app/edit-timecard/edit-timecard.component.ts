@@ -183,7 +183,7 @@ export class EditTimecardComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          this.NavigateBackToProject();
+          this.NavigateBackToProject('Time entry updated.');
         },
         error: (error) => {
           this.errMsg = error['error']['message'];
@@ -191,9 +191,13 @@ export class EditTimecardComponent implements OnInit {
       });
   }
 
-  NavigateBackToProject() {
-    let state = { projectID: this.projectID };
-    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
+
+    NavigateBackToProject(successMsg = '') {
+    const state = {
+      projectID: this.projectID,
+      successMsg,
+    };
+
     this.router.navigate(['/project'], { state });
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import CryptoES from 'crypto-es';
 import { environment } from '../../environments/environment';
 
@@ -13,6 +13,7 @@ import { environment } from '../../environments/environment';
 export class LoginComponent implements OnInit {
   public showPassword = false;
   public errMsg = '';
+  public successMsg = '';
 
   checkoutForm = this.formBuilder.group({
     username: '',
@@ -22,11 +23,20 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: UntypedFormBuilder,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     localStorage.removeItem('currentUser');
+    this.successMsg =
+      this.router.getCurrentNavigation()?.extras.state?.successMsg ??
+      history.state?.successMsg ??
+      (this.activatedRoute.snapshot.queryParamMap.get('registration') ===
+      'success'
+        ? 'Registration successful. Please sign in.'
+        : '');
+
     this.defaultAdminCreated();
   }
 
@@ -36,9 +46,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    //console.log("Username: " + this.checkoutForm.value['username'] + " | Password: " + this.checkoutForm.value['password']);
-
-    let username = this.checkoutForm.value['username'];
+    const username = this.checkoutForm.value['username'];
 
     this.http
       .get<any>(`${environment.apiURL}/api/saltForUser/${username}`)
@@ -52,7 +60,7 @@ export class LoginComponent implements OnInit {
             { keySize: 512 / 32, iterations: 1000 }
           ).toString();
 
-          let payload = {
+          const payload = {
             username: username,
             password: hashedPassword,
           };
@@ -66,7 +74,7 @@ export class LoginComponent implements OnInit {
                   'currentUser',
                   JSON.stringify(data['user'])
                 );
-                this.router.navigate(['./dashboard']); // ROUTED TO DASHBOARD
+                this.router.navigate(['./dashboard']);
               },
               error: (error) => {
                 this.errMsg = error['error']['message'];

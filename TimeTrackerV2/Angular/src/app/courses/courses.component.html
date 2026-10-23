@@ -5,8 +5,11 @@
   <h2 class="course-head">Courses</h2>
   <hr />
 
-  <!-- ng-model="search" ??? -->
-  <form class="d-flex flex-column flex-sm-row gap-2 mb-3" (ngSubmit)="searchCourses()">
+   <!-- ng-model="search" ??? -->
+  <form
+    class="d-flex flex-column flex-sm-row gap-2 mb-3"
+    (ngSubmit)="searchCourses()"
+  >
     <input
       class="form-control"
       [(ngModel)]="searchQuery"
@@ -15,9 +18,20 @@
       placeholder="Search for a course"
       aria-label="Search courses"
     />
-    <button class="btn btn-purple btn-elevated align-self-start flex-shrink-0" type="submit">Search</button>
+    <button
+      class="btn btn-purple btn-elevated align-self-start flex-shrink-0"
+      type="submit"
+    >
+      Search
+    </button>
+    <button
+      class="btn btn-secondary btn-elevated align-self-start flex-shrink-0"
+      type="button"
+      (click)="clearSearch()"
+    >
+      Clear Search
+    </button>
   </form>
-
   <!-- Alert Message for No Courses Found -->
   <div
     class="alert alert-danger"

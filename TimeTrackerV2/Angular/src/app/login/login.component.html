@@ -7,7 +7,12 @@
       <div class="card-body">
         <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
           <div>
-            <p class="errorText">{{ errMsg }}</p>
+            <div *ngIf="errMsg" class="alert alert-danger mb-3" role="alert">
+              {{ errMsg }}
+            </div>
+            <div *ngIf="successMsg" class="alert alert-success mb-3" role="alert">
+              {{ successMsg }}
+            </div>
           </div>
           <div class="input-group">
             <div class="input-group-prepend">

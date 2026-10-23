@@ -62,7 +62,7 @@ export class EditProjectComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          this.project = data;
+          this.project = data.project;
           if (this.project) {
             this.editProjectForm.controls['projectName'].setValue(
               this.project.projectName
@@ -110,7 +110,7 @@ export class EditProjectComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          this.NavigateBackToProject();
+          this.NavigateBackToProject('Project updated.');
         },
         error: (error) => {
           this.errMsg = error['error']['message'];
@@ -118,8 +118,8 @@ export class EditProjectComponent implements OnInit {
       });
   }
 
-  NavigateBackToProject() {
-    let state = {projectID: this.projectID};
+  NavigateBackToProject(successMsg = '') {
+    let state = {projectID: this.projectID, successMsg};
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate(['/project'], { state });
   }
