@@ -9,9 +9,3 @@
 .table-head {
   background-color: #f5eef9;
 }
-
-@media (max-width: 767px) {
-  .btn-success {
-    margin-top: 10px;
-  }
-}

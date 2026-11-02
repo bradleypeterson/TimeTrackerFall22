@@ -154,8 +154,25 @@ db.run(
       templateID INTEGER PRIMARY KEY AUTOINCREMENT,
       templateName TEXT NOT NULL,
       evaluatorID INTEGER NOT NULL,
+      isArchived BOOL NOT NULL DEFAULT 0,
       FOREIGN KEY (evaluatorID) REFERENCES Users (userID)
 );`);
+
+// Add the archive column to databases created before evaluation forms could be archived.
+db.all(`PRAGMA table_info(Template)`, (err, columns) => {
+    if (err) {
+        console.error(err.message);
+        return;
+    }
+
+    if (!columns.some((column) => column.name === 'isArchived')) {
+        db.run(`ALTER TABLE Template ADD COLUMN isArchived BOOL NOT NULL DEFAULT 0`, (alterError) => {
+            if (alterError) {
+                console.error(alterError.message);
+            }
+        });
+    }
+});
 
 // Create the Assigned_Eval table
 db.run(

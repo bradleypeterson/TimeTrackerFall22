@@ -18,6 +18,7 @@ import { environment } from '../../environments/environment';
 export class ProjectComponent implements OnInit {
     public pageTitle = 'TimeTrackerV2 | Project'
     public errMsg = '';
+    public successMsg = '';
     public project: any;
     public projectUsers: any;
     public projectUserTimes: any;
@@ -180,6 +181,10 @@ export class ProjectComponent implements OnInit {
         // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
         console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
         this.projectID = this.router.getCurrentNavigation()?.extras.state?.projectID;
+        this.successMsg =
+            this.router.getCurrentNavigation()?.extras.state?.successMsg ??
+            history.state?.successMsg ??
+            '';
 
         console.log("The current project is: " + this.projectID);
         if (this.projectID) {
@@ -441,6 +446,7 @@ export class ProjectComponent implements OnInit {
           .subscribe({
             next: (data) => {
               this.errMsg = '';
+              this.successMsg = 'Time entry saved.';
               console.log(`contents of \"req.isEdited\":` + req.isEdited);
 
               // Clear the input inside the form
@@ -495,6 +501,7 @@ export class ProjectComponent implements OnInit {
           .subscribe({
             next: (data) => {
               this.errMsg = '';
+              this.successMsg = 'Time entry saved.';
               console.log(`contents of \"req.isEdited\":` + req.isEdited);
 
               // Clear the inputs inside the form
@@ -607,7 +614,10 @@ export class ProjectComponent implements OnInit {
                 next: (data) => {
                   this.errMsg = '';
 
-                  let state = { courseID: this.project.courseID };
+                  let state = {
+                    courseID: this.project.courseID,
+                    successMsg: 'Project deleted.',
+                  };
                   // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
                   // This method of navigating is special, the "replaceUrl" will make it will prevent the user from going back to this page when they delete the project.  This is documented here https://angular.io/api/router/NavigationBehaviorOptions
                   this.router.navigate(['/course'], {
@@ -637,7 +647,10 @@ export class ProjectComponent implements OnInit {
             this.http.post<any>(`${environment.apiURL}/api/deleteTimeCard/`, req, { headers: new HttpHeaders({ "Access-Control-Allow-Headers": "Content-Type" }) }).subscribe({
                 next: data => {
                     this.errMsg = "";
-                    window.location.reload();
+                    this.successMsg = 'Time entry deleted.';
+                    this.p = 1;
+                    this.getActivities();
+                    this.loadProjectUserTimes();
                 },
                 error: error => {
                     this.errMsg = error['error']['message'];
@@ -687,6 +700,7 @@ export class ProjectComponent implements OnInit {
           .subscribe({
             next: (data) => {
               this.errMsg = '';
+              this.successMsg = 'Time entry saved.';
               console.log(`contents of \"req.isEdited\":` + req.isEdited);
 
               // Clear the inputs inside the form

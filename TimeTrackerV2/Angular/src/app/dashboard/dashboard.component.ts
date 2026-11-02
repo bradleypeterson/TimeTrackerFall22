@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
   public PendUserCourses: any = [];
   public PendInstrCourses: any = [];
   public errMsg = '';
+  public successMsg = '';
   public p: number = 1;
   public Evals: any = [];
   public hasPendingEvals: boolean = false;
@@ -47,6 +48,10 @@ export class DashboardComponent implements OnInit {
     if (tempUser) {
       this.currentUser = JSON.parse(tempUser);
     }
+    this.successMsg =
+      this.router.getCurrentNavigation()?.extras.state?.successMsg ??
+      history.state?.successMsg ??
+      '';
   }
 
   ngOnInit(): void {
@@ -93,6 +98,8 @@ export class DashboardComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error fetching pending approval count', err);
+          this.errMsg =
+            err.error?.message || 'Unable to load pending approval requests.';
         },
       });
 }
@@ -110,9 +117,11 @@ export class DashboardComponent implements OnInit {
   }
 
   loadCourses(): void {
-    // attempt to pull only the courses the instructor has created
+    // Admins load all courses; instructors load their assigned active courses.
     if (this.instructor) {
-      var request = `${environment.apiURL}/api/Courses/${this.userID}`;
+      var request = this.admin
+        ? `${environment.apiURL}/api/Courses`
+        : `${environment.apiURL}/api/Courses/${this.userID}`;
       this.http.get(request).subscribe((data: any) => {
         console.log(data);
         this.courses = data;
@@ -162,8 +171,13 @@ export class DashboardComponent implements OnInit {
   loadRecentUsers(): void {
     this.http
       .get(`${environment.apiURL}/api/GetRecentUsers/`)
-      .subscribe((data: any) => {
-        this.recentUsers = data;
+      .subscribe({
+        next: (data: any) => {
+          this.recentUsers = data;
+        },
+        error: (error) => {
+          this.errMsg = error.error?.message || 'Unable to load recent users.';
+        },
       });
   }
 
@@ -171,8 +185,13 @@ export class DashboardComponent implements OnInit {
   loadRecentCourses(): void {
     this.http
       .get(`${environment.apiURL}/api/GetRecentCourses/`)
-      .subscribe((data: any) => {
-        this.recentCourses = data;
+      .subscribe({
+        next: (data: any) => {
+          this.recentCourses = data;
+        },
+        error: (error) => {
+          this.errMsg = error.error?.message || 'Unable to load recent courses.';
+        },
       });
   }
 
@@ -180,8 +199,14 @@ export class DashboardComponent implements OnInit {
   loadRecentProjects(): void {
     this.http
       .get(`${environment.apiURL}/api/GetRecentProjects/`)
-      .subscribe((data: any) => {
-        this.recentProjects = data;
+      .subscribe({
+        next: (data: any) => {
+          this.recentProjects = data;
+        },
+        error: (error) => {
+          this.errMsg =
+            error.error?.message || 'Unable to load recent projects.';
+        },
       });
   }
 
@@ -221,10 +246,9 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          // Refresh the data on the page
+          this.successMsg = 'Course request cancelled.';
           this.loadCourses();
-          // The following line will refresh the page
-          location.reload();
+          this.loadPenUserCourses();
         },
         error: (error) => {
           this.errMsg = error['error']['message'];
@@ -233,7 +257,7 @@ export class DashboardComponent implements OnInit {
   }
 
   // instructor denies a student for a course
-  cancelIns(CourseId: any, UserID: any) {
+  cancelIns(CourseId: any, UserID: any, successMessage = 'Course request denied.') {
     let req = {
       userID: UserID,
       courseID: CourseId
@@ -248,10 +272,9 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          // Refresh the data on the page
+          this.successMsg = successMessage;
           this.loadCourses();
-          // The following line will refresh the page
-          location.reload();
+          this.loadInstrPenUserCourses();
         },
         error: (error) => {
           this.errMsg = error['error']['message'];
@@ -303,7 +326,7 @@ export class DashboardComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
-          this.cancelIns(CourseId, UserID);
+          this.cancelIns(CourseId, UserID, 'Student approved and added to the course.');
           // this.loadCourses();
         },
         error: (error) => {

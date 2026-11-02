@@ -34,11 +34,19 @@ describe('Dashboard role capabilities', () => {
       if (role === 'student') {
         http.expectNone(`${environment.apiURL}/api/Users/42/getPendInstrCourses/`);
         http.expectNone(`${environment.apiURL}/api/Courses/42`);
+        http.expectNone(`${environment.apiURL}/api/Courses`);
+        http.expectOne(`${environment.apiURL}/api/Users/42/getUserCourses`).flush([]);
       } else {
         http.expectOne(`${environment.apiURL}/api/Users/42/getPendInstrCourses/`).flush([
           { courseID: 7, studentID: 9, courseName: 'Course', studentFirstName: 'Pending', studentLastName: 'Student' },
         ]);
-        http.expectOne(`${environment.apiURL}/api/Courses/42`).flush([]);
+        const courseURL = role === 'admin'
+          ? `${environment.apiURL}/api/Courses`
+          : `${environment.apiURL}/api/Courses/42`;
+        http.expectOne(courseURL).flush([]);
+        http.expectNone(role === 'admin'
+          ? `${environment.apiURL}/api/Courses/42`
+          : `${environment.apiURL}/api/Courses`);
       }
       if (role === 'admin') {
         http.expectOne(`${environment.apiURL}/api/UsersPendingApproval`).flush({ count: 2 });
@@ -51,6 +59,15 @@ describe('Dashboard role capabilities', () => {
       for (const request of http.match(() => true)) request.flush([]);
       fixture.detectChanges();
       const page: HTMLElement = fixture.nativeElement;
+      if (role !== 'student') {
+        const coursesSection = page.querySelector('h3.box-head')!.parentElement!.parentElement!;
+        expect(coursesSection.querySelector('h3')!.textContent!.trim()).toBe(
+          role === 'admin' ? 'All Courses' : 'Courses'
+        );
+        expect(coursesSection.querySelector('.alert')!.textContent!.trim()).toBe(
+          role === 'admin' ? 'No courses have been created.' : 'You have no active courses assigned.'
+        );
+      }
       expect(page.textContent!.includes('Manage Users')).toBe(role === 'admin');
       expect(page.querySelectorAll('.dashboard-head').length).toBe(1);
       const buttons = Array.from(page.querySelectorAll('button'));
@@ -69,4 +86,28 @@ describe('Dashboard role capabilities', () => {
       }
     });
   }
+
+  it('keeps the Admin all-course list separate from Recent Courses', () => {
+    localStorage.setItem('currentUser', JSON.stringify({ type: 'admin', userID: 42 }));
+    const fixture = TestBed.createComponent(DashboardComponent);
+    fixture.detectChanges();
+    const courses = [
+      { courseID: 7, courseName: 'Another instructor course', description: 'Active course' },
+      { courseID: 8, courseName: 'Archived course', description: 'Inactive course' },
+    ];
+    const recentCourses = [
+      { ...courses[1], firstName: 'Another', lastName: 'Instructor' },
+    ];
+    http.expectOne(`${environment.apiURL}/api/Courses`).flush(courses);
+    http.expectNone(`${environment.apiURL}/api/Courses/42`);
+    http.expectOne(`${environment.apiURL}/api/GetRecentCourses/`).flush(recentCourses);
+    for (const request of http.match(() => true)) request.flush([]);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.courses).toEqual(courses);
+    expect(fixture.componentInstance.recentCourses).toEqual(recentCourses);
+    const headings = Array.from(fixture.nativeElement.querySelectorAll('h5.card-header') as NodeListOf<HTMLElement>);
+    expect(headings.map(heading => heading.textContent!.trim())).toEqual([
+      'Another instructor course', 'Archived course', 'Archived course',
+    ]);
+  });
 });

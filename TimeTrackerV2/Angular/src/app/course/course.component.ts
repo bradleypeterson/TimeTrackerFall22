@@ -13,6 +13,7 @@ export class CourseComponent implements OnInit {
   public course: any;
   public projects: any = [];  // This is redundant information, if the user is not part of any project, or the variable allUserGroups size is 0, then the variable nonUserGroups contains every project for the course.  I am however am not the one that created this logic so I am not removing it because I don't know if it is used in local storage in anywhere else but here, it will simply not be used in the HTML for the component.
   public errMsg = '';
+  public successMsg = '';
   public allUserGroups: any = [];
   public nonUserGroups: any = [];
   public filteredProjects: any = [];  // This is redundant information because of the same reason as stated above.
@@ -42,6 +43,10 @@ export class CourseComponent implements OnInit {
     // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
     console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
     this.courseID = this.router.getCurrentNavigation()?.extras.state?.courseID;
+    this.successMsg =
+      this.router.getCurrentNavigation()?.extras.state?.successMsg ??
+      history.state?.successMsg ??
+      '';
   }
 
   ngOnInit(): void {
@@ -104,11 +109,16 @@ export class CourseComponent implements OnInit {
   loadProjects(): void {
     this.http
       .get(`${environment.apiURL}/api/Projects/` + this.courseID)
-      .subscribe((data: any) => {
-        this.projects = data;
-        if (this.projects) {
-          localStorage.setItem('projects', JSON.stringify(this.projects));
-        }
+      .subscribe({
+        next: (data: any) => {
+          this.projects = data;
+          if (this.projects) {
+            localStorage.setItem('projects', JSON.stringify(this.projects));
+          }
+        },
+        error: (error) => {
+          this.errMsg = error.error?.message || 'Unable to load projects.';
+        },
       });
   }
 
@@ -238,6 +248,7 @@ export class CourseComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
+          this.successMsg = 'You joined the project.';
           this.loadPage();
         },
         error: (error) => {
@@ -261,6 +272,7 @@ export class CourseComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
+          this.successMsg = 'You left the project.';
           this.loadPage();
         },
         error: (error) => {
@@ -284,7 +296,10 @@ export class CourseComponent implements OnInit {
         .subscribe({
           next: (data) => {
             this.errMsg = '';
-            window.location.replace('/dashboard');
+            this.router.navigate(['/dashboard'], {
+              replaceUrl: true,
+              state: { successMsg: 'Course deleted.' },
+            });
           },
           error: (error) => {
             this.errMsg = error['error']['message'];

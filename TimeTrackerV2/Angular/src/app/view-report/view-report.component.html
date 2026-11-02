@@ -1,7 +1,7 @@
+    <button class="btn btn-purple mb-3" (click)="GoBackToCourse()">Return to course</button>
+    <h4 class="mb-3">Detailed report for {{studentName}} on the project "{{projectName}}"</h4>
 <div class="table-responsive">
-    <button class="btn btn-purple" (click)="GoBackToCourse()">Return to course</button>
-    <h4>Detailed report for {{studentName}} on the project "{{projectName}}"</h4>
-    <table class="table table-light table-sm table-hover table-bordered border-dark table-striped" style="overflow-y:scroll">
+    <table class="table table-light table-sm table-hover table-bordered border-dark table-striped">
         <thead>
             <tr>
                 <th scope="col">Time In</th>
@@ -17,5 +17,5 @@
             </tr>
         </tbody>
     </table>
-    <pagination-controls (pageChange)="p = $event"></pagination-controls>
 </div>
+    <pagination-controls (pageChange)="p = $event"></pagination-controls>

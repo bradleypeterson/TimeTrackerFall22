@@ -94,7 +94,10 @@ describe('ViewReportComponent', () =>{
 
         const req = httpMock.expectOne(`${environment.apiURL}/api/ProjectInfo/1`);
         expect(req.request.method).toBe('GET');
-        req.flush({projectName: 'Project Unit Test'});
+        req.flush({
+          project: { projectName: 'Project Unit Test' },
+          users: []
+        });
 
         expect(component.projectName).toBe('Project Unit Test');
         expect(component.errMsg).toBe('');

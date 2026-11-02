@@ -118,7 +118,13 @@ export class CourseReportsComponent implements OnInit {
             });
 
             this.studentReports = reports;
-            this.filteredStudents = reports;
+            this.searchStudents();
+
+            for (const cardID of Object.keys(this.expandedCards)) {
+              if (!reports.some(report => report.id === Number(cardID))) {
+                delete this.expandedCards[Number(cardID)];
+              }
+            }
           });
     }
 

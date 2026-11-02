@@ -11,6 +11,7 @@ import { environment } from '../../environments/environment';
 export class AddStudentProjectComponent implements OnInit {
   public project: any;
   public errMsg = '';
+  public successMsg = '';
   public studentsInProject: any = [];
   public studentsNotInProject: any = [];
 
@@ -154,6 +155,7 @@ export class AddStudentProjectComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
+          this.successMsg = 'Student added to the project.';
           this.loadPage();
         },
         error: (error) => {
@@ -177,6 +179,7 @@ export class AddStudentProjectComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.errMsg = '';
+          this.successMsg = 'Student removed from the project.';
           this.loadPage();
         },
         error: (error) => {
