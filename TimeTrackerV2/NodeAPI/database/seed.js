@@ -250,5 +250,18 @@ db.run(`CREATE TABLE IF NOT EXISTS Response (
     FOREIGN KEY (questionID) REFERENCES Question(questionID)
 );`);
 
+db.run(`CREATE TABLE IF NOT EXISTS Bug_Reports (
+    bugReportID integer PRIMARY KEY AUTOINCREMENT,
+    userID integer,
+    description text NOT NULL,
+    name text,
+    creationDate datetime NOT NULL,
+    lastUpdateDate datetime NOT NULL,
+    isResolved bool DEFAULT 0,
+    CONSTRAINT fk_userID
+    FOREIGN KEY (userID)
+    REFERENCES Users(userID)
+);`);
+
 
 db.close(); // Close the connection because it doesn't need to be persistent for the creation of the DB

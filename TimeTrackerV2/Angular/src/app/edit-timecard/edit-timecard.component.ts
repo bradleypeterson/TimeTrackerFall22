@@ -142,6 +142,15 @@ export class EditTimecardComponent implements OnInit {
     };
   }
 
+// This function checks that all needed forms are filled out
+CreateFieldsValidator(): ValidatorFn {
+  return (form: AbstractControl): ValidationErrors | null => {
+    const start: string = form.get("timeIn")!.value;
+    const end: string = form.get("timeOut")!.value;
+    return (start && end) ? null : { validFields: true }
+  }
+}
+
   onSubmit(): void {
     this.errMsg = '';
 
