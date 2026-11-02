@@ -103,9 +103,11 @@
                             <input formControlName="timecardEnd" type="time" id="End" class="form-control"
                                 required>
                         </div>
-                        <div *ngIf="manualForm.errors?.timeRange" class="row mt-2 errorText" style="max-width: 600px;">
-                            The end time is earlier than the start time. 
-                            If the session happened over midnight, set the date to when you started. Otherwise, do not proceed!
+                        <div *ngIf="manualForm.errors?.timeRange" class="row mt-2" style="max-width: 600px;">
+                            Because this entry passes through midnight, the end date will be set to {{nextDateManual}}.
+                        </div>
+                        <div *ngIf="manualForm.errors?.midnightOvershoot" class="row mt-2 errorText" style="max-width: 600px;">
+                            Please change your date to something earlier.
                         </div>
                         <!-- Description row -->
                         <div class="row mt-2">
@@ -147,7 +149,7 @@
                             <th scope="col">Start Time</th>
                             <th scope="col">End Time</th>
                             <th scope="col">Total Time</th>
-                            <th scope="col" style="max-width: 500px;">Description</th>
+                            <th scope="col" style="max-width: 450px;">Description</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -155,7 +157,7 @@
                             <td>{{activity.timeIn | date:'medium'}}</td>
                             <td>{{activity.timeOut | date:'medium'}}</td>
                             <td>{{activity.timeOut - activity.timeIn | totalTimePipe}}</td>
-                            <td style="max-width: 500px;">{{activity.description}}</td>
+                            <td style="max-width: 450px;  overflow-wrap: break-word;">{{activity.description}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -351,9 +353,12 @@
                                 <input formControlName="timecardEnd" type="time" id="End" class="form-control"
                                     required>
                             </div>
-                            <div *ngIf="instructorManualForm.errors?.timeRange" class="row mt-2 errorText">
-                                The end time is earlier than the start time. 
-                                If the session happened over midnight, set the date to when you started. Otherwise, do not proceed!
+                            <div *ngIf="instructorManualForm.errors?.timeRange" class="row mt-2" style="max-width: 600px;">
+                                Because this entry passes through midnight, the end date will be set to {{nextDateInstructor}}.
+                            </div>
+                            <div *ngIf="instructorManualForm.errors?.midnightOvershoot" 
+                                class="row mt-2 errorText" style="max-width: 600px;">
+                                Please change your date to something earlier.
                             </div>
                             <div *ngIf="instructorManualForm.errors?.dateCheck" class="row mt-2 errorText">
                                 The date entered is later than the current date.
@@ -410,14 +415,14 @@
             </div>
             <div class="row">
                 <table class="table table-light table-sm table-hover table-bordered border-dark"
-                    style="max-height: 200px; overflow-y:scroll">
+                    style="max-height: 200px; overflow-y:scroll; max-width: 100%;">
                     <thead>
                         <tr>
                             <th scope="col">Name</th>
                             <th scope="col">Time In</th>
                             <th scope="col">Time Out</th>
                             <th scope="col">Total Time</th>
-                            <th scope="col">Description</th>
+                            <th scope="col" style="max-width: 900px;">Description</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -429,7 +434,7 @@
                                 <td>{{user.timeIn | date:'medium'}}</td>
                                 <td>{{user.timeOut | date:'medium'}}</td>
                                 <td>{{user.timeOut - user.timeIn | totalTimePipe}}</td>
-                                <td style="max-width: 900px;">{{user.description}}</td>
+                                <td style="overflow-wrap: break-word; max-width: 900px;">{{user.description}}</td>
 
                                 <td>
                                     <div class="btn-group float-right">

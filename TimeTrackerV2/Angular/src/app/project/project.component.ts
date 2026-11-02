@@ -28,9 +28,20 @@ export class ProjectComponent implements OnInit {
     public pieChartOptions: ChartOptions<'pie'> = {
         // responsive: false,
         plugins: {
-            legend: {
-                position: 'left'
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const label = context.label || '';
+                
+                // 'context.raw' is the numeric value from pieChartDatasets
+                const rawValue = context.raw as number;
+                return `${label}: ${rawValue} hrs`;
+              }
             }
+          },
+          legend: {
+              position: 'left'
+          }
         }
     };
     public pieChartLabels: any = [];
@@ -58,7 +69,8 @@ export class ProjectComponent implements OnInit {
     }, {
         validators: [this.CreateTimeDifferenceValidator(),
         this.CreateManualFieldsValidator(),
-        this.CreateMaximumDateValidator()]
+        this.CreateMaximumDateValidator(),
+        this.CreateMidnightDateValidator(),]
     });
     // Instructor Manual time card form
     instructorManualForm = new FormGroup({
@@ -69,7 +81,8 @@ export class ProjectComponent implements OnInit {
         description: this.descriptionINS
     }, {
         validators: [this.CreateTimeDifferenceValidator(),
-          this.CreateMaximumDateValidator()]
+          this.CreateMaximumDateValidator(),
+          this.CreateMidnightDateValidator(),]
     });
 
     // This function is used to check if an end time is less than a start time so we can give a warning.
@@ -83,13 +96,9 @@ export class ProjectComponent implements OnInit {
             // We have to use this format to translate fields into a Date
             const dateStart = new Date(`${date}T${start}`);
             const dateEnd = new Date(`${date}T${end}`);
-            console.log("dateStart:" + dateStart);
-            console.log("dateEnd: " + dateEnd)
             const isRangeValid = (dateEnd.getTime() > dateStart.getTime());
-
             return isRangeValid ? null : { timeRange: true };
         }
-
         return null;
       }
     }
@@ -102,7 +111,7 @@ export class ProjectComponent implements OnInit {
         const end: string = form.get("timecardEnd")!.value;
         const descript = form.get("description")!.value;
 
-        return ( (start && end && date && descript) ) ? null : { fieldsCheck: true }
+        return (start && end && date && descript) ? null : { fieldsCheck: true }
       }
     }
 
@@ -115,6 +124,15 @@ export class ProjectComponent implements OnInit {
           return ( (dateValue <= this.date) ) ? null : { dateCheck: true }
         }
         return null;
+      }
+    }
+
+    CreateMidnightDateValidator(): ValidatorFn {
+      return (form: AbstractControl): ValidationErrors | null => {
+        // First, we should check if we have a time during midnight
+        const timeDiffValidator = this.CreateTimeDifferenceValidator();
+        const date: string = form.get("datecard")?.value;
+        return !(timeDiffValidator(form) && date == this.defaultDate) ? null : { midnightOvershoot: true }
       }
     }
 
@@ -191,6 +209,21 @@ export class ProjectComponent implements OnInit {
             //     }
             // }
         }
+    }
+
+    //This function returns the next day for displaying overnight times
+    get nextDateManual(): String {
+      const nextDate = new Date(this.manualForm.controls.datecard.value);
+      //I have no clue why +2 gets to the next day and not +1
+      nextDate.setDate(nextDate.getDate() + 2);
+      return formatDate(nextDate.valueOf(), 'MM/dd/yyyy', 'en-US');
+    }
+
+    get nextDateInstructor(): String {
+      const nextDate = new Date(this.instructorManualForm.controls.datecard.value);
+      //I have no clue why +2 gets to the next day and not +1
+      nextDate.setDate(nextDate.getDate() + 2);
+      return formatDate(nextDate.valueOf(), 'MM/dd/yyyy', 'en-US');
     }
 
     getActivities(): void {
@@ -313,8 +346,8 @@ export class ProjectComponent implements OnInit {
     }
 
     calculateGraphTime(value: number): number {
-        // Minutes Conversion
-        return Number((value / 1000 / 60).toFixed(2));
+        // Hours Conversion
+        return Number((value / 1000 / 60 / 60).toFixed(2));
     }
 
     loadProjectUserTimes(): void {
@@ -438,11 +471,6 @@ export class ProjectComponent implements OnInit {
         const endTime: string = this.manualForm.controls.timecardEnd.value;
         var dateStart = new Date(`${date}T${startTime}`);
         var dateEnd = new Date(`${date}T${endTime}`);
-
-        // Here we can add 24 hours to the end date to account for overnight sessions
-        if(dateStart > dateEnd) {
-          dateEnd.setDate(dateEnd.getDate() + 1);
-        }
 
         let req = {
             isManualEntry: true,
@@ -635,11 +663,6 @@ export class ProjectComponent implements OnInit {
         const endTime: string = this.instructorManualForm.controls.timecardEnd.value;
         var dateStart = new Date(`${date}T${startTime}`);
         var dateEnd = new Date(`${date}T${endTime}`);
-
-        // Here we can add 24 hours to the end date to account for overnight sessions
-        if(dateStart > dateEnd) {
-          dateEnd.setDate(dateEnd.getDate() + 1);
-        }
 
         let req = {
             isManualEntry: true,

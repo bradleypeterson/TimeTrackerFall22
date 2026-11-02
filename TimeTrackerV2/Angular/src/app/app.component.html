@@ -70,6 +70,11 @@
               routerLink="./dashboard"
               >Dashboard</a
             >
+            <a
+              class="nav-item nav-link active centered-on-small"
+              routerLink="./report-issue"
+              >Report issue</a
+            >
           </div>
         </div>
       </div>
@@ -109,6 +114,16 @@
               class="nav-link active dark-nav-link centered-on-small"
               routerLink="./courses"
               >Courses</a
+            >
+          </div>
+          <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <a
+              class="nav-item nav-link active centered-on-small"
+              routerLink="./report-issue"
+              >Report issue</a
             >
           </div>
         </div>
@@ -174,10 +189,41 @@
               >Dashboard</a
             >
           </div>
+          <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <a
+              class="nav-item nav-link active centered-on-small"
+              routerLink="./report-issue"
+              >Report issue</a
+            >
+          </div>
+          <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <a
+              class="nav-item nav-link active centered-on-small"
+              routerLink="./view-issues"
+              >View Issues</a
+            >
+          </div>
         </div>
       </div>
+      <!-- LOGGED OUT SWITCH CASE -->
       <div *ngSwitchDefault>
-        <div class="navbar-nav"></div>
+        <div class="navbar-nav mx-auto"></div>
+        <div
+            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
+            class="rounded clickable"
+          >
+            <a
+              class="nav-item nav-link active centered-on-small"
+              routerLink="./report-issue"
+              >Report issue</a
+            >
+          </div>
       </div>
     </div>
   </div>

@@ -16,6 +16,9 @@ export class EditProfileComponent implements OnInit {
   public profileData: any;
 
   editProfileForm = this.formBuilder.group({
+    firstName: '',
+    lastName: '',
+    username: '',
     pronouns: '',
     bio: '',
     contact: '',
@@ -62,6 +65,15 @@ export class EditProfileComponent implements OnInit {
                   this.userProfile = profile;
                 }
               }
+              this.editProfileForm.controls['firstName'].setValue(
+                this.userProfile.firstName
+              )
+              this.editProfileForm.controls['lastName'].setValue(
+                this.userProfile.lastName
+              )
+              this.editProfileForm.controls['username'].setValue(
+                this.userProfile.username
+              )
               this.editProfileForm.controls['pronouns'].setValue(
                 this.userProfile.pronouns
               );
@@ -81,6 +93,11 @@ export class EditProfileComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log("onSubmit reached");
+    this.updateProfile();
+  }
+
+  updateProfile(): void {
     let payload = {
       pronouns: this.editProfileForm.value['pronouns'],
       bio: this.editProfileForm.value['bio'],
@@ -88,10 +105,36 @@ export class EditProfileComponent implements OnInit {
       userID: this.userID,
     }
 
-    console.log("onSubmit reached");
-
     this.http
       .post<any>(`${environment.apiURL}/api/EditProfile`, payload, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          console.log('data posted');
+          // Moving to a second method to do another database update
+          this.updateUser();
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
+  }
+
+  updateUser(): void {
+    let payload = {
+      username: this.editProfileForm.value['username'],
+      firstName: this.editProfileForm.value['firstName'],
+      lastName: this.editProfileForm.value['lastName'],
+      userID: this.userID,
+      oldUsername: this.userProfile.username,
+    }
+
+    this.http
+      .post<any>(`${environment.apiURL}/api/EditUser`, payload, {
         headers: new HttpHeaders({
           'Access-Control-Allow-Headers': 'Content-Type',
         }),
