@@ -42,6 +42,8 @@ export class ReportIssueComponent implements OnInit {
       validators: [this.CreateFilledOutValidator()]
   });
 
+  date: Date = new Date();
+
   CreateFilledOutValidator(): ValidatorFn {
     return (form: AbstractControl): ValidationErrors | null => {
       const description: string = form.get("bugDescription")?.value;
@@ -70,6 +72,8 @@ export class ReportIssueComponent implements OnInit {
         userID: this.currentUser?.userID ?? null,
         description: this.issueReportForm.value['bugDescription'],
         name: this.issueReportForm.value['inputName'],
+        creationDate: this.date,
+        lastUpdateDate: this.date,
     }
 
     this.http

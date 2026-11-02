@@ -16,10 +16,12 @@ exports.CreateBugReport = async (req, res, next) => {
     data[0] = req.body["userID"];
     data[1] = req.body["description"];
     data[2] = req.body["name"];
+    data[3] = req.body["creationDate"]
+    data[4] = req.body["lastUpdateDate"];
 
     console.log(data);
 
-    db.run(`INSERT INTO Bug_Reports(userID, description, name) VALUES(?, ?, ?)`, data, function (err, rows) {
+    db.run(`INSERT INTO Bug_Reports(userID, description, name, creationDate, lastUpdateDate) VALUES(?, ?, ?, ?, ?)`, data, function (err, rows) {
         if (err) {
             return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
         } else {
@@ -35,7 +37,8 @@ exports.GetUnresolvedIssues = async (req, res) => {
 	let sql = `SELECT Bug_Reports.bugReportID, Bug_Reports.description, Bug_Reports.name, Users.type
     FROM Bug_Reports
     LEFT JOIN Users ON Bug_Reports.userID = Users.userID
-    WHERE Bug_Reports.isResolved = 0`;
+    WHERE Bug_Reports.isResolved = 0
+    ORDER BY lastUpdateDate DESC`;
 
 	db.all(sql, [], (err, rows) => {
 		if (err) {
@@ -54,7 +57,8 @@ exports.GetResolvedIssues = async (req, res) => {
 	let sql = `SELECT Bug_Reports.bugReportID, Bug_Reports.description, Bug_Reports.name, Users.type
     FROM Bug_Reports
     LEFT JOIN Users ON Bug_Reports.userID = Users.userID
-    WHERE Bug_Reports.isResolved = 1`;
+    WHERE Bug_Reports.isResolved = 1
+    ORDER BY lastUpdateDate DESC`;
 
 	db.all(sql, [], (err, rows) => {
 		if (err) {
@@ -70,14 +74,15 @@ exports.GetResolvedIssues = async (req, res) => {
 exports.MarkIssueResolved = async (req, res) => {
     console.log("BugReportControllers.js file/MarkIssueResolved route called");
 
-	let bugReportID = req.body["bugReportID"];
-    console.log(JSON.stringify(req.body));
+    let data = [];
+    data[0] = req.body["lastUpdateDate"];
+    data[1] = req.body["bugReportID"];
 
     let sql = `UPDATE Bug_Reports
-    SET isResolved = 1
+    SET lastUpdateDate = ?, isResolved = 1
     WHERE bugReportID = ?`;
 
-    db.run(sql, [bugReportID], (err, value) => {
+    db.run(sql, data, (err, value) => {
         if (err) {
             console.log(err);
             return res.status(500).json({ message: 'The update was unsuccessful.' });
@@ -91,14 +96,15 @@ exports.MarkIssueResolved = async (req, res) => {
 exports.MarkIssueUnresolved = async (req, res) => {
     console.log("BugReportControllers.js file/MarkIssueUnresolved route called");
 
-	let bugReportID = req.body["bugReportID"];
-    console.log(JSON.stringify(req.body));
+	let data = [];
+    data[0] = req.body["lastUpdateDate"];
+    data[1] = req.body["bugReportID"];
 
     let sql = `UPDATE Bug_Reports
-    SET isResolved = 0
+    SET lastUpdateDate = ?, isResolved = 0
     WHERE bugReportID = ?`;
 
-    db.run(sql, [bugReportID], (err, value) => {
+    db.run(sql, data, (err, value) => {
         if (err) {
             console.log(err);
             return res.status(500).json({ message: 'The update was unsuccessful.' });

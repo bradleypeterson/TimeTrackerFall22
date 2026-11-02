@@ -238,6 +238,8 @@ db.run(`CREATE TABLE IF NOT EXISTS Bug_Reports (
     userID integer,
     description text NOT NULL,
     name text,
+    creationDate datetime NOT NULL,
+    lastUpdateDate datetime NOT NULL,
     isResolved bool DEFAULT 0,
     CONSTRAINT fk_userID
     FOREIGN KEY (userID)

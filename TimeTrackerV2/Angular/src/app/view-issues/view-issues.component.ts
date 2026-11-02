@@ -18,6 +18,9 @@ export class ViewIssuesComponent implements OnInit {
     public admin: boolean = false;
 
     public currentUser: any;
+    date: Date = new Date();
+
+    
 
     constructor(
         private http: HttpClient,
@@ -65,11 +68,13 @@ export class ViewIssuesComponent implements OnInit {
     }
 
     MarkResolved(BugReportID: any) {
-        let req = {
-            bugReportID: BugReportID
+        this.date = new Date();
+        let payload = {
+            lastUpdateDate: this.date,
+            bugReportID: BugReportID,
         };
 
-        this.http.post<any>(`${environment.apiURL}/api/markIssueResolved/`, req, {
+        this.http.post<any>(`${environment.apiURL}/api/markIssueResolved/`, payload, {
         headers: new HttpHeaders({
             'Access-Control-Allow-Headers': 'Content-Type',
         }),
@@ -86,11 +91,13 @@ export class ViewIssuesComponent implements OnInit {
     }
 
     MarkUnresolved(BugReportID: any) {
-        let req = {
-            bugReportID: BugReportID
+        this.date = new Date();
+        let payload = {
+            lastUpdateDate: this.date,
+            bugReportID: BugReportID,
         };
 
-        this.http.post<any>(`${environment.apiURL}/api/markIssueUnresolved/`, req, {
+        this.http.post<any>(`${environment.apiURL}/api/markIssueUnresolved/`, payload, {
         headers: new HttpHeaders({
             'Access-Control-Allow-Headers': 'Content-Type',
         }),
