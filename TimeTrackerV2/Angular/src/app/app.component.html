@@ -29,8 +29,8 @@
               {{ name }} <span aria-hidden="true">▾</span>
             </button>
             <div *ngIf="openMenu === 'account'" id="account-menu" class="nav-panel account-panel">
-              <button type="button" class="nav-link" (click)="onUserOptionChange('viewProfile')">View Profile</button>
-              <button type="button" class="nav-link" (click)="onUserOptionChange('#')">Logout</button>
+              <button type="button" class="nav-link nav-dropdown" (click)="onUserOptionChange('viewProfile')">View Profile</button>
+              <button type="button" class="nav-link nav-dropdown" (click)="onUserOptionChange('#')">Logout</button>
             </div>
           </div>
           <div class="nav-menu">
@@ -39,9 +39,9 @@
               Course Options <span aria-hidden="true">▾</span>
             </button>
             <div *ngIf="openMenu === 'course'" id="course-menu" class="nav-panel">
-              <a class="nav-link" href="/create-course" (click)="openMenu = null">Create New Course</a>
-              <a class="nav-link" href="/past-courses" (click)="openMenu = null">Past Courses</a>
-              <a class="nav-link" href="/manage-evals" (click)="openMenu = null">Manage Evaluations</a>
+              <a class="nav-link nav-dropdown" href="/create-course" (click)="openMenu = null">Create New Course</a>
+              <a class="nav-link nav-dropdown" href="/past-courses" (click)="openMenu = null">Past Courses</a>
+              <a class="nav-link nav-dropdown" href="/manage-evals" (click)="openMenu = null">Manage Evaluations</a>
             </div>
           </div>
           <div>
@@ -50,8 +50,10 @@
               routerLink="./dashboard"
               >Dashboard</a
             >
+          </div>
+          <div>
             <a
-              class="nav-item nav-link active centered-on-small"
+              class="nav-link"
               routerLink="./report-issue"
               >Report issue</a
             >
@@ -67,8 +69,8 @@
               {{ name }} <span aria-hidden="true">▾</span>
             </button>
             <div *ngIf="openMenu === 'account'" id="account-menu" class="nav-panel account-panel">
-              <button type="button" class="nav-link" (click)="onUserOptionChange('viewProfile')">View Profile</button>
-              <button type="button" class="nav-link" (click)="onUserOptionChange('#')">Logout</button>
+              <button type="button" class="nav-link nav-dropdown" (click)="onUserOptionChange('viewProfile')">View Profile</button>
+              <button type="button" class="nav-link nav-dropdown" (click)="onUserOptionChange('#')">Logout</button>
             </div>
           </div>
           <div>
@@ -85,12 +87,9 @@
               >Courses</a
             >
           </div>
-          <div
-            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
-            class="rounded clickable"
-          >
+          <div>
             <a
-              class="nav-item nav-link active centered-on-small"
+              class="nav-link"
               routerLink="./report-issue"
               >Report issue</a
             >
@@ -106,8 +105,8 @@
               {{ name }} <span aria-hidden="true">▾</span>
             </button>
             <div *ngIf="openMenu === 'account'" id="account-menu" class="nav-panel account-panel">
-              <button type="button" class="nav-link" (click)="onUserOptionChange('viewProfile')">View Profile</button>
-              <button type="button" class="nav-link" (click)="onUserOptionChange('#')">Logout</button>
+              <button type="button" class="nav-link nav-dropdown" (click)="onUserOptionChange('viewProfile')">View Profile</button>
+              <button type="button" class="nav-link nav-dropdown" (click)="onUserOptionChange('#')">Logout</button>
             </div>
           </div>
           <div class="nav-menu">
@@ -118,9 +117,9 @@
               Course Options <span aria-hidden="true">▾</span>
             </button>
             <div *ngIf="openMenu === 'course'" id="course-menu" class="nav-panel">
-              <a class="nav-link" href="/create-course" (click)="openMenu = null">Create New Course</a>
-              <a class="nav-link" href="/past-courses" (click)="openMenu = null">Past Courses</a>
-              <a class="nav-link" href="/manage-evals" (click)="openMenu = null">Manage Evaluations</a>
+              <a class="nav-link nav-dropdown" href="/create-course" (click)="openMenu = null">Create New Course</a>
+              <a class="nav-link nav-dropdown" href="/past-courses" (click)="openMenu = null">Past Courses</a>
+              <a class="nav-link nav-dropdown" href="/manage-evals" (click)="openMenu = null">Manage Evaluations</a>
             </div>
           </div>
           <div>
@@ -137,22 +136,16 @@
               >Dashboard</a
             >
           </div>
-          <div
-            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
-            class="rounded clickable"
-          >
+          <div>
             <a
-              class="nav-item nav-link active centered-on-small"
+              class="nav-link"
               routerLink="./report-issue"
               >Report issue</a
             >
           </div>
-          <div
-            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
-            class="rounded clickable"
-          >
+          <div>
             <a
-              class="nav-item nav-link active centered-on-small"
+              class="nav-link"
               routerLink="./view-issues"
               >View Issues</a
             >
@@ -162,12 +155,9 @@
       <!-- LOGGED OUT SWITCH CASE -->
       <div *ngSwitchDefault>
         <div class="navbar-nav mx-auto"></div>
-        <div
-            style="overflow: hidden; border: 2px solid #cfcdb5; margin: 2px"
-            class="rounded clickable"
-          >
+        <div>
             <a
-              class="nav-item nav-link active centered-on-small"
+              class="nav-link"
               routerLink="./report-issue"
               >Report issue</a
             >
