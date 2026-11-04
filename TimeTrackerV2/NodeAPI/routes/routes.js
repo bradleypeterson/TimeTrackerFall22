@@ -2,6 +2,29 @@ const express = require("express"); //includes the "express" module so we can us
 
 const router = express.Router();
 
+// End the server session before the browser clears its signed-in state.
+router.post('/logout', (req, res) => {
+    req.session.destroy((error) => {
+        if (error) {
+            return res.status(500).json({
+                message: 'Unable to log out. Please try again.'
+            });
+        }
+
+        // Match the name and settings of the cookie configured in server.js.
+        res.clearCookie('connect.sid', {
+            path: '/',
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: false
+        });
+
+        return res.status(200).json({
+            message: 'Logged out successfully.'
+        });
+    });
+});
+
 // Limit repeated requests to recovery endpoints.
 const { rateLimit } = require('express-rate-limit');
 

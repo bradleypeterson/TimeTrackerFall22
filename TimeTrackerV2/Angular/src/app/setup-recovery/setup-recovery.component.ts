@@ -92,7 +92,12 @@ export class SetupRecoveryComponent {
     ).subscribe({
       next: (data) => {
         this.busy = false;
+
+        // Clear inputs only after the email is sent successfully.
+        this.form.controls['username'].reset('');
         this.form.controls['password'].reset('');
+        this.form.controls['email'].reset('');
+
         this.message = data.message;
       },
       error: (error) => this.handleError(error),

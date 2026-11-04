@@ -320,34 +320,150 @@ exports.DefaultAdminAccountCreated = async (req, res, next) => {
   }
 };
 
-exports.ChangePassword = (req, res) => {
-  console.log("AccountControllers.js file/ChangePassword route called");
+exports.ChangePassword = async (req, res) => {
+    const userID = Number(req.params.userID);
+    const { password, salt, currentPassword } = req.body;
 
-  let userID = req.params["userID"];
-  console.log(JSON.stringify(req.body));
-  let password = req.body.password;
-  let salt = req.body.salt;
-
-  let sql = `UPDATE Users
-    SET password = ?, salt = ?
-    WHERE userID = ?`;
-
-  db.run(sql, [password, salt, userID], (err, value) => {
-    if (err) {
-      console.log(err);
-      return res
-        .status(500)
-        .json({
-          message:
-            "Something went wrong in resetting the user's password.\nPlease try again later.",
-        });
-    } else {
-      return res
-        .status(200)
-        .json({ message: "The user's password has been changed." });
+    if (!req.session?.userID) {
+      return res.status(401).json({
+        message: 'Please log in again.',
+      });
     }
-  });
-};
+
+    if (
+      !Number.isSafeInteger(userID) ||
+      userID <= 0 ||
+      typeof password !== 'string' ||
+      !/^[a-f0-9]{128}$/i.test(password) ||
+      typeof salt !== 'string' ||
+      !/^[a-f0-9]{32}$/i.test(salt)
+    ) {
+      return res.status(400).json({
+        message: 'A valid user ID, password hash, and salt are required.',
+      });
+    }
+
+    // Use a separate connection for this transaction.
+    const connection = ConnectToDB();
+
+    const run = (sql, params = []) =>
+      new Promise((resolve, reject) => {
+        connection.run(sql, params, function (err) {
+          if (err) reject(err);
+          else resolve(this);
+        });
+      });
+
+    const get = (sql, params = []) =>
+      new Promise((resolve, reject) => {
+        connection.get(sql, params, (err, row) => {
+          if (err) reject(err);
+          else resolve(row);
+        });
+      });
+
+    let transactionStarted = false;
+
+    try {
+      await run('BEGIN IMMEDIATE');
+      transactionStarted = true;
+
+      const requester = await get(
+        `SELECT userID, type, password
+         FROM Users
+         WHERE userID = ? AND isActive = 1 AND isApproved = 1`,
+        [req.session.userID]
+      );
+
+      if (!requester) {
+        await run('ROLLBACK');
+        transactionStarted = false;
+        return res.status(401).json({
+          message: 'Please log in again.',
+        });
+      }
+
+      if (requester.type !== 'admin') {
+        if (requester.userID !== userID) {
+          await run('ROLLBACK');
+          transactionStarted = false;
+          return res.status(403).json({
+            message: 'You cannot change this account’s password.',
+          });
+        }
+
+        // Non-admin users must confirm their current password.
+        const validFormat =
+          typeof currentPassword === 'string' &&
+          /^[a-f0-9]{128}$/i.test(currentPassword);
+
+        const supplied = Buffer.from(
+          validFormat ? currentPassword : '',
+          'hex'
+        );
+        const stored = Buffer.from(requester.password, 'hex');
+
+        if (
+          !validFormat ||
+          supplied.length !== stored.length ||
+          !crypto.timingSafeEqual(supplied, stored)
+        ) {
+          await run('ROLLBACK');
+          transactionStarted = false;
+          return res.status(403).json({
+            message: 'Your current password is required and must be correct.',
+          });
+        }
+      }
+
+      const target = await get(
+        'SELECT userID FROM Users WHERE userID = ?',
+        [userID]
+      );
+
+      if (!target) {
+        await run('ROLLBACK');
+        transactionStarted = false;
+        return res.status(404).json({
+          message: 'Account not found.',
+        });
+      }
+
+      await run(
+        'UPDATE Users SET password = ?, salt = ? WHERE userID = ?',
+        [password, salt, userID]
+      );
+
+      // Invalidate outstanding verification and password-reset links.
+      await run(
+        `UPDATE AccountRecoveryTokens
+         SET usedAt = ?
+         WHERE userID = ? AND usedAt IS NULL`,
+        [Date.now(), userID]
+      );
+
+      await run('COMMIT');
+      transactionStarted = false;
+
+      return res.status(200).json({
+        message: 'The user’s password has been changed.',
+      });
+    } catch (error) {
+      if (transactionStarted) {
+        try {
+          await run('ROLLBACK');
+        } catch (rollbackError) {
+          console.error('Password change rollback failed.');
+        }
+      }
+
+      return res.status(500).json({
+        message: 'Unable to change the password. Please try again later.',
+      });
+    } finally {
+      connection.close();
+    }
+  };
 
 exports.UpdateUserInfo = (req, res) => {
   console.log("AccountControllers.js file/UpdateAccountInfo route called");
