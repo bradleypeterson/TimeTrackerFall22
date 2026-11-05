@@ -50,7 +50,11 @@ export class ProjectComponent implements OnInit {
                 
                 // 'context.raw' is the numeric value from pieChartDatasets
                 const rawValue = context.raw as number;
-                return `${label}: ${rawValue} hrs`;
+                let formattedHours = rawValue.toFixed(2);
+                if (rawValue > 0 && rawValue < 0.01) {
+                    formattedHours = '<0.01';
+                }
+                return `${label}: ${formattedHours} hrs`;
               }
             }
           },
@@ -368,8 +372,8 @@ export class ProjectComponent implements OnInit {
     }
 
     calculateGraphTime(value: number): number {
-        // Hours Conversion
-        return Number((value / 1000 / 60 / 60).toFixed(2));
+        // Keep full precision so short entries still have a nonzero chart slice.
+        return value / (1000 * 60 * 60);
     }
 
     loadProjectUserTimes(): void {

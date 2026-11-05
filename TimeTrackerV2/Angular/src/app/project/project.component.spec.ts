@@ -241,14 +241,49 @@ describe('ProjectComponent', () => {
     });
   });
 
-  it('should chart separate contributions of 120 and 300 minutes', () => {
+  it('should chart separate contributions of 2 and 5 hours', () => {
     loadContributions([timecard(101, 2), timecard(102, 5)]);
 
     expect(component.pieChartDatasets[0].data.length).toBe(2);
     expect(chartContributions()).toEqual(new Map([
-      ['Alex Taylor (ID: 101)', 120],
-      ['Alex Taylor (ID: 102)', 300],
+      ['Alex Taylor (ID: 101)', 2],
+      ['Alex Taylor (ID: 102)', 5],
     ]));
+  });
+
+  it('should keep short contributions separate and proportional in hours', () => {
+    const firstEntry = timecard(101, 0);
+    firstEntry.timeOut = firstEntry.timeIn + 10320;
+    const secondEntry = timecard(102, 0);
+    secondEntry.timeOut = secondEntry.timeIn + 13293;
+    loadContributions([firstEntry, secondEntry]);
+
+    const contributions = chartContributions();
+    expect(contributions.size).toBe(2);
+    expect(contributions.get('Alex Taylor (ID: 101)')).toBe(10320 / hour);
+    expect(contributions.get('Alex Taylor (ID: 102)')).toBe(13293 / hour);
+    expect(component.pieChartDatasets[0].data.every((hours: number) => hours > 0)).toBeTrue();
+    expect(component.pieChartDatasets[0].data.reduce((sum: number, hours: number) => sum + hours, 0))
+      .toBeCloseTo((10320 + 13293) / hour, 12);
+  });
+
+  it('should preserve even a one-millisecond contribution in the chart', () => {
+    const entry = timecard(101, 0);
+    entry.timeOut = entry.timeIn + 1;
+    loadContributions([entry]);
+
+    expect(chartContributions()).toEqual(new Map([['Alex Taylor', 1 / hour]]));
+  });
+
+  it('should format tooltips in hours without displaying short contributions as zero', () => {
+    const label = component.pieChartOptions.plugins!.tooltip!.callbacks!.label!;
+
+    expect(label.call({} as any, { label: 'Alex Taylor', raw: 2 } as any))
+      .toBe('Alex Taylor: 2.00 hrs');
+    expect(label.call({} as any, { label: 'Alex Taylor', raw: 0.5 } as any))
+      .toBe('Alex Taylor: 0.50 hrs');
+    expect(label.call({} as any, { label: 'Alex Taylor', raw: 10320 / hour } as any))
+      .toBe('Alex Taylor: <0.01 hrs');
   });
 
   it('should sum multiple timecards for each same-named student', () => {
@@ -263,8 +298,8 @@ describe('ProjectComponent', () => {
     expect(component.totalTimeMap.get(101)!.totalTime).toBe(2 * hour);
     expect(component.totalTimeMap.get(102)!.totalTime).toBe(5 * hour);
     expect(chartContributions()).toEqual(new Map([
-      ['Alex Taylor (ID: 101)', 120],
-      ['Alex Taylor (ID: 102)', 300],
+      ['Alex Taylor (ID: 101)', 2],
+      ['Alex Taylor (ID: 102)', 5],
     ]));
   });
 
@@ -273,7 +308,7 @@ describe('ProjectComponent', () => {
 
     expect(component.totalTimeMap.size).toBe(1);
     expect(component.totalTimeMap.get(101)!.displayName).toBe('Alex Taylor');
-    expect(chartContributions()).toEqual(new Map([['Alex Taylor', 120]]));
+    expect(chartContributions()).toEqual(new Map([['Alex Taylor', 2]]));
   });
 
   it('should treat numeric and string versions of a user ID as the same student', () => {
@@ -284,7 +319,7 @@ describe('ProjectComponent', () => {
 
     expect(component.totalTimeMap.size).toBe(1);
     expect(component.totalTimeMap.get(101)!.totalTime).toBe(2 * hour);
-    expect(chartContributions()).toEqual(new Map([['Alex Taylor', 120]]));
+    expect(chartContributions()).toEqual(new Map([['Alex Taylor', 2]]));
   });
 
   for (const zeroFirst of [true, false]) {
@@ -306,7 +341,7 @@ describe('ProjectComponent', () => {
         ['Alex Taylor (ID: 101)', '2 hr 0 min 0 sec'],
         ['Alex Taylor (ID: 102)', '0 sec'],
       ]);
-      expect(chartContributions()).toEqual(new Map([['Alex Taylor (ID: 101)', 120]]));
+      expect(chartContributions()).toEqual(new Map([['Alex Taylor (ID: 101)', 2]]));
     });
   }
 
@@ -322,8 +357,8 @@ describe('ProjectComponent', () => {
       ['John Doe', '2 hr 0 min 0 sec'],
     ]);
     expect(chartContributions()).toEqual(new Map([
-      ['Jane Smith', 300],
-      ['John Doe', 120],
+      ['Jane Smith', 5],
+      ['John Doe', 2],
     ]));
   });
 
@@ -335,7 +370,7 @@ describe('ProjectComponent', () => {
 
     expect(component.totalTimeMap.size).toBe(1);
     expect(component.totalTimeMap.get(101)!.totalTime).toBe(2 * hour);
-    expect(chartContributions()).toEqual(new Map([['Alex Taylor', 120]]));
+    expect(chartContributions()).toEqual(new Map([['Alex Taylor', 2]]));
   });
 
   it('should continue excluding nonpositive totals from the chart', () => {
@@ -346,7 +381,7 @@ describe('ProjectComponent', () => {
     ]);
 
     expect(component.totalTimeMap.size).toBe(3);
-    expect(chartContributions()).toEqual(new Map([['Alex Taylor', 120]]));
+    expect(chartContributions()).toEqual(new Map([['Alex Taylor', 2]]));
   });
 
   it('should preserve the empty chart placeholder when there are no users', () => {
@@ -392,7 +427,7 @@ describe('ProjectComponent', () => {
       ]);
       const chart = component.chart.chart!;
       expect(chart.data.labels).toEqual(component.pieChartLabels);
-      expect(chart.data.datasets[0].data).toEqual([120, 300]);
+      expect(chart.data.datasets[0].data).toEqual([2, 5]);
       expect(chart.legend!.legendItems!.map(item => item.text)).toEqual([
         'Alex Taylor (ID: 101)',
         'Alex Taylor (ID: 102)',
