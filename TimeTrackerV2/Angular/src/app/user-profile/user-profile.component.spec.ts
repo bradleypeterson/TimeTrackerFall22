@@ -1,6 +1,7 @@
-import {ComponentFixture, TestBed, inject} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import { UserProfileComponent } from './user-profile.component';
 import { ActivatedRoute } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { Router, NavigationExtras} from '@angular/router';
 import {CommonModule } from'@angular/common';
@@ -32,6 +33,7 @@ describe('UserProfileComponent', ()=>{
       imports: [CommonModule],
       declarations: [UserProfileComponent],
       providers: [
+        provideHttpClient(),
         provideHttpClientTesting(),
         {
           provide: ActivatedRoute,
@@ -65,18 +67,17 @@ describe('UserProfileComponent', ()=>{
     //Set the viewingUserID 
 
 
+    httpMock = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(UserProfileComponent);
     component = fixture.componentInstance;
+    fixture.detectChanges();
+    httpMock.expectOne(`${environment.apiURL}/api/UserProfile/30`).flush([mockUser]);
     fixture.detectChanges();
 
 
     
   });
 
-
-  beforeEach(inject([HttpTestingController], (http:HttpTestingController)=> {
-    httpMock = http;
-  }));
 
   afterEach(()=>{
     httpMock.verify(); //Cleans up any outstanding requests

@@ -108,7 +108,7 @@ describe('ProjectComponent', () => {
 
     httpClient.get
       .withArgs(`${environment.apiURL}/api/ProjectInfo/1`, jasmine.any(Object))
-      .and.returnValue(of(mockProject));
+      .and.returnValue(of({ project: mockProject, users: [1, 2] }));
 
     httpClient.get
       .withArgs(
