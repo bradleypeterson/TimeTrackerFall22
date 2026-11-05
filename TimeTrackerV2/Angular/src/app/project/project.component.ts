@@ -1,13 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { formatDate } from '@angular/common';
+import { formatDate, KeyValue } from '@angular/common';
 // import { Stopwatch } from "ts-stopwatch";
 import { AbstractControl, FormGroup, UntypedFormControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { environment } from '../../environments/environment';
 
+interface ProjectContribution {
+    name: string;
+    displayName: string;
+    totalTime: number;
+}
 
 @Component({
     selector: 'app-project',
@@ -22,7 +27,16 @@ export class ProjectComponent implements OnInit {
     public project: any;
     public projectUsers: any;
     public projectUserTimes: any;
-    public totalTimeMap: Map<string, number> = new Map<string, number>();
+    public totalTimeMap = new Map<number, ProjectContribution>();
+    public compareContributions = (
+        a: KeyValue<number, ProjectContribution>,
+        b: KeyValue<number, ProjectContribution>
+    ): number => {
+        if (a.value.name === b.value.name) {
+            return a.key - b.key;
+        }
+        return a.value.name < b.value.name ? -1 : 1;
+    };
     public projectID;
     public p: number = 1;
 
@@ -234,40 +248,43 @@ export class ProjectComponent implements OnInit {
     }
 
     calculateTotalTime(): void {
-        this.totalTimeMap = new Map<string, number>();
+        this.totalTimeMap = new Map<number, ProjectContribution>();
+        const nameCounts = new Map<string, number>();
         for (let teamMate of this.projectUserTimes) {
-            const fullName = `${teamMate.firstName} ${teamMate.lastName}`;
-            if (!teamMate.timeIn) {
-                this.totalTimeMap.set(fullName, 0);
-                continue;
+            const userID = Number(teamMate.userID);
+            let contribution = this.totalTimeMap.get(userID);
+            if (!contribution) {
+                const name = `${teamMate.firstName} ${teamMate.lastName}`;
+                contribution = { name, displayName: name, totalTime: 0 };
+                this.totalTimeMap.set(userID, contribution);
+                nameCounts.set(name, (nameCounts.get(name) || 0) + 1);
             }
-            if (this.totalTimeMap.has(fullName)) {
-                const timeDifference = teamMate.timeOut - teamMate.timeIn;
-                this.totalTimeMap.set(fullName, timeDifference + this.totalTimeMap.get(fullName)!);
-            }
-            else {
-                const timeDifference = teamMate.timeOut - teamMate.timeIn;
-                this.totalTimeMap.set(fullName, timeDifference);
+            if (teamMate.timeIn) {
+                contribution.totalTime += teamMate.timeOut - teamMate.timeIn;
             }
         }
+
+        this.totalTimeMap.forEach((contribution, userID) => {
+            if (nameCounts.get(contribution.name)! > 1) {
+                contribution.displayName = `${contribution.name} (ID: ${userID})`;
+            }
+        });
     }
 
     populateGraph(): void {
         this.pieChartDatasets = [{ data: [] }];
         this.pieChartLabels = [];
 
-        // You can use either of the below lines of code, they will achieve the same thing.  However, the second is easier to read.  Source https://stackoverflow.com/a/67288242
-        // let filtered = new Map([...this.totalTimeMap.entries()].filter((item: any) => item[1] > 0 ));
-        let filtered = new Map([...this.totalTimeMap.entries()].filter(([key, value]) => value > 0 ));
+        const filtered = [...this.totalTimeMap.values()].filter(contribution => contribution.totalTime > 0);
 
-        if (filtered.size == 0) {
+        if (filtered.length == 0) {
             this.pieChartLabels.push("No time cards created");
             this.pieChartDatasets[0]["data"].push(1);
         }
         else {
-            filtered.forEach((value: number, key: string) => {
-                this.pieChartLabels.push(key);
-                this.pieChartDatasets[0]["data"].push(this.calculateGraphTime(value));
+            filtered.forEach(contribution => {
+                this.pieChartLabels.push(contribution.displayName);
+                this.pieChartDatasets[0]["data"].push(this.calculateGraphTime(contribution.totalTime));
                 if (this.chart && this.chart.chart) {
                     this.chart.chart.update();
                 }
