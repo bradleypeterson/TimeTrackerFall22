@@ -1,10 +1,14 @@
 <div id="profile">
   <h2 class="dashboard-head">Profile</h2>
+  <div *ngIf="successMsg" class="alert alert-success">{{ successMsg }}</div>
+  <div *ngIf="errMsg" class="alert alert-danger">{{ errMsg }}</div>
+
   <div *ngFor="let u of userProfile">
     <div class="row">
       <div class="col-10">
         <h3 class="box-head rounded">{{ u.firstName }} {{ u.lastName }}</h3>
         <hr />
+
         <div class="row">
           <div class="col">
             <h4>User Info</h4>
@@ -17,6 +21,7 @@
           </div>
         </div>
       </div>
+
       <div class="col-2" *ngIf="sameUser || admin">
         <div class="card">
           <div class="card-header">Options</div>

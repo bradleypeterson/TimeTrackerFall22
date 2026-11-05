@@ -28,6 +28,8 @@ import { EditProjectComponent } from './edit-project/edit-project.component';
 import { AddStudentProjectComponent } from './add-student-project/add-student-project.component';
 import { EditTimecardComponent } from './edit-timecard/edit-timecard.component';
 import { InactiveCoursesComponent } from './inactive-courses/inactive-courses.component';
+import { ReportIssueComponent } from './report-issue/report-issue.component'
+import { ViewIssuesComponent } from './view-issues/view-issues.component'
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -57,6 +59,8 @@ const routes: Routes = [
   { path: 'add-students-project', component: AddStudentProjectComponent, canActivate: [instructGuard] },  // Previously add-students-project/:id
   { path: 'edit-timecard', component: EditTimecardComponent, canActivate: [instructGuard] },  // Previously edit-timecard/:id
   { path: 'past-courses', component: InactiveCoursesComponent, canActivate: [instructGuard] },
+  { path: 'report-issue', component: ReportIssueComponent},
+  { path: 'view-issues', component: ViewIssuesComponent, canActivate: [adminGuard]}
 ];
 
 @NgModule({
@@ -85,5 +89,7 @@ export const RoutingComponents = [
   AddCoursesComponent,
   CreateCourseComponent,
   CreateProjectComponent,
-  AddStudentProjectComponent
+  AddStudentProjectComponent,
+  ReportIssueComponent,
+  ViewIssuesComponent
 ]

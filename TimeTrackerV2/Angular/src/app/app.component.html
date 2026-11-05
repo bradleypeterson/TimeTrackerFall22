@@ -29,8 +29,8 @@
               {{ name }} <span aria-hidden="true">▾</span>
             </button>
             <div *ngIf="openMenu === 'account'" id="account-menu" class="nav-panel account-panel">
-              <button type="button" class="nav-link" (click)="onUserOptionChange('viewProfile')">View Profile</button>
-              <button type="button" class="nav-link" (click)="onUserOptionChange('#')">Logout</button>
+              <button type="button" class="nav-link nav-dropdown" (click)="onUserOptionChange('viewProfile')">View Profile</button>
+              <button type="button" class="nav-link nav-dropdown" (click)="onUserOptionChange('#')">Logout</button>
             </div>
           </div>
           <div class="nav-menu">
@@ -39,9 +39,9 @@
               Course Options <span aria-hidden="true">▾</span>
             </button>
             <div *ngIf="openMenu === 'course'" id="course-menu" class="nav-panel">
-              <a class="nav-link" href="/create-course" (click)="openMenu = null">Create New Course</a>
-              <a class="nav-link" href="/past-courses" (click)="openMenu = null">Past Courses</a>
-              <a class="nav-link" href="/manage-evals" (click)="openMenu = null">Manage Evaluations</a>
+              <a class="nav-link nav-dropdown" href="/create-course" (click)="openMenu = null">Create New Course</a>
+              <a class="nav-link nav-dropdown" href="/past-courses" (click)="openMenu = null">Past Courses</a>
+              <a class="nav-link nav-dropdown" href="/manage-evals" (click)="openMenu = null">Manage Evaluations</a>
             </div>
           </div>
           <div>
@@ -49,6 +49,13 @@
               class="nav-link"
               routerLink="./dashboard"
               >Dashboard</a
+            >
+          </div>
+          <div>
+            <a
+              class="nav-link"
+              routerLink="./report-issue"
+              >Report issue</a
             >
           </div>
         </div>
@@ -62,8 +69,8 @@
               {{ name }} <span aria-hidden="true">▾</span>
             </button>
             <div *ngIf="openMenu === 'account'" id="account-menu" class="nav-panel account-panel">
-              <button type="button" class="nav-link" (click)="onUserOptionChange('viewProfile')">View Profile</button>
-              <button type="button" class="nav-link" (click)="onUserOptionChange('#')">Logout</button>
+              <button type="button" class="nav-link nav-dropdown" (click)="onUserOptionChange('viewProfile')">View Profile</button>
+              <button type="button" class="nav-link nav-dropdown" (click)="onUserOptionChange('#')">Logout</button>
             </div>
           </div>
           <div>
@@ -80,6 +87,13 @@
               >Courses</a
             >
           </div>
+          <div>
+            <a
+              class="nav-link"
+              routerLink="./report-issue"
+              >Report issue</a
+            >
+          </div>
         </div>
       </div>
       <!-- ADMIN SWITCH CASE -->
@@ -91,8 +105,8 @@
               {{ name }} <span aria-hidden="true">▾</span>
             </button>
             <div *ngIf="openMenu === 'account'" id="account-menu" class="nav-panel account-panel">
-              <button type="button" class="nav-link" (click)="onUserOptionChange('viewProfile')">View Profile</button>
-              <button type="button" class="nav-link" (click)="onUserOptionChange('#')">Logout</button>
+              <button type="button" class="nav-link nav-dropdown" (click)="onUserOptionChange('viewProfile')">View Profile</button>
+              <button type="button" class="nav-link nav-dropdown" (click)="onUserOptionChange('#')">Logout</button>
             </div>
           </div>
           <div class="nav-menu">
@@ -103,9 +117,9 @@
               Course Options <span aria-hidden="true">▾</span>
             </button>
             <div *ngIf="openMenu === 'course'" id="course-menu" class="nav-panel">
-              <a class="nav-link" href="/create-course" (click)="openMenu = null">Create New Course</a>
-              <a class="nav-link" href="/past-courses" (click)="openMenu = null">Past Courses</a>
-              <a class="nav-link" href="/manage-evals" (click)="openMenu = null">Manage Evaluations</a>
+              <a class="nav-link nav-dropdown" href="/create-course" (click)="openMenu = null">Create New Course</a>
+              <a class="nav-link nav-dropdown" href="/past-courses" (click)="openMenu = null">Past Courses</a>
+              <a class="nav-link nav-dropdown" href="/manage-evals" (click)="openMenu = null">Manage Evaluations</a>
             </div>
           </div>
           <div>
@@ -122,10 +136,32 @@
               >Dashboard</a
             >
           </div>
+          <div>
+            <a
+              class="nav-link"
+              routerLink="./report-issue"
+              >Report issue</a
+            >
+          </div>
+          <div>
+            <a
+              class="nav-link"
+              routerLink="./view-issues"
+              >View Issues</a
+            >
+          </div>
         </div>
       </div>
+      <!-- LOGGED OUT SWITCH CASE -->
       <div *ngSwitchDefault>
-        <div class="navbar-nav"></div>
+        <div class="navbar-nav mx-auto"></div>
+        <div>
+            <a
+              class="nav-link"
+              routerLink="./report-issue"
+              >Report issue</a
+            >
+          </div>
       </div>
     </div>
   </div>

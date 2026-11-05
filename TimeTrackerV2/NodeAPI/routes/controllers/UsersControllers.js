@@ -46,7 +46,7 @@ exports.GetUserProfile = (req, res) => {
 
     let userID = req.params["userID"];
 
-    let sql = `SELECT u.firstName, u.lastName, p.pronouns, p.bio, p.contact, u.userID
+    let sql = `SELECT u.firstName, u.lastName, u.username, p.pronouns, p.bio, p.contact, u.userID
         FROM Users u
         INNER JOIN Profiles p ON u.userID = p.userID
         WHERE u.userID = ?`
@@ -60,6 +60,43 @@ exports.GetUserProfile = (req, res) => {
         }
     });
     
+}
+
+exports.EditUserInfo = (req, res) => {
+    console.log("UsersControllers.js file/EditUserInfo route called");
+
+    let data = [];
+    data[0] = req.body["username"];
+    data[1] = req.body["firstName"];
+    data[2] = req.body["lastName"];
+    data[3] = req.body["userID"];
+    data[4] = req.body["oldUsername"];
+
+    //First we check if the new username already exists and isn't the same as the old one
+    let sql = `SELECT *
+		FROM Users
+		WHERE username = ?`;
+
+    db.get(sql, data[0], (err, rows) => {
+        if (err) {
+            console.log(err);
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (rows && data[0] != data[4]) {
+            return res.status(400).json({ message: 'A user of this name already exists' });
+        }
+        sql = `UPDATE Users
+        SET username = ?, firstName = ?, lastName = ?
+        WHERE userID = ?`;
+
+        db.run(sql, [data[0], data[1], data[2], data[3]], function (err, rows) {
+            if (err) {
+                return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+            } else {
+                return res.status(200).json({ course: data });
+            }
+        });
+    });
 }
 
 exports.EditUserProfile = (req, res) => {
