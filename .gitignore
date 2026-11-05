@@ -53,3 +53,9 @@ testem.log
 .DS_Store
 Thumbs.db
 /TimeTrackerV2/Angular/src/app/manage-evals/manage-evals.component.html
+
+# Visual Studio workspace files
+.vs/
+
+# Angular build output
+/TimeTrackerV2/Angular/dist/

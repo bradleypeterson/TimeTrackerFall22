@@ -157,6 +157,10 @@ export class ProjectComponent implements OnInit {
     timerStoppedAt: number | null = null;
     totalTime: any = "00:00:00";
 
+    private getTimerStorageKey(): string {
+      return `studentTimer_${this.userID}_${this.projectID}`;
+    }
+
     currentUser: any;
 
     instructor: boolean = false;
@@ -180,7 +184,10 @@ export class ProjectComponent implements OnInit {
         //this.projectID = this.activatedRoute.snapshot.params["id"];
         // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
         console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
-        this.projectID = this.router.getCurrentNavigation()?.extras.state?.projectID;
+        this.projectID =
+          this.router.getCurrentNavigation()?.extras.state?.projectID
+          ?? history.state?.projectID; //Checks the currNav first then falls back to the browser's navigation history
+        
         this.successMsg =
             this.router.getCurrentNavigation()?.extras.state?.successMsg ??
             history.state?.successMsg ??
@@ -268,9 +275,64 @@ export class ProjectComponent implements OnInit {
 
         // iterate through the projectUsers to check against current user ID
         this.loadProjectUsers();
-
+      
         this.manualForm.controls.datecard.setValue(this.defaultDate);
         this.instructorManualForm.controls.datecard.setValue(this.defaultDate);
+
+        this.restoreTimer();
+    }
+
+    //This restores the elapsed time instead of starting from zero
+    restoreTimer(): void {
+        const savedTimer = localStorage.getItem(this.getTimerStorageKey());
+
+        if (savedTimer) {
+            const timer = JSON.parse(savedTimer);
+
+            //Restore a stopped timer
+            if (timer.status == 'stopped') {
+                this.TimerRunning = false;
+                this.timerStopped = true;
+                this.timerStoppedAt = Number(timer.timeOut);
+
+                const elapsedSeconds = Math.floor((Number(timer.timeOut) - Number(timer.timeIn)) / 1000);
+
+                const hours = Math.floor(elapsedSeconds / 3600);
+                const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+                const seconds = elapsedSeconds % 60;
+
+                this.totalTime = [
+                     hours.toString().padStart(2,'0'),
+                     minutes.toString().padStart(2,'0'),
+                     seconds.toString().padStart(2,'0'),
+                ].join(':');
+
+                this.description.setValue(timer.description || '');
+
+                return;
+            }
+
+            //restores a running timer
+            if (timer.status === 'running') {
+              localStorage.setItem('timeIn', timer.timeIn.toString());
+
+              this.timerStopped = false;
+              this.timerStoppedAt = null;
+
+              this.startTimer();
+
+              return;
+            }
+        }
+
+        const timeIn = localStorage.getItem('timeIn');
+
+        if (!timeIn) {
+            return;
+        }
+
+        this.timerStopped = false;
+        this.startTimer();
     }
 
     getProjectInfo(): void {
@@ -293,9 +355,26 @@ export class ProjectComponent implements OnInit {
 
     clockIn(): void {
         if (!this.TimerRunning) {
+            const timeIn = Date.now();
+
             localStorage.setItem("timeIn", Date.now().toString());
+
+            //Saves a new running snapshot, replaces previous stopped snapshot
+            localStorage.setItem(this.getTimerStorageKey(), JSON.stringify({
+                status: 'running',
+                timeIn: timeIn,
+                timeOut: null,
+                description: ''
+            }));
+
             this.timerStopped = false;
             this.timerStoppedAt = null;
+            this.totalTime = '00:00:00';
+
+            this.hours = '00';
+            this.minutes = '00';
+            this.seconds = '00';
+
             this.startTimer();
         }
     }
@@ -447,6 +526,12 @@ export class ProjectComponent implements OnInit {
             next: (data) => {
               this.errMsg = '';
               this.successMsg = 'Time entry saved.';
+
+              //Clears the saved timer snapshot after saving
+              localStorage.removeItem(this.getTimerStorageKey());
+              localStorage.removeItem('timeIn');
+
+
               console.log(`contents of \"req.isEdited\":` + req.isEdited);
 
               // Clear the input inside the form
@@ -551,39 +636,64 @@ export class ProjectComponent implements OnInit {
           });
     }
 
+    //Calculates the elapsed time from the start
+    updateTimerDisplay(): void {
+      const timeIn = Number(localStorage.getItem('timeIn'));
+
+      if (!timeIn) {
+        return;
+      }
+
+      const elapsedSeconds = Math.floor((Date.now() - timeIn) / 1000);
+
+      this.hours = Math.floor(elapsedSeconds / 3600).toString().padStart(2, '0');
+      this.minutes = Math.floor((elapsedSeconds % 3600) / 60).toString().padStart(2, '0');
+      this.seconds = (elapsedSeconds % 60).toString().padStart(2, '0');
+    }
+
+    //Updates the display and refreshes every second
     startTimer(): void {
         if (!this.TimerRunning) {
             this.TimerRunning = true;
+
+            this.updateTimerDisplay();
+
             this.start = setInterval(() => {
-                this.seconds++;
-                this.seconds = this.seconds < 10 ? '0' + this.seconds : this.seconds;
-
-                if (this.seconds === 60) {
-                    this.minutes++;
-                    this.minutes = this.minutes < 10 ? '0' + this.minutes : this.minutes;
-                    this.seconds = '0' + 0;
-                }
-
-                if (this.minutes === 60) {
-                    this.hours++;
-                    this.hours = this.hours < 10 ? '0' + this.hours : this.hours;
-                    this.minutes = '0' + 0;
-                }
+                this.updateTimerDisplay();
             }, 1000);
         }
     }
 
     stopTimer(): void {
         clearInterval(this.start);
+
         this.TimerRunning = false;
         this.timerStopped = true;
         this.timerStoppedAt = Date.now();
 
-        this.totalTime = this.hours.toString() + ":" + this.minutes.toString() + ":" + this.seconds.toString();
+        const timeIn = localStorage.getItem('timeIn');
 
-        this.hours = '0' + 0;
-        this.minutes = '0' + 0;
-        this.seconds = '0' + 0;
+        //Saves the clock-out snapshot
+        localStorage.setItem(this.getTimerStorageKey(), JSON.stringify({
+            status: 'stopped',
+            timeIn: timeIn,
+            timeOut: this.timerStoppedAt,
+            description: this.description.value || ''
+        }));
+
+        //Calcs the final duration, using the clock-out timestamp
+        const elapsedSeconds = Math.floor((this.timerStoppedAt - Number(timeIn)) / 1000);
+
+        const hours = Math.floor(elapsedSeconds / 3600);
+        const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+        const seconds = elapsedSeconds % 60;
+
+        this.hours = hours.toString().padStart(2, '0'),
+        this.minutes = minutes.toString().padStart(2, '0'),
+        this.seconds = seconds.toString().padStart(2, '0'),
+
+
+        this.totalTime = `${this.hours}:${this.minutes}:${this.seconds}`;
     }
 
     AddStudents() {
