@@ -150,12 +150,13 @@ export class ManageEvalsComponent implements OnInit {
   }
 
   createTemplate() {
-    if (!this.newTemplateName) {
-      alert('Please enter a template name.');
+    if (!this.newTemplateName.trim()) {
+      this.statusMessage = '';
+      this.errorMessage = 'Evaluation form name is required.';
       return;
     }
 
-    const newTemplate = { templateName: this.newTemplateName };
+    const newTemplate = { templateName: this.newTemplateName.trim() };
     console.error('evaluatorID:', this.evaluatorID);
     this.http
       .post(
@@ -166,17 +167,21 @@ export class ManageEvalsComponent implements OnInit {
         () => {
           this.loadTemplates();
           this.statusMessage = 'Evaluation form created.';
+          this.errorMessage = '';
           this.newTemplateName = '';
           this.showModal = false;
         },
         (error) => {
-          alert('Error creating template. Please try again.');
+          this.statusMessage = '';
+          this.errorMessage =
+            error.error?.message || 'Unable to create the evaluation form. Please try again.';
           console.error('Error creating template:', error);
         }
       );
   }
 
   openRenameModal(template: EvalTemplate) {
+    this.errorMessage = '';
     this.templateToRename = template;
     this.renameTemplateName = template.templateName;
     this.showRenameModal = true;
@@ -184,6 +189,8 @@ export class ManageEvalsComponent implements OnInit {
 
   renameTemplate() {
     if (!this.templateToRename || !this.renameTemplateName.trim()) {
+      this.statusMessage = '';
+      this.errorMessage = 'Evaluation form name is required.';
       return;
     }
 
@@ -199,12 +206,15 @@ export class ManageEvalsComponent implements OnInit {
         () => {
           this.loadTemplates();
           this.statusMessage = 'Evaluation form renamed.';
+          this.errorMessage = '';
           this.showRenameModal = false;
           this.templateToRename = null;
           this.renameTemplateName = '';
         },
         (error) => {
-          alert(error.error?.message || 'Unable to rename the evaluation form.');
+          this.statusMessage = '';
+          this.errorMessage =
+            error.error?.message || 'Unable to rename the evaluation form.';
         }
       );
   }

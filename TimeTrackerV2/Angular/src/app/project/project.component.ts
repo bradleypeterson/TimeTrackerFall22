@@ -29,9 +29,20 @@ export class ProjectComponent implements OnInit {
     public pieChartOptions: ChartOptions<'pie'> = {
         // responsive: false,
         plugins: {
-            legend: {
-                position: 'left'
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const label = context.label || '';
+                
+                // 'context.raw' is the numeric value from pieChartDatasets
+                const rawValue = context.raw as number;
+                return `${label}: ${rawValue} hrs`;
+              }
             }
+          },
+          legend: {
+              position: 'left'
+          }
         }
     };
     public pieChartLabels: any = [];
@@ -51,40 +62,79 @@ export class ProjectComponent implements OnInit {
     });
     // Manual time card form
     manualForm = new FormGroup({
+        
+        datecard: new UntypedFormControl(),
         timecardStart: new UntypedFormControl(''),
         timecardEnd: new UntypedFormControl(''),
         description: this.description
     }, {
-        validators: [this.CreateDateRangeValidator()]
+        validators: [this.CreateTimeDifferenceValidator(),
+        this.CreateManualFieldsValidator(),
+        this.CreateMaximumDateValidator(),
+        this.CreateMidnightDateValidator(),]
     });
     // Instructor Manual time card form
     instructorManualForm = new FormGroup({
         studentID: new UntypedFormControl(''),
+        datecard: new UntypedFormControl(),
         timecardStart: new UntypedFormControl(''),
         timecardEnd: new UntypedFormControl(''),
         description: this.descriptionINS
     }, {
-        validators: [this.CreateDateRangeValidator()]
+        validators: [this.CreateTimeDifferenceValidator(),
+          this.CreateMaximumDateValidator(),
+          this.CreateMidnightDateValidator(),]
     });
 
-    // This function is used to make sure that the starting date is always before the ending date.  Source https://blog.angular-university.io/angular-custom-validators/#:~:text=our%20previous%20article.-,Form%2Dlevel%20(multi%2Dfield)%20Validators,-Besides%20being%20able
-    CreateDateRangeValidator(): ValidatorFn {
-        // The AbstractControl replaces the FormGroup because apparently the above source uses a different typescript version than this project.  It seems to be caused by a bug in the TypeScript version.  Fix source https://stackoverflow.com/a/63306484
-        return (form: AbstractControl): ValidationErrors | null => {
-            // The '!' at the end is the "non-null assertion operator", this tell the TypeScript compiler that a value is not null or undefined, even if its type suggests that it might be
-            const start: string = form.get("timecardStart")!.value;
-            const end: string = form.get("timecardEnd")!.value;
+    // This function is used to check if an end time is less than a start time so we can give a warning.
+    CreateTimeDifferenceValidator(): ValidatorFn {
+      return (form: AbstractControl): ValidationErrors | null => {
+        const date: string = form.get("datecard")?.value;
+        const start: string = form.get("timecardStart")!.value;
+        const end: string = form.get("timecardEnd")!.value;
 
-            if (start && end) {
-                const dateStart = new Date(start);
-                const dateEnd = new Date(end);
-                const isRangeValid = (dateEnd.getTime() - dateStart.getTime() > 0);
-
-                return isRangeValid ? null : { dateRange: true };
-            }
-
-            return null;
+        if (start && end && date) {
+            // We have to use this format to translate fields into a Date
+            const dateStart = new Date(`${date}T${start}`);
+            const dateEnd = new Date(`${date}T${end}`);
+            const isRangeValid = (dateEnd.getTime() > dateStart.getTime());
+            return isRangeValid ? null : { timeRange: true };
         }
+        return null;
+      }
+    }
+
+    // Checks if every field is filled out
+    CreateManualFieldsValidator(): ValidatorFn {
+      return (form: AbstractControl): ValidationErrors | null => {
+        const date: string = form.get("datecard")?.value;
+        const start: string = form.get("timecardStart")!.value;
+        const end: string = form.get("timecardEnd")!.value;
+        const descript = form.get("description")!.value;
+
+        return (start && end && date && descript) ? null : { fieldsCheck: true }
+      }
+    }
+
+    // Checks if the date entered isn't after the system date, does not return an error if there is no entered date
+    CreateMaximumDateValidator(): ValidatorFn {
+      return (form: AbstractControl): ValidationErrors | null => {
+        const date: string = form.get("datecard")?.value;
+        if (date) {
+          const dateValue = new Date(form.get("datecard")?.value);
+          return ( (dateValue <= this.date) ) ? null : { dateCheck: true }
+        }
+        return null;
+      }
+    }
+
+    CreateMidnightDateValidator(): ValidatorFn {
+      return (form: AbstractControl): ValidationErrors | null => {
+        // First, we should check if we have a time during midnight
+        const timeDiffValidator = this.CreateTimeDifferenceValidator();
+        const date: string = form.get("datecard")?.value;
+        return !(timeDiffValidator(form) && date == this.defaultDate) ? null : { midnightOvershoot: true }
+      }
     }
 
     activities: any = [];
@@ -92,7 +142,10 @@ export class ProjectComponent implements OnInit {
     manualTimeCardEntry: boolean = false;  // This will be overwritten in the constructor() method below
 
     date: Date = new Date();
+    //This value is used for the automatic submission
     currDate = formatDate(this.date, 'MM/dd/yyyy', 'en-US');
+    //This value is used for getting a default value on manual submission
+    defaultDate = formatDate(this.date, 'yyyy-MM-dd', 'en-US');
 
     seconds: any = '0' + 0;
     minutes: any = '0' + 0;
@@ -134,6 +187,11 @@ export class ProjectComponent implements OnInit {
         this.projectID =
           this.router.getCurrentNavigation()?.extras.state?.projectID
           ?? history.state?.projectID; //Checks the currNav first then falls back to the browser's navigation history
+        
+        this.successMsg =
+            this.router.getCurrentNavigation()?.extras.state?.successMsg ??
+            history.state?.successMsg ??
+            '';
 
         console.log("The current project is: " + this.projectID);
         if (this.projectID) {
@@ -163,6 +221,21 @@ export class ProjectComponent implements OnInit {
             //     }
             // }
         }
+    }
+
+    //This function returns the next day for displaying overnight times
+    get nextDateManual(): String {
+      const nextDate = new Date(this.manualForm.controls.datecard.value);
+      //I have no clue why +2 gets to the next day and not +1
+      nextDate.setDate(nextDate.getDate() + 2);
+      return formatDate(nextDate.valueOf(), 'MM/dd/yyyy', 'en-US');
+    }
+
+    get nextDateInstructor(): String {
+      const nextDate = new Date(this.instructorManualForm.controls.datecard.value);
+      //I have no clue why +2 gets to the next day and not +1
+      nextDate.setDate(nextDate.getDate() + 2);
+      return formatDate(nextDate.valueOf(), 'MM/dd/yyyy', 'en-US');
     }
 
     getActivities(): void {
@@ -202,6 +275,9 @@ export class ProjectComponent implements OnInit {
 
         // iterate through the projectUsers to check against current user ID
         this.loadProjectUsers();
+      
+        this.manualForm.controls.datecard.setValue(this.defaultDate);
+        this.instructorManualForm.controls.datecard.setValue(this.defaultDate);
 
         this.restoreTimer();
     }
@@ -354,8 +430,8 @@ export class ProjectComponent implements OnInit {
     }
 
     calculateGraphTime(value: number): number {
-        // Minutes Conversion
-        return Number((value / 1000 / 60).toFixed(2));
+        // Hours Conversion
+        return Number((value / 1000 / 60 / 60).toFixed(2));
     }
 
     loadProjectUserTimes(): void {
@@ -476,16 +552,22 @@ export class ProjectComponent implements OnInit {
     }
 
     manualSubmit(): void {
-        // An extra check condition to prevent submission of the data unless for form is valid
-        if (!this.manualForm.valid) {
+        // An extra check condition to prevent submission of the data if there are incomplete fields
+        if (this.manualForm.errors?.fieldsCheck || this.manualForm.errors?.dateCheck) {
             return;
         }
+
+        const date: string = this.manualForm.controls.datecard.value;
+        const startTime: string = this.manualForm.controls.timecardStart.value;
+        const endTime: string = this.manualForm.controls.timecardEnd.value;
+        var dateStart = new Date(`${date}T${startTime}`);
+        var dateEnd = new Date(`${date}T${endTime}`);
 
         let req = {
             isManualEntry: true,
             // We format the timeIn and timeOut like this so that it will return the number of milliseconds since midnight, January 1, 1970 UTC.  https://stackoverflow.com/questions/9756120/how-do-i-get-a-utc-timestamp-in-javascript#:~:text=new%20Date().getTime()%20is%20always%20UTC
-            timeIn: new Date(this.manualForm.controls.timecardStart.value).getTime(),
-            timeOut: new Date(this.manualForm.controls.timecardEnd.value).getTime(),
+            timeIn: dateStart.getTime(),
+            timeOut: dateEnd.getTime(),
             isEdited: false,
 
             userID: this.currentUser.userID,
@@ -508,6 +590,7 @@ export class ProjectComponent implements OnInit {
               console.log(`contents of \"req.isEdited\":` + req.isEdited);
 
               // Clear the inputs inside the form
+              this.manualForm.controls.datecard.setValue('');
               this.manualForm.controls.timecardStart.setValue('');
               this.manualForm.controls.timecardEnd.setValue('');
               this.manualForm.controls.description.setValue(''); // You can also us the code "this.description.setValue("");" because the code currently being used references this variable.
@@ -641,7 +724,10 @@ export class ProjectComponent implements OnInit {
                 next: (data) => {
                   this.errMsg = '';
 
-                  let state = { courseID: this.project.courseID };
+                  let state = {
+                    courseID: this.project.courseID,
+                    successMsg: 'Project deleted.',
+                  };
                   // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
                   // This method of navigating is special, the "replaceUrl" will make it will prevent the user from going back to this page when they delete the project.  This is documented here https://angular.io/api/router/NavigationBehaviorOptions
                   this.router.navigate(['/course'], {
@@ -691,15 +777,21 @@ export class ProjectComponent implements OnInit {
 
     instructorManualSubmit() : void {
         // An extra check condition to prevent submission of the data unless for form is valid
-        if (!this.instructorManualForm.valid) {
+        if (this.instructorManualForm.errors?.dateCheck) {
             return;
         }
+
+        const date: string = this.instructorManualForm.controls.datecard.value;
+        const startTime: string = this.instructorManualForm.controls.timecardStart.value;
+        const endTime: string = this.instructorManualForm.controls.timecardEnd.value;
+        var dateStart = new Date(`${date}T${startTime}`);
+        var dateEnd = new Date(`${date}T${endTime}`);
 
         let req = {
             isManualEntry: true,
             // We format the timeIn and timeOut like this so that it will return the number of milliseconds since midnight, January 1, 1970 UTC.  https://stackoverflow.com/questions/9756120/how-do-i-get-a-utc-timestamp-in-javascript#:~:text=new%20Date().getTime()%20is%20always%20UTC
-            timeIn: new Date(this.instructorManualForm.controls.timecardStart.value).getTime(),
-            timeOut: new Date(this.instructorManualForm.controls.timecardEnd.value).getTime(),
+            timeIn: new Date(dateStart).getTime(),
+            timeOut: new Date(dateEnd).getTime(),
             isEdited: false,
 
             userID: this.instructorManualForm.controls.studentID.value, // pull userID from the form

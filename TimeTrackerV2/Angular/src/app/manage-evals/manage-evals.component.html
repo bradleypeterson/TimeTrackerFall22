@@ -86,6 +86,7 @@
       <div class="modal-body">
         <label for="template-name">Form Name</label>
         <input type="text" id="template-name" class="form-control" [(ngModel)]="newTemplateName" name="newTemplateName" />
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3 mb-0">{{ errorMessage }}</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-purple btn-courses" (click)="createTemplate()">Create</button>
@@ -103,6 +104,7 @@
       <div class="modal-body">
         <label for="rename-template-name">Form Name</label>
         <input type="text" id="rename-template-name" class="form-control" [(ngModel)]="renameTemplateName" name="renameTemplateName" />
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3 mb-0">{{ errorMessage }}</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-purple btn-courses" (click)="renameTemplate()">Save Name</button>
