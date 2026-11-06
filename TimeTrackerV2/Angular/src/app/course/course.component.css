@@ -5,3 +5,8 @@
 .desc {
     font-style: italic;
 }
+
+.inactive-course-alert {
+    border-width: 2px;
+    font-size: 1.05rem;
+}

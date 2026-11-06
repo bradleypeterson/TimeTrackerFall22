@@ -3,6 +3,20 @@ const insertAudit = require('./AuditLog')
 
 let db = ConnectToDB();
 
+const ensureCourseIsActive = (courseID, res, onActive) => {
+    db.get(`SELECT courseID
+        FROM Courses
+        WHERE courseID = ? AND isActive`, [courseID], (err, course) => {
+        if (err) {
+            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+        }
+        if (!course) {
+            return res.status(400).json({ message: 'This course is inactive or no longer exists.' });
+        }
+        return onActive();
+    });
+};
+
 exports.GetAllCoursesNamesDescriptionIDs = (req, res) => {
 	console.log("CourseControllers.js file/GetAllCoursesNamesDescriptionIDs route called");
 
@@ -355,15 +369,17 @@ exports.PutUserInPending = async (req, res, next) => {
     data[0] = req.body["userID"];
     data[1] = req.body["courseID"];
 
-    db.run(`INSERT INTO Pend_Course_Users(userID, courseID)
-        VALUES(?, ?)`, data, function (err, value) {
-        if (err) {
-            console.log(err)
-            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
-        }
-        else {
-            return res.status(200).json({ message: 'User Course added.' });
-        }
+    return ensureCourseIsActive(data[1], res, () => {
+        db.run(`INSERT INTO Pend_Course_Users(userID, courseID)
+            VALUES(?, ?)`, data, function (err, value) {
+            if (err) {
+                console.log(err)
+                return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+            }
+            else {
+                return res.status(200).json({ message: 'User Course added.' });
+            }
+        });
     });
 }
 
@@ -374,16 +390,18 @@ exports.RegisterForCourse = async (req, res, next) => {
     data[0] = req.body["userID"];
     data[1] = req.body["courseID"];
 
-    db.run(`INSERT INTO Course_Users(userID, courseID)
-        VALUES(?, ?)`, data, function (err, value) {
-        if (err) {
-            console.log(err)
-            return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
-        }
-        else {
-            insertAudit(req.body['inID'], 'JOIN_COURSE', `Student: ${req.body['userID']} joined Course: ${req.body["courseID"]}`)
-            return res.status(200).json({ message: 'User Course added.' });
-        }
+    return ensureCourseIsActive(data[1], res, () => {
+        db.run(`INSERT INTO Course_Users(userID, courseID)
+            VALUES(?, ?)`, data, function (err, value) {
+            if (err) {
+                console.log(err)
+                return res.status(500).json({ message: 'Something went wrong. Please try again later.' });
+            }
+            else {
+                insertAudit(req.body['inID'], 'JOIN_COURSE', `Student: ${req.body['userID']} joined Course: ${req.body["courseID"]}`)
+                return res.status(200).json({ message: 'User Course added.' });
+            }
+        });
     });
 }
 

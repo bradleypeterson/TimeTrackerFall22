@@ -448,9 +448,14 @@ exports.GetAllEvals = async (req, res, next) => {
 
     let evaluateeID = req.params["evaluateeID"];
 
-    let sql = `SELECT assignedEvalID as evalID, projectID
-               FROM Assigned_Eval
-               WHERE evaluateeID = ? AND evalCompleted = 0`;
+    let sql = `SELECT a.assignedEvalID as evalID, a.projectID
+               FROM Assigned_Eval as a
+               INNER JOIN Projects as p ON p.projectID = a.projectID
+               INNER JOIN Courses as c ON c.courseID = p.courseID
+               WHERE a.evaluateeID = ?
+                 AND a.evalCompleted = 0
+                 AND p.isActive
+                 AND c.isActive`;
 
     db.all(sql, [evaluateeID], (err, rows) => {
         if (err) {
@@ -478,7 +483,12 @@ exports.GetAssignedEvals = async (req, res, next) => {
     INNER JOIN Assigned_Eval as a ON a.templateID = q.templateID
     INNER JOIN Question_Type as qt ON qt.questionTypeID = q.questionType
     INNER JOIN Projects as p ON a.projectID = p.projectID
-    WHERE evaluateeID = ? AND a.projectID = ? AND evalCompleted = 0`;
+    INNER JOIN Courses as c ON c.courseID = p.courseID
+    WHERE evaluateeID = ?
+      AND a.projectID = ?
+      AND evalCompleted = 0
+      AND p.isActive
+      AND c.isActive`;
 
     db.all(sql, [evaluateeID, projectID], (err, rows) => {
         if (err) {
