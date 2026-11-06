@@ -108,3 +108,9 @@ h5{
     position: absolute;
     right: 0;
 }
+
+.wizard-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}

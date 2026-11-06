@@ -73,7 +73,9 @@ export class EditCourseComponent implements OnInit {
             this.course.description
           );
           this.editCourseForm.controls['isActive'].setValue(
-            this.course.isActive
+            this.course.isActive === true ||
+              this.course.isActive === 1 ||
+              this.course.isActive === '1'
           );
           this.instructorID = this.course.instructorID;
           this.editCourseForm.controls['instructorID'].setValue(String(this.instructorID));
@@ -104,7 +106,7 @@ export class EditCourseComponent implements OnInit {
   editCourseForm = this.formBuilder.group({
     courseName: '',
     description: '',
-    isActive: '',
+    isActive: false,
     instructorID: '',
   });
 

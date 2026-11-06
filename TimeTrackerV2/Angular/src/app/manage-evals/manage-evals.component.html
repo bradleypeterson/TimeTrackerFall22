@@ -4,7 +4,7 @@
       <h2>Manage Evaluation Forms</h2>
       <p>Choose a form to edit its questions, or create a new form.</p>
     </div>
-    <button type="button" class="btn btn-purple btn-courses" (click)="showModal = true">
+    <button type="button" class="btn btn-purple btn-courses" (click)="openNewFormWizard()">
       Create Evaluation Form
     </button>
   </div>
@@ -80,17 +80,71 @@
   <div class="modal" *ngIf="showModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h5>New Evaluation Form</h5>
-        <button type="button" class="btn-close" (click)="showModal = false"></button>
+        <h5 *ngIf="newFormStep === 'name'">New Evaluation Form - Step 1 of 2</h5>
+        <h5 *ngIf="newFormStep === 'questions'">New Evaluation Form - Step 2 of 2</h5>
+        <button
+          *ngIf="newFormStep === 'name'"
+          type="button"
+          class="btn-close"
+          (click)="cancelNewFormWizard()"
+        ></button>
       </div>
-      <div class="modal-body">
+
+      <div *ngIf="newFormStep === 'name'" class="modal-body">
         <label for="template-name">Form Name</label>
         <input type="text" id="template-name" class="form-control" [(ngModel)]="newTemplateName" name="newTemplateName" />
         <div *ngIf="errorMessage" class="alert alert-danger mt-3 mb-0">{{ errorMessage }}</div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-purple btn-courses" (click)="createTemplate()">Create</button>
-        <button type="button" class="btn btn-secondary" (click)="showModal = false">Cancel</button>
+
+      <div *ngIf="newFormStep === 'name'" class="modal-footer">
+        <button type="button" class="btn btn-purple btn-courses" (click)="createTemplate()">Next</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelNewFormWizard()">Cancel</button>
+      </div>
+
+      <div *ngIf="newFormStep === 'questions'" class="modal-body">
+        <p>
+          Add at least one question to <strong>{{ selectedTemplateName }}</strong>.
+          You can add more questions before saving the form.
+        </p>
+
+        <label for="new-form-question-type">Response Type</label>
+        <select
+          id="new-form-question-type"
+          class="form-select"
+          [(ngModel)]="newQuestionType"
+          name="newFormQuestionType"
+        >
+          <option value="" disabled>Select Type</option>
+          <option *ngFor="let questionType of questionTypes" [value]="questionType">{{ questionType }}</option>
+        </select>
+
+        <label for="new-form-question-text" class="mt-2">Question</label>
+        <input
+          type="text"
+          id="new-form-question-text"
+          class="form-control"
+          [(ngModel)]="newQuestionText"
+          name="newFormQuestionText"
+        />
+
+        <div *ngIf="newFormQuestionCount > 0" class="alert alert-success mt-3 mb-0">
+          {{ newFormQuestionCount }} question{{ newFormQuestionCount === 1 ? '' : 's' }} added.
+        </div>
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3 mb-0">{{ errorMessage }}</div>
+      </div>
+
+      <div *ngIf="newFormStep === 'questions'" class="modal-footer wizard-actions">
+        <button type="button" class="btn btn-purple btn-courses" (click)="addQuestion()">
+          {{ newFormQuestionCount > 0 ? 'Add Another Question' : 'Add Question' }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          [disabled]="newFormQuestionCount === 0"
+          (click)="finishNewForm()"
+        >
+          Save Form
+        </button>
       </div>
     </div>
   </div>
@@ -127,6 +181,7 @@
         </select>
         <label for="new-question-text" class="mt-2">Question</label>
         <input type="text" id="new-question-text" class="form-control" [(ngModel)]="newQuestionText" name="newQuestionText" />
+        <div *ngIf="errorMessage" class="alert alert-danger mt-3 mb-0">{{ errorMessage }}</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-purple btn-courses" (click)="addQuestion()">Add Question</button>

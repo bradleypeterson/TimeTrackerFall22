@@ -60,7 +60,7 @@ exports.GetActiveProjectsForUser = (req, res) => {
         INNER JOIN Course_Users as cu ON cu.CourseID = c.courseID
         INNER JOIN Users as u on u.userID = cu.userID AND u.userID = ?
         INNER JOIN Project_Users as pu on pu.userID = u.userID AND pu.projectID = p.projectID
-        WHERE p.isActive`;
+        WHERE p.isActive AND c.isActive`;
 
     db.all(sql, [userID], (err, rows) => {
         if (err) {
