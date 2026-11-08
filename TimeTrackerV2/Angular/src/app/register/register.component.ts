@@ -119,7 +119,12 @@ export class RegisterComponent implements OnInit {
           if (payload.type == 'instructor') {
             this.successMsg = 'Request sent. Account pending admin approval.';
           } else {
-            this.router.navigate(['./']);
+            this.router.navigate(['/'], {
+              queryParams: { registration: 'success' },
+              state: {
+                successMsg: 'Registration successful. Please sign in.',
+              },
+            });
           }
         },
         error: (error) => {

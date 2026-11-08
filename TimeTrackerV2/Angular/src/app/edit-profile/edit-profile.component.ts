@@ -16,6 +16,9 @@ export class EditProfileComponent implements OnInit {
   public profileData: any;
 
   editProfileForm = this.formBuilder.group({
+    firstName: '',
+    lastName: '',
+    username: '',
     pronouns: '',
     bio: '',
     contact: '',
@@ -62,6 +65,15 @@ export class EditProfileComponent implements OnInit {
                   this.userProfile = profile;
                 }
               }
+              this.editProfileForm.controls['firstName'].setValue(
+                this.userProfile.firstName
+              )
+              this.editProfileForm.controls['lastName'].setValue(
+                this.userProfile.lastName
+              )
+              this.editProfileForm.controls['username'].setValue(
+                this.userProfile.username
+              )
               this.editProfileForm.controls['pronouns'].setValue(
                 this.userProfile.pronouns
               );
@@ -81,14 +93,17 @@ export class EditProfileComponent implements OnInit {
   }
 
   onSubmit(): void {
+    console.log("onSubmit reached");
+    this.updateProfile();
+  }
+
+  updateProfile(): void {
     let payload = {
       pronouns: this.editProfileForm.value['pronouns'],
       bio: this.editProfileForm.value['bio'],
       contact: this.editProfileForm.value['contact'],
       userID: this.userID,
     }
-
-    console.log("onSubmit reached");
 
     this.http
       .post<any>(`${environment.apiURL}/api/EditProfile`, payload, {
@@ -100,7 +115,8 @@ export class EditProfileComponent implements OnInit {
         next: (data) => {
           this.errMsg = '';
           console.log('data posted');
-          this.NavigateBackToProfile();
+          // Moving to a second method to do another database update
+          this.updateUser();
         },
         error: (error) => {
           this.errMsg = error['error']['message'];
@@ -108,8 +124,35 @@ export class EditProfileComponent implements OnInit {
       });
   }
 
-  NavigateBackToProfile() {
-    let state = {userID: this.userID};
+  updateUser(): void {
+    let payload = {
+      username: this.editProfileForm.value['username'],
+      firstName: this.editProfileForm.value['firstName'],
+      lastName: this.editProfileForm.value['lastName'],
+      userID: this.userID,
+      oldUsername: this.userProfile.username,
+    }
+
+    this.http
+      .post<any>(`${environment.apiURL}/api/EditUser`, payload, {
+        headers: new HttpHeaders({
+          'Access-Control-Allow-Headers': 'Content-Type',
+        }),
+      })
+      .subscribe({
+        next: (data) => {
+          this.errMsg = '';
+          console.log('data posted');
+          this.NavigateBackToProfile('Profile updated.');
+        },
+        error: (error) => {
+          this.errMsg = error['error']['message'];
+        },
+      });
+  }
+
+  NavigateBackToProfile(successMsg = '') {
+    let state = {userID: this.userID, successMsg};
     // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
     this.router.navigate(['/profile'], { state });
   }

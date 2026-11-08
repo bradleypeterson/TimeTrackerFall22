@@ -80,7 +80,17 @@ const {
     GetRecentCourses,
 } = require("./controllers/CourseControllers");
 
-const { CreateNewGroup } = require("./controllers/MiscellaneousControllers");
+const { 
+    CreateNewGroup
+ } = require("./controllers/MiscellaneousControllers");
+
+ const {
+    CreateBugReport,
+    GetUnresolvedIssues,
+    GetResolvedIssues,
+    MarkIssueResolved,
+    MarkIssueUnresolved
+ } = require("./controllers/BugReportControllers");
 
 const {
     GetProjectInfo,
@@ -112,6 +122,7 @@ const {
 const {
     GetUserInfo,
     GetUserProfile,
+    EditUserInfo,
     EditUserProfile,
     GetUsersInfo,
     GetRecentUsers,
@@ -209,7 +220,22 @@ router.post("/removePendUser", RemovePendUser);
 
 //#region Miscellaneous routes
 router.post("/createGroup", CreateNewGroup);
+
 router.get("/UsersPendingApproval", GetUsersPendingApproval);
+
+//#endregion
+
+//#region Bug Report routes
+router.post("/CreateBugReport", CreateBugReport);
+
+router.get("/getUnresolvedIssues", GetUnresolvedIssues);
+
+router.get("/getResolvedIssues", GetResolvedIssues);
+
+router.post("/markIssueResolved", MarkIssueResolved);
+
+router.post("/markIssueUnresolved", MarkIssueUnresolved);
+
 //#endregion
 
 //#region Project routes
@@ -271,6 +297,8 @@ router.get("/TimeCardInfo/:id", GetTimeCardInfo);
 router.get("/GetUserInfo/:id", GetUserInfo);
 
 router.get("/UserProfile/:userID", GetUserProfile);
+
+router.post("/EditUser", EditUserInfo);
 
 router.post("/EditProfile", EditUserProfile);
 

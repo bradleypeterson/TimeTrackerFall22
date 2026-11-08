@@ -112,7 +112,9 @@ export class EvalComponent implements OnInit {
     .subscribe({
       next: (data) => {
         console.log('Evaluation completed:', data);
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard'], {
+          state: { successMsg: 'Evaluation submitted.' },
+        });
       },
       error: (err) => {
         // Show a helpful message when the server provides no details

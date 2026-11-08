@@ -1,0 +1,36 @@
+<div id="report-issue">
+    <!--Users not logged in don't have a way to navigate pages, so this button is for them in particular-->
+    <div *ngIf="!loggedIn" class="btn-group">
+        <!--This href links to the login page-->
+        <a href="">
+            <button class="btn btn-purple mt-2">Return to login page</button>
+        </a>
+    </div>
+    <div  *ngIf="fillingForm">
+        <h2>Report Issue</h2>
+        <form [formGroup]="issueReportForm" (ngSubmit)="onSubmit()">
+            <p class="errorText">{{ errMsg }}</p>
+            <div class="form-group">
+                <label for="bugDescription">Description</label>
+                <textarea formControlName="bugDescription" id="bugDescription" 
+                    placeholder="Please be thorough in your description of your issue so it can be resolved swiftly."
+                    class="form-control" style="width: 1300px" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="inputName">Name</label>
+                <input formControlName="inputName" type="text" id="inputName" placeholder="Name"
+                    class="form-control" style="width: 500px">
+            </div>
+            <div class="btn-group">
+                <button type="submit" class="btn btn-purple mt-2" 
+                    [disabled]="issueReportForm.errors?.fieldsCheck">Submit Report</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="!fillingForm">
+        <p style="padding-top: 10px">
+            Thank you for your feedback. You may now leave this page.
+        </p>
+    </div>
+</div>
