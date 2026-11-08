@@ -3,11 +3,13 @@ const express = require("express");
 const https = require("https");
 const path = require("path");
 const fs = require("fs");
-const ConnectToDB = require("./Database/DBConnection.js");
-const ConnectToAudit = require("./Database/create_audit.js")
+const ConnectToDB = require("./database/DBConnection");
+const ConnectToAudit = require("./database/create_audit.js");
+const session = require("express-session");
+const crypto = require("crypto");
 
+require("./database/seed.js"); //this runs the file seed.js to make the database if it doesn't exist
 
-require("./Database/seed.js"); //this runs the file seed.js to make the database if it doesn't exist
 
 const ExternalRoutes = require("./routes/routes"); //include our "routes.js" module so we can use it inside this file.  Module documentation https://www.w3schools.com/nodejs/nodejs_modules.asp
 
@@ -23,7 +25,7 @@ const app = express();
 const hostname = "137.190.19.215"
 
 app.use(cors({
-  origin: true, 
+  origin: true,
   credentials: true
 }));
 
@@ -36,6 +38,20 @@ app.use(
 app.get("/", (req, res) => {
   return res.send("Hello World");
 });
+
+// Remember authenticated users between API requests.
+// This in-memory session setup is for local development.
+app.use(session({
+  secret: process.env.SESSION_SECRET || crypto.randomBytes(32).toString('hex'),
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: false, // Local website uses http://localhost.
+      maxAge: 60 * 60 * 1000
+  }
+}));
 
 // using our routes we defined inside our "routes.js" file
 app.use("/api", ExternalRoutes); //adds our custom http responses from the file specified for "ExternalRoutes"

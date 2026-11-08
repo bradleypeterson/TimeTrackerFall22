@@ -18,3 +18,39 @@
 .password-toggle .fa {
   font-size: 16px;
 }
+
+
+.login-card {
+  width: calc(100% - 32px);
+  max-width: 440px;
+  margin-left: auto;
+  margin-right: auto;
+  flex: 0 0 auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.login-card .card-body {
+    padding: 32px 24px;
+
+}
+
+.login-link {
+  color: #63358b;
+  text-decoration: underline;
+}
+
+.login-link:hover {
+  color: #492568;
+}
+
+.registration-link {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e5e5;
+  text-align: center;
+  font-size: 14px;
+}
+
+.registration-link a {
+  white-space: nowrap;
+}

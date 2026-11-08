@@ -1,92 +1,160 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import CryptoES from 'crypto-es';
 import { environment } from '../../environments/environment';
 
 @Component({
-    selector: 'app-resetpassword',
-    templateUrl: './resetpassword.component.html',
-    styleUrls: ['./resetpassword.component.css']
+  selector: 'app-resetpassword',
+  templateUrl: './resetpassword.component.html',
+  styleUrls: ['./resetpassword.component.css'],
 })
 export class ResetpasswordComponent implements OnInit {
-    userID!: number;
-    resetForm!: UntypedFormGroup;
-    errorMessage: string = "";
+  userID: number;
+  resetForm!: UntypedFormGroup;
+  errorMessage = '';
+  busy = false;
+  isAdmin = false;
+  username = '';
 
-    constructor(
-        private activeRoute: ActivatedRoute,
-        private location: Location,
-        private http: HttpClient,
-        private router: Router,
-    ) {
-        // This will grab values from the state variable of the navigate function we defined inside the users.ts component in the function NavToResetPassword().  This solution was found here https://stackoverflow.com/a/54365098
-        console.log(JSON.stringify(this.router.getCurrentNavigation()?.extras.state));
-        this.userID = this.router.getCurrentNavigation()?.extras.state?.userID;
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {
+    // Identify the profile being edited.
+    // history.state also preserves the target when refreshing this page.
+    const state = this.router.getCurrentNavigation()?.extras.state;
+    this.userID = Number(
+      state?.['userID'] ?? history.state?.userID
+    );
+
+    // The saved role controls the form's appearance only.
+    // The backend independently checks the authenticated user's permissions.
+    const user = JSON.parse(
+      localStorage.getItem('currentUser') || '{}'
+    );
+
+    this.isAdmin = user.type === 'admin';
+    this.username = user.username || '';
+  }
+
+  ngOnInit(): void {
+    // Non-admin users must confirm their current password.
+    // Admins can reset passwords through their verified admin session.
+    this.resetForm = new UntypedFormGroup({
+      currentPassword: new UntypedFormControl(
+        '',
+        this.isAdmin ? [] : [Validators.required]
+      ),
+      newPswd: new UntypedFormControl('', Validators.required),
+      confirm: new UntypedFormControl('', Validators.required),
+    });
+  }
+
+  onSubmit(): void {
+    // Prevent duplicate requests while a password change is processing.
+    if (this.busy) return;
+
+    this.errorMessage = '';
+
+    // Do not send a request without a valid target account.
+    if (!Number.isSafeInteger(this.userID) || this.userID <= 0) {
+      this.errorMessage =
+        'Open Reset Password from the user’s profile.';
+      return;
     }
 
-    ngOnInit(): void {
-        this.resetForm = new UntypedFormGroup({
-            newPswd: new UntypedFormControl(null),
-            confirm: new UntypedFormControl(null)
-        });
+    if (this.resetForm.invalid) {
+      this.resetForm.markAllAsTouched();
+      this.errorMessage = 'Complete all password fields.';
+      return;
     }
 
-    onSubmit() {
-        // If th reset form is not valid
-        if (!this.resetForm.valid) {
-            this.errorMessage = "A password field has not been supplied";
-            return;
-        }
-        this.errorMessage = "";
+    const { currentPassword, newPswd, confirm } =
+      this.resetForm.value;
 
-        let pass1 = this.resetForm.get("newPswd")!.value;
-        let pass2 = this.resetForm.get("confirm")!.value;
+    // Catch typing mistakes before generating a hash or sending a request.
+    if (newPswd !== confirm) {
+      this.errorMessage = 'Your new passwords do not match.';
+      return;
+    }
 
-        // if the two passwords don't match
-        if(pass1 !== pass2)
+    this.busy = true;
+
+    const savePassword = (currentHash?: string) => {
+      // Generate a fresh salt for the new password.
+      // Keep the hashing settings compatible with the existing login flow.
+      const salt = CryptoES.lib.WordArray.random(16).toString();
+      const password = CryptoES.PBKDF2(newPswd, salt, {
+        keySize: 512 / 32,
+        iterations: 1000,
+      }).toString();
+
+      this.http.put<{ message: string }>(
+        `${environment.apiURL}/api/resetPassword/${this.userID}`,
         {
-            this.errorMessage = "Your passwords do not match";
-            return;
-        }
-        this.errorMessage = "";
+          password,
+          salt,
+          currentPassword: currentHash,
+        },
+        // Send the session cookie so the backend can identify the requester.
+        { withCredentials: true }
+      ).subscribe({
+        next: (data) => {
+          this.busy = false;
+          this.resetForm.reset();
+          alert(data.message);
+          this.NavigateBackToProfile();
+        },
+        error: (error) => this.handleError(error),
+      });
+    };
 
-        const salt = CryptoES.lib.WordArray.random(16).toString();  //Creates a salt value that is 16*2 (default encoder for toString() is hexadecimal) values long (this is because hex uses 1/2 of the byte while a character uses the full byte)
-        const hashedPassword = CryptoES.PBKDF2(pass1, salt, { keySize: 512/32, iterations: 1000 }).toString();
-
-        // Make a body variable for the http.put request so we can update the users password
-        let requestBody = {
-            password: hashedPassword,
-            salt: salt
-        };
-
-        this.http
-          .put(
-            `${environment.apiURL}/api/resetPassword/${this.userID}`,
-            requestBody
-          )
-          .subscribe(
-            (res: any) => {
-              this.ShowMessage(res.message);
-              this.NavigateBackToProfile();
-            },
-            (err) => {
-              this.ShowMessage(err.error.message);
-            }
-          );
+    // Admins skip current-password confirmation in the UI.
+    // Changing localStorage cannot bypass the backend's admin permission check.
+    if (this.isAdmin) {
+      savePassword();
+      return;
     }
 
-    NavigateBackToProfile() {
-        let state = {userID: this.userID};
-        // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
-        this.router.navigate(['/profile'], { state });
-    }
+    // Confirm the current password using its existing salt.
+    // The new password receives a separate, newly generated salt.
+    this.http.get<string>(
+      `${environment.apiURL}/api/saltForUser/${encodeURIComponent(this.username)}`
+    ).subscribe({
+      next: (salt) => {
+        const currentHash = CryptoES.PBKDF2(
+          currentPassword,
+          salt,
+          {
+            keySize: 512 / 32,
+            iterations: 1000,
+          }
+        ).toString();
 
-    // Open an alert window with the supplied message
-    ShowMessage(message: string) {
-        alert(message);
-    }
+        savePassword(currentHash);
+      },
+      error: (error) => this.handleError(error),
+    });
+  }
+
+  private handleError(error: any): void {
+    // Allow another attempt, clear the current password, and show the error.
+    this.busy = false;
+    this.resetForm.controls['currentPassword'].reset('');
+    this.errorMessage =
+      error.error?.message || 'Unable to change the password.';
+  }
+
+  NavigateBackToProfile(): void {
+    // Return to the same profile after saving or cancelling.
+    this.router.navigate(['/profile'], {
+      state: { userID: this.userID },
+    });
+  }
 }
