@@ -34,11 +34,11 @@ exports.CreateBugReport = async (req, res, next) => {
 exports.GetUnresolvedIssues = async (req, res) => {
     console.log("BugReportControllers.js file/GetUnresolvedIssues route called");
 
-	let sql = `SELECT Bug_Reports.bugReportID, Bug_Reports.description, Bug_Reports.name, Users.type
-    FROM Bug_Reports
-    LEFT JOIN Users ON Bug_Reports.userID = Users.userID
-    WHERE Bug_Reports.isResolved = 0
-    ORDER BY lastUpdateDate DESC`;
+	let sql = `SELECT b.bugReportID, b.description, b.name, u.type, b.creationDate
+    FROM Bug_Reports b
+    LEFT JOIN Users u ON b.userID = u.userID
+    WHERE b.isResolved = 0
+    ORDER BY b.lastUpdateDate DESC LIMIT 10`;
 
 	db.all(sql, [], (err, rows) => {
 		if (err) {
@@ -54,11 +54,11 @@ exports.GetUnresolvedIssues = async (req, res) => {
 exports.GetResolvedIssues = async (req, res) => {
     console.log("BugReportControllers.js file/GetResolvedIssues route called");
 
-	let sql = `SELECT Bug_Reports.bugReportID, Bug_Reports.description, Bug_Reports.name, Users.type
-    FROM Bug_Reports
-    LEFT JOIN Users ON Bug_Reports.userID = Users.userID
-    WHERE Bug_Reports.isResolved = 1
-    ORDER BY lastUpdateDate DESC`;
+	let sql = `SELECT b.bugReportID, b.description, b.name, u.type, b.creationDate
+    FROM Bug_Reports b
+    LEFT JOIN Users u ON b.userID = u.userID
+    WHERE b.isResolved = 1
+    ORDER BY b.lastUpdateDate`;
 
 	db.all(sql, [], (err, rows) => {
 		if (err) {

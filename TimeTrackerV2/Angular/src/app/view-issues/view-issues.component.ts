@@ -20,7 +20,8 @@ export class ViewIssuesComponent implements OnInit {
     public currentUser: any;
     date: Date = new Date();
 
-    
+    public p: number = 1;
+    public c: number = 1;
 
     constructor(
         private http: HttpClient,
