@@ -22,6 +22,12 @@ interface UpdateQuestionPayload {
   questionType?: string;
 }
 
+interface CreateTemplateResponse {
+  templateId: string | number;
+}
+
+type NewFormStep = 'name' | 'questions';
+
 @Component({
     selector: 'app-manage-evals',
     templateUrl: './manage-evals.component.html',
@@ -48,6 +54,8 @@ export class ManageEvalsComponent implements OnInit {
   saveSuccessful: boolean = false;
   statusMessage = '';
   errorMessage = '';
+  newFormStep: NewFormStep = 'name';
+  newFormQuestionCount = 0;
 
   constructor(private http: HttpClient) {}
 
@@ -157,19 +165,21 @@ export class ManageEvalsComponent implements OnInit {
     }
 
     const newTemplate = { templateName: this.newTemplateName.trim() };
-    console.error('evaluatorID:', this.evaluatorID);
     this.http
-      .post(
+      .post<CreateTemplateResponse>(
         `${environment.apiURL}/api/addTemplate/${this.evaluatorID}`,
         newTemplate
       )
       .subscribe(
-        () => {
+        (data) => {
+          this.selectedTemplateId = String(data.templateId);
+          this.selectedTemplateName = newTemplate.templateName;
+          this.selectedTemplateQuestions = [];
+          this.initialQuestionsState = {};
+          this.newFormQuestionCount = 0;
+          this.newFormStep = 'questions';
           this.loadTemplates();
-          this.statusMessage = 'Evaluation form created.';
           this.errorMessage = '';
-          this.newTemplateName = '';
-          this.showModal = false;
         },
         (error) => {
           this.statusMessage = '';
@@ -178,6 +188,38 @@ export class ManageEvalsComponent implements OnInit {
           console.error('Error creating template:', error);
         }
       );
+  }
+
+  openNewFormWizard() {
+    this.newTemplateName = '';
+    this.newQuestionText = '';
+    this.newQuestionType = '';
+    this.newFormQuestionCount = 0;
+    this.newFormStep = 'name';
+    this.statusMessage = '';
+    this.errorMessage = '';
+    this.showModal = true;
+  }
+
+  cancelNewFormWizard() {
+    this.showModal = false;
+    this.errorMessage = '';
+  }
+
+  finishNewForm() {
+    if (this.newFormQuestionCount === 0) {
+      this.errorMessage = 'Add at least one question before saving the form.';
+      return;
+    }
+
+    this.showModal = false;
+    this.newTemplateName = '';
+    this.newQuestionText = '';
+    this.newQuestionType = '';
+    this.newFormStep = 'name';
+    this.statusMessage =
+      'Evaluation form saved. Open an active course and choose Assign Evals to assign it to students.';
+    this.errorMessage = '';
   }
 
   openRenameModal(template: EvalTemplate) {
@@ -251,13 +293,14 @@ export class ManageEvalsComponent implements OnInit {
       return;
     }
 
-    if (!this.newQuestionText || !this.newQuestionType) {
-      alert('Both question text and type are required');
+    const questionText = this.newQuestionText.trim();
+    if (!questionText || !this.newQuestionType) {
+      this.errorMessage = 'Both question text and type are required.';
       return;
     }
 
     const payload = {
-      questionText: this.newQuestionText,
+      questionText,
       questionType: this.newQuestionType,
       templateID: this.selectedTemplateId,
     };
@@ -268,7 +311,13 @@ export class ManageEvalsComponent implements OnInit {
         this.showQuestionModal = false;
         this.newQuestionText = '';
         this.newQuestionType = '';
-        this.statusMessage = '1 question added successfully.';
+        if (this.newFormStep === 'questions') {
+          this.newFormQuestionCount++;
+          this.statusMessage =
+            'Question added. Add another question or save the form.';
+        } else {
+          this.statusMessage = '1 question added successfully.';
+        }
         this.errorMessage = '';
       },
       (error) => {

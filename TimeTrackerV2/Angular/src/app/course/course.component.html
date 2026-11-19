@@ -26,9 +26,13 @@
         <button class="btn btn-success" (click)="NavigateToAddProject()" *ngIf="course.isActive">Create New Project</button>
         <button class="btn btn-purple" (click)="NavigateToAssignEvals()" *ngIf="course.isActive">Assign Evals</button>
         <button class="btn btn-purple" (click)="NavigateToViewEvals()">View Evaluations</button>
-        <i *ngIf="!course.isActive">Course is inactive. Reactivate course in edit page to create projects.</i>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="course && !course.isActive" class="alert alert-danger inactive-course-alert" role="alert">
+    <strong>This course is inactive.</strong> Select <strong>Edit</strong> to reactivate it before creating projects or assigning evaluations.
+    <span class="d-block mt-1">Projects that are already active will return automatically. Only projects marked inactive separately must be reactivated individually.</span>
   </div>
 
   <div>
