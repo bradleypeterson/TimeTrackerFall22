@@ -182,9 +182,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let teamMate of totalTimeMap | keyvalue">
-                            <td>{{teamMate.key}}</td>
-                            <td>{{teamMate.value | totalTimePipe}}</td>
+                        <tr *ngFor="let teamMate of totalTimeMap | keyvalue: compareContributions">
+                            <td>{{teamMate.value.displayName}}</td>
+                            <td>{{teamMate.value.totalTime | totalTimePipe}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -261,9 +261,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let teamMate of totalTimeMap | keyvalue">
-                            <td>{{teamMate.key}}</td>
-                            <td>{{teamMate.value | totalTimePipe}}</td>
+                        <tr *ngFor="let teamMate of totalTimeMap | keyvalue: compareContributions">
+                            <td>{{teamMate.value.displayName}}</td>
+                            <td>{{teamMate.value.totalTime | totalTimePipe}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -403,9 +403,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let teamMate of totalTimeMap | keyvalue">
-                            <td>{{teamMate.key}}</td>
-                            <td>{{teamMate.value | totalTimePipe}}</td>
+                        <tr *ngFor="let teamMate of totalTimeMap | keyvalue: compareContributions">
+                            <td>{{teamMate.value.displayName}}</td>
+                            <td>{{teamMate.value.totalTime | totalTimePipe}}</td>
                         </tr>
                     </tbody>
                 </table>
