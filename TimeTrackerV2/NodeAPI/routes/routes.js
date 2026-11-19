@@ -2,6 +2,41 @@ const express = require("express"); //includes the "express" module so we can us
 
 const router = express.Router();
 
+// End the server session before the browser clears its signed-in state.
+router.post('/logout', (req, res) => {
+    req.session.destroy((error) => {
+        if (error) {
+            return res.status(500).json({
+                message: 'Unable to log out. Please try again.'
+            });
+        }
+
+        // Match the name and settings of the cookie configured in server.js.
+        res.clearCookie('connect.sid', {
+            path: '/',
+            httpOnly: true,
+            sameSite: 'lax',
+            secure: false
+        });
+
+        return res.status(200).json({
+            message: 'Logged out successfully.'
+        });
+    });
+});
+
+// Limit repeated requests to recovery endpoints.
+const { rateLimit } = require('express-rate-limit');
+
+// Import handlers for requesting and confirming recovery-email verification. and password reset.
+const {
+    RequestRecoveryEmailVerification,
+    VerifyRecoveryEmail,
+    RequestPasswordReset,
+    GetRecoveryEmailStatus,
+    ResetPasswordWithToken,
+} = require('./controllers/RecoveryControllers');
+
 //#region Controller imports (imports everything inside the {} to this file)
 const {
     Register,
@@ -13,6 +48,17 @@ const {
     ChangePassword,
     UpdateUserInfo,
 } = require("./controllers/AccountControllers");
+
+const recoveryLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 20,
+    keyGenerator: () => 'local-recovery',
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: {
+        message: 'Too many recovery attempts. Please try again later.'
+    },
+});
 
 const {
     GetAllCoursesNamesDescriptionIDs,
@@ -295,6 +341,41 @@ router.get("/getAssignedEvals/:evaluateeID/:projectID", GetAssignedEvals);
 router.post("/submitResponses", SubmitResponses);
 
 router.post("/evalCompleted", evalCompleted);
+
+// Check current account credentials and email a verification link.
+router.post(
+    '/recovery/request-verification',
+    recoveryLimiter,
+    RequestRecoveryEmailVerification
+);
+
+// Validate and consume the verification token, then save the recovery email.
+router.post(
+    '/recovery/verify-email',
+    recoveryLimiter,
+    VerifyRecoveryEmail
+);
+
+// Request a reset link using the account's username.
+router.post(
+    '/recovery/request-reset',
+    recoveryLimiter,
+    RequestPasswordReset
+);
+
+// Require owner/admin credentials before returning recovery-email details.
+router.post(
+    '/recovery/status',
+    recoveryLimiter,
+    GetRecoveryEmailStatus
+);
+
+// Validate the recovery token and save the new password.
+router.post(
+    '/recovery/reset-password',
+    recoveryLimiter,
+    ResetPasswordWithToken
+);
 
 //#endregion
 

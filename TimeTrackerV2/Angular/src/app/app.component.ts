@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
 import { filter } from 'rxjs/operators';
 
 @Component({
@@ -17,9 +19,12 @@ export class AppComponent implements OnInit {
   userID: string = '';
   isNavbarExpanded = false;
   openMenu: 'account' | 'course' | null = null;
+  // Prevent repeated logout requests while the first one is processing.
+  logoutBusy = false;
 
   constructor (
     private router: Router,
+    private http: HttpClient,
   ) { }
 
   ngOnInit(): void {
@@ -62,16 +67,47 @@ export class AppComponent implements OnInit {
   }
 
   // Used for dropdown for View Profile and Logout
-  onUserOptionChange(selectedOption: 'viewProfile' | '#') {
-    this.openMenu = null;
+  // Route account-menu actions through the appropriate handler.
+onUserOptionChange(selectedOption: 'viewProfile' | '#'): void {
+  this.openMenu = null;
 
-    if (selectedOption === 'viewProfile') {
-      this.ViewProfile();
-    } else if (selectedOption === '#') {
-      localStorage.removeItem('currentUser');
-      this.router.navigate(['/']);
-    }
+  if (selectedOption === 'viewProfile') {
+    this.ViewProfile();
+  } else if (selectedOption === '#') {
+    this.logout();
   }
+}
+
+logout(): void {
+  // Prevent duplicate logout requests.
+  if (this.logoutBusy) return;
+  this.logoutBusy = true;
+
+  this.http.post(
+    `${environment.apiURL}/api/logout`,
+    {},
+    // Include the session cookie so the server destroys this user's session.
+    { withCredentials: true }
+  ).subscribe({
+    next: () => {
+      // Clear browser state after the server confirms logout succeeded.
+      localStorage.removeItem('currentUser');
+      localStorage.removeItem('userProfile');
+
+      this.openMenu = null;
+      this.isNavbarExpanded = false;
+      this.loadCurrentUser();
+      this.logoutBusy = false;
+
+      this.router.navigate(['/']);
+    },
+    error: () => {
+      // Keep the current state if the server could not complete logout.
+      this.logoutBusy = false;
+      alert('Unable to log out. Please try again.');
+    },
+  });
+}
   
   ViewProfile() {
     let state = {userID: this.userID};

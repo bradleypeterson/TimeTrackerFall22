@@ -1,5 +1,5 @@
-const ConnectToAudit = require('../../Database/create_audit');
-const ConnectToDB = require('../../Database/DBConnection');
+const ConnectToAudit = require('../../database/create_audit');
+const ConnectToDB = require('../../database/DBConnection');
 let db = ConnectToDB();
 let al = ConnectToAudit();
 
