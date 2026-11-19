@@ -34,6 +34,7 @@ import { SetupRecoveryComponent } from './setup-recovery/setup-recovery.componen
 import { RecoverPasswordComponent } from './recover-password/recover-password.component';
 import { ReportIssueComponent } from './report-issue/report-issue.component'
 import { ViewIssuesComponent } from './view-issues/view-issues.component'
+import { ContactAdminComponent } from './contact-admin/contact-admin.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -68,7 +69,8 @@ const routes: Routes = [
   { path: 'setup-recovery', component: SetupRecoveryComponent }, // Previously setup-recovery/:id
   { path: 'recover-password', component: RecoverPasswordComponent }, // Previously recover-password/:id
   { path: 'report-issue', component: ReportIssueComponent},
-  { path: 'view-issues', component: ViewIssuesComponent, canActivate: [adminGuard]}
+  { path: 'view-issues', component: ViewIssuesComponent, canActivate: [adminGuard]},
+  { path: 'contact-admin', component: ContactAdminComponent }, // Previously contact-admin/:id
 ];
 
 @NgModule({

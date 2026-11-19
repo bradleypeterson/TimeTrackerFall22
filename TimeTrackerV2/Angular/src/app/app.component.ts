@@ -1,37 +1,64 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EMPTY, merge, of, timer } from 'rxjs';
+import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
-import { filter } from 'rxjs/operators';
+import { IssueCountService } from './view-issues/issue-count.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
   userType!: string;
-  instructor: boolean = false;
-  student: boolean = false;
-  admin: boolean = false;
-  nullType: boolean = false;
-  name: string = '';
-  userID: string = '';
+  instructor = false;
+  student = false;
+  admin = false;
+  nullType = false;
+  name = '';
+  userID = '';
   isNavbarExpanded = false;
   openMenu: 'account' | 'course' | null = null;
-  // Prevent repeated logout requests while the first one is processing.
   logoutBusy = false;
+  openIssueCount = 0;
+  title = 'TimeTrackerV2';
 
-  constructor (
+  constructor(
     private router: Router,
     private http: HttpClient,
-  ) { }
+    private issueCount: IssueCountService,
+    private destroyRef: DestroyRef,
+  ) {}
 
   ngOnInit(): void {
     this.loadCurrentUser();
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => this.loadCurrentUser());
+
+    const navigation$ = this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      tap(() => this.loadCurrentUser()),
+    );
+
+    merge(timer(0, 30000), navigation$, this.issueCount.changes$).pipe(
+      switchMap(() => {
+        if (!this.admin) return of(0);
+
+        return this.http.get<unknown[]>(
+          `${environment.apiURL}/api/getUnresolvedIssues/`,
+          { withCredentials: true },
+        ).pipe(
+          map((issues) => issues.length),
+          catchError((error) =>
+            error.status === 401 || error.status === 403 ? of(0) : EMPTY,
+          ),
+        );
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe((count) => {
+      this.openIssueCount = count;
+    });
   }
 
   loadCurrentUser(): void {
@@ -49,8 +76,7 @@ export class AppComponent implements OnInit {
     if (this.userType === 'admin') {
       this.admin = true;
       this.name = userData.firstName + ' ' + userData.lastName;
-    }
-    else if (this.userType === 'instructor') {
+    } else if (this.userType === 'instructor') {
       this.instructor = true;
       this.name = userData.firstName + ' ' + userData.lastName;
     } else if (this.userType === 'student') {
@@ -60,60 +86,52 @@ export class AppComponent implements OnInit {
       this.nullType = true;
     }
   }
-  title = 'TimeTrackerV2';
 
   toggleMenu(menu: 'account' | 'course'): void {
     this.openMenu = this.openMenu === menu ? null : menu;
   }
 
-  // Used for dropdown for View Profile and Logout
-  // Route account-menu actions through the appropriate handler.
-onUserOptionChange(selectedOption: 'viewProfile' | '#'): void {
-  this.openMenu = null;
+  onUserOptionChange(selectedOption: 'viewProfile' | '#'): void {
+    this.openMenu = null;
 
-  if (selectedOption === 'viewProfile') {
-    this.ViewProfile();
-  } else if (selectedOption === '#') {
-    this.logout();
+    if (selectedOption === 'viewProfile') {
+      this.ViewProfile();
+    } else if (selectedOption === '#') {
+      this.logout();
+    }
   }
-}
 
-logout(): void {
-  // Prevent duplicate logout requests.
-  if (this.logoutBusy) return;
-  this.logoutBusy = true;
+  logout(): void {
+    if (this.logoutBusy) return;
+    this.logoutBusy = true;
 
-  this.http.post(
-    `${environment.apiURL}/api/logout`,
-    {},
-    // Include the session cookie so the server destroys this user's session.
-    { withCredentials: true }
-  ).subscribe({
-    next: () => {
-      // Clear browser state after the server confirms logout succeeded.
-      localStorage.removeItem('currentUser');
-      localStorage.removeItem('userProfile');
+    this.http.post(
+      `${environment.apiURL}/api/logout`,
+      {},
+      { withCredentials: true },
+    ).subscribe({
+      next: () => {
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('userProfile');
 
-      this.openMenu = null;
-      this.isNavbarExpanded = false;
-      this.loadCurrentUser();
-      this.logoutBusy = false;
+        this.openMenu = null;
+        this.isNavbarExpanded = false;
+        this.loadCurrentUser();
+        this.issueCount.refresh();
+        this.logoutBusy = false;
 
-      this.router.navigate(['/']);
-    },
-    error: () => {
-      // Keep the current state if the server could not complete logout.
-      this.logoutBusy = false;
-      alert('Unable to log out. Please try again.');
-    },
-  });
-}
-  
-  ViewProfile() {
-    let state = {userID: this.userID};
-    // navigate to the component that is attached to the url inside the [] and pass some information to that page by using the code described here https://stackoverflow.com/a/54365098
-    // this navigation method allows you to view someone else's profile and then instantly navigate to your profile by pressing the "Profile" link in the navigation bar.
-    // however, the only issue with this implementation is that it replaces the other user profile from this history.  I.E. if you go back a page from viewing your profile, you are taken to the page that you were at before viewing the other user’s profile.
-    this.router.navigateByUrl('/', {skipLocationChange: true}).then(() => this.router.navigate(['/profile'], { state }));
+        this.router.navigate(['/']);
+      },
+      error: () => {
+        this.logoutBusy = false;
+        alert('Unable to log out. Please try again.');
+      },
+    });
+  }
+
+  ViewProfile(): void {
+    const state = { userID: this.userID };
+    this.router.navigateByUrl('/', { skipLocationChange: true })
+      .then(() => this.router.navigate(['/profile'], { state }));
   }
 }

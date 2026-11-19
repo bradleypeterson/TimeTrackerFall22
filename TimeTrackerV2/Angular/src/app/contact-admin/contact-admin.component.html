@@ -1,0 +1,49 @@
+<section class="card mx-auto mt-5 mb-4" style="max-width: 560px; width: 92%;">
+    <div class="card-header">
+      <h1 class="h4 mb-0">Contact Admin</h1>
+    </div>
+
+    <div class="card-body">
+      <div *ngIf="sent" class="alert alert-success" role="status">
+        Request submitted. An admin can follow up at the email you provided.
+      </div>
+
+      <form *ngIf="!sent" [formGroup]="form" (ngSubmit)="submit()">
+        <p>Tell us what happened and how we can reach you.</p>
+
+        <label for="help-name">Name</label>
+        <input id="help-name" class="form-control mb-3"
+          formControlName="name" autocomplete="name" maxlength="120" required>
+
+        <label for="help-username">TimeTracker username (if known)</label>
+        <input id="help-username" class="form-control mb-3"
+          formControlName="username" autocomplete="username" maxlength="200">
+
+        <label for="help-email">Email address we can reach you at</label>
+        <input id="help-email" class="form-control" type="email"
+          formControlName="replyEmail" autocomplete="email" maxlength="254"
+          aria-describedby="help-email-note" required>
+        <small id="help-email-note" class="d-block text-muted mb-3">
+          Use an inbox you can access. This won’t change your recovery email.
+        </small>
+
+        <label for="help-description">What do you need help with?</label>
+        <textarea id="help-description" class="form-control"
+          formControlName="description" rows="4" maxlength="2000"
+          aria-describedby="help-description-note" required></textarea>
+          <small id="help-description-note" class="d-block text-danger mb-3">
+            Please don’t include passwords or reset codes.
+          </small>
+
+        <div *ngIf="error" class="alert alert-danger" role="alert">{{ error }}</div>
+
+        <button type="submit" class="btn btn-purple w-100" [disabled]="busy">
+          {{ busy ? 'Submitting…' : 'Submit help request' }}
+        </button>
+      </form>
+
+      <a [routerLink]="sent ? '/' : '/forgot-password'" class="d-block mt-3">
+        {{ sent ? 'Back to Login' : 'Back to Forgot Password' }}
+      </a>
+    </div>
+  </section>

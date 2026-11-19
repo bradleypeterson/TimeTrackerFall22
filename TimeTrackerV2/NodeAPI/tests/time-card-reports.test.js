@@ -19,7 +19,7 @@ function getReports(rows, error = null) {
         exports: controllers,
         console: { log() {} },
         require(name) {
-            if (name === '../../Database/DBConnection') {
+            if (name === '../../database/DBConnection') {
                 return () => ({ all(sql, params, callback) { callback(error, rows); } });
             }
             if (name === './AuditLog') return () => {};

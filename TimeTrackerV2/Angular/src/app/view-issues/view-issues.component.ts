@@ -1,7 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { forkJoin } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { IssueCountService } from './issue-count.service';
+
+
+interface Issue {
+  bugReportID: number;
+  category: 'bug' | 'account-access';
+  description: string;
+  name: string;
+  type: string | null;
+  username: string | null;
+  replyEmail: string | null;
+}
 
 @Component({
   selector: 'app-view-issues',
@@ -9,108 +21,64 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./view-issues.component.css']
 })
 
+
 export class ViewIssuesComponent implements OnInit {
-    public errMsg = '';
-    public unresolvedIssues: any = [];
-    public resolvedIssues: any = [];
+  errMsg = '';
+  loading = true;
+  updating = false;
+  unresolvedIssues: Issue[] = [];
+  resolvedIssues: Issue[] = [];
+  private readonly options = { withCredentials: true };
 
-    public userID: string = '';
-    public admin: boolean = false;
+  constructor(private http: HttpClient, private issueCount: IssueCountService) {}
 
-    public currentUser: any;
-    date: Date = new Date();
+  ngOnInit(): void {
+    this.loadPage();
+  }
 
-    
+  loadPage(): void {
+    this.loading = true;
+    this.errMsg = '';
+    forkJoin({
+      unresolved: this.http.get<Issue[]>(`${environment.apiURL}/api/getUnresolvedIssues/`, this.options),
+      resolved: this.http.get<Issue[]>(`${environment.apiURL}/api/getResolvedIssues/`, this.options),
+    }).subscribe({
+      next: ({ unresolved, resolved }) => {
+        this.unresolvedIssues = unresolved;
+        this.resolvedIssues = resolved;
+        this.loading = false;
+      },
+      error: (response) => {
+        this.loading = false;
+        this.errMsg = response.error?.message || 'Could not load issues.';
+      },
+    });
+  }
 
-    constructor(
-        private http: HttpClient,
-        private router: Router,
-        private activatedRoute: ActivatedRoute,
-    ) {
-        const tempUser = localStorage.getItem('currentUser');
-        if (tempUser) {
-        this.currentUser = JSON.parse(tempUser);
-        }
-        // This will grab values from the state variable of the navigate function we defined while navigating to this page.  This solution was found here https://stackoverflow.com/a/54365098
-        console.log(`State received: ${JSON.stringify(this.router.getCurrentNavigation()?.extras.state)}`);  // For debugging only
-    }
+  replyLink(email: string): string {
+    return 'mailto:' + encodeURIComponent(email).replace('%40', '@') +
+      '?subject=' + encodeURIComponent('TimeTracker account help');
+  }
 
-    ngOnInit(): void {
-        // get user type
-        var userType = this.currentUser.type;
-        this.userID = this.currentUser.userID;
-        if (userType === 'admin') { this.admin = true; }
-
+  setResolved(issue: Issue, resolved: boolean): void {
+    if (this.updating) return;
+    this.updating = true;
+    this.errMsg = '';
+    const route = resolved ? 'markIssueResolved' : 'markIssueUnresolved';
+    this.http.post(`${environment.apiURL}/api/${route}/`, {
+      bugReportID: issue.bugReportID,
+      category: issue.category,
+    }, this.options).subscribe({
+      next: () => {
+        this.updating = false;
+        this.issueCount.refresh();
         this.loadPage();
-    }
+      },
+      error: (response) => {
+        this.updating = false;
+        this.errMsg = response.error?.message || 'Could not update this issue.';
+      },
 
-    loadPage(): void {
-
-        // get projects
-        this.loadUnresolvedIssues();
-        this.loadResolvedIssues();
-    }
-
-    loadUnresolvedIssues(): void {
-        this.http
-        .get(`${environment.apiURL}/api/getUnresolvedIssues/`)
-        .subscribe((data: any) => {
-            this.unresolvedIssues = data;
-        });
-    }
-
-    loadResolvedIssues(): void {
-        this.http
-        .get(`${environment.apiURL}/api/getResolvedIssues/`)
-        .subscribe((data: any) => {
-            this.resolvedIssues = data;
-        });
-    }
-
-    MarkResolved(BugReportID: any) {
-        this.date = new Date();
-        let payload = {
-            lastUpdateDate: this.date,
-            bugReportID: BugReportID,
-        };
-
-        this.http.post<any>(`${environment.apiURL}/api/markIssueResolved/`, payload, {
-        headers: new HttpHeaders({
-            'Access-Control-Allow-Headers': 'Content-Type',
-        }),
-        })
-        .subscribe({
-        next: (data) => {
-            this.errMsg = '';
-            this.loadPage();
-        },
-        error: (error) => {
-            this.errMsg = error['error']['message'];
-        },
-        });
-    }
-
-    MarkUnresolved(BugReportID: any) {
-        this.date = new Date();
-        let payload = {
-            lastUpdateDate: this.date,
-            bugReportID: BugReportID,
-        };
-
-        this.http.post<any>(`${environment.apiURL}/api/markIssueUnresolved/`, payload, {
-        headers: new HttpHeaders({
-            'Access-Control-Allow-Headers': 'Content-Type',
-        }),
-        })
-        .subscribe({
-        next: (data) => {
-            this.errMsg = '';
-            this.loadPage();
-        },
-        error: (error) => {
-            this.errMsg = error['error']['message'];
-        },
-        });
-    }
-  
+    });
+  }
 }

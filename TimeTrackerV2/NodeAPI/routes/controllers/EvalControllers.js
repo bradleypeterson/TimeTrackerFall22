@@ -1,4 +1,4 @@
-const ConnectToDB = require("../../Database/DBConnection");
+const ConnectToDB = require("../../database/DBConnection");
 const insertAudit = require('./AuditLog')
 
 let db = ConnectToDB();

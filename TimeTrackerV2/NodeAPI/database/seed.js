@@ -291,4 +291,16 @@ db.run(`CREATE TABLE IF NOT EXISTS Bug_Reports (
     REFERENCES Users(userID)
 );`);
 
+// Account-help requests share the admin inbox without changing existing bug reports.
+db.run(`CREATE TABLE IF NOT EXISTS Account_Help_Requests (
+    requestID INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    username TEXT NOT NULL,
+    replyEmail TEXT NOT NULL,
+    description TEXT NOT NULL,
+    creationDate TEXT NOT NULL,
+    lastUpdateDate TEXT NOT NULL,
+    isResolved INTEGER NOT NULL DEFAULT 0
+);`);
+
 db.close(); // Close the connection because it doesn't need to be persistent for the creation of the DB

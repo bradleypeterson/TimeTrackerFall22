@@ -1,59 +1,44 @@
 <div id="view-issues">
-  <h2>Unresolved issues</h2>
-  <div>
+  <div *ngIf="errMsg" class="alert alert-danger" role="alert">{{ errMsg }}</div>
+  <p *ngIf="loading" role="status">Loading issues…</p>
+  <ng-container *ngIf="!loading">
+    <ng-container *ngTemplateOutlet="issueList; context: { $implicit: unresolvedIssues, resolved: false }"></ng-container>
+    <ng-container *ngTemplateOutlet="issueList; context: { $implicit: resolvedIssues, resolved: true }"></ng-container>
+  </ng-container>
+</div>
+
+<ng-template #issueList let-issues let-resolved="resolved">
+  <h2 class="mt-3">{{ resolved ? 'Resolved issues' : 'Unresolved issues' }}</h2>
+  <p *ngIf="!issues.length && !errMsg">{{ resolved ? 'No resolved issues found.' : 'No open issues.' }}</p>
+  <div *ngIf="issues.length" class="table-responsive">
     <table class="table table-hover issue-table">
       <thead>
         <tr>
-        <th class="table-head" style="width: 900px;">Bug Description</th>
-        <th class="table-head">Name</th>
-        <th class="table-head" style="width: 100px;">Role</th>
-        <th class="table-head"></th>
+          <th scope="col" class="table-head">Description</th>
+          <th scope="col" class="table-head">Submitted by</th>
+          <th scope="col" class="table-head">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let u of unresolvedIssues">
-          <td>{{ u.description }}</td>
-          <td>{{ u.name }}</td>
-          <td>{{ u.type }}</td>
+        <tr *ngFor="let issue of issues">
+          <td class="text-break">
+            <strong class="d-block">{{ issue.category === 'account-access' ? 'Account access' : 'Bug report' }}</strong>
+            {{ issue.description }}
+          </td>
+          <td class="text-break">
+            {{ issue.name }}
+            <small class="d-block" *ngIf="issue.type">{{ issue.type }}</small>
+            <small class="d-block" *ngIf="issue.username">Username: {{ issue.username }}</small>
+            <small class="d-block" *ngIf="issue.replyEmail">{{ issue.replyEmail }}</small>
+          </td>
           <td>
-            <div class="btn-group float-right">
-                <button class="btn btn-purple" style="width: 180px;"
-                 (click)="MarkResolved(u.bugReportID)">Mark as resolved</button>
-            </div>
+            <a *ngIf="issue.replyEmail" class="btn btn-outline-secondary mb-1 mr-1" [href]="replyLink(issue.replyEmail)">Reply by email</a>
+            <button type="button" class="btn btn-purple mb-1" [disabled]="updating" (click)="setResolved(issue, !resolved)">
+              {{ resolved ? 'Reopen' : 'Mark as resolved' }}
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
-    <div *ngIf="unresolvedIssues.length == 0">
-        No active issues! Good job!
-    </div>
   </div>
-  <h2 style="padding-top: 20px">Resolved issues</h2>
-  <div>
-    <table class="table table-hover issue-table">
-      <thead>
-        <tr>
-        <th class="table-head" style="width: 900px;">Bug Description</th>
-        <th class="table-head">Name</th>
-        <th class="table-head" style="width: 100px;">Role</th>
-        <th class="table-head"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let r of resolvedIssues">
-          <td>{{ r.description }}</td>
-          <td>{{ r.name }}</td>
-          <td>{{ r.type }}</td>
-          <td>
-            <div class="btn-group float-right">
-                <button class="btn btn-danger" style="width: 180px;" 
-                  (click)="MarkUnresolved(r.bugReportID)">Mark as unresolved</button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <div *ngIf="resolvedIssues.length == 0">
-        No resolved issues found
-    </div>
-  </div>
+</ng-template>

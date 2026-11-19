@@ -4,7 +4,7 @@ const ConnectToDB = require('../../database/DBConnection');
 const insertAudit = require("./AuditLog");
 let db = ConnectToDB();
 localStorage = new localStorage("./scratch");
-const DummyData = require("../../Database/DummyData");
+const DummyData = require("../../database/DummyData");
 
 exports.Register = async (req, res, next) => {
   console.log("AccountControllers.js file/Register route called");

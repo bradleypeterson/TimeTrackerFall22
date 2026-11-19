@@ -85,6 +85,8 @@ const {
  } = require("./controllers/MiscellaneousControllers");
 
  const {
+    RequireIssueAdmin,
+    CreateAccountHelpRequest,
     CreateBugReport,
     GetUnresolvedIssues,
     GetResolvedIssues,
@@ -227,14 +229,21 @@ router.get("/UsersPendingApproval", GetUsersPendingApproval);
 
 //#region Bug Report routes
 router.post("/CreateBugReport", CreateBugReport);
+router.post('/account-help', rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 10,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { message: 'Too many help requests. Please try again later.' },
+}), CreateAccountHelpRequest);
 
-router.get("/getUnresolvedIssues", GetUnresolvedIssues);
+router.get("/getUnresolvedIssues", RequireIssueAdmin, GetUnresolvedIssues);
 
-router.get("/getResolvedIssues", GetResolvedIssues);
+router.get("/getResolvedIssues", RequireIssueAdmin, GetResolvedIssues);
 
-router.post("/markIssueResolved", MarkIssueResolved);
+router.post("/markIssueResolved", RequireIssueAdmin, MarkIssueResolved);
 
-router.post("/markIssueUnresolved", MarkIssueUnresolved);
+router.post("/markIssueUnresolved", RequireIssueAdmin, MarkIssueUnresolved);
 
 //#endregion
 

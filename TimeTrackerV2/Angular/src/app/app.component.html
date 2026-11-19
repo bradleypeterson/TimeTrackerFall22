@@ -144,11 +144,12 @@
             >
           </div>
           <div>
-            <a
-              class="nav-link"
-              routerLink="./view-issues"
-              >View Issues</a
-            >
+            <a class="nav-link" routerLink="./view-issues">
+              View Issues
+              <span *ngIf="openIssueCount > 0" class="badge bg-danger text-white ms-1">
+                {{ openIssueCount }}
+              </span>
+            </a>
           </div>
         </div>
       </div>
