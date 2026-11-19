@@ -13,6 +13,7 @@ Run the test with ng test
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import { RegisterComponent } from './register.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
 
 ///HttpClientTestingModule fix: 
 /// Using simply import { HttpClientTestingModule}, we get an error, most likely because the version of 
@@ -20,14 +21,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs';
 
-beforeEach(async () => {
-  await TestBed.configureTestingModule({
-    declarations: [RegisterComponent],
-    providers: [
-      { provide: HttpClient, useValue: { get: () => of({}), post: () => of({}) } }
-    ],
-  }).compileComponents();
-});
 //
 
 
@@ -35,9 +28,18 @@ describe('RegisterComponent', () => {
     let component: RegisterComponent;
     let fixture: ComponentFixture<RegisterComponent>;
 
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [RegisterComponent],
+            providers: [
+                { provide: HttpClient, useValue: { get: () => of({}), post: () => of({}) } }
+            ],
+        }).compileComponents();
+    });
+
     beforeEach(async ()=> {
         await TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule], 
+            imports: [ReactiveFormsModule, RouterTestingModule],
             declarations: [RegisterComponent],
         }).compileComponents();
     });//beforeEach end
@@ -112,7 +114,7 @@ describe('RegisterComponent', () => {
 
         //call to test
         component.onSubmit();
-        expect(component.errMsg).toBe('Missing one or more required arguments');
+        expect(component.errMsg).toBe('Please complete all required fields and select an account type.');
     });
 
     //Testing

@@ -2,8 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { LoginComponent } from './login.component';
-import { of, throwError } from 'rxjs';
-import { RouterModule, ActivatedRoute, Router } from '@angular/router';
+import { of } from 'rxjs';
+import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -22,11 +23,10 @@ describe('LoginComponent', () => {
     spyOn(localStorage, 'removeItem');
 
     await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, RouterModule],
+      imports: [FormsModule, ReactiveFormsModule, RouterTestingModule],
       declarations: [LoginComponent],
       providers: [
         { provide: HttpClient, useValue: httpClient },
-        { provide: ActivatedRoute, useValue: {} },
       ],
     }).compileComponents();
 
@@ -34,13 +34,13 @@ describe('LoginComponent', () => {
     spyOn(router, 'navigate');
   });
 
-//   beforeEach(() => {
-//     fixture = TestBed.createComponent(LoginComponent);
-//     component = fixture.componentInstance;
-//     fixture.detectChanges();
-//   });
+  beforeEach(() => {
+    fixture = TestBed.createComponent(LoginComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

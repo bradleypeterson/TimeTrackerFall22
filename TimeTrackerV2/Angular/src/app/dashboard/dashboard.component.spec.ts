@@ -15,7 +15,10 @@ describe('Dashboard role capabilities', () => {
     await TestBed.configureTestingModule({
       declarations: [DashboardComponent],
       imports: [CommonModule, HttpClientTestingModule, NgxPaginationModule],
-      providers: [{ provide: Router, useValue: { navigate: jasmine.createSpy('navigate') } }],
+      providers: [{ provide: Router, useValue: {
+        navigate: jasmine.createSpy('navigate'),
+        getCurrentNavigation: () => null,
+      } }],
     }).compileComponents();
     http = TestBed.inject(HttpTestingController);
   });

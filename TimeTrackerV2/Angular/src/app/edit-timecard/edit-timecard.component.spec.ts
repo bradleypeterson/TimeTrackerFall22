@@ -19,8 +19,8 @@ describe('EditTimecardComponent', () => {
   const mockTimecard = {
     timeslotID: 123,
     studentName: 'John Doe',
-    timeIn: '2024-04-11T10:00:00',
-    timeOut: '2024-04-11T12:00:00',
+    timeIn: new Date('2024-04-11T10:00:00Z').getTime(),
+    timeOut: new Date('2024-04-11T12:00:00Z').getTime(),
   };
 
   const mockUser = {
@@ -64,7 +64,7 @@ describe('EditTimecardComponent', () => {
         `${environment.apiURL}/api/TimeCardInfo/123`,
         jasmine.any(Object)
       )
-      .and.returnValue(of(mockTimecard));
+      .and.returnValue(of([mockTimecard]));
 
     await TestBed.configureTestingModule({
       imports: [HttpClientModule, FormsModule, ReactiveFormsModule],
@@ -84,7 +84,7 @@ describe('EditTimecardComponent', () => {
     fixture.detectChanges();
   });
 
-//   it('should create', () => {
-//     expect(component).toBeTruthy();
-//   });
-// });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});
